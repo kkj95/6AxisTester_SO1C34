@@ -1,4 +1,5 @@
 ﻿using Basler.Pylon;
+using FZ4P.DriverIc.OISIC;
 using FZ4P.Properties;
 using OpenCvSharp;
 using OpenCvSharp.Dnn;
@@ -38,6 +39,7 @@ namespace FZ4P
     {
         public DLN Dln { get { return STATIC.Dln; } }
         public DrvIC DrvIC { get { return STATIC.DrvIC; } }
+        public DW9836N DWDrvIC { get { return STATIC.DW9836; } }
         public Recipe Rcp { get { return STATIC.Rcp; } }
         public Condition Condition { get { return STATIC.Rcp.Condition; } }
         public Spec Spec { get { return STATIC.Rcp.Spec; } }
@@ -1880,15 +1882,26 @@ namespace FZ4P
                         DrvIC.AFOnOff(j, true);
                         break;
                     case "OIS X Scan":
-                        DrvIC.OISOnOff(j, true);
-                        DrvIC.SetManualDrvModeXY(j, OISXCenter, OISYCenter);                      
+                        DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.StandbyMode);
+                        DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.ClosedMode);
+                        //OIS Zero 무브
+                        DWDrvIC.OISMove(0, 0, 0);
+
+                        //DWDrvIC.OISOnOff(j, true);
+                        //DWDrvIC.SetManualDrvModeXY(j, OISXCenter, OISYCenter);
+
                         DrvIC.AFOnOff(j, true);
                         DrvIC.AFMove(j, Condition.OISDrvAFPos);
                         AddLog(j, $"Move AF Best Position : {Condition.OISDrvAFPos}");
                         break;
                     case "OIS Y Scan":
-                        DrvIC.OISOnOff(j, true);
-                        DrvIC.SetManualDrvModeXY(j, OISXCenter, OISYCenter);                  
+                        DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.ClosedMode);
+
+                        //OIS Zero 무브
+                        DWDrvIC.OISMove(0, 0, 0);
+                        //DWDrvIC.OISOnOff(j, true);
+                        //DWDrvIC.SetManualDrvModeXY(j, OISXCenter, OISYCenter);                  
+
                         DrvIC.AFOnOff(j, true);
                         DrvIC.AFMove(j, Condition.OISDrvAFPos);
                         AddLog(j, $"Move AF Best Position : {Condition.OISDrvAFPos}");
@@ -1966,11 +1979,11 @@ namespace FZ4P
                         {
                             if (name.Contains("X"))
                             {
-                                DrvIC.OISMove(j, Cal.CodeX[framCnt[port]], OISYCenter);
+                                DWDrvIC.OISMove(j, Cal.CodeX[framCnt[port]], OISYCenter);
                             }
                             else if (name.Contains("Y"))
                             {
-                                DrvIC.OISMove(j, OISXCenter, Cal.CodeY[framCnt[port]]);
+                                DWDrvIC.OISMove(j, OISXCenter, Cal.CodeY[framCnt[port]]);
                             }
                             else if (name.Contains("AF"))
                             {

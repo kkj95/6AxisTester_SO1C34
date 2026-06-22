@@ -17,12 +17,12 @@ namespace FZ4P.DriverIc.OISIC
     {
         private readonly IOneTwoBytesDrivingIC _controls;
 
-        public int FRA_Addr { get; set; }
-        public int OISX_Addr { get; set; }
-        public int OISY_Addr { get; set; }
-        public int OIS_MIN_CODE { get; set; }
-        public int OIS_MID_CODE { get; set; }
-        public int OIS_MAX_CODE { get; set; }
+        public int FRA_Addr { get; set; } = 0x12;
+        public int OISX_Addr { get; set; } = 0x0E;
+        public int OISY_Addr { get; set; } = 0x4E;
+        public int OIS_MIN_CODE { get; set; } = 0;
+        public int OIS_MID_CODE { get; set; } = 2048;
+        public int OIS_MAX_CODE { get; set; } = 4095;
 
         public DW9836N(IOneTwoBytesDrivingIC controls)
         {
@@ -30,8 +30,8 @@ namespace FZ4P.DriverIc.OISIC
         }
         public void OISMove(int ch, int Xcode, int Ycode)
         {
-            _controls.Write2Byte(OISX_Addr, (int)eRegisterMapDW9836N.Target1, 2, (ushort)Xcode);
-            _controls.Write2Byte(OISY_Addr, (int)eRegisterMapDW9836N.Target1, 2, (ushort)Ycode);
+            _controls.Write2Byte(OISX_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)Xcode);
+            _controls.Write2Byte(OISY_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)Ycode);
         }
 
         public void OISMoveOL(int ch, int axis, int code)
@@ -102,7 +102,7 @@ namespace FZ4P.DriverIc.OISIC
                     break;
             }
 
-            _controls.WriteByte(SlaveID, (int)eRegisterMapDW9836N.Mode, 1, writeData);
+            _controls.WriteByte(SlaveID, (int)RegisterMapDW9836N.Mode, 1, writeData);
         }
         private int GetAxisTypeID(AxisTypeDW axisType)
         {
