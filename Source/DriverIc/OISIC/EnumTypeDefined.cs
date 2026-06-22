@@ -11,6 +11,7 @@ namespace FZ4P.DriverIc.OISIC
         StandbyMode = 0,
         SleepMode = 1,
         ClosedMode = 2,
+        OpenMode = 3,
     }
 
     public enum AxisTypeDW

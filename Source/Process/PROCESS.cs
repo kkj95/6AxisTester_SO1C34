@@ -1882,25 +1882,16 @@ namespace FZ4P
                         DrvIC.AFOnOff(j, true);
                         break;
                     case "OIS X Scan":
-                        DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.StandbyMode);
-                        DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.ClosedMode);
-                        //OIS Zero 무브
-                        DWDrvIC.OISMove(0, 0, 0);
-
-                        //DWDrvIC.OISOnOff(j, true);
-                        //DWDrvIC.SetManualDrvModeXY(j, OISXCenter, OISYCenter);
+                        DWDrvIC.OISOnOff(j, true);
+                        DWDrvIC.SetManualDrvModeXY(j, OISXCenter, OISYCenter);
 
                         DrvIC.AFOnOff(j, true);
                         DrvIC.AFMove(j, Condition.OISDrvAFPos);
                         AddLog(j, $"Move AF Best Position : {Condition.OISDrvAFPos}");
                         break;
                     case "OIS Y Scan":
-                        DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.ClosedMode);
-
-                        //OIS Zero 무브
-                        DWDrvIC.OISMove(0, 0, 0);
-                        //DWDrvIC.OISOnOff(j, true);
-                        //DWDrvIC.SetManualDrvModeXY(j, OISXCenter, OISYCenter);                  
+                        DWDrvIC.OISOnOff(j, true);
+                        DWDrvIC.SetManualDrvModeXY(j, OISXCenter, OISYCenter);                  
 
                         DrvIC.AFOnOff(j, true);
                         DrvIC.AFMove(j, Condition.OISDrvAFPos);
@@ -1933,7 +1924,7 @@ namespace FZ4P
                             if (!m_ChannelOn[j]) continue;
                             foreach (var Cal in CalList[j])
                             {
-                                if (Cal.Name == name) DrvIC.OISMove(j, Cal.CodeX[0], OISYCenter);
+                                if (Cal.Name == name) DWDrvIC.OISMove(j, Cal.CodeX[0], OISYCenter);
                             }
                         }
                         Process.Wait(Condition.iDrvStepIntervalX);
@@ -1944,7 +1935,7 @@ namespace FZ4P
                             if (!m_ChannelOn[j]) continue;
                             foreach (var Cal in CalList[j])
                             {
-                                if (Cal.Name == name) DrvIC.OISMove(j, OISXCenter, Cal.CodeY[0]);
+                                if (Cal.Name == name) DWDrvIC.OISMove(j, OISXCenter, Cal.CodeY[0]);
                             }
                         }
                         Process.Wait(Condition.iDrvStepIntervalY);
@@ -2025,8 +2016,8 @@ namespace FZ4P
                     foreach (var Cal in CalList[j])
                         if (Cal.Name == name)
                         {
-                            Cal.HallX[framCnt[port]] = DrvIC.ReadOISHall(j, 0, 0);
-                            Cal.HallY[framCnt[port]] = DrvIC.ReadOISHall(j, 1, 0);
+                            Cal.HallX[framCnt[port]] = DWDrvIC.ReadOISHall(j, 0, 0);
+                            Cal.HallY[framCnt[port]] = DWDrvIC.ReadOISHall(j, 1, 0);
                             Cal.HallZ[framCnt[port]] = DrvIC.ReadAFHall(j);
                             //Get Hall
                             if (name.Contains("X"))
@@ -2095,7 +2086,7 @@ namespace FZ4P
             for (int j = ch; j < ch + ChannelCnt; j++)
             {
                 DrvIC.AFOnOff(j, false);
-                DrvIC.OISOnOff(j, false);
+                DWDrvIC.OISOnOff(j, false);
               
             }
             for (int j = ch; j < ch + ChannelCnt; j++)

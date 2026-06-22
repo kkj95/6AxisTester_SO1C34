@@ -1,4 +1,5 @@
 ﻿using Dln.I2cMaster;
+using FZ4P.DriverIc.I2CBase;
 using FZ4P.DriverIc.I2CBase.Interfaces;
 using FZ4P.DriverIc.Interfaces;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace FZ4P.DriverIc.OISIC
 {
@@ -41,7 +43,18 @@ namespace FZ4P.DriverIc.OISIC
 
         public void OISOnOff(int ch, bool isOn)
         {
-            throw new NotImplementedException();
+            //임시
+            var axisType = (AxisTypeDW)0;
+
+            if (isOn)
+            {
+                SetOperationMode(axisType, OperationTypeDW.StandbyMode);
+                SetOperationMode(axisType, OperationTypeDW.ClosedMode);
+            }
+            else
+            {
+                SetOperationMode(axisType, OperationTypeDW.StandbyMode);
+            }
         }
 
         public bool OIS_StausCheck(int ch, byte res1, byte res2)
@@ -56,12 +69,47 @@ namespace FZ4P.DriverIc.OISIC
 
         public short ReadOISHall(int ch, int axis, int mode)
         {
-            throw new NotImplementedException();
+            throw new Exception("test");
+            //if (mode == 0)
+            //{
+            //    byte[] data = new byte[3];
+            //    if (axis == 0) _controls.ReadArray(ch, OISX_Addr, RegisterMapDW9836N.POSITION_READ_LOW, 2, data);
+            //    else Dln.ReadArray(ch, OIS_Addr, 0xB109, 2, data);
+
+            //    short Readhall = (short)((data[1] << 8 | data[2]) / 16);
+            //    if (Readhall >= 2048) Readhall = (short)(Readhall - 4096);
+            //    return Readhall;
+
+            //}
+            //else
+            //{
+            //    if (axis == 0)
+            //    {
+            //        Dln.WriteByte(ch, OIS_Addr, 0x6060, 2, 0x00);
+            //        bool res = OIS_StausCheck(ch, 0x6060, 0x00, 0x00);
+            //        if (!res) return short.MaxValue;
+            //    }
+            //    else
+            //    {
+            //        Dln.WriteByte(ch, OIS_Addr, 0x6060, 2, 0x01);
+            //        bool res = OIS_StausCheck(ch, 0x6060, 0x01, 0x01);
+            //        if (!res) return short.MaxValue;
+            //    }
+            //    return Dln.Read2Byte_signed(ch, OIS_Addr, 0x6062, 2);
+            //}
         }
 
         public bool SetManualDrvModeXY(int ch, int MidCodeX, int MidCodeY)
         {
-            throw new NotImplementedException();
+            bool flag = false;
+            //flag = OIS_StausCheck(ch, 0x01, 0x02); if (!flag) return false;
+            //_controls.WriteByte(ch, OIS_Addr, 0x617A, 2, 0x01);
+            //flag = OIS_StausCheck(ch, 0x01, 0x02); if (!flag) return false;
+            //_controls.WriteByte(ch, OIS_Addr, 0x6020, 2, 0x07);
+            //flag = OIS_StausCheck(ch, 0x01, 0x02); if (!flag) return false;
+            OISMove(ch, MidCodeX, MidCodeY);
+
+            return true;
         }
 
         //Store 명령
@@ -96,6 +144,9 @@ namespace FZ4P.DriverIc.OISIC
                     break;
                 case OperationTypeDW.ClosedMode:
                     writeData = 0x00;
+                    break;
+                case OperationTypeDW.OpenMode:
+                    writeData = 0x03;
                     break;
                 default:
                     writeData = 0x00;
