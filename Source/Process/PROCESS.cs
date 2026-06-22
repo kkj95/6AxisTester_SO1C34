@@ -57,15 +57,15 @@ namespace FZ4P
         public int RunTaskId2 = 0;
 
         public bool m_bAllLEDOn = false;
-        public bool IsVirtual = false;
+        private bool isVirtual = false;
         public bool SuddenStop = false;
         public int RepeatRun = 0;
         public int CurrentRun = 0;
         public bool IsHallComplete = false;
         public int PortCnt { get; set; }
         public int ChannelCnt { get; set; }
+        public bool IsVirtual { get => isVirtual; }
 
-     
         public List<string> errMsg = new List<string>();
         public List<bool> m_ChannelOn = new List<bool>();
         public List<string> m_StrIndex = new List<string>();

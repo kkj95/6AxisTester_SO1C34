@@ -126,6 +126,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DriverIc\I2CBase\I2CControl.cs" />
+    <Compile Include="DriverIc\I2CBase\Interfaces\IOneBytesDrivingIC.cs" />
+    <Compile Include="DriverIc\I2CBase\Interfaces\IOneTwoBytesDrivingIC.cs" />
+    <Compile Include="DriverIc\I2CBase\Interfaces\ITwoBytesDrivingIC.cs" />
+    <Compile Include="DriverIc\Interfaces\IOISFunction.cs" />
+    <Compile Include="DriverIc\OISIC\DW9836N.cs" />
+    <Compile Include="DriverIc\OISIC\EnumTypeDefined.cs" />
     <Compile Include="Extensions\FIndResultExtension.cs" />
     <Compile Include="Process\AFLinCompCoef.cs" />
     <Compile Include="Process\AjinLibrary.cs" />

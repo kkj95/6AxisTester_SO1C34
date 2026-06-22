@@ -1,4 +1,5 @@
 ﻿using Dln;
+using Dln.I2cMaster;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,9 +29,12 @@ namespace FZ4P
     public class DLN
     {
         public Process Process { get { return STATIC.Process; } }
+
+        public Port[] DLNi2c { get => dLNi2c; }
+
         public uint m_PortCount = 0;
         public List<Device> DLNdevice = new List<Device>();
-        public Dln.I2cMaster.Port[] DLNi2c;
+        private Dln.I2cMaster.Port[] dLNi2c;
         public Dln.Gpio.Module[] DLNgpio;
 
         public event EventHandler SwitchOn = null;

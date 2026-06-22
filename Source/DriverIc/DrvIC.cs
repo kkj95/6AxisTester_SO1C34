@@ -1,4 +1,5 @@
 ﻿using Dln;
+using FZ4P.DriverIc.Interfaces;
 using MathNet.Numerics.Distributions;
 using OpenCvSharp.Dnn;
 using OpenCvSharp.Flann;
@@ -18,7 +19,9 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace FZ4P
 {
-    public class DrvIC
+    //동윤 14bit
+
+    public class DrvIC : IOISFunction
     { 
         public Process Process { get { return STATIC.Process; } }
         public DLN Dln { get { return STATIC.Dln; } }
