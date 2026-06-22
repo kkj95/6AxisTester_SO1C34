@@ -190,7 +190,7 @@ namespace FZ4P
         public static DLN Dln = new DLN();
         public static DrvIC DrvIC = new DrvIC();
 
-        public static I2CControl dln_control = new I2CControl(Dln.DLNi2c[2], Dln.SetError);
+        public static I2CControl dln_control = new I2CControl(Dln.DLNi2c[3], Dln.SetError);
         public static DW9836N DW9836 = new DW9836N(dln_control);
     }
     public static class DataIO

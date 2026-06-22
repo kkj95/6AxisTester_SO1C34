@@ -1401,7 +1401,7 @@ namespace FZ4P
 
 
                     if (Dln.ReadByteNull(ch, DrvIC.AF_Addr, 0x03, 1) == null) m_ChannelOn[ch] = false;
-                    if (Dln.ReadByteNull(ch, DrvIC.OIS_Addr, 0x6024, 2) == null) m_ChannelOn[ch] = false;
+                    //if (Dln.ReadByteNull(ch, DrvIC.OIS_Addr, 0x6024, 2) == null) m_ChannelOn[ch] = false;
 
 
                     for (int k = ch; k < ch + ChannelCnt; k++)
@@ -1414,75 +1414,75 @@ namespace FZ4P
                         }
                     }
 
-                    if (!isI2cFail)
-                    {
-                        LEDs_All_On(0, true);
-                        Thread.Sleep(100);
-                        FindResult res = Measure();
+                    //if (!isI2cFail)
+                    //{
+                    //    LEDs_All_On(0, true);
+                    //    Thread.Sleep(100);
+                    //    FindResult res = Measure();
 
-                        if (res.cx[0] == 0 || res.cy[0] == 0 || res.cz[0] == 0)
-                            m_ChannelOn[ch] = false;
+                    //    if (res.cx[0] == 0 || res.cy[0] == 0 || res.cz[0] == 0)
+                    //        m_ChannelOn[ch] = false;
 
-                        //OpenLoopMoveSeq
-                        Dln.WriteByte(ch, DrvIC.AF_Addr, 0xAE, 1, 0x3B);
-                        byte backData = Dln.ReadByte(ch, DrvIC.AF_Addr, 0x0B, 1);
-                        Dln.WriteByte(ch, DrvIC.AF_Addr, 0x1A, 1, 0x00);
-                        Dln.WriteByte(ch, DrvIC.AF_Addr, 0x0B, 1, (byte)(backData & 0x7F));
-                        Dln.WriteByte(ch, DrvIC.AF_Addr, 0xA6, 1, 0x7B);
-                        DrvIC.AFOnOff(ch, true);
-                        DrvIC.AFMoveOL(ch, 0);
-                        Wait(100);
-                        res = Measure();
-                        if (res.cx[0] == 0 || res.cy[0] == 0 || res.cz[0] == 0)
-                            m_ChannelOn[ch] = false;
-                        DrvIC.AFMoveOL(ch, 4095);
-                        Wait(100);
-                        res = Measure();
-                        if (res.cx[0] == 0 || res.cy[0] == 0 || res.cz[0] == 0)
-                            m_ChannelOn[ch] = false;
+                    //    //OpenLoopMoveSeq
+                    //    Dln.WriteByte(ch, DrvIC.AF_Addr, 0xAE, 1, 0x3B);
+                    //    byte backData = Dln.ReadByte(ch, DrvIC.AF_Addr, 0x0B, 1);
+                    //    Dln.WriteByte(ch, DrvIC.AF_Addr, 0x1A, 1, 0x00);
+                    //    Dln.WriteByte(ch, DrvIC.AF_Addr, 0x0B, 1, (byte)(backData & 0x7F));
+                    //    Dln.WriteByte(ch, DrvIC.AF_Addr, 0xA6, 1, 0x7B);
+                    //    DrvIC.AFOnOff(ch, true);
+                    //    DrvIC.AFMoveOL(ch, 0);
+                    //    Wait(100);
+                    //    res = Measure();
+                    //    if (res.cx[0] == 0 || res.cy[0] == 0 || res.cz[0] == 0)
+                    //        m_ChannelOn[ch] = false;
+                    //    DrvIC.AFMoveOL(ch, 4095);
+                    //    Wait(100);
+                    //    res = Measure();
+                    //    if (res.cx[0] == 0 || res.cy[0] == 0 || res.cz[0] == 0)
+                    //        m_ChannelOn[ch] = false;
 
-                        DrvIC.AFOnOff(ch, false);
-                        Wait(5);
-                        Dln.WriteByte(ch, DrvIC.AF_Addr, 0x0B, 1, backData);
-                        Dln.WriteByte(ch, DrvIC.AF_Addr, 0xA6, 1, 0x00);
+                    //    DrvIC.AFOnOff(ch, false);
+                    //    Wait(5);
+                    //    Dln.WriteByte(ch, DrvIC.AF_Addr, 0x0B, 1, backData);
+                    //    Dln.WriteByte(ch, DrvIC.AF_Addr, 0xA6, 1, 0x00);
 
-                        //DrvIC.OISOnOff(ch, true);
-                        //DrvIC.OISOnOff(ch, false);
-                        //Wait(10);
-                        //DrvIC.OISMoveOL(ch, 1, 0);
-                        //DrvIC.OISMoveOL(ch, 0, -8192);
-                        //Wait(100);
-                        //res = Measure();
-                        //if (res.cx[0] == 0 || res.cy[0] == 0 || res.cz[0] == 0)
-                        //    m_ChannelOn[ch] = false;
-                        //DrvIC.OISMoveOL(ch, 0, 8191);
-                        //Wait(100);
-                        //res = Measure();
-                        //if (res.cx[0] == 0 || res.cy[0] == 0 || res.cz[0] == 0)
-                        //    m_ChannelOn[ch] = false;
-                        //DrvIC.OISMoveOL(ch, 0, 0);
-                        //DrvIC.OISMoveOL(ch, 1, -8192);
-                        //Wait(100);
-                        //res = Measure();
-                        //if (res.cx[0] == 0 || res.cy[0] == 0 || res.cz[0] == 0)
-                        //    m_ChannelOn[ch] = false;
-                        //DrvIC.OISMoveOL(ch, 1, 8191);
-                        //Wait(100);
-                        //res = Measure();
-                        //if (res.cx[0] == 0 || res.cy[0] == 0 || res.cz[0] == 0)
-                        //    m_ChannelOn[ch] = false;
+                    //    //DrvIC.OISOnOff(ch, true);
+                    //    //DrvIC.OISOnOff(ch, false);
+                    //    //Wait(10);
+                    //    //DrvIC.OISMoveOL(ch, 1, 0);
+                    //    //DrvIC.OISMoveOL(ch, 0, -8192);
+                    //    //Wait(100);
+                    //    //res = Measure();
+                    //    //if (res.cx[0] == 0 || res.cy[0] == 0 || res.cz[0] == 0)
+                    //    //    m_ChannelOn[ch] = false;
+                    //    //DrvIC.OISMoveOL(ch, 0, 8191);
+                    //    //Wait(100);
+                    //    //res = Measure();
+                    //    //if (res.cx[0] == 0 || res.cy[0] == 0 || res.cz[0] == 0)
+                    //    //    m_ChannelOn[ch] = false;
+                    //    //DrvIC.OISMoveOL(ch, 0, 0);
+                    //    //DrvIC.OISMoveOL(ch, 1, -8192);
+                    //    //Wait(100);
+                    //    //res = Measure();
+                    //    //if (res.cx[0] == 0 || res.cy[0] == 0 || res.cz[0] == 0)
+                    //    //    m_ChannelOn[ch] = false;
+                    //    //DrvIC.OISMoveOL(ch, 1, 8191);
+                    //    //Wait(100);
+                    //    //res = Measure();
+                    //    //if (res.cx[0] == 0 || res.cy[0] == 0 || res.cz[0] == 0)
+                    //    //    m_ChannelOn[ch] = false;
 
-                        LEDs_All_On(0, false);
+                    //    LEDs_All_On(0, false);
 
-                        for (int k = ch; k < ch + ChannelCnt; k++)
-                        {
-                            if (!m_ChannelOn[k])
-                            {
-                                errMsg[k] = "Socket Empty\r\nVision Check";
-                                AddLog(k, "Socket Empty\r\nVision Check");
-                            }
-                        }
-                    }
+                    //    for (int k = ch; k < ch + ChannelCnt; k++)
+                    //    {
+                    //        if (!m_ChannelOn[k])
+                    //        {
+                    //            errMsg[k] = "Socket Empty\r\nVision Check";
+                    //            AddLog(k, "Socket Empty\r\nVision Check");
+                    //        }
+                    //    }
+                    //}
 
   
 
@@ -2016,24 +2016,24 @@ namespace FZ4P
                     foreach (var Cal in CalList[j])
                         if (Cal.Name == name)
                         {
-                            Cal.HallX[framCnt[port]] = DWDrvIC.ReadOISHall(j, 0, 0);
-                            Cal.HallY[framCnt[port]] = DWDrvIC.ReadOISHall(j, 1, 0);
-                            Cal.HallZ[framCnt[port]] = DrvIC.ReadAFHall(j);
+                            //Cal.HallX[framCnt[port]] = DWDrvIC.ReadOISHall(j, 0, 0);
+                            //Cal.HallY[framCnt[port]] = DWDrvIC.ReadOISHall(j, 1, 0);
+                            //Cal.HallZ[framCnt[port]] = DrvIC.ReadAFHall(j);
                             //Get Hall
                             if (name.Contains("X"))
                             {
-                                Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 1);
-                                AddLog(j, string.Format("{0} == Code : {1}, Hall : {2}", name, Cal.CodeX[framCnt[port]], Cal.HallX[framCnt[port]]));
+                                //Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 1);
+                                //AddLog(j, string.Format("{0} == Code : {1}, Hall : {2}", name, Cal.CodeX[framCnt[port]], Cal.HallX[framCnt[port]]));
                             }
                             else if (name.Contains("Y"))
                             {
-                                Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 1);
-                                AddLog(j, string.Format("{0} == Code : {1}, Hall : {2}", name, Cal.CodeY[framCnt[port]], Cal.HallY[framCnt[port]]));
+                                //Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 1);
+                               // AddLog(j, string.Format("{0} == Code : {1}, Hall : {2}", name, Cal.CodeY[framCnt[port]], Cal.HallY[framCnt[port]]));
                             }
                             else if (name.Contains("AF"))
                             {
-                                Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 0) + Condition.AFCurrentOffset;
-                                AddLog(j, string.Format("{0} == Code : {1}, Hall : {2}", name, Cal.CodeZ[framCnt[port]], Cal.HallZ[framCnt[port]]));
+                                //Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 0) + Condition.AFCurrentOffset;
+                                //(j, string.Format("{0} == Code : {1}, Hall : {2}", name, Cal.CodeZ[framCnt[port]], Cal.HallZ[framCnt[port]]));
                             }
 
                         }

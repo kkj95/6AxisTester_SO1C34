@@ -16,7 +16,7 @@ namespace FZ4P.DriverIc.I2CBase
         public readonly Port _i2CMaster = null;
         public readonly Action<string> SetError = null;
         public bool IsVirtual => STATIC.Process.IsVirtual;
-        private object I2cLock = null;
+        private object I2cLock = new object();
 
         public I2CControl(Port i2CMaster, Action<string> action)
         {

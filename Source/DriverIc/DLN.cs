@@ -77,9 +77,16 @@ namespace FZ4P
 
             if (f != null)
             {
-                MessageBox.Show(f, s, "Error",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                System.Diagnostics.Process.GetCurrentProcess().Kill();
+                if (f.InvokeRequired)
+                {
+                    f.BeginInvoke((MethodInvoker)delegate
+                    {
+                        MessageBox.Show(f, s, "Error",
+                       MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        System.Diagnostics.Process.GetCurrentProcess().Kill();
+                    });
+                }
+               
             }
             else
             {
@@ -127,8 +134,8 @@ namespace FZ4P
                 }
             }
 
-            dLNi2c = new Dln.I2cMaster.Port[m_PortCount];
-            DLNgpio = new Dln.Gpio.Module[m_PortCount];
+            dLNi2c = new Dln.I2cMaster.Port[4];
+            DLNgpio = new Dln.Gpio.Module[4];
 
             for (int i = 0; i < m_PortCount; i++)
             {
@@ -175,7 +182,6 @@ namespace FZ4P
                 res[1] = DLNdevice[i].Gpio.Pins[7].Value;
                 if (res[1] == 1)
                     portID += 2;
-
            
                 int portCount = DLNdevice[i].I2cMaster.Ports.Count;
                 if (portCount == 0)
@@ -183,17 +189,9 @@ namespace FZ4P
                     MessageBox.Show("Current DLN-series adapter doesn't support I2C Master interface.", null, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
-                if (portID == 3) portID = 2;
+                //if (portID == 3) portID = 2;
                 DLNi2c[portID] = DLNdevice[i].I2cMaster.Ports[0];
                 DLNgpio[portID] = DLNdevice[i].Gpio;
-            }
-
-            if (DLNgpio.Length > 2)
-            {
-                DLNgpio[2].Pins[9].Enabled = true;
-                DLNgpio[2].Pins[9].Direction = 0;   //  0 ~ 15 : 0(in), 24 ~ 31 : 1(out)
-                DLNgpio[2].Pins[9].OutputValue = 1;
-                DLNgpio[2].Pins[9].PulldownEnabled = true;
             }
 
 

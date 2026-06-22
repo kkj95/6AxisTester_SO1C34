@@ -32,8 +32,10 @@ namespace FZ4P.DriverIc.OISIC
         }
         public void OISMove(int ch, int Xcode, int Ycode)
         {
-            _controls.Write2Byte(OISX_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)Xcode);
-            _controls.Write2Byte(OISY_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)Ycode);
+            var positionX = Xcode;// << 3;
+            var positionY = Ycode;// << 3;
+            _controls.Write2Byte(OISX_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionX);
+            _controls.Write2Byte(OISY_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionY);
         }
 
         public void OISMoveOL(int ch, int axis, int code)
