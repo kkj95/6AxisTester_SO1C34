@@ -127,7 +127,7 @@ namespace FZ4P
                 }
             }
 
-            DLNi2c = new Dln.I2cMaster.Port[m_PortCount];
+            dLNi2c = new Dln.I2cMaster.Port[m_PortCount];
             DLNgpio = new Dln.Gpio.Module[m_PortCount];
 
             for (int i = 0; i < m_PortCount; i++)
