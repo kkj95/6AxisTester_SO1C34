@@ -2022,20 +2022,19 @@ namespace FZ4P
                             //Get Hall
                             if (name.Contains("X"))
                             {
-                                //Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 1);
-                                //AddLog(j, string.Format("{0} == Code : {1}, Hall : {2}", name, Cal.CodeX[framCnt[port]], Cal.HallX[framCnt[port]]));
+                                Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 1);
+                                AddLog(j, string.Format("{0} == Code : {1}, Hall : {2}", name, Cal.CodeX[framCnt[port]], Cal.HallX[framCnt[port]]));
                             }
                             else if (name.Contains("Y"))
                             {
-                                //Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 1);
-                               // AddLog(j, string.Format("{0} == Code : {1}, Hall : {2}", name, Cal.CodeY[framCnt[port]], Cal.HallY[framCnt[port]]));
+                                Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 1);
+                                AddLog(j, string.Format("{0} == Code : {1}, Hall : {2}", name, Cal.CodeY[framCnt[port]], Cal.HallY[framCnt[port]]));
                             }
                             else if (name.Contains("AF"))
                             {
-                                //Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 0) + Condition.AFCurrentOffset;
-                                //(j, string.Format("{0} == Code : {1}, Hall : {2}", name, Cal.CodeZ[framCnt[port]], Cal.HallZ[framCnt[port]]));
+                                Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 0) + Condition.AFCurrentOffset;
+                                AddLog(j, string.Format("{0} == Code : {1}, Hall : {2}", name, Cal.CodeZ[framCnt[port]], Cal.HallZ[framCnt[port]]));
                             }
-
                         }
                 }
                 STATIC.fVision.m__G.oCam[port].GrabA(framCnt[port]);
