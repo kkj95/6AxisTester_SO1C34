@@ -48,6 +48,20 @@ namespace FZ4P.UI
             }
         }
 
+        private string _readHall3;
+        public string ReadHall3
+        {
+            get => _readHall3;
+            set
+            {
+                if (_readHall3 != value)
+                {
+                    _readHall3 = value;
+                    OnPropertyChanged(nameof(ReadHall3), value);
+                }
+            }
+        }
+
         private string _peakCurrent;
         public string PeakCurrent
         {
@@ -88,6 +102,12 @@ namespace FZ4P.UI
             {
                 this.InvokeOnUIThread(() => {
                     lbl_ReadHall2.Text = PropertiesHelper.GetValue<string>(e);
+                });
+            }
+            else if (e.PropertyName == nameof(ReadHall3))
+            {
+                this.InvokeOnUIThread(() => {
+                    lbl_ReadHall3.Text = PropertiesHelper.GetValue<string>(e);
                 });
             }
             else if (e.PropertyName == nameof(PeakCurrent))
@@ -151,13 +171,9 @@ namespace FZ4P.UI
 
             while (!token.IsCancellationRequested)
             {
-                if (iAixs == 0) //OIS
-                {
-                    //ReadHall = STATIC.DrvIC.ReadHall(iCh, "X").ToString();
-                    //ReadHall2 = STATIC.DrvIC.ReadHall(iCh, "Y").ToString();
-                }
-                else
-                   ReadHall = STATIC.DrvIC.ReadAFHall(iCh).ToString();
+                ReadHall = _oISFunction.ReadOISHall(0, 0, 0).ToString();
+                ReadHall2 = _oISFunction.ReadOISHall(0, 1, 0).ToString();
+                ReadHall = _afFunction.ReadAFHall(iCh).ToString();
 
                 Thread.Sleep(5);
                 //PeakCurrent = STATIC.DrvIC.GetPeakCurrent(iCh, iAixs).ToString();

@@ -1,5 +1,6 @@
 ﻿using FZ4P.DriverIc.I2CBase;
 using FZ4P.DriverIc.OISIC;
+using FZ4P.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -192,6 +193,9 @@ namespace FZ4P
 
         public static I2CControl dln_control = new I2CControl(Dln.DLNi2c[3], Dln.SetError);
         public static DW9836N DW9836 = new DW9836N(dln_control);
+
+
+        public static F_Manual fManual = new F_Manual(DW9836,DrvIC);
     }
     public static class DataIO
     {

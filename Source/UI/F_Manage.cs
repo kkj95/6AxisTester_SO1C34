@@ -959,6 +959,12 @@ namespace FZ4P
             }
         }
 
-        
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (STATIC.fManual.Visible)
+                STATIC.fManual.Hide();
+            else
+                STATIC.fManual.Show();
+        }
     }
 }

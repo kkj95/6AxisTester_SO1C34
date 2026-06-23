@@ -66,6 +66,11 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.label9 = new System.Windows.Forms.Label();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.label10 = new System.Windows.Forms.Label();
+            this.lbl_ReadHall3 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -75,6 +80,8 @@
             this.panel4.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel6.SuspendLayout();
+            this.panel7.SuspendLayout();
+            this.panel8.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -229,7 +236,7 @@
             this.groupBox5.Controls.Add(this.btn_Move_Min);
             this.groupBox5.Controls.Add(this.btn_Move_Mid);
             this.groupBox5.Font = new System.Drawing.Font("맑은 고딕", 10F, System.Drawing.FontStyle.Bold);
-            this.groupBox5.Location = new System.Drawing.Point(12, 271);
+            this.groupBox5.Location = new System.Drawing.Point(12, 319);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(392, 167);
             this.groupBox5.TabIndex = 512;
@@ -324,6 +331,9 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.panel7);
+            this.groupBox2.Controls.Add(this.panel8);
+            this.groupBox2.Controls.Add(this.lbl_ReadHall3);
             this.groupBox2.Controls.Add(this.panel5);
             this.groupBox2.Controls.Add(this.panel6);
             this.groupBox2.Controls.Add(this.panel3);
@@ -335,7 +345,7 @@
             this.groupBox2.Controls.Add(this.lbl_ReadHall);
             this.groupBox2.Location = new System.Drawing.Point(12, 12);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(392, 155);
+            this.groupBox2.Size = new System.Drawing.Size(392, 299);
             this.groupBox2.TabIndex = 513;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Real Data";
@@ -359,7 +369,7 @@
             this.lbl_ADC.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbl_ADC.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_ADC.ForeColor = System.Drawing.Color.Yellow;
-            this.lbl_ADC.Location = new System.Drawing.Point(246, 51);
+            this.lbl_ADC.Location = new System.Drawing.Point(10, 183);
             this.lbl_ADC.Name = "lbl_ADC";
             this.lbl_ADC.Size = new System.Drawing.Size(135, 64);
             this.lbl_ADC.TabIndex = 283;
@@ -419,7 +429,7 @@
             // 
             this.panel5.BackColor = System.Drawing.SystemColors.ControlDark;
             this.panel5.Controls.Add(this.label8);
-            this.panel5.Location = new System.Drawing.Point(247, 116);
+            this.panel5.Location = new System.Drawing.Point(11, 248);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(134, 30);
             this.panel5.TabIndex = 290;
@@ -428,7 +438,7 @@
             // 
             this.panel6.BackColor = System.Drawing.SystemColors.ControlDark;
             this.panel6.Controls.Add(this.label5);
-            this.panel6.Location = new System.Drawing.Point(247, 20);
+            this.panel6.Location = new System.Drawing.Point(11, 152);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(134, 30);
             this.panel6.TabIndex = 289;
@@ -440,9 +450,9 @@
             this.label3.ForeColor = System.Drawing.Color.White;
             this.label3.Location = new System.Drawing.Point(30, 9);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(59, 12);
+            this.label3.Size = new System.Drawing.Size(66, 12);
             this.label3.TabIndex = 277;
-            this.label3.Text = "Channel";
+            this.label3.Text = "Channel1";
             // 
             // label4
             // 
@@ -451,9 +461,9 @@
             this.label4.ForeColor = System.Drawing.Color.White;
             this.label4.Location = new System.Drawing.Point(27, 9);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(59, 12);
+            this.label4.Size = new System.Drawing.Size(66, 12);
             this.label4.TabIndex = 278;
-            this.label4.Text = "Channel";
+            this.label4.Text = "Channel2";
             // 
             // label5
             // 
@@ -508,11 +518,67 @@
             this.label8.TabIndex = 279;
             this.label8.Text = "-";
             // 
+            // panel7
+            // 
+            this.panel7.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.panel7.Controls.Add(this.label9);
+            this.panel7.Location = new System.Drawing.Point(247, 116);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(112, 30);
+            this.panel7.TabIndex = 293;
+            // 
+            // label9
+            // 
+            this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label9.ForeColor = System.Drawing.Color.White;
+            this.label9.Location = new System.Drawing.Point(37, 9);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(39, 12);
+            this.label9.TabIndex = 279;
+            this.label9.Text = "Code";
+            // 
+            // panel8
+            // 
+            this.panel8.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.panel8.Controls.Add(this.label10);
+            this.panel8.Location = new System.Drawing.Point(247, 20);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(112, 30);
+            this.panel8.TabIndex = 292;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label10.ForeColor = System.Drawing.Color.White;
+            this.label10.Location = new System.Drawing.Point(27, 9);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(66, 12);
+            this.label10.TabIndex = 278;
+            this.label10.Text = "Channel3";
+            // 
+            // lbl_ReadHall3
+            // 
+            this.lbl_ReadHall3.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.lbl_ReadHall3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbl_ReadHall3.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_ReadHall3.ForeColor = System.Drawing.Color.Yellow;
+            this.lbl_ReadHall3.Location = new System.Drawing.Point(247, 51);
+            this.lbl_ReadHall3.Name = "lbl_ReadHall3";
+            this.lbl_ReadHall3.Size = new System.Drawing.Size(112, 64);
+            this.lbl_ReadHall3.TabIndex = 291;
+            this.lbl_ReadHall3.Text = "-";
+            this.lbl_ReadHall3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // F_Manual
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1064, 450);
+            this.ClientSize = new System.Drawing.Size(1064, 522);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox1);
@@ -536,6 +602,10 @@
             this.panel5.PerformLayout();
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
+            this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
+            this.panel8.ResumeLayout(false);
+            this.panel8.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -580,5 +650,10 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Panel panel8;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label lbl_ReadHall3;
     }
 }
