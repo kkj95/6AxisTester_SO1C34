@@ -177,7 +177,7 @@ namespace FZ4P.DriverIc.OISIC
                     throw new Exception("Type Not Difined Error");
             }
 
-            return (int)axisType;
+            return SlaveID;
         }
     }
 }
