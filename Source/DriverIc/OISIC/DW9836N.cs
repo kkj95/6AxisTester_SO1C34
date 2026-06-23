@@ -38,8 +38,7 @@ namespace FZ4P.DriverIc.OISIC
             var positionX = Xcode;// << 3;
             var positionY = Ycode;// << 3;
 
-            byte[] tmp = new byte[] { (byte)((positionX >> 6) & 0xff), (byte)(positionX & 0x3f) };
-            tmp[1] = (byte)(tmp[1] << 2);
+
 
             Controls.Write2Byte(OISX_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionX);
             Controls.Write2Byte(OISY_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionY);
@@ -86,6 +85,11 @@ namespace FZ4P.DriverIc.OISIC
             int SlaveID = GetAxisTypeID((AxisTypeDW)axis);
 
             var ReadData = Controls.Read2Byte(SlaveID, (int)RegisterMapDW9836N.POSITION_READ_LOW, 2);
+            byte[] Readbyte = new byte[] { (byte)(ReadData & 0xFF), (byte)((ReadData >> 8) & 0xFF) };
+
+            var calculHall = (short)((Readbyte[0] << 8 | Readbyte[0]) / 16);
+            if (calculHall >= 2048) calculHall = (short)(calculHall - 4096);
+            return calculHall;
             if (mode == 0)
             {
                 //short Readhall = (short)((data[1] << 8 | data[2]) / 16);

@@ -92,6 +92,10 @@ namespace FZ4P.DriverIc.I2CBase
         public bool Write2Byte(int slaveAddr, int memAddr, int memCnt, ushort data)
         {
             byte[] tmp = new byte[] { (byte)((data >> 8) & 0xff), (byte)(data & 0xff) };
+
+            //byte[] tmp = new byte[] { (byte)((data >> 6) & 0xff), (byte)(data & 0x3f) };
+            //tmp[0] = (byte)(tmp[0] << 2);
+
             try
             {
                 lock (I2cLock) { if (_i2CMaster != null) _i2CMaster.Write(slaveAddr, memCnt, memAddr, tmp); }
