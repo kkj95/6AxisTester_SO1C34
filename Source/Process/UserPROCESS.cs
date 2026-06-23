@@ -2298,7 +2298,7 @@ namespace FZ4P
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x04);
             Wait(550);
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
-            ushort data = DWDrvIC.Controls.Read2Byte(DWDrvIC.OISX_Addr, 0x44, 1);
+            ushort data = DWDrvIC.Controls.Read2Byte(DWDrvIC.OISX_Addr, 0x44, 2);
             byte res = (byte)(data & 0xFF);
             if (res == 0x01)
             {

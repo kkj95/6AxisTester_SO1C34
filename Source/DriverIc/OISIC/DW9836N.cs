@@ -24,8 +24,8 @@ namespace FZ4P.DriverIc.OISIC
         public int OISX_Addr { get; set; } = 0x0E;
         public int OISY_Addr { get; set; } = 0x4E;
         public int OIS_MIN_CODE { get; set; } = 0;
-        public int OIS_MID_CODE { get; set; } = 2048;
-        public int OIS_MAX_CODE { get; set; } = 4095;
+        public int OIS_MID_CODE { get; set; } = 8192;
+        public int OIS_MAX_CODE { get; set; } = 16382;
 
         public IOneTwoBytesDrivingIC Controls => _controls;
 
@@ -35,13 +35,23 @@ namespace FZ4P.DriverIc.OISIC
         }
         public void OISMove(int ch, int Xcode, int Ycode)
         {
-            var positionX = Xcode;// << 3;
-            var positionY = Ycode;// << 3;
+            int HighCodeX = ((Xcode >> 8) & 0x3F) << 2;
+            int HighCodeY = ((Ycode >> 8) & 0x3F) << 2;
 
+            int positionX = (HighCodeX << 8 ) + (Xcode & 0xFF);
+            int positionY = (HighCodeY << 8 ) + (Ycode & 0xFF);
 
+            //int positionX = (HighCodeX & 0xFF ) + (Xcode << 8);
+            //int positionY = (HighCodeY & 0xFF) + (Ycode << 8 );
+
+            //var positionX = Xcode;
+            //var positionY = Ycode;
 
             Controls.Write2Byte(OISX_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionX);
             Controls.Write2Byte(OISY_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionY);
+
+            //Controls.Write2Byte(OISX_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionX);
+            //Controls.Write2Byte(OISY_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionY);
         }
 
         public void OISMoveOL(int ch, int axis, int code)

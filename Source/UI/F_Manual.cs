@@ -226,7 +226,7 @@ namespace FZ4P.UI
         {
             var afMinCode = _afFunction.AF_MIN_CODE;
             var oisMinCode = _oISFunction.OIS_MIN_CODE;
-            _afFunction.AFMove(0, afMinCode);
+            //_afFunction.AFMove(0, afMinCode);
             _oISFunction.OISMove(0, oisMinCode, oisMinCode);
         }
 
@@ -234,7 +234,7 @@ namespace FZ4P.UI
         {
             var afMidCode = _afFunction.AF_MID_CODE;
             var oisMidCode = _oISFunction.OIS_MID_CODE;
-            _afFunction.AFMove(0, afMidCode);
+            //_afFunction.AFMove(0, afMidCode);
             _oISFunction.OISMove(0, oisMidCode, oisMidCode);
         }
 
@@ -242,7 +242,7 @@ namespace FZ4P.UI
         {
             var afMidCode = _afFunction.AF_MAX_CODE;
             var oisMidCode = _oISFunction.OIS_MAX_CODE;
-            _afFunction.AFMove(0, afMidCode);
+            //_afFunction.AFMove(0, afMidCode);
             _oISFunction.OISMove(0, oisMidCode, oisMidCode);
         }
 

@@ -357,6 +357,11 @@ namespace FZ4P
         {
             throw new NotImplementedException();
         }
+
+        public void OISICReset(int ch)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
     }
