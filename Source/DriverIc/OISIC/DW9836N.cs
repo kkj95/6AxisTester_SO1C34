@@ -27,6 +27,8 @@ namespace FZ4P.DriverIc.OISIC
         public int OIS_MID_CODE { get; set; } = 2048;
         public int OIS_MAX_CODE { get; set; } = 4095;
 
+        public IOneTwoBytesDrivingIC Controls => _controls;
+
         public DW9836N(IOneTwoBytesDrivingIC controls)
         {
             _controls = controls;
@@ -39,8 +41,8 @@ namespace FZ4P.DriverIc.OISIC
             byte[] tmp = new byte[] { (byte)((positionX >> 6) & 0xff), (byte)(positionX & 0x3f) };
             tmp[1] = (byte)(tmp[1] << 2);
 
-            _controls.Write2Byte(OISX_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionX);
-            _controls.Write2Byte(OISY_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionY);
+            Controls.Write2Byte(OISX_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionX);
+            Controls.Write2Byte(OISY_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionY);
         }
 
         public void OISMoveOL(int ch, int axis, int code)
@@ -83,7 +85,7 @@ namespace FZ4P.DriverIc.OISIC
         {
             int SlaveID = GetAxisTypeID((AxisTypeDW)axis);
 
-            var ReadData = _controls.Read2Byte(SlaveID, (int)RegisterMapDW9836N.POSITION_READ_LOW, 2);
+            var ReadData = Controls.Read2Byte(SlaveID, (int)RegisterMapDW9836N.POSITION_READ_LOW, 2);
             if (mode == 0)
             {
                 //short Readhall = (short)((data[1] << 8 | data[2]) / 16);
@@ -165,7 +167,7 @@ namespace FZ4P.DriverIc.OISIC
                     break;
             }
 
-            _controls.WriteByte(SlaveID, (int)RegisterMapDW9836N.Mode, 1, writeData);
+            Controls.WriteByte(SlaveID, (int)RegisterMapDW9836N.Mode, 1, writeData);
         }
         private int GetAxisTypeID(AxisTypeDW axisType)
         {
@@ -182,7 +184,7 @@ namespace FZ4P.DriverIc.OISIC
                     throw new Exception("Type Not Difined Error");
             }
 
-            return (int)axisType;
+            return SlaveID;
         }
     }
 }
