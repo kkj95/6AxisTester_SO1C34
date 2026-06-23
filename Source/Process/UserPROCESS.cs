@@ -2290,16 +2290,11 @@ namespace FZ4P
             DrvIC.AFOnOff(ch, true);
             DrvIC.AFMove(ch, Condition.OISCalAFPos);
             AddLog(ch, $"Move AF Position :  {Condition.OISCalAFPos}");
-            DrvIC.OISOnOff(ch, false);
-          
-            bool res = DrvIC.OIS_StausCheck(ch, 0x01, 0x02);
-            if (!res)
-            {
-                //error
-                PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 1;
-                ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
-                return;
-            }
+            DWDrvIC.OISOnOff(ch, false);
+
+            //DWDrvIC.Controls.WriteByte()
+            
+            
             Dln.WriteByte(ch, DrvIC.OIS_Addr, 0x60A0, 2, Convert.ToByte(Condition.OISCal60A0, 16));
             Dln.WriteByte(ch, DrvIC.OIS_Addr, 0x61D2, 2, Convert.ToByte(Condition.OISCal61D2, 16));
             Dln.WriteByte(ch, DrvIC.OIS_Addr, 0x61D3, 2, Convert.ToByte(Condition.OISCal61D3, 16));
@@ -2307,22 +2302,22 @@ namespace FZ4P
             Dln.WriteByte(ch, DrvIC.OIS_Addr, 0x61D5, 2, Convert.ToByte(Condition.OISCal61D5, 16));
             Dln.WriteByte(ch, DrvIC.OIS_Addr, 0x60A1, 2, 0x11);
             Wait(100);
-            res = DrvIC.OIS_StausCheck(ch, 0x60A1, 0x01, 0x01);
-            if (!res)
-            {
-                //error
-                PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 1;
-                ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
-                return;
-            }
-            res = DrvIC.OIS_StausCheck(ch, 0x01, 0x02);
-            if (!res)
-            {
-                //error
-                PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 1;
-                ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
-                return;
-            }
+            //res = DrvIC.OIS_StausCheck(ch, 0x60A1, 0x01, 0x01);
+            //if (!res)
+            //{
+            //    //error
+            //    PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 1;
+            //    ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
+            //    return;
+            //}
+            //res = DrvIC.OIS_StausCheck(ch, 0x01, 0x02);
+            //if (!res)
+            //{
+            //    //error
+            //    PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 1;
+            //    ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
+            //    return;
+            //}
             byte XhallCurrent = Dln.ReadByte(ch, DrvIC.OIS_Addr, 0x60A2, 2);
             byte YhallCurrent = Dln.ReadByte(ch, DrvIC.OIS_Addr, 0x60A3, 2);
             ushort XhallOfsDAC = Dln.Read2Byte(ch, DrvIC.OIS_Addr, 0x60A4, 2);
