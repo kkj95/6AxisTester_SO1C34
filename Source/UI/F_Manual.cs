@@ -1,12 +1,14 @@
-﻿using System;
+﻿using FZ4P.Commons;
+using FZ4P.Commons.Helper;
+using FZ4P.DriverIc.I2CBase.Interfaces;
+using FZ4P.DriverIc.Interfaces;
+using System;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using FZ4P.Commons;
-using FZ4P.Commons.Helper;
-using FZ4P.DriverIc.I2CBase.Interfaces;
-using FZ4P.DriverIc.Interfaces;
+using System.Windows.Forms.DataVisualization.Charting;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace FZ4P.UI
 {
@@ -155,25 +157,22 @@ namespace FZ4P.UI
         {
             bool State = ((CheckBox)sender).Checked;
             int ch = Convert.ToInt32(cbb_Channel.Text);
-            int iAixs = cbb_Aixs.SelectedIndex;
             if (State)
             {
                 cts = new CancellationTokenSource();
-                Task.Run(() => ReadHold(cts.Token, ch, iAixs));
+                Task.Run(() => ReadHold(cts.Token, ch));
             }
             else
                 cts?.Cancel();
         }
 
-        private void ReadHold(CancellationToken token,int iCh,int iAixs)
+        private void ReadHold(CancellationToken token,int iCh)
         {
-            if (iAixs != 0) ReadHall2 = "-";
-
             while (!token.IsCancellationRequested)
             {
                 ReadHall = _oISFunction.ReadOISHall(0, 0, 0).ToString();
                 ReadHall2 = _oISFunction.ReadOISHall(0, 1, 0).ToString();
-                ReadHall = _afFunction.ReadAFHall(iCh).ToString();
+                ReadHall3 = _afFunction.ReadAFHall(iCh).ToString();
 
                 Thread.Sleep(5);
                 //PeakCurrent = STATIC.DrvIC.GetPeakCurrent(iCh, iAixs).ToString();
@@ -241,10 +240,19 @@ namespace FZ4P.UI
 
         private void btn_Move_Max_Click(object sender, EventArgs e)
         {
-            var afMidCode = _afFunction.AF_MID_CODE;
-            var oisMidCode = _oISFunction.OIS_MID_CODE;
+            var afMidCode = _afFunction.AF_MAX_CODE;
+            var oisMidCode = _oISFunction.OIS_MAX_CODE;
             _afFunction.AFMove(0, afMidCode);
             _oISFunction.OISMove(0, oisMidCode, oisMidCode);
+        }
+
+        private void checkBox3_CheckStateChanged(object sender, EventArgs e)
+        {
+            bool State = ((CheckBox)sender).Checked;
+            int ch = Convert.ToInt32(cbb_Channel.Text);
+            _oISFunction.OISReset(0, 0, State);
+            _oISFunction.OISReset(0, 1, State);
+            _afFunction.AF_ICReset(0);
         }
     }
 }

@@ -352,6 +352,11 @@ namespace FZ4P
                 
             }
         }
+
+        public void OISReset(int ch, int axis, bool OnOff)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
     }
