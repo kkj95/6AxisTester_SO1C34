@@ -74,6 +74,9 @@
     <Reference Include="Basler.Pylon">
       <HintPath>..\lib\Basler.Pylon.dll</HintPath>
     </Reference>
+    <Reference Include="CommModule">
+      <HintPath>..\lib\CommModule.dll</HintPath>
+    </Reference>
     <Reference Include="dln.net">
       <HintPath>..\lib\dln.net.dll</HintPath>
     </Reference>
@@ -126,10 +129,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commons\Events\ArrayChangedEventArgs.cs" />
+    <Compile Include="Commons\Events\CustomPropertyChangedEventArgs.cs" />
+    <Compile Include="Commons\Helper\AppHelper.cs" />
+    <Compile Include="Commons\Helper\PropertiesHelper.cs" />
+    <Compile Include="Commons\ModelChangedBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="DriverIc\I2CBase\I2CControl.cs" />
     <Compile Include="DriverIc\I2CBase\Interfaces\IOneBytesDrivingIC.cs" />
     <Compile Include="DriverIc\I2CBase\Interfaces\IOneTwoBytesDrivingIC.cs" />
     <Compile Include="DriverIc\I2CBase\Interfaces\ITwoBytesDrivingIC.cs" />
+    <Compile Include="DriverIc\Interfaces\IAFunction.cs" />
     <Compile Include="DriverIc\Interfaces\IOISFunction.cs" />
     <Compile Include="DriverIc\OISIC\DW9836N.cs" />
     <Compile Include="DriverIc\OISIC\EnumTypeDefined.cs" />
@@ -147,6 +158,12 @@
     <Compile Include="Process\TCPComm.cs" />
     <Compile Include="Process\TiltGraph.cs" />
     <Compile Include="Process\UserPROCESS.cs" />
+    <Compile Include="UI\F_Manual.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\F_Manual.Designer.cs">
+      <DependentUpon>F_Manual.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\F_Motion.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -194,6 +211,9 @@
     <Compile Include="Vision\MyMatrox.cs" />
     <Compile Include="Vision\MyMicroLibrary.cs" />
     <Compile Include="Vision\MySingleton.cs" />
+    <EmbeddedResource Include="UI\F_Manual.resx">
+      <DependentUpon>F_Manual.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\F_Motion.resx">
       <DependentUpon>F_Motion.cs</DependentUpon>
     </EmbeddedResource>

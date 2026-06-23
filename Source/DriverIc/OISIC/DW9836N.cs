@@ -51,16 +51,21 @@ namespace FZ4P.DriverIc.OISIC
         public void OISOnOff(int ch, bool isOn)
         {
             //임시
-            var axisType = (AxisTypeDW)0;
+            var axisTypeX = AxisTypeDW.AxisX;
+            var axisTypeY = AxisTypeDW.AxisY;
 
             if (isOn)
             {
-                SetOperationMode(axisType, OperationTypeDW.StandbyMode);
-                SetOperationMode(axisType, OperationTypeDW.ClosedMode);
+                SetOperationMode(axisTypeX, OperationTypeDW.StandbyMode);
+                SetOperationMode(axisTypeX, OperationTypeDW.ClosedMode);
+
+                SetOperationMode(axisTypeY, OperationTypeDW.StandbyMode);
+                SetOperationMode(axisTypeY, OperationTypeDW.ClosedMode);
             }
             else
             {
-                SetOperationMode(axisType, OperationTypeDW.StandbyMode);
+                SetOperationMode(axisTypeX, OperationTypeDW.StandbyMode);
+                SetOperationMode(axisTypeY, OperationTypeDW.StandbyMode);
             }
         }
 

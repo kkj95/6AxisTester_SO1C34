@@ -9,6 +9,11 @@ namespace FZ4P.DriverIc.Interfaces
 {
     public interface IOISFunction
     {
+        int OIS_MIN_CODE { get; }
+        int OIS_MID_CODE { get; }
+        int OIS_MAX_CODE { get; }
+
+
         void OISOnOff(int ch, bool isOn);
         bool OIS_StausCheck(int ch, byte res1, byte res2);
 

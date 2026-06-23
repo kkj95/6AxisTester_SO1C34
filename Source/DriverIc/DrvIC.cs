@@ -21,7 +21,7 @@ namespace FZ4P
 {
     //동윤 14bit
 
-    public class DrvIC : IOISFunction
+    public class DrvIC : IOISFunction,IAFunction
     { 
         public Process Process { get { return STATIC.Process; } }
         public DLN Dln { get { return STATIC.Dln; } }
@@ -32,8 +32,8 @@ namespace FZ4P
         public int AF_MIN_CODE { get; set; }
         public int AF_MAX_CODE { get; set; }
         public int OIS_MID_CODE { get; set; }
-
-        
+        public int OIS_MIN_CODE { get; set; }
+        public int OIS_MAX_CODE { get; set; }
 
         public DrvIC()
         {
