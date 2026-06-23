@@ -80,10 +80,6 @@
     <Reference Include="dln.net">
       <HintPath>..\lib\dln.net.dll</HintPath>
     </Reference>
-    <Reference Include="FAutoLearn, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\FAutoLearn.dll</HintPath>
-    </Reference>
     <Reference Include="MathNet.Numerics, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MathNet.Numerics.5.0.0\lib\net461\MathNet.Numerics.dll</HintPath>
     </Reference>
@@ -299,6 +295,15 @@
     <None Include="Image\ArrL.png" />
     <None Include="Image\ArrD2.png" />
     <None Include="Image\ArrD.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FAutoLearn\FAutoLearn.csproj">
+      <Project>{39752b05-88c4-4608-a3dc-695d165b7a94}</Project>
+      <Name>FAutoLearn</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
