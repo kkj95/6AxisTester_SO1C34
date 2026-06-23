@@ -2291,6 +2291,129 @@ namespace FZ4P
             DrvIC.AFMove(ch, Condition.OISCalAFPos);
             
             AddLog(ch, $"Move AF Position :  {Condition.OISCalAFPos}");
+            AddLog(ch, "OIS X PID Write Start");
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x39);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x39, 1, 0xA0);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x7D, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x03, 1, 0x01);
+
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x0E, 1, 0x40);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x0F, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x10, 1, 0x03);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x11, 1, 0x50);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x12, 1, 0x50);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x13, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x14, 1, 0x45);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x15, 1, 0x0D);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x16, 1, 0xA0);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x17, 1, 0xF9);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x18, 1, 0x2A);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x19, 1, 0x02);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x1A, 1, 0x4E);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x1B, 1, 0x04);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x1C, 1, 0x9B);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x1D, 1, 0x02);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x1E, 1, 0x4E);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x25, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x26, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x27, 1, 0x10);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x2E, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x2F, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x30, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x31, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x38, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x39, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x3A, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x3B, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x45, 1, 0x5F);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x46, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x47, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x48, 1, 0x10);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x49, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x4A, 1, 0x15);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x4B, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x4C, 1, 0x01);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x4D, 1, 0x50);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x4E, 1, 0x50);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x4F, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x50, 1, 0x0C);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x51, 1, 0xF3);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x52, 1, 0x1F);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x53, 1, 0xEB);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x54, 1, 0x47);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x55, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x65, 1, 0x7D);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x66, 1, 0x65);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x67, 1, 0xC1);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x68, 1, 0xBB);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x69, 1, 0x3F);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x6A, 1, 0x39);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x6B, 1, 0x82);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x6C, 1, 0x9B);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x6D, 1, 0x3F);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x6E, 1, 0x0C);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x71, 1, 0xFF);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x73, 1, 0x10);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x74, 1, 0x0F);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x75, 1, 0x58);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x76, 1, 0x13);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x77, 1, 0x30);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x78, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x79, 1, 0x0C);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x7A, 1, 0x70);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x7B, 1, 0x05);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x7C, 1, 0x04);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x7D, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x7E, 1, 0x01);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x7F, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x90, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x91, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x92, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x93, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x94, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x96, 1, 0x0E);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x97, 1, 0x1C);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x98, 1, 0x13);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x99, 1, 0xC3);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x9A, 1, 0xEE);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x9B, 1, 0x21);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x9C, 1, 0x0D);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x9D, 1, 0xD4);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x9E, 1, 0x0F);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x9F, 1, 0xD0);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0xA0, 1, 0x26);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0xA1, 1, 0x4A);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0xA2, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0xA3, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0xA4, 1, 0x0C);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0xA5, 1, 0xDB);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0xA6, 1, 0x0C);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0xA7, 1, 0xDB);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0xA8, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0xA9, 1, 0x00);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0xAC, 1, 0x02);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0xAD, 1, 0x02);
+            
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x04);
+            Wait(550);
+
+            byte data = DWDrvIC.Controls.ReadByte(DWDrvIC.OISX_Addr, 0x44, 1);
+            if (data == 0x01)
+            {
+                AddLog(ch, $"OIS X PID Success");
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x03, 1, 0x01);
+                Wait(55);
+            }
+            else
+            {              
+                AddLog(ch, $"OIS X PID Fail");
+                PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 1;
+                ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
+                return;
+            }
+
 
 
             AddLog(ch, "OIS X Hall Calibration Start");
@@ -2298,9 +2421,8 @@ namespace FZ4P
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x04);
             Wait(550);
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
-            ushort data = DWDrvIC.Controls.Read2Byte(DWDrvIC.OISX_Addr, 0x44, 1);
-            byte res = (byte)(data & 0xFF);
-            if (res == 0x01)
+            data = DWDrvIC.Controls.ReadByte(DWDrvIC.OISX_Addr, 0x44, 1);
+            if (data == 0x01)
             {
                 AddLog(ch, $"OIS X Hall Calibration Success");
                 DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x39);
@@ -2318,34 +2440,33 @@ namespace FZ4P
                 return;
             }
 
-            AddLog(ch, "OIS Y Hall Calibration Start");
-            DWDrvIC.OISOnOff(ch, false);
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x04);
-            Wait(550);
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x40);
-            data = DWDrvIC.Controls.Read2Byte(DWDrvIC.OISY_Addr, 0x44, 1);
-            res = (byte)(data & 0xFF);
-            if (res == 0x01)
-            {
-                AddLog(ch, $"OIS Y Hall Calibration Success");
-                DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0x39);
-                DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0xA0);
-                DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x40);
-                DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x03, 1, 0x01);
-                Wait(20);
-                DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0x14);
-            }
-            else
-            {
-                AddLog(ch, $"OIS Y Hall Calibration Fail");
-                PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 1;
-                ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
-                return;
-            }
-            AddLog(ch, $"OIS XY Hall Calibration Success");
-            PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 0;
-            ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
-            return;
+            //AddLog(ch, "OIS Y Hall Calibration Start");
+            //DWDrvIC.OISOnOff(ch, false);
+            //DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x04);
+            //Wait(550);
+            //DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x40);
+            //data = DWDrvIC.Controls.ReadByte(DWDrvIC.OISY_Addr, 0x44, 1);
+            //if (data == 0x01)
+            //{
+            //    AddLog(ch, $"OIS Y Hall Calibration Success");
+            //    DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0x39);
+            //    DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0xA0);
+            //    DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x40);
+            //    DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x03, 1, 0x01);
+            //    Wait(20);
+            //    DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0x14);
+            //}
+            //else
+            //{
+            //    AddLog(ch, $"OIS Y Hall Calibration Fail");
+            //    PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 1;
+            //    ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
+            //    return;
+            //}
+            //AddLog(ch, $"OIS XY Hall Calibration Success");
+            //PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 0;
+            //ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
+            //return;
 
 
 
