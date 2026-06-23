@@ -186,5 +186,14 @@ namespace FZ4P.DriverIc.OISIC
 
             return SlaveID;
         }
+
+        public void OISReset(int ch, int axis, bool OnOff)
+        {
+            byte data = 0x00;
+            if (OnOff)
+                data = 0x10;
+            int slaveID = GetAxisTypeID((AxisTypeDW)axis);
+            _controls.WriteByte(slaveID, (int)RegisterMapDW9836N.STORE_PROD_ID, 1, data);
+        }
     }
 }
