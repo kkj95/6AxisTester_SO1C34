@@ -4,6 +4,7 @@ using FZ4P.DriverIc.I2CBase.Interfaces;
 using FZ4P.DriverIc.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,6 +35,10 @@ namespace FZ4P.DriverIc.OISIC
         {
             var positionX = Xcode;// << 3;
             var positionY = Ycode;// << 3;
+
+            byte[] tmp = new byte[] { (byte)((positionX >> 6) & 0xff), (byte)(positionX & 0x3f) };
+            tmp[1] = (byte)(tmp[1] << 2);
+
             _controls.Write2Byte(OISX_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionX);
             _controls.Write2Byte(OISY_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionY);
         }
@@ -71,34 +76,34 @@ namespace FZ4P.DriverIc.OISIC
 
         public short ReadOISHall(int ch, int axis, int mode)
         {
-            throw new Exception("test");
-            //if (mode == 0)
-            //{
-            //    byte[] data = new byte[3];
-            //    if (axis == 0) _controls.ReadArray(ch, OISX_Addr, RegisterMapDW9836N.POSITION_READ_LOW, 2, data);
-            //    else Dln.ReadArray(ch, OIS_Addr, 0xB109, 2, data);
+            int SlaveID = GetAxisTypeID((AxisTypeDW)axis);
 
-            //    short Readhall = (short)((data[1] << 8 | data[2]) / 16);
-            //    if (Readhall >= 2048) Readhall = (short)(Readhall - 4096);
-            //    return Readhall;
+            var ReadData = _controls.Read2Byte(SlaveID, (int)RegisterMapDW9836N.POSITION_READ_LOW, 2);
+            if (mode == 0)
+            {
+                //short Readhall = (short)((data[1] << 8 | data[2]) / 16);
+                //if (Readhall >= 2048) Readhall = (short)(Readhall - 4096);
+                //return Readhall;
 
-            //}
-            //else
-            //{
-            //    if (axis == 0)
-            //    {
-            //        Dln.WriteByte(ch, OIS_Addr, 0x6060, 2, 0x00);
-            //        bool res = OIS_StausCheck(ch, 0x6060, 0x00, 0x00);
-            //        if (!res) return short.MaxValue;
-            //    }
-            //    else
-            //    {
-            //        Dln.WriteByte(ch, OIS_Addr, 0x6060, 2, 0x01);
-            //        bool res = OIS_StausCheck(ch, 0x6060, 0x01, 0x01);
-            //        if (!res) return short.MaxValue;
-            //    }
-            //    return Dln.Read2Byte_signed(ch, OIS_Addr, 0x6062, 2);
-            //}
+            }
+            else
+            {
+                //if (axis == 0)
+                //{
+                //    Dln.WriteByte(ch, OIS_Addr, 0x6060, 2, 0x00);
+                //    bool res = OIS_StausCheck(ch, 0x6060, 0x00, 0x00);
+                //    if (!res) return short.MaxValue;
+                //}
+                //else
+                //{
+                //    Dln.WriteByte(ch, OIS_Addr, 0x6060, 2, 0x01);
+                //    bool res = OIS_StausCheck(ch, 0x6060, 0x01, 0x01);
+                //    if (!res) return short.MaxValue;
+                //}
+                //return Dln.Read2Byte_signed(ch, OIS_Addr, 0x6062, 2);
+            }
+
+            return (short)ReadData;
         }
 
         public bool SetManualDrvModeXY(int ch, int MidCodeX, int MidCodeY)

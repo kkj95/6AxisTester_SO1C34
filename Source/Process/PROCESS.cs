@@ -2016,9 +2016,9 @@ namespace FZ4P
                     foreach (var Cal in CalList[j])
                         if (Cal.Name == name)
                         {
-                            //Cal.HallX[framCnt[port]] = DWDrvIC.ReadOISHall(j, 0, 0);
-                            //Cal.HallY[framCnt[port]] = DWDrvIC.ReadOISHall(j, 1, 0);
-                            //Cal.HallZ[framCnt[port]] = DrvIC.ReadAFHall(j);
+                            Cal.HallX[framCnt[port]] = DWDrvIC.ReadOISHall(j, 0, 0);
+                            Cal.HallY[framCnt[port]] = DWDrvIC.ReadOISHall(j, 1, 0);
+                            Cal.HallZ[framCnt[port]] = DrvIC.ReadAFHall(j);
                             //Get Hall
                             if (name.Contains("X"))
                             {
