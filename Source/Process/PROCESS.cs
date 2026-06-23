@@ -109,8 +109,8 @@ namespace FZ4P
 
 
 
-        public int OISXCenter = 0;
-        public int OISYCenter = 0;
+        public int OISXCenter = 8192;
+        public int OISYCenter = 8192;
         public int AFCenter = 2048;
         double SlopeX = 0;
         double SlopeY = 0;

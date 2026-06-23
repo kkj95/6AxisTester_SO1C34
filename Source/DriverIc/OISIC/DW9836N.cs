@@ -35,11 +35,21 @@ namespace FZ4P.DriverIc.OISIC
         }
         public void OISMove(int ch, int Xcode, int Ycode)
         {
-            int HighCodeX = ((Xcode >> 8) & 0x3F) << 2;
-            int HighCodeY = ((Ycode >> 8) & 0x3F) << 2;
+            var moveX = Xcode << 2;
+            var moveY = Ycode << 2;
 
-            int positionX = (HighCodeX << 8 ) + (Xcode & 0xFF);
-            int positionY = (HighCodeY << 8 ) + (Ycode & 0xFF);
+            var targetBufferX1 = (moveX >> 8) & 0xFF;
+            var targetBufferX2= (moveX) & 0xFF;
+
+            var targetBufferY1 = (moveY >> 8) & 0xFF;
+            var targetBufferY2 = (moveY) & 0xFF;
+
+
+            //int HighCodeX = ((Xcode >> 8) & 0x3F) << 2;
+            //int HighCodeY = ((Ycode >> 8) & 0x3F) << 2;
+
+            //int positionX = (HighCodeX << 8 ) + (Xcode & 0xFF);
+            //int positionY = (HighCodeY << 8 ) + (Ycode & 0xFF);
 
             //int positionX = (HighCodeX & 0xFF ) + (Xcode << 8);
             //int positionY = (HighCodeY & 0xFF) + (Ycode << 8 );
@@ -47,11 +57,17 @@ namespace FZ4P.DriverIc.OISIC
             //var positionX = Xcode;
             //var positionY = Ycode;
 
-            Controls.Write2Byte(OISX_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionX);
-            Controls.Write2Byte(OISY_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionY);
+            //Controls.Write2Byte(OISX_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionX);
+            //Controls.Write2Byte(OISY_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionY);
 
             //Controls.Write2Byte(OISX_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionX);
             //Controls.Write2Byte(OISY_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionY);
+
+            Controls.WriteByte(OISX_Addr, (int)RegisterMapDW9836N.Target, 1, (byte)targetBufferX1);
+            Controls.WriteByte(OISX_Addr, (int)RegisterMapDW9836N.Target1, 1, (byte)targetBufferX2);
+
+            Controls.WriteByte(OISY_Addr, (int)RegisterMapDW9836N.Target, 1, (byte)targetBufferY1);
+            Controls.WriteByte(OISY_Addr, (int)RegisterMapDW9836N.Target1, 1, (byte)targetBufferY2);
         }
 
         public void OISMoveOL(int ch, int axis, int code)
@@ -99,12 +115,18 @@ namespace FZ4P.DriverIc.OISIC
         {
             int SlaveID = GetAxisTypeID((AxisTypeDW)axis);
 
-            var ReadData = Controls.Read2Byte(SlaveID, (int)RegisterMapDW9836N.POSITION_READ_LOW, 2);
-            byte[] Readbyte = new byte[] { (byte)(ReadData & 0xFF), (byte)((ReadData >> 8) & 0xFF) };
+            //var ReadData = Controls.Read2Byte(SlaveID, (int)RegisterMapDW9836N.POSITION_READ_LOW, 2);
 
-            var calculHall = (short)((Readbyte[0] << 8 | Readbyte[0]) / 16);
-            if (calculHall >= 2048) calculHall = (short)(calculHall - 4096);
-            return calculHall;
+            var ReadDataHigh = Controls.ReadByte(SlaveID, (int)RegisterMapDW9836N.POSITION_READ_LOW, 1);
+            var ReadDataLow = Controls.ReadByte(SlaveID, (int)RegisterMapDW9836N.POSITION_READ_HIGH, 1);
+
+            short ReadData = (short)(((ReadDataHigh << 8) + (ReadDataHigh & 0xFF))>>2);
+
+            //byte[] Readbyte = new byte[] { (byte)(ReadData & 0xFF), (byte)((ReadData >> 8) & 0xFF) };
+
+            //var calculHall = (short)((Readbyte[0] << 8 | Readbyte[0]) / 16);
+            //if (calculHall >= 2048) calculHall = (short)(calculHall - 4096);
+            //return calculHall;
             if (mode == 0)
             {
                 //short Readhall = (short)((data[1] << 8 | data[2]) / 16);
