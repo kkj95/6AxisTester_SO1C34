@@ -2289,101 +2289,66 @@ namespace FZ4P
             //AF BestPos Move
             DrvIC.AFOnOff(ch, true);
             DrvIC.AFMove(ch, Condition.OISCalAFPos);
+            
             AddLog(ch, $"Move AF Position :  {Condition.OISCalAFPos}");
+
+
+            AddLog(ch, "OIS X Hall Calibration Start");
             DWDrvIC.OISOnOff(ch, false);
-
-            //DWDrvIC.Controls.WriteByte()
-            
-            
-            Dln.WriteByte(ch, DrvIC.OIS_Addr, 0x60A0, 2, Convert.ToByte(Condition.OISCal60A0, 16));
-            Dln.WriteByte(ch, DrvIC.OIS_Addr, 0x61D2, 2, Convert.ToByte(Condition.OISCal61D2, 16));
-            Dln.WriteByte(ch, DrvIC.OIS_Addr, 0x61D3, 2, Convert.ToByte(Condition.OISCal61D3, 16));
-            Dln.WriteByte(ch, DrvIC.OIS_Addr, 0x61D4, 2, Convert.ToByte(Condition.OISCal61D4, 16));
-            Dln.WriteByte(ch, DrvIC.OIS_Addr, 0x61D5, 2, Convert.ToByte(Condition.OISCal61D5, 16));
-            Dln.WriteByte(ch, DrvIC.OIS_Addr, 0x60A1, 2, 0x11);
-            Wait(100);
-            //res = DrvIC.OIS_StausCheck(ch, 0x60A1, 0x01, 0x01);
-            //if (!res)
-            //{
-            //    //error
-            //    PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 1;
-            //    ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
-            //    return;
-            //}
-            //res = DrvIC.OIS_StausCheck(ch, 0x01, 0x02);
-            //if (!res)
-            //{
-            //    //error
-            //    PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 1;
-            //    ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
-            //    return;
-            //}
-            byte XhallCurrent = Dln.ReadByte(ch, DrvIC.OIS_Addr, 0x60A2, 2);
-            byte YhallCurrent = Dln.ReadByte(ch, DrvIC.OIS_Addr, 0x60A3, 2);
-            ushort XhallOfsDAC = Dln.Read2Byte(ch, DrvIC.OIS_Addr, 0x60A4, 2);
-            ushort YhallOfsDAC = Dln.Read2Byte(ch, DrvIC.OIS_Addr, 0x60A6, 2);
-            Dln.WriteByte(ch, DrvIC.OIS_Addr, 0x60CC, 2, 0x00);
-            short XhallMin = Dln.Read2Byte_signed(ch, DrvIC.OIS_Addr, 0x60CE, 2);
-            Dln.WriteByte(ch, DrvIC.OIS_Addr, 0x60CC, 2, 0x01);
-            short XhallMax = Dln.Read2Byte_signed(ch, DrvIC.OIS_Addr, 0x60CE, 2);
-            Dln.WriteByte(ch, DrvIC.OIS_Addr, 0x60CC, 2, 0x02);
-            short YhallMin = Dln.Read2Byte_signed(ch, DrvIC.OIS_Addr, 0x60CE, 2);
-            Dln.WriteByte(ch, DrvIC.OIS_Addr, 0x60CC, 2, 0x03);
-            short YhallMax = Dln.Read2Byte_signed(ch, DrvIC.OIS_Addr, 0x60CE, 2);
-
-            string s = $"X Hall current = {XhallCurrent}\r\n" +
-                       $"Y Hall current = {YhallCurrent}\r\n" +
-                       $"X Hall offset DAC = {XhallOfsDAC}\r\n" +
-                       $"Y Hall offset DAC = {YhallOfsDAC}\r\n" +
-                       $"X Hall Min = {XhallMin}\r\n" +
-                       $"X Hall Max = {XhallMax}\r\n" +
-                       $"X Hall Mid = {(XhallMax + XhallMin) / 2}\r\n" +
-                       $"Y Hall Min = {YhallMin}\r\n" +
-                       $"Y Hall Max = {YhallMax}\r\n" +
-                       $"Y Hall Mid = {(YhallMax + YhallMin) / 2}\r\n";
-            AddLog(ch, s);
-
-            OISCalData.XHallCurrent = XhallCurrent;
-            OISCalData.YHallCurrent = YhallCurrent;
-            OISCalData.XHallOfsDAC = XhallOfsDAC;
-            OISCalData.YHallOfsDAC = YhallOfsDAC;
-            OISCalData.XhallMin = XhallMin;
-            OISCalData.YhallMin = YhallMin;
-            OISCalData.XhallMax = XhallMax;
-            OISCalData.YhallMax = YhallMax;
-            OISCalData.XhallMid = (XhallMax + XhallMin) / 2;
-            OISCalData.YhallMid = (YhallMax + YhallMin) / 2;
-
-            if (Option.SaveRawData)
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x04);
+            Wait(550);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
+            ushort data = DWDrvIC.Controls.Read2Byte(DWDrvIC.OISX_Addr, 0x44, 1);
+            byte res = (byte)(data & 0xFF);
+            if (res == 0x01)
             {
-                StreamWriter sw = null;
-                string dateDir = STATIC.CreateDateDir();
-                if (!Directory.Exists(dateDir)) Directory.CreateDirectory(dateDir);
-                string path = dateDir + $"OIS_HallCalData.csv";
-
-                if (!File.Exists(path))
-                {
-                    sw = File.AppendText(path);
-                    s = $"SPL No, Date, Time, X Hall Current(Bias), X Hall Offset, X Hall Min, X Hall Max, X Hall Mid, Y Hall Current(Bias), Y Hall Offset, Y Hall Min, Y Hall Max, Y Hall Mid";
-                    sw.WriteLine(s);
-                    sw.Close();
-                }
-                sw = File.AppendText(path);
-                string data = $"{m_StrIndex[ch]},{STATIC.LogDate.ToString("yyyy-MM-dd")},{STATIC.LogDate.Hour}h{STATIC.LogDate.Minute}m{STATIC.LogDate.Second}s," +
-                    $"{XhallCurrent},{XhallOfsDAC},{XhallMin},{XhallMax},{(XhallMax + XhallMin) / 2},{YhallCurrent},{YhallOfsDAC},{YhallMin},{YhallMax},{(YhallMax + YhallMin) / 2}";
-                sw.WriteLine(data);
-                sw.Close();
+                AddLog(ch, $"OIS X Hall Calibration Success");
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x39);
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0xA0);
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x03, 1, 0x01);
+                Wait(20);
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x14);
             }
-            if (XhallMin > Condition.XCalMinSpec || XhallMax < Condition.XCalMaxSpec || YhallMin > Condition.YCalMinSpec || YhallMax < Condition.YCalMaxSpec
-                || XhallMin > 0 || XhallMax < 0 || YhallMin > 0 || YhallMax < 0)
+            else
             {
+                AddLog(ch, $"OIS X Hall Calibration Fail");
                 PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 1;
                 ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
                 return;
             }
+
+            AddLog(ch, "OIS Y Hall Calibration Start");
+            DWDrvIC.OISOnOff(ch, false);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x04);
+            Wait(550);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x40);
+            data = DWDrvIC.Controls.Read2Byte(DWDrvIC.OISY_Addr, 0x44, 1);
+            res = (byte)(data & 0xFF);
+            if (res == 0x01)
+            {
+                AddLog(ch, $"OIS Y Hall Calibration Success");
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0x39);
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0xA0);
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x40);
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x03, 1, 0x01);
+                Wait(20);
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0x14);
+            }
+            else
+            {
+                AddLog(ch, $"OIS Y Hall Calibration Fail");
+                PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 1;
+                ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
+                return;
+            }
+            AddLog(ch, $"OIS XY Hall Calibration Success");
             PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 0;
             ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
             return;
+
+
+
 
         }
 

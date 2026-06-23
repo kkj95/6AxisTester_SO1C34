@@ -70,6 +70,11 @@ namespace FZ4P.DriverIc.OISIC
             }
         }
 
+        public void OISICReset(int ch)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool OIS_StausCheck(int ch, byte res1, byte res2)
         {
             throw new NotImplementedException();

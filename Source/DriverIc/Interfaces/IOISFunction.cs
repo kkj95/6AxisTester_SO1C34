@@ -14,6 +14,7 @@ namespace FZ4P.DriverIc.Interfaces
         int OIS_MAX_CODE { get; }
 
 
+        void OISICReset(int ch);
         void OISOnOff(int ch, bool isOn);
         bool OIS_StausCheck(int ch, byte res1, byte res2);
 
