@@ -676,9 +676,9 @@ namespace FZ4P
                                     {
                                         if (tmpRes.CodeX[i] >= OISXCenter - CodeRange && tmpRes.CodeX[i] <= OISXCenter + CodeRange)
                                         {
-                                            ChartTop[ch].C.Series[0].Points.AddXY(tmpRes.CodeX[i] + 2048, tmpRes.StrokeX[i]); //  stroke
-                                            ChartTop[ch].C.Series[3].Points.AddXY(tmpRes.CodeX[i] + 2048, tmpRes.Current[i]); //  current
-                                            ChartTop[ch].C.Series[6].Points.AddXY(tmpRes.CodeX[i] + 2048, (tmpRes.HallX[i] + 2048) / 10); //  hall
+                                            ChartTop[ch].C.Series[0].Points.AddXY(tmpRes.CodeX[i] * 0.25, tmpRes.StrokeX[i]); //  stroke
+                                            ChartTop[ch].C.Series[3].Points.AddXY(tmpRes.CodeX[i] * 0.25, tmpRes.Current[i]); //  current
+                                            ChartTop[ch].C.Series[6].Points.AddXY(tmpRes.CodeX[i] * 0.25, (tmpRes.HallX[i] * 0.25) / 10); //  hall
                                         }
                                     }
                                 });
@@ -722,11 +722,11 @@ namespace FZ4P
                                     {
                                         if (tmpRes.CodeY[i] >= OISYCenter - CodeRange && tmpRes.CodeY[i] <= OISYCenter + CodeRange)
                                         {
-                                            ChartTop[ch].C.Series[1].Points.AddXY(tmpRes.CodeY[i] + 2048, tmpRes.StrokeY[i]); //  stroke
+                                            ChartTop[ch].C.Series[1].Points.AddXY((tmpRes.CodeY[i] * 0.25), tmpRes.StrokeY[i]); //  stroke
                                                                                                                   //   ChartTop[ch].C.Series[9].Points.AddXY(Cal.CodeY1[i], Cal.StrokeY1[i]); //  stroke 1
                                                                                                                   // ChartTop[ch].C.Series[10].Points.AddXY(Cal.CodeY2[i], Cal.StrokeY2[i]); //  stroke 2
-                                            ChartTop[ch].C.Series[4].Points.AddXY(tmpRes.CodeY[i] + 2048, tmpRes.Current[i]); //  current
-                                            ChartTop[ch].C.Series[7].Points.AddXY(tmpRes.CodeY[i] + 2048, (tmpRes.HallY[i] + 2048) / 10); //  hall
+                                            ChartTop[ch].C.Series[4].Points.AddXY((tmpRes.CodeY[i] * 0.25 ), tmpRes.Current[i]); //  current
+                                            ChartTop[ch].C.Series[7].Points.AddXY((tmpRes.CodeY[i] * 0.25 ), (tmpRes.HallY[i] * 0.25) / 10); //  hall
                                         }
                                     }
                                 });
