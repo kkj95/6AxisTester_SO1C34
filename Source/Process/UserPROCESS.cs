@@ -2361,7 +2361,7 @@ namespace FZ4P
             DrvIC.AFMove(ch, Condition.OISCalAFPos);
             
             AddLog(ch, $"Move AF Position :  {Condition.OISCalAFPos}");
-            
+
             #region OIS Hall Calibration
             AddLog(ch, "OIS X PID Write Start");
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x39);
@@ -2371,7 +2371,7 @@ namespace FZ4P
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x55, 1, 0x00);
 
             Wait(55);
-            
+
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x39);
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0xA0);
@@ -2380,14 +2380,13 @@ namespace FZ4P
 
             for (int i = 0; i < IC_DATA_OIS_X.Length; i++)
             {
-                Dln.WriteByte(ch, DWDrvIC.OISX_Addr, IC_DATA_OIS_X_REG[i], 1, IC_DATA_OIS_X[i]);
+               DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, IC_DATA_OIS_X_REG[i], 1, IC_DATA_OIS_X[i]);
             }
 
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x04);
-            Wait(550);
+            Wait(800);
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
-
 
             byte data = DWDrvIC.Controls.ReadByte(DWDrvIC.OISX_Addr, 0x44, 1);
             if (data == 0x01)
@@ -2401,7 +2400,7 @@ namespace FZ4P
                 DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x14);
             }
             else
-            {              
+            {
                 AddLog(ch, $"OIS X Hall Calibration Fail");
                 PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 1;
                 ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
@@ -2409,7 +2408,7 @@ namespace FZ4P
             }
 
 
-            SetEPA((int)AxisTypeDW.AxisX);
+            //SetEPA((int)AxisTypeDW.AxisX);
             #endregion
 
             #region OIS Y Hall Calibration
@@ -2426,12 +2425,12 @@ namespace FZ4P
 
             for (int i = 0; i < IC_DATA_OIS_Y.Length; i++)
             {
-                Dln.WriteByte(ch, DWDrvIC.OISY_Addr, IC_DATA_OIS_Y_REG[i], 1, IC_DATA_OIS_Y[i]);
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, IC_DATA_OIS_Y_REG[i], 1, IC_DATA_OIS_Y[i]);
             }
 
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x40);
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x04);
-            Wait(550);
+            Wait(800);
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x40);
 
 
@@ -2454,7 +2453,7 @@ namespace FZ4P
                 return;
             }
 
-            SetEPA((int)AxisTypeDW.AxisY);
+            //SetEPA((int)AxisTypeDW.AxisY);
             #endregion
         }
 
@@ -2463,26 +2462,38 @@ namespace FZ4P
             FindResult res = null;
             int targetStrockPos = -1;
             int targetStrockNeg = -1;
+            double zeroCodeOffset = -1;
             DWDrvIC.OISOnOff(0,true);
 
             if (iAxis == (int)AxisTypeDW.AxisX)
             {
-                targetStrockPos = Condition.OISLincompXEPAPos;
-                targetStrockNeg = Condition.OISLincompXEPANeg;
+                DWDrvIC.OISMove(0, DWDrvIC.OIS_MIN_CODE, DWDrvIC.OIS_MID_CODE);
+                Wait(300);
+                res = Measure();
+                zeroCodeOffset = res.cx[0];
+                targetStrockPos = Condition.OISXEPAPos;
+                targetStrockNeg = Condition.OISXEPANeg;
+
                 //Set Zero
                 DWDrvIC.OISMove(0, DWDrvIC.OIS_MAX_CODE - 1, DWDrvIC.OIS_MID_CODE);
             }
             else if (iAxis == (int)AxisTypeDW.AxisY)
             {
-                targetStrockPos = Condition.OISLincompYEPAPos;
-                targetStrockNeg = Condition.OISLincompYEPANeg;
+                DWDrvIC.OISMove(0, DWDrvIC.OIS_MID_CODE, DWDrvIC.OIS_MIN_CODE);
+                Wait(300);
+                res = Measure();
+                zeroCodeOffset = res.cy[0];
+
+                targetStrockPos = Condition.OISYEPAPos;
+                targetStrockNeg = Condition.OISYEPANeg;
                 //Set Zero
                 DWDrvIC.OISMove(0, DWDrvIC.OIS_MID_CODE, DWDrvIC.OIS_MAX_CODE - 1);
             }
+            Wait(100);
 
             DWDrvIC.Set_PT(iAxis, false);
             
-            if (FindPosition_PCAL(iAxis, targetStrockPos, 5))
+            if (FindPosition_PCAL(iAxis, targetStrockPos, 5, zeroCodeOffset))
                 DWDrvIC.SetStore(iAxis);
             else
             {
@@ -2490,13 +2501,13 @@ namespace FZ4P
                 return;
             }
 
-            if (FindPosition_NCAL(iAxis, targetStrockNeg, 5))
+            if (FindPosition_NCAL(iAxis, targetStrockNeg, 5, zeroCodeOffset))
                 DWDrvIC.SetStore(iAxis);
             else
                 AddLog(0, $"NCAL Not Find");
         }
 
-        private bool FindPosition_PCAL(int Axis,int targetStrockPos, int MinMaxGap)
+        private bool FindPosition_PCAL(int Axis,int targetStrockPos, int MinMaxGap, double strokOffSet)
         {
             int RangeMin = (targetStrockPos - MinMaxGap);
             int RangeMax = (targetStrockPos + MinMaxGap);
@@ -2511,9 +2522,9 @@ namespace FZ4P
                 res = Measure();
 
                 if ((AxisTypeDW)Axis == AxisTypeDW.AxisX)
-                    currentValue = res.cx[0];
+                    currentValue = res.cx[0] + Math.Abs(strokOffSet);
                 else if ((AxisTypeDW)Axis == AxisTypeDW.AxisY)
-                    currentValue = res.cy[0];
+                    currentValue = res.cy[0] + Math.Abs(strokOffSet);
 
 
                 if (RangeMin < currentValue && RangeMax > currentValue)
@@ -2530,7 +2541,7 @@ namespace FZ4P
             }
         }
 
-        private bool FindPosition_NCAL(int Axis, int targetStrockPos, int MinMaxGap)
+        private bool FindPosition_NCAL(int Axis, int targetStrockPos, int MinMaxGap, double strokOffSet)
         {
             int RangeMin = (targetStrockPos - MinMaxGap);
             int RangeMax = (targetStrockPos + MinMaxGap);
@@ -2545,9 +2556,9 @@ namespace FZ4P
                 res = Measure();
 
                 if ((AxisTypeDW)Axis == AxisTypeDW.AxisX)
-                    currentValue = res.cx[0];
+                    currentValue = res.cx[0] + Math.Abs(strokOffSet);
                 else if ((AxisTypeDW)Axis == AxisTypeDW.AxisY)
-                    currentValue = res.cy[0];
+                    currentValue = res.cy[0] + Math.Abs(strokOffSet);
 
                 if (RangeMin < currentValue && RangeMax > currentValue)
                 {
