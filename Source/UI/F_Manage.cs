@@ -445,8 +445,8 @@ namespace FZ4P
             lblCrecipe.Text = Current.ConditionName;
             lblCspec.Text = Current.SpecName;
             lbAFPID.Text = Path.GetFileName(Current.AFPidPath);
-            lbOISFW.Text = Path.GetFileName(Current.OISFWPath);
-            lbOISCalData.Text = Path.GetFileName(Current.OISBaseCalPath);
+            lbOISXPID.Text = Path.GetFileName(Current.OISXPidPath);
+            lbOISYPID.Text = Path.GetFileName(Current.OISYPidPath);
 
         }
         public void BindingUIModel(string PGVer)
@@ -482,8 +482,8 @@ namespace FZ4P
             lblPGMver.Text = PGVer;
             lblMCnum.Text = STATIC.Rcp.Model.TesterNo;
             lbAFPID.Text = Path.GetFileName(Current.AFPidPath);
-            lbOISFW.Text = Path.GetFileName(Current.OISFWPath);
-            lbOISCalData.Text = Path.GetFileName(Current.OISBaseCalPath);
+            lbOISXPID.Text = Path.GetFileName(Current.OISXPidPath);
+            lbOISYPID.Text = Path.GetFileName(Current.OISYPidPath);
         }
         
         private void Model_Changed(object sender, EventArgs e)

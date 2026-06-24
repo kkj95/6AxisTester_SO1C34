@@ -72,7 +72,20 @@ namespace FZ4P.DriverIc.OISIC
 
         public void OISMoveOL(int ch, int axis, int code)
         {
-            throw new NotImplementedException();
+            if (code < 0) code = 0;
+            if (code > 0x1FFF) code = 0x1FFF; // 8191
+
+
+
+            ushort raw = (ushort)(code << 3);
+
+            byte data1 = (byte)((raw >> 8) & 0xFF);
+            byte data2 = (byte)(raw & 0xFF);
+
+            Controls.WriteByte(OISX_Addr, (int)RegisterMapDW9836N.Target, 1, data1);
+            Controls.WriteByte(OISX_Addr, (int)RegisterMapDW9836N.Target1, 1, data2);
+
+           
         }
 
         public void OISOnOff(int ch, bool isOn)

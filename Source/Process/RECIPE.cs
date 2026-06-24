@@ -40,9 +40,13 @@ namespace FZ4P
             if (!Directory.Exists(STATIC.SpecDir)) Directory.CreateDirectory(STATIC.SpecDir);
             if (!Directory.Exists(STATIC.PackageDir)) Directory.CreateDirectory(STATIC.PackageDir);
             if (!Directory.Exists(STATIC.PackageDir + "AFPID\\")) Directory.CreateDirectory(STATIC.PackageDir + "AFPID\\");
+            if (!Directory.Exists(STATIC.PackageDir + "OISXPID\\")) Directory.CreateDirectory(STATIC.PackageDir + "OISXPID\\");
+            if (!Directory.Exists(STATIC.PackageDir + "OISYPID\\")) Directory.CreateDirectory(STATIC.PackageDir + "OISYPID\\");
             if (!Directory.Exists(STATIC.PackageDir + "OISFW\\")) Directory.CreateDirectory(STATIC.PackageDir + "OISFW\\");
             if (!Directory.Exists(STATIC.PackageDir + "OISBaseCal\\")) Directory.CreateDirectory(STATIC.PackageDir + "OISBaseCal\\");
             if (!Directory.Exists(STATIC.AFPIDDir)) Directory.CreateDirectory(STATIC.AFPIDDir);
+            if (!Directory.Exists(STATIC.OISXPIDDir)) Directory.CreateDirectory(STATIC.OISXPIDDir);
+            if (!Directory.Exists(STATIC.OISYPIDDir)) Directory.CreateDirectory(STATIC.OISYPIDDir);
             if (!Directory.Exists(STATIC.OISFWDir)) Directory.CreateDirectory(STATIC.OISFWDir);
             if (!Directory.Exists(STATIC.OISBaseCalDir)) Directory.CreateDirectory(STATIC.OISBaseCalDir);
             string res = string.Empty;
@@ -54,6 +58,10 @@ namespace FZ4P
 
             res = STATIC.PKGRelease(STATIC.PackageDir + "AFPID\\", "*.txt", STATIC.AFPIDDir);
             if (res != string.Empty) Current.AFPidPath = res;
+            res = STATIC.PKGRelease(STATIC.PackageDir + "OISXPID\\", "*.txt", STATIC.OISXPIDDir);
+            if (res != string.Empty) Current.OISXPidPath = res;
+            res = STATIC.PKGRelease(STATIC.PackageDir + "OISYPID\\", "*.txt", STATIC.OISYPIDDir);
+            if (res != string.Empty) Current.OISYPidPath = res;
             res = STATIC.PKGRelease(STATIC.PackageDir + "OISFW\\", "*.ntbrst", STATIC.OISFWDir);
             if (res != string.Empty) Current.OISFWPath = res;
             res = STATIC.PKGRelease(STATIC.PackageDir + "OISBaseCal\\", "*.ntbrst", STATIC.OISBaseCalDir);
@@ -777,6 +785,9 @@ namespace FZ4P
         public string ConditionName { get; set; } = "";
         public string SpecName { get; set; } = "";
         public string AFPidPath { get; set; } = "";
+        public string OISXPidPath { get; set; } = "";
+        public string OISYPidPath { get; set; } = "";
+
         public string OISFWPath { get; set; } = "";
         public string OISBaseCalPath { get; set; } = "";
 

@@ -50,6 +50,8 @@ namespace FZ4P
         public static string RootDir = BaseDir + "\\DoNotTouch\\";
         public static string DataDir = BaseDir + "\\Data\\";
         public static string AFPIDDir = BaseDir + "FW\\AFPID\\";
+        public static string OISXPIDDir = BaseDir + "FW\\OISXPIDDir\\";
+        public static string OISYPIDDir = BaseDir + "FW\\OISYPIDDir\\";
         public static string OISFWDir = BaseDir + "FW\\OISFW\\";
         public static string OISBaseCalDir = BaseDir + "FW\\OISBaseCal\\";
         public static string PackageDir = BaseDir + "Package\\";
