@@ -2407,7 +2407,9 @@ namespace FZ4P
                 ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
                 return;
             }
- 
+
+
+            SetEPA((int)AxisTypeDW.AxisX);
             #endregion
 
             #region OIS Y Hall Calibration
@@ -2452,6 +2454,7 @@ namespace FZ4P
                 return;
             }
 
+            SetEPA((int)AxisTypeDW.AxisY);
             #endregion
         }
 
