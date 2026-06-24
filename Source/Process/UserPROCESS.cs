@@ -1,37 +1,14 @@
-﻿using Dln;
-using Dln.Exceptions;
+﻿using FZ4P.DriverIc.OISIC;
 using FZ4P.Extensions;
-using MathNet.Numerics.Financial;
-using MathNet.Numerics.Optimization.TrustRegion;
-using OpenCvSharp;
-using OpenCvSharp.Dnn;
-using OpenCvSharp.Flann;
-using OpenCvSharp.Internal.Util;
 using System;
-using System.CodeDom;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Data;
 using System.Diagnostics;
-using System.Drawing.Imaging;
 using System.IO;
-using System.IO.Ports;
 using System.Linq;
-using System.Net.Http.Headers;
-using System.Runtime;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text;
-using System.Threading;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
-using System.Xml.Linq;
-using System.Xml.Schema;
-using static alglib;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 namespace FZ4P
 {
@@ -3927,150 +3904,164 @@ namespace FZ4P
             LEDs_All_On(0, false);
         }
 
-        void OISLCCComp(int ch, string testItem, int inspCnt)
+        private void OISLCCComp(int ch, string testItem, int inspCnt)
         {
-            const int SIZE_OFS_TBL = 7;
-
+            OISLinCompCoefDW oISLinCompCoef = new OISLinCompCoefDW(Condition.OISLincompStep); 
             FindResult res = new FindResult();
-            short[] TargetX = new short[SIZE_OFS_TBL] { -1024, -683, -341, 0, 341, 683, 1024 }; //TBD
-            short[] TargetY = new short[SIZE_OFS_TBL] { -1024, -683, -341, 0, 341, 683, 1024 }; //TBD
+            var step = Condition.OISLincompStep;
+            List<short> TargetCode = new List<short>();
+            var step_interval = DWDrvIC.OIS_MAX_CODE / step;
+            double[] ldmDataX = new double[step + 1];
+            double[] ldmDataY = new double[step + 1];
 
-            List<double> MeasX = new List<double>();
-            List<double> MeasY = new List<double>();
+            int AxisX = (int)AxisTypeDW.AxisX;
+            int AxisY = (int)AxisTypeDW.AxisY;
+            //여기까지
 
-            List<int> adjMatrixX = new List<int>();
-            List<int> adjMatrixY = new List<int>();
+            for (int i = 0; i < step; i++)
+                TargetCode.Add((short)(step_interval * (i + 1)));
+
+            List<double> bufferLDMX = new List<double>();
+            List<double> bufferLDMY = new List<double>();
+
+            List<double> checkReadHallX = new List<double>();
+            List<double> checkReadHallY = new List<double>();
+
+            //List<int> adjMatrixX = new List<int>();
+            //List<int> adjMatrixY = new List<int>();
             LEDs_All_On(0, true);
           
-            DrvIC.OISOnOff(ch, true);
+            DWDrvIC.OISOnOff(ch, true);
             Wait(100);
-            bool Status = DrvIC.OIS_StausCheck(ch, 0x01, 0x02);
-            if(!Status)
-            {
-                LEDs_All_On(0, false);
-                PassFails[ch].Results[(int)SpecItem.OISLCCComp].Val = 1;
-                ShowDataResults(ch, (int)SpecItem.OISLCCComp, (int)SpecItem.OISLCCComp, InspType.OKNG, new double[] { });
-                return;
-            }
-            Dln.WriteByte(ch, DrvIC.OIS_Addr, 0x617A, 2, 0x00);
-            Status = DrvIC.OIS_StausCheck(ch, 0x01, 0x02);
-            if(!Status)
-            {
-                LEDs_All_On(0, false);
-                PassFails[ch].Results[(int)SpecItem.OISLCCComp].Val = 1;
-                ShowDataResults(ch, (int)SpecItem.OISLCCComp, (int)SpecItem.OISLCCComp, InspType.OKNG, new double[] { });
-                return;
-            }
-            Dln.WriteByte(ch, DrvIC.OIS_Addr, 0x6020, 2, 0x07);
-            Status = DrvIC.OIS_StausCheck(ch, 0x01, 0x02);
-            if(!Status)
-            {
-                LEDs_All_On(0, false);
-                PassFails[ch].Results[(int)SpecItem.OISLCCComp].Val = 1;
-                ShowDataResults(ch, (int)SpecItem.OISLCCComp, (int)SpecItem.OISLCCComp, InspType.OKNG, new double[] { });
-                return;
-            }
-            Dln.Write2Byte(ch, DrvIC.OIS_Addr, 0x60B0, 2, 0);
-            Dln.Write2Byte(ch, DrvIC.OIS_Addr, 0x60B2, 2, 0);
-            Wait(10);
 
+            bufferLDMX.Add(step_interval);
+            bufferLDMY.Add(step_interval);
 
-            for (int i = 0; i < SIZE_OFS_TBL * SIZE_OFS_TBL; i++)
+            for (int i = 0; i < TargetCode.Count; i++)
             {
-                DrvIC.OISMove(ch, TargetX[i % SIZE_OFS_TBL], TargetY[i / 7]);
+                DWDrvIC.OISMove(ch, TargetCode[i], TargetCode[i]);
                 Wait(100);
                 res = Measure();
-                MeasX.Add(res.cx[0]);
-                MeasY.Add(res.cy[0]);
+                bufferLDMX.Add(res.cx[0]);
+                bufferLDMY.Add(res.cy[0]);
             }
-
        
             AddLog(ch, $"MoveX\tMoveY");
-            for (int i = 0; i < MeasX.Count; i++)
+            for (int i = 1; i < bufferLDMX.Count; i++)
             {
-                AddLog(ch, $"{MeasX[i].ToString("F2")}\t{MeasY[i].ToString("F2")}");
+                AddLog(ch, $"{bufferLDMX[i].ToString("F2")}\t{bufferLDMY[i].ToString("F2")}");
             }
-            int normParam = 2048;
-            int center = (SIZE_OFS_TBL * SIZE_OFS_TBL) / 2;
 
-            int idx_x = SIZE_OFS_TBL * (SIZE_OFS_TBL / 2);
-            int idx_x_e = idx_x + (SIZE_OFS_TBL - 1);
-            int idx_y = (SIZE_OFS_TBL / 2);
-            int idx_y_e = idx_y + SIZE_OFS_TBL * (SIZE_OFS_TBL - 1);
+            ldmDataX = bufferLDMX.ToArray();
+            ldmDataY = bufferLDMY.ToArray();
+            //int normParam = 2048;
+            //int center = (SIZE_OFS_TBL * SIZE_OFS_TBL) / 2;
 
-            double sense_px = ((double)(normParam * (SIZE_OFS_TBL - 1)) / (MeasX[idx_x_e] - MeasX[idx_x]));
-            double sense_py = ((double)(normParam * (SIZE_OFS_TBL - 1)) / (MeasY[idx_y_e] - MeasY[idx_y]));
+            //int idx_x = SIZE_OFS_TBL * (SIZE_OFS_TBL / 2);
+            //int idx_x_e = idx_x + (SIZE_OFS_TBL - 1);
+            //int idx_y = (SIZE_OFS_TBL / 2);
+            //int idx_y_e = idx_y + SIZE_OFS_TBL * (SIZE_OFS_TBL - 1);
 
-            for (int i = 0; i < SIZE_OFS_TBL * SIZE_OFS_TBL; i++)
+            //double sense_px = ((double)(normParam * (SIZE_OFS_TBL - 1)) / (MeasX[idx_x_e] - MeasX[idx_x]));
+            //double sense_py = ((double)(normParam * (SIZE_OFS_TBL - 1)) / (MeasY[idx_y_e] - MeasY[idx_y]));
+
+            //for (int i = 0; i < SIZE_OFS_TBL * SIZE_OFS_TBL; i++)
+            //{
+            //    int tmpX = (int)((MeasX[i] - MeasX[center]) * sense_px);
+            //    int tmpY = (int)((MeasY[i] - MeasY[center]) * sense_py);
+
+            //    adjMatrixX.Add(tmpX);
+            //    adjMatrixY.Add(tmpY);
+            //}
+            //adjMatrixX.Add(0);
+            //adjMatrixY.Add(0);
+
+
+
+            //AddLog(ch, "Updata cal data of matrix y");
+            //int startAddr = 0x102408E1;
+            //for (int i = 0; i < 25; i++)
+            //{
+            //    int addr = startAddr + (i * 0x400);
+            //    uint data = (uint)((adjMatrixY[i * 2 + 1] << 16) + adjMatrixY[i * 2]);
+            //    Dln.Write4Byte(ch, DrvIC.OIS_Addr, 0x6080, 2, addr);
+            //    Dln.Write4Byte(ch, DrvIC.OIS_Addr, 0x6084, 2, data);
+            //    AddLog(ch, $"Addr : 0x{addr.ToString("X8")}, data : 0x{data.ToString("X8")}");
+            //    Status = DrvIC.OIS_StausCheck(ch, 0x01, 0x01);
+            //    if(!Status)
+            //    {
+            //        LEDs_All_On(0, false);
+            //        PassFails[ch].Results[(int)SpecItem.OISLCCComp].Val = 1;
+            //        ShowDataResults(ch, (int)SpecItem.OISLCCComp, (int)SpecItem.OISLCCComp, InspType.OKNG, new double[] { });
+            //        return;
+            //    }
+
+            //}
+            //AddLog(ch, "Updata cal data of matrix x");
+            //startAddr = 0x10246CE1;
+            //for (int i = 0; i < 25; i++)
+            //{
+            //    int addr = startAddr + (i * 0x400);
+            //    uint data = (uint)((adjMatrixX[i * 2 + 1] << 16) + adjMatrixX[i * 2]);
+            //    Dln.Write4Byte(ch, DrvIC.OIS_Addr, 0x6080, 2, addr);
+            //    Dln.Write4Byte(ch, DrvIC.OIS_Addr, 0x6084, 2, data);
+            //    AddLog(ch, $"Addr : 0x{addr.ToString("X8")}, data : 0x{data.ToString("X8")}");
+            //    Status = DrvIC.OIS_StausCheck(ch, 0x01, 0x01);
+            //    if (!Status)
+            //    {
+            //        LEDs_All_On(0, false);
+            //        PassFails[ch].Results[(int)SpecItem.OISLCCComp].Val = 1;
+            //        ShowDataResults(ch, (int)SpecItem.OISLCCComp, (int)SpecItem.OISLCCComp, InspType.OKNG, new double[] { });
+            //        return;
+            //    }
+            //}
+
+
+            oISLinCompCoef.InputValLoad(ldmDataX);
+            var RealValue = oISLinCompCoef.OutputCoeff();
+
+            DWDrvIC.LiearCompWrite(AxisX, RealValue);
+            DWDrvIC.LiearCompWrite(AxisY, RealValue);
+
+            DWDrvIC.SetStore(AxisX);
+            DWDrvIC.SetStore(AxisY);
+
+            for (int i = 0; i < TargetCode.Count; i++)
             {
-                int tmpX = (int)((MeasX[i] - MeasX[center]) * sense_px);
-                int tmpY = (int)((MeasY[i] - MeasY[center]) * sense_py);
-
-                adjMatrixX.Add(tmpX);
-                adjMatrixY.Add(tmpY);
-            }
-            adjMatrixX.Add(0);
-            adjMatrixY.Add(0);
-
-
-
-            AddLog(ch, "Updata cal data of matrix y");
-            int startAddr = 0x102408E1;
-            for (int i = 0; i < 25; i++)
-            {
-                int addr = startAddr + (i * 0x400);
-                uint data = (uint)((adjMatrixY[i * 2 + 1] << 16) + adjMatrixY[i * 2]);
-                Dln.Write4Byte(ch, DrvIC.OIS_Addr, 0x6080, 2, addr);
-                Dln.Write4Byte(ch, DrvIC.OIS_Addr, 0x6084, 2, data);
-                AddLog(ch, $"Addr : 0x{addr.ToString("X8")}, data : 0x{data.ToString("X8")}");
-                Status = DrvIC.OIS_StausCheck(ch, 0x01, 0x01);
-                if(!Status)
-                {
-                    LEDs_All_On(0, false);
-                    PassFails[ch].Results[(int)SpecItem.OISLCCComp].Val = 1;
-                    ShowDataResults(ch, (int)SpecItem.OISLCCComp, (int)SpecItem.OISLCCComp, InspType.OKNG, new double[] { });
-                    return;
-                }
+                DWDrvIC.OISMove(ch, TargetCode[i], TargetCode[i]);
+                Wait(100);
                 
+                checkReadHallX.Add(DWDrvIC.ReadOISHall(0, AxisX, 0));
+                checkReadHallY.Add(DWDrvIC.ReadOISHall(0, AxisY, 0));
             }
-            AddLog(ch, "Updata cal data of matrix x");
-            startAddr = 0x10246CE1;
-            for (int i = 0; i < 25; i++)
+            AddLog(ch, $"CheckedReadHall");
+            AddLog(ch, $"MoveX\tMoveY");
+            for (int i = 1; i < checkReadHallX.Count; i++)
             {
-                int addr = startAddr + (i * 0x400);
-                uint data = (uint)((adjMatrixX[i * 2 + 1] << 16) + adjMatrixX[i * 2]);
-                Dln.Write4Byte(ch, DrvIC.OIS_Addr, 0x6080, 2, addr);
-                Dln.Write4Byte(ch, DrvIC.OIS_Addr, 0x6084, 2, data);
-                AddLog(ch, $"Addr : 0x{addr.ToString("X8")}, data : 0x{data.ToString("X8")}");
-                Status = DrvIC.OIS_StausCheck(ch, 0x01, 0x01);
-                if (!Status)
-                {
-                    LEDs_All_On(0, false);
-                    PassFails[ch].Results[(int)SpecItem.OISLCCComp].Val = 1;
-                    ShowDataResults(ch, (int)SpecItem.OISLCCComp, (int)SpecItem.OISLCCComp, InspType.OKNG, new double[] { });
-                    return;
-                }
+                AddLog(ch, $"{checkReadHallX[i].ToString("F2")}\t{checkReadHallY[i].ToString("F2")}");
             }
 
-            DrvIC.OISOnOff(ch, true);
-            Wait(100);
-            Status = DrvIC.OIS_StausCheck(ch, 0x01, 0x02);
-            if (!Status)
-            {
-                LEDs_All_On(0, false);
-                PassFails[ch].Results[(int)SpecItem.OISLCCComp].Val = 1;
-                ShowDataResults(ch, (int)SpecItem.OISLCCComp, (int)SpecItem.OISLCCComp, InspType.OKNG, new double[] { });
-                return;
-            }
-            Dln.WriteByte(ch, DrvIC.OIS_Addr, 0x617A, 2, 0x01);
-            Status = DrvIC.OIS_StausCheck(ch, 0x01, 0x02);
-            if (!Status)
-            {
-                LEDs_All_On(0, false);
-                PassFails[ch].Results[(int)SpecItem.OISLCCComp].Val = 1;
-                ShowDataResults(ch, (int)SpecItem.OISLCCComp, (int)SpecItem.OISLCCComp, InspType.OKNG, new double[] { });
-                return;
-            }
+
+
+            //DWDrvIC.OISOnOff(ch, true);
+            //Wait(100);
+            //Status = DrvIC.OIS_StausCheck(ch, 0x01, 0x02);
+            //if (!Status)
+            //{
+            //    LEDs_All_On(0, false);
+            //    PassFails[ch].Results[(int)SpecItem.OISLCCComp].Val = 1;
+            //    ShowDataResults(ch, (int)SpecItem.OISLCCComp, (int)SpecItem.OISLCCComp, InspType.OKNG, new double[] { });
+            //    return;
+            //}
+            //Dln.WriteByte(ch, DrvIC.OIS_Addr, 0x617A, 2, 0x01);
+            //Status = DrvIC.OIS_StausCheck(ch, 0x01, 0x02);
+            //if (!Status)
+            //{
+            //    LEDs_All_On(0, false);
+            //    PassFails[ch].Results[(int)SpecItem.OISLCCComp].Val = 1;
+            //    ShowDataResults(ch, (int)SpecItem.OISLCCComp, (int)SpecItem.OISLCCComp, InspType.OKNG, new double[] { });
+            //    return;
+            //}
 
 
             PassFails[ch].Results[(int)SpecItem.OISLCCComp].Val = 0;

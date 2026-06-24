@@ -144,6 +144,7 @@
     <Compile Include="Process\AFLinCompCoef.cs" />
     <Compile Include="Process\AjinLibrary.cs" />
     <Compile Include="Process\OISLinCompCoef.cs" />
+    <Compile Include="Process\OISLinCompCoefDW.cs" />
     <Compile Include="Process\PROCESSParam.cs" />
     <Compile Include="Process\PROCESS.cs" />
     <Compile Include="DriverIc\DLN.cs" />

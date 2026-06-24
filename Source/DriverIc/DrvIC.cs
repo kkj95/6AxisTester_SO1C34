@@ -362,6 +362,16 @@ namespace FZ4P
         {
             throw new NotImplementedException();
         }
+
+        public bool SetStore(int axis)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LiearCompWrite(int axis, List<int> CompValue)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
     }
