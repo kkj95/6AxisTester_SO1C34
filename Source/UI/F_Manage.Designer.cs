@@ -52,9 +52,9 @@ namespace FZ4P
             this.p_Result = new System.Windows.Forms.Panel();
             this.RunProgress = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.lbOISCalData = new System.Windows.Forms.Label();
+            this.lbOISYPID = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.lbOISFW = new System.Windows.Forms.Label();
+            this.lbOISXPID = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.lbAFPID = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -318,9 +318,9 @@ namespace FZ4P
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 19.56067F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 80.43933F));
-            this.tableLayoutPanel1.Controls.Add(this.lbOISCalData, 1, 7);
+            this.tableLayoutPanel1.Controls.Add(this.lbOISYPID, 1, 7);
             this.tableLayoutPanel1.Controls.Add(this.label10, 0, 7);
-            this.tableLayoutPanel1.Controls.Add(this.lbOISFW, 1, 6);
+            this.tableLayoutPanel1.Controls.Add(this.lbOISXPID, 1, 6);
             this.tableLayoutPanel1.Controls.Add(this.label8, 0, 6);
             this.tableLayoutPanel1.Controls.Add(this.lbAFPID, 1, 5);
             this.tableLayoutPanel1.Controls.Add(this.label6, 0, 5);
@@ -348,18 +348,18 @@ namespace FZ4P
             this.tableLayoutPanel1.Size = new System.Drawing.Size(951, 176);
             this.tableLayoutPanel1.TabIndex = 254;
             // 
-            // lbOISCalData
+            // lbOISYPID
             // 
-            this.lbOISCalData.BackColor = System.Drawing.Color.White;
-            this.lbOISCalData.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbOISCalData.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbOISCalData.ForeColor = System.Drawing.Color.Blue;
-            this.lbOISCalData.Location = new System.Drawing.Point(190, 148);
-            this.lbOISCalData.Name = "lbOISCalData";
-            this.lbOISCalData.Size = new System.Drawing.Size(757, 20);
-            this.lbOISCalData.TabIndex = 198;
-            this.lbOISCalData.Text = "MC Number";
-            this.lbOISCalData.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbOISYPID.BackColor = System.Drawing.Color.White;
+            this.lbOISYPID.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbOISYPID.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbOISYPID.ForeColor = System.Drawing.Color.Blue;
+            this.lbOISYPID.Location = new System.Drawing.Point(190, 148);
+            this.lbOISYPID.Name = "lbOISYPID";
+            this.lbOISYPID.Size = new System.Drawing.Size(757, 20);
+            this.lbOISYPID.TabIndex = 198;
+            this.lbOISYPID.Text = "MC Number";
+            this.lbOISYPID.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label10
             // 
@@ -370,21 +370,21 @@ namespace FZ4P
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(179, 20);
             this.label10.TabIndex = 197;
-            this.label10.Text = "OIS CalData";
+            this.label10.Text = "OIS Y PID";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // lbOISFW
+            // lbOISXPID
             // 
-            this.lbOISFW.BackColor = System.Drawing.Color.White;
-            this.lbOISFW.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbOISFW.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbOISFW.ForeColor = System.Drawing.Color.Blue;
-            this.lbOISFW.Location = new System.Drawing.Point(190, 127);
-            this.lbOISFW.Name = "lbOISFW";
-            this.lbOISFW.Size = new System.Drawing.Size(757, 20);
-            this.lbOISFW.TabIndex = 196;
-            this.lbOISFW.Text = "MC Number";
-            this.lbOISFW.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbOISXPID.BackColor = System.Drawing.Color.White;
+            this.lbOISXPID.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbOISXPID.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbOISXPID.ForeColor = System.Drawing.Color.Blue;
+            this.lbOISXPID.Location = new System.Drawing.Point(190, 127);
+            this.lbOISXPID.Name = "lbOISXPID";
+            this.lbOISXPID.Size = new System.Drawing.Size(757, 20);
+            this.lbOISXPID.TabIndex = 196;
+            this.lbOISXPID.Text = "MC Number";
+            this.lbOISXPID.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label8
             // 
@@ -395,7 +395,7 @@ namespace FZ4P
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(179, 20);
             this.label8.TabIndex = 195;
-            this.label8.Text = "OIS FW";
+            this.label8.Text = "OIS X PID";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lbAFPID
@@ -892,9 +892,9 @@ namespace FZ4P
         private System.Windows.Forms.DataVisualization.Charting.Chart YieldChart;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.DataGridView dataGridView1;
-        public System.Windows.Forms.Label lbOISCalData;
+        public System.Windows.Forms.Label lbOISYPID;
         private System.Windows.Forms.Label label10;
-        public System.Windows.Forms.Label lbOISFW;
+        public System.Windows.Forms.Label lbOISXPID;
         private System.Windows.Forms.Label label8;
         public System.Windows.Forms.Label lbAFPID;
         private System.Windows.Forms.Label label6;

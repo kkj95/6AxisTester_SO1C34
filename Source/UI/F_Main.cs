@@ -188,9 +188,11 @@ namespace FZ4P
             //Process.StartI2CMonitor();
 
             Process.AddLog(0, $"{Current.AFPidPath}");
-          //  Process.AddLog(1, $"{Current.AFPidPath}");
             Process.Load_AFPID(Current.AFPidPath);
-       
+            Process.AddLog(0, $"{Current.OISXPidPath}");
+            Process.Load_OISXPID(Current.OISXPidPath);
+            Process.AddLog(0, $"{Current.OISYPidPath}");
+            Process.Load_OISYPID(Current.OISYPidPath);
 
 
             if (Model.MCType == "Posture_M")
@@ -1058,8 +1060,8 @@ namespace FZ4P
         void InitFWPath()
         {
             AFPidSetPath.Text = Current.AFPidPath;
-            OISFWSetPath.Text = Current.OISFWPath;
-            OISBaseCalSetPath.Text = Current.OISBaseCalPath;
+            OISFWSetPath.Text = Current.OISXPidPath;
+            OISBaseCalSetPath.Text = Current.OISYPidPath;
         }
         private void SetAFPIDUpdate_Click(object sender, EventArgs e)
         {
