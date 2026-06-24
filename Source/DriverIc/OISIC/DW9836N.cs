@@ -26,7 +26,7 @@ namespace FZ4P.DriverIc.OISIC
         public int OISY_Addr { get; set; } = 0x4E;
         public int OIS_MIN_CODE { get; set; } = 0;
         public int OIS_MID_CODE { get; set; } = 8192;
-        public int OIS_MAX_CODE { get; set; } = 16382;
+        public int OIS_MAX_CODE { get; set; } = 16384;
 
         public IOneTwoBytesDrivingIC Controls => _controls;
 

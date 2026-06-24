@@ -241,7 +241,7 @@ namespace FZ4P.UI
         private void btn_Move_Max_Click(object sender, EventArgs e)
         {
             var afMidCode = _afFunction.AF_MAX_CODE;
-            var oisMidCode = _oISFunction.OIS_MAX_CODE;
+            var oisMidCode = _oISFunction.OIS_MAX_CODE-1;
             //_afFunction.AFMove(0, afMidCode);
             _oISFunction.OISMove(0, oisMidCode, oisMidCode);
         }

@@ -3878,8 +3878,8 @@ namespace FZ4P
             int AxisY = (int)AxisTypeDW.AxisY;
             //여기까지
 
-            for (int i = 0; i < step; i++)
-                TargetCode.Add((short)(step_interval * (i + 1)));
+            for (int i = 0; i < step+1; i++)
+                TargetCode.Add((short)(step_interval * (i)));
 
             List<double> bufferLDMX = new List<double>();
             List<double> bufferLDMY = new List<double>();
@@ -3899,7 +3899,10 @@ namespace FZ4P
 
             for (int i = 0; i < TargetCode.Count; i++)
             {
-                DWDrvIC.OISMove(ch, TargetCode[i], TargetCode[i]);
+                var targetCode = TargetCode[i];
+                if (targetCode == DWDrvIC.OIS_MAX_CODE) targetCode -= 1;
+
+                DWDrvIC.OISMove(ch, targetCode, targetCode);
                 Wait(100);
                 res = Measure();
                 bufferLDMX.Add(res.cx[0]);
@@ -3995,7 +3998,7 @@ namespace FZ4P
                 checkReadHallY.Add(DWDrvIC.ReadOISHall(0, AxisY, 0));
             }
             AddLog(ch, $"CheckedReadHall");
-            AddLog(ch, $"MoveX\tMoveY");
+            AddLog(ch, $"TargetCode\tMoveX\tMoveY");
             for (int i = 1; i < checkReadHallX.Count; i++)
             {
                 AddLog(ch, $"{checkReadHallX[i].ToString("F2")}\t{checkReadHallY[i].ToString("F2")}");
