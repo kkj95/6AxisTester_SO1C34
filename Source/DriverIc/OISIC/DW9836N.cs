@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms.DataVisualization.Charting;
 
@@ -115,24 +116,16 @@ namespace FZ4P.DriverIc.OISIC
         {
             int SlaveID = GetAxisTypeID((AxisTypeDW)axis);
 
-            //var ReadData = Controls.Read2Byte(SlaveID, (int)RegisterMapDW9836N.POSITION_READ_LOW, 2);
-
             var ReadDataHigh = Controls.ReadByte(SlaveID, (int)RegisterMapDW9836N.POSITION_READ_LOW, 1);
             var ReadDataLow = Controls.ReadByte(SlaveID, (int)RegisterMapDW9836N.POSITION_READ_HIGH, 1);
 
             short ReadData = (short)(((ReadDataHigh << 8) + (ReadDataHigh & 0xFF))>>2);
 
-            //byte[] Readbyte = new byte[] { (byte)(ReadData & 0xFF), (byte)((ReadData >> 8) & 0xFF) };
-
-            //var calculHall = (short)((Readbyte[0] << 8 | Readbyte[0]) / 16);
-            //if (calculHall >= 2048) calculHall = (short)(calculHall - 4096);
-            //return calculHall;
             if (mode == 0)
             {
                 //short Readhall = (short)((data[1] << 8 | data[2]) / 16);
                 //if (Readhall >= 2048) Readhall = (short)(Readhall - 4096);
                 //return Readhall;
-
             }
             else
             {
@@ -166,19 +159,27 @@ namespace FZ4P.DriverIc.OISIC
 
             return true;
         }
+        public bool SetStore(int axis)
+        {
+            var slaveID = GetAxisTypeID((AxisTypeDW)axis);
+            bool bResult = true;
+            try
+            {
+                Controls.WriteByte(slaveID, (int)0x28, 1, (byte)0x39);
+                Controls.WriteByte(slaveID, (int)0x28, 1, (byte)0xA0);
+                Controls.WriteByte(slaveID, (int)RegisterMapDW9836N.Mode, 1, (byte)0x40);
+                Controls.WriteByte(slaveID, (int)RegisterMapDW9836N.STORE_PROD_ID, 1, (byte)0x01);
+                Thread.Sleep(640);
+                Controls.WriteByte(slaveID, (int)0x28, 1, (byte)0x14);
+                Controls.WriteByte(slaveID, (int)RegisterMapDW9836N.SWREST, 1, (byte)0x01);
+            }
+            catch
+            {
+                bResult = false;
+            }
 
-        //Store 명령
-        //public bool SetStore()
-        //{
-        //    byte byteData = 0x40;
-        //    return _controls.WriteByte(OISX_Addr, 0X28, 1, byteData);
-        //}
-
-        //public bool PT_OFF()
-        //{
-        //    byte byteData = 0x40;
-        //    _controls.WriteByte(OISX_Addr, 0X28, 1, byteData);
-        //}
+            return bResult;
+        }
 
         /// <summary>
         /// 기본 close 모드
@@ -235,6 +236,31 @@ namespace FZ4P.DriverIc.OISIC
                 data = 0x10;
             int slaveID = GetAxisTypeID((AxisTypeDW)axis);
             _controls.WriteByte(slaveID, (int)RegisterMapDW9836N.STORE_PROD_ID, 1, data);
+        }
+
+        public void LiearCompWrite(int axis, List<int> CompValue)
+        {
+            var slaveID = GetAxisTypeID((AxisTypeDW)axis);
+            Set_PT(axis,false);
+
+            int startAddress = 0x55;
+            _controls.WriteByte(slaveID, startAddress++, 1, 0x01);        // Linearity Enabled
+
+            CompValue.ForEach(vlaue => 
+            {
+                _controls.WriteByte(slaveID, startAddress++, 1, (byte)vlaue);        
+            });
+        }
+        
+        private void Set_PT(int axis,bool OnOff)
+        {
+            var SlaveID = GetAxisTypeID((AxisTypeDW)axis);
+
+            if (!OnOff)
+            {
+                _controls.WriteByte(SlaveID, 0x28, 1, 0x39);
+                _controls.WriteByte(SlaveID, 0x28, 1, 0xA0);
+            }
         }
     }
 }

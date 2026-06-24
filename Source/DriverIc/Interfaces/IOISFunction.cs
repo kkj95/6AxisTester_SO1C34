@@ -27,5 +27,9 @@ namespace FZ4P.DriverIc.Interfaces
         short ReadOISHall(int ch, int axis, int mode);
 
         void OISReset(int ch, int axis, bool OnOff);
+
+        bool SetStore(int axis);
+
+        void LiearCompWrite(int axis, List<int> CompValue);
     }
 }
