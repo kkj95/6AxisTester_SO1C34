@@ -45,25 +45,6 @@ namespace FZ4P.DriverIc.OISIC
             var targetBufferY1 = (moveY >> 8) & 0xFF;
             var targetBufferY2 = (moveY) & 0xFF;
 
-
-            //int HighCodeX = ((Xcode >> 8) & 0x3F) << 2;
-            //int HighCodeY = ((Ycode >> 8) & 0x3F) << 2;
-
-            //int positionX = (HighCodeX << 8 ) + (Xcode & 0xFF);
-            //int positionY = (HighCodeY << 8 ) + (Ycode & 0xFF);
-
-            //int positionX = (HighCodeX & 0xFF ) + (Xcode << 8);
-            //int positionY = (HighCodeY & 0xFF) + (Ycode << 8 );
-
-            //var positionX = Xcode;
-            //var positionY = Ycode;
-
-            //Controls.Write2Byte(OISX_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionX);
-            //Controls.Write2Byte(OISY_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionY);
-
-            //Controls.Write2Byte(OISX_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionX);
-            //Controls.Write2Byte(OISY_Addr, (int)RegisterMapDW9836N.Target, 2, (ushort)positionY);
-
             Controls.WriteByte(OISX_Addr, (int)RegisterMapDW9836N.Target, 1, (byte)targetBufferX1);
             Controls.WriteByte(OISX_Addr, (int)RegisterMapDW9836N.Target1, 1, (byte)targetBufferX2);
 
@@ -250,30 +231,43 @@ namespace FZ4P.DriverIc.OISIC
             int slaveID = GetAxisTypeID((AxisTypeDW)axis);
             _controls.WriteByte(slaveID, (int)RegisterMapDW9836N.STORE_PROD_ID, 1, data);
         }
-
-        public void LiearCompWrite(int axis, List<int> CompValue)
-        {
-            var slaveID = GetAxisTypeID((AxisTypeDW)axis);
-            Set_PT(axis,false);
-
-            int startAddress = 0x55;
-            _controls.WriteByte(slaveID, startAddress++, 1, 0x01);        // Linearity Enabled
-
-            CompValue.ForEach(vlaue => 
-            {
-                _controls.WriteByte(slaveID, startAddress++, 1, (byte)vlaue);        
-            });
-        }
         
-        private void Set_PT(int axis,bool OnOff)
+        public void Set_PT(int axis,bool OnOff)
         {
             var SlaveID = GetAxisTypeID((AxisTypeDW)axis);
 
-            if (!OnOff)
-            {
+            if (!OnOff) {
                 _controls.WriteByte(SlaveID, 0x28, 1, 0x39);
                 _controls.WriteByte(SlaveID, 0x28, 1, 0xA0);
             }
         }
+
+        public void LiearCompWrite(int axis, List<int> CompValue)
+        {
+            var slaveID = GetAxisTypeID((AxisTypeDW)axis);
+            Set_PT(axis, false);
+
+            int startAddress = 0x55;
+            _controls.WriteByte(slaveID, startAddress++, 1, 0x01);        // Linearity Enabled
+
+            CompValue.ForEach(vlaue =>
+            {
+                _controls.WriteByte(slaveID, startAddress++, 1, (byte)vlaue);
+            });
+        }
+
+
+        public void SetPCAL(int axis,int code)
+        {
+            var slaveID = GetAxisTypeID((AxisTypeDW)axis);
+            _controls.WriteByte(slaveID, (int)RegisterMapPIDDW9836N.PCAL, 1, (byte)code);
+        }
+        public void SetNCAL(int axis, int code)
+        {
+            var slaveID = GetAxisTypeID((AxisTypeDW)axis);
+            _controls.WriteByte(slaveID, (int)RegisterMapPIDDW9836N.NCAL, 1, (byte)code);
+        }
+
+
     }
 }

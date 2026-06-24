@@ -4,11 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace FZ4P
 {
@@ -2451,10 +2453,112 @@ namespace FZ4P
             }
 
             #endregion
-
         }
 
+        private void SetEPA(int iAxis)
+        {
+            FindResult res = null;
+            int targetStrockPos = -1;
+            int targetStrockNeg = -1;
+            DWDrvIC.OISOnOff(0,true);
 
+            if (iAxis == (int)AxisTypeDW.AxisX)
+            {
+                targetStrockPos = Condition.OISLincompXEPAPos;
+                targetStrockNeg = Condition.OISLincompXEPANeg;
+                //Set Zero
+                DWDrvIC.OISMove(0, DWDrvIC.OIS_MAX_CODE - 1, DWDrvIC.OIS_MID_CODE);
+            }
+            else if (iAxis == (int)AxisTypeDW.AxisY)
+            {
+                targetStrockPos = Condition.OISLincompYEPAPos;
+                targetStrockNeg = Condition.OISLincompYEPANeg;
+                //Set Zero
+                DWDrvIC.OISMove(0, DWDrvIC.OIS_MID_CODE, DWDrvIC.OIS_MAX_CODE - 1);
+            }
+
+            DWDrvIC.Set_PT(iAxis, false);
+            
+            if (FindPosition_PCAL(iAxis, targetStrockPos, 5))
+                DWDrvIC.SetStore(iAxis);
+            else
+            {
+                AddLog(0, $"PCAL Not Find");
+                return;
+            }
+
+            if (FindPosition_NCAL(iAxis, targetStrockNeg, 5))
+                DWDrvIC.SetStore(iAxis);
+            else
+                AddLog(0, $"NCAL Not Find");
+        }
+
+        private bool FindPosition_PCAL(int Axis,int targetStrockPos, int MinMaxGap)
+        {
+            int RangeMin = (targetStrockPos - MinMaxGap);
+            int RangeMax = (targetStrockPos + MinMaxGap);
+            FindResult res = null;
+            int movecode = 0x00;
+            double currentValue = -1;
+
+            while (true)
+            {
+                DWDrvIC.SetPCAL(Axis, movecode++);
+                Wait(100);
+                res = Measure();
+
+                if ((AxisTypeDW)Axis == AxisTypeDW.AxisX)
+                    currentValue = res.cx[0];
+                else if ((AxisTypeDW)Axis == AxisTypeDW.AxisY)
+                    currentValue = res.cy[0];
+
+
+                if (RangeMin < currentValue && RangeMax > currentValue)
+                {
+                    AddLog(0, $"PCAL Find : Measure [{currentValue}], Code [{movecode - 1}]");       //후순위 처리로 이전 코드가 필요
+                    return true;
+                }
+
+                if (RangeMin > res.cx[0] || movecode > 0xF0)
+                {
+                    AddLog(0, $"PCAL NOT Find : Measure [{currentValue}], Code [{movecode - 1}]");       //후순위 처리로 이전 코드가 필요
+                    return false;
+                }       
+            }
+        }
+
+        private bool FindPosition_NCAL(int Axis, int targetStrockPos, int MinMaxGap)
+        {
+            int RangeMin = (targetStrockPos - MinMaxGap);
+            int RangeMax = (targetStrockPos + MinMaxGap);
+            FindResult res;
+            int movecode = 0x00;
+            double currentValue = -1;
+
+            while (true)
+            {
+                DWDrvIC.SetNCAL(Axis, movecode++);
+                Wait(100);
+                res = Measure();
+
+                if ((AxisTypeDW)Axis == AxisTypeDW.AxisX)
+                    currentValue = res.cx[0];
+                else if ((AxisTypeDW)Axis == AxisTypeDW.AxisY)
+                    currentValue = res.cy[0];
+
+                if (RangeMin < currentValue && RangeMax > currentValue)
+                {
+                    AddLog(0, $"PCAL Find : Measure [{currentValue}], Code [{movecode - 1}]");       //후순위 처리로 이전 코드가 필요
+                    return true;
+                }
+
+                if (RangeMin > currentValue || movecode > 0xF0)
+                {
+                    AddLog(0, $"PCAL NOT Find : Measure [{currentValue}], Code [{movecode - 1}]");       //후순위 처리로 이전 코드가 필요
+                    return false;
+                }
+            }
+        }
         //(bool, int) OISRatedStrokeAdjustment(int ch)
         //{
         //    int BTM_POS = 20;
@@ -2471,7 +2575,7 @@ namespace FZ4P
         //    DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x39);
         //    DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0xA0);
 
-            
+
 
         //    DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x46, 1, 0x01);
 
