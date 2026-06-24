@@ -38,4 +38,10 @@ namespace FZ4P.DriverIc.OISIC
         //PID
         //FREACCESS
     }
+
+    public enum RegisterMapPIDDW9836N
+    {
+        PCAL = 0x46,
+        NCAL = 0x47,
+    }
 }
