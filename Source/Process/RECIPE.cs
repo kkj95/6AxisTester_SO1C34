@@ -325,15 +325,27 @@ namespace FZ4P
         [Condition("AF LoopGain", "Freq", "AF LoopGain", "", "Hz")] public int AFLoopGainFreq { get; set; } = 10;
         [Condition("AF LoopGain", "AF Position", "AF LoopGain", "", "code")] public int AFLoopGainPos { get; set; } = 2048;
 
-        [Condition("OIS PM", "X Insp Count", "OIS Phase Margin", "", "dec")] public int XPMInspCnt { get; set; } = 50;
+        //[Condition("OIS PM", "X Insp Count", "OIS Phase Margin", "", "dec")] public int XPMInspCnt { get; set; } = 50;
+        //[Condition("OIS PM", "X Chirp from", "OIS Phase Margin", "", "Hz")] public int iXChirpFrom { get; set; } = 250;
+        //[Condition("OIS PM", "X Chirp to", "OIS Phase Margin", "", "Hz")] public int iXChirpTo { get; set; } = 20;
+        //[Condition("OIS PM", "X Drv Amp", "OIS Phase Margin", "", "mV")] public int iXAmplitude { get; set; } = 60;
+
+        [Condition("OIS PM", "FRA Step", "OIS Phase Margin", "", "dec")] public int iFRAStep { get; set; } = 50;
+        [Condition("OIS PM", "X Drv Amp", "OIS Phase Margin", "", "mV")] public int iXAmplitude { get; set; } = 60;
         [Condition("OIS PM", "X Chirp from", "OIS Phase Margin", "", "Hz")] public int iXChirpFrom { get; set; } = 250;
         [Condition("OIS PM", "X Chirp to", "OIS Phase Margin", "", "Hz")] public int iXChirpTo { get; set; } = 20;
-        [Condition("OIS PM", "X Drv Amp", "OIS Phase Margin", "", "mV")] public int iXAmplitude { get; set; } = 60;
+        [Condition("OIS PM", "X Off Set", "OIS Phase Margin", "", "Hz")] public int iXOffset { get; set; } = 20;
 
-        [Condition("OIS PM", "Y Insp Count", "OIS Phase Margin", "", "dec")] public int YPMInspCnt { get; set; } = 50;
+
+        [Condition("OIS PM", "Y Drv Amp", "OIS Phase Margin", "", "mV")] public int iYAmplitude { get; set; } = 60;
         [Condition("OIS PM", "Y Chirp from", "OIS Phase Margin", "", "Hz")] public int iYChirpFrom { get; set; } = 250;
-        [Condition("OIS PM", "Y Chirp to", "OIS Phase Margin", "", "Hz")] public int iYChirpTo { get; set; } = 100;
-        [Condition("OIS PM", "Y Drv Amp", "OIS Phase Margin", "", "mV")] public int iYAmplitude { get; set; } = 75;
+        [Condition("OIS PM", "Y Chirp to", "OIS Phase Margin", "", "Hz")] public int iYChirpTo { get; set; } = 20;
+        [Condition("OIS PM", "Y Off Set", "OIS Phase Margin", "", "Hz")] public int iYOffset { get; set; } = 20;
+
+        //[Condition("OIS PM", "Y Insp Count", "OIS Phase Margin", "", "dec")] public int YPMInspCnt { get; set; } = 50;
+        //[Condition("OIS PM", "Y Chirp from", "OIS Phase Margin", "", "Hz")] public int iYChirpFrom { get; set; } = 250;
+        //[Condition("OIS PM", "Y Chirp to", "OIS Phase Margin", "", "Hz")] public int iYChirpTo { get; set; } = 100;
+        //[Condition("OIS PM", "Y Drv Amp", "OIS Phase Margin", "", "mV")] public int iYAmplitude { get; set; } = 75;
         [Condition("OIS PM", "AF Position", "OIS Phase Margin", "", "code")] public int AFPosOISPM { get; set; } = 2048;
 
         [Condition("OIS GM", "X Insp Count", "OIS Gain Margin", "", "dec")] public int XGMInspCnt { get; set; } = 50;

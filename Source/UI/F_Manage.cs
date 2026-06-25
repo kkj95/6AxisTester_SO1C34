@@ -60,7 +60,6 @@ namespace FZ4P
                 Process.Dln.StopOn += Dln_StopOn;
                 Process.Dln.SafetyOn += Dln_SafetyOn;
                 Process.Dln.EMGOn += Dln_EMGOn;
-                
             }
 
             Model.Changed += Model_Changed;

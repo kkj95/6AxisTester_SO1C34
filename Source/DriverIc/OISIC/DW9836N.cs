@@ -271,5 +271,16 @@ namespace FZ4P.DriverIc.OISIC
         }
 
 
+        public void FRA_Echoboard_StartStop(int ch, StartStopType iStep)
+        {
+            if (iStep == StartStopType.Stop)
+                _controls.WriteByte(ch, (int)RegisterMapFRA.FRA_START, 1, 0x00 ); //stop            
+            else if (iStep == StartStopType.Start)
+                _controls.WriteByte(ch, (int)RegisterMapFRA.FRA_START, 1, 0x03 ); //start
+            else if (iStep == StartStopType.Ready)
+                _controls.WriteByte(ch, (int)RegisterMapFRA.FRA_START, 1, 0x01); //Ready
+        }
+
+
     }
 }

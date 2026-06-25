@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace FZ4P.DriverIc.OISIC
 {
+    public enum StartStopType
+    { Stop, Start, Ready }
     public enum OperationTypeDW
     {
         StandbyMode = 0,
@@ -71,5 +73,32 @@ namespace FZ4P.DriverIc.OISIC
         TARGET_WAIT_TIME = 0x15,
         TARGET_POS2_H = 0x16,
         TARGET_POS2_L = 0x16,
+
+        FRA_RESULT_FREQUENCY_H = 0x20,
+        FRA_RESULT_FREQUENCY_L = 0x21,
+        FRA_RESULT_MAGNITUDE_H = 0x22,
+        FRA_RESULT_MAGNITUDE_L = 0x23,
+        FRA_RESULT_PHASE_H = 0x24,
+        FRA_RESULT_PHASE_L = 0x25,
+
+        CONTROL_FREQ = 0x2F,
+
+        TARGET_SLAVE_ADDR = 0x30,
+        TARGET_DEVICE = 0x31,
+        LOD_ENABLE = 0x32,
+        I2C_CH1_AVDD = 0x33,
+        I2C_CH1_IOVDD= 0x34,
+        I2C_CH2_AVDD = 0x35,
+        I2C_CH2_IOVDD = 0x36,
+        I2C_CH1_SPEED = 0x37,
+        I2C_CH2_SPEED = 0x38,
+        CURRENT_SET_WRITE = 0x39,
+        CURRENT_SET_READ = 0x40,
+
+        AMP_MODE = 0xE1,
+
+
+        VERSION_MAJOR = 0xF2,
+        VERSION_MINOR = 0xF3,
     }
 }

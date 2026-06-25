@@ -1188,8 +1188,8 @@ namespace FZ4P
         {
             double[] res = new double[2];
 
-            res[0] = OISPMGM(ch, 0, 0, Condition.iXChirpFrom, Condition.iXChirpTo, Condition.XPMInspCnt, Condition.iXAmplitude);
-            res[1] = OISPMGM(ch, 1, 0, Condition.iYChirpFrom, Condition.iYChirpTo, Condition.YPMInspCnt, Condition.iYAmplitude);
+            //res[0] = OISPMGM(ch, 0, 0, Condition.iXChirpFrom, Condition.iXChirpTo, Condition.XPMInspCnt, Condition.iXAmplitude);
+            //res[1] = OISPMGM(ch, 1, 0, Condition.iYChirpFrom, Condition.iYChirpTo, Condition.YPMInspCnt, Condition.iYAmplitude);
 
             PassFails[0].Results[(int)SpecItem.FRAX_PhaseMargin].Val = res[0];
             ShowDataResults(ch, (int)SpecItem.FRAX_PhaseMargin, (int)SpecItem.FRAX_PhaseMargin, InspType.Normal, new double[] { });
@@ -1200,8 +1200,8 @@ namespace FZ4P
         {
             double[] res = new double[2];
 
-            res[0] = OISPMGM(ch, 0, 1, Condition.iXChirpFromGM, Condition.iXChirpToGM, Condition.XGMInspCnt, Condition.iXAmplitudeGM);
-            res[1] = OISPMGM(ch, 1, 1, Condition.iYChirpFromGM, Condition.iYChirpToGM, Condition.YGMInspCnt, Condition.iYAmplitudeGM);
+            //res[0] = OISPMGM(ch, 0, 1, Condition.iXChirpFromGM, Condition.iXChirpToGM, Condition.XGMInspCnt, Condition.iXAmplitudeGM);
+            //res[1] = OISPMGM(ch, 1, 1, Condition.iYChirpFromGM, Condition.iYChirpToGM, Condition.YGMInspCnt, Condition.iYAmplitudeGM);
 
             PassFails[0].Results[(int)SpecItem.FRAX_GainMargin].Val = res[0];
             ShowDataResults(ch, (int)SpecItem.FRAX_GainMargin, (int)SpecItem.FRAX_GainMargin, InspType.Normal, new double[] { });
