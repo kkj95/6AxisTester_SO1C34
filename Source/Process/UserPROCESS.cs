@@ -2408,7 +2408,7 @@ namespace FZ4P
             }
 
 
-            SetEPA((int)AxisTypeDW.AxisX);
+            //SetEPA((int)AxisTypeDW.AxisX);
             #endregion
 
             #region OIS Y Hall Calibration
@@ -2453,7 +2453,7 @@ namespace FZ4P
                 return;
             }
 
-            SetEPA((int)AxisTypeDW.AxisY);
+            //SetEPA((int)AxisTypeDW.AxisY);
             #endregion
         }
 
@@ -4045,8 +4045,8 @@ namespace FZ4P
             var step = Condition.OISLincompStep;
             List<short> TargetCode = new List<short>();
             var step_interval = DWDrvIC.OIS_MAX_CODE / step;
-            double[] ldmDataX = new double[step + 1];
-            double[] ldmDataY = new double[step + 1];
+            double[] ldmDataX = null;//new double;
+            double[] ldmDataY = null;//new double;
 
             int AxisX = (int)AxisTypeDW.AxisX;
             int AxisY = (int)AxisTypeDW.AxisY;
@@ -4091,77 +4091,15 @@ namespace FZ4P
 
             ldmDataX = bufferLDMX.ToArray();
             ldmDataY = bufferLDMY.ToArray();
-            //int normParam = 2048;
-            //int center = (SIZE_OFS_TBL * SIZE_OFS_TBL) / 2;
-
-            //int idx_x = SIZE_OFS_TBL * (SIZE_OFS_TBL / 2);
-            //int idx_x_e = idx_x + (SIZE_OFS_TBL - 1);
-            //int idx_y = (SIZE_OFS_TBL / 2);
-            //int idx_y_e = idx_y + SIZE_OFS_TBL * (SIZE_OFS_TBL - 1);
-
-            //double sense_px = ((double)(normParam * (SIZE_OFS_TBL - 1)) / (MeasX[idx_x_e] - MeasX[idx_x]));
-            //double sense_py = ((double)(normParam * (SIZE_OFS_TBL - 1)) / (MeasY[idx_y_e] - MeasY[idx_y]));
-
-            //for (int i = 0; i < SIZE_OFS_TBL * SIZE_OFS_TBL; i++)
-            //{
-            //    int tmpX = (int)((MeasX[i] - MeasX[center]) * sense_px);
-            //    int tmpY = (int)((MeasY[i] - MeasY[center]) * sense_py);
-
-            //    adjMatrixX.Add(tmpX);
-            //    adjMatrixY.Add(tmpY);
-            //}
-            //adjMatrixX.Add(0);
-            //adjMatrixY.Add(0);
-
-
-
-            //AddLog(ch, "Updata cal data of matrix y");
-            //int startAddr = 0x102408E1;
-            //for (int i = 0; i < 25; i++)
-            //{
-            //    int addr = startAddr + (i * 0x400);
-            //    uint data = (uint)((adjMatrixY[i * 2 + 1] << 16) + adjMatrixY[i * 2]);
-            //    Dln.Write4Byte(ch, DrvIC.OIS_Addr, 0x6080, 2, addr);
-            //    Dln.Write4Byte(ch, DrvIC.OIS_Addr, 0x6084, 2, data);
-            //    AddLog(ch, $"Addr : 0x{addr.ToString("X8")}, data : 0x{data.ToString("X8")}");
-            //    Status = DrvIC.OIS_StausCheck(ch, 0x01, 0x01);
-            //    if(!Status)
-            //    {
-            //        LEDs_All_On(0, false);
-            //        PassFails[ch].Results[(int)SpecItem.OISLCCComp].Val = 1;
-            //        ShowDataResults(ch, (int)SpecItem.OISLCCComp, (int)SpecItem.OISLCCComp, InspType.OKNG, new double[] { });
-            //        return;
-            //    }
-
-            //}
-            //AddLog(ch, "Updata cal data of matrix x");
-            //startAddr = 0x10246CE1;
-            //for (int i = 0; i < 25; i++)
-            //{
-            //    int addr = startAddr + (i * 0x400);
-            //    uint data = (uint)((adjMatrixX[i * 2 + 1] << 16) + adjMatrixX[i * 2]);
-            //    Dln.Write4Byte(ch, DrvIC.OIS_Addr, 0x6080, 2, addr);
-            //    Dln.Write4Byte(ch, DrvIC.OIS_Addr, 0x6084, 2, data);
-            //    AddLog(ch, $"Addr : 0x{addr.ToString("X8")}, data : 0x{data.ToString("X8")}");
-            //    Status = DrvIC.OIS_StausCheck(ch, 0x01, 0x01);
-            //    if (!Status)
-            //    {
-            //        LEDs_All_On(0, false);
-            //        PassFails[ch].Results[(int)SpecItem.OISLCCComp].Val = 1;
-            //        ShowDataResults(ch, (int)SpecItem.OISLCCComp, (int)SpecItem.OISLCCComp, InspType.OKNG, new double[] { });
-            //        return;
-            //    }
-            //}
-
 
             oISLinCompCoef.InputValLoad(ldmDataX);
             var RealValue = oISLinCompCoef.OutputCoeff();
 
             DWDrvIC.LiearCompWrite(AxisX, RealValue);
-            DWDrvIC.LiearCompWrite(AxisY, RealValue);
+            //DWDrvIC.LiearCompWrite(AxisY, RealValue);
 
             DWDrvIC.SetStore(AxisX);
-            DWDrvIC.SetStore(AxisY);
+            //DWDrvIC.SetStore(AxisY);
 
             for (int i = 0; i < TargetCode.Count; i++)
             {
@@ -4172,10 +4110,10 @@ namespace FZ4P
                 checkReadHallY.Add(DWDrvIC.ReadOISHall(0, AxisY, 0));
             }
             AddLog(ch, $"CheckedReadHall");
-            AddLog(ch, $"TargetCode\tMoveX\tMoveY");
+            AddLog(ch, $"TargetCodeX\tMoveX\tMoveY");
             for (int i = 1; i < checkReadHallX.Count; i++)
             {
-                AddLog(ch, $"{checkReadHallX[i].ToString("F2")}\t{checkReadHallY[i].ToString("F2")}");
+                AddLog(ch, $"{TargetCode[i]}\t{checkReadHallX[i].ToString("F2")}\t{checkReadHallY[i].ToString("F2")}");
             }
 
 

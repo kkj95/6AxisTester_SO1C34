@@ -149,7 +149,9 @@ namespace FZ4P
             int calpoint;
             double sectionslope;
 
-            int[] resultcoeffBuffer = new int[INPUT_NUM];
+            int lastCoeffBuffer = -1;
+
+            //int[] resultcoeffBuffer = new int[INPUT_NUM];
             List<int> resultCoeffCollection = new List<int>();
 
             for (i = 0; i < INPUT_NUM - 1; i++)
@@ -167,12 +169,13 @@ namespace FZ4P
                     {
 
                         sectionslope = 512.0 / (g_fRealTargetScale[i + 1] - g_fRealTargetScale[i]);
-                        resultcoeffBuffer[j - 1] = (int)((sectionslope * (g_nTargetPoint[calpoint] - g_fRealTargetScale[i])) + g_nTargetPoint[i]) >> 6;
+                        lastCoeffBuffer = (int)((sectionslope * (g_nTargetPoint[calpoint] - g_fRealTargetScale[i])) + g_nTargetPoint[i]) >> 6;
                     }
                 }
+                resultCoeffCollection.Add(lastCoeffBuffer);
             }
 
-            resultCoeffCollection.AddRange(resultcoeffBuffer);
+            //resultCoeffCollection.AddRange(resultcoeffBuffer);
             return resultCoeffCollection;
         }
 
