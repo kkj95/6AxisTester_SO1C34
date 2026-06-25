@@ -2408,7 +2408,7 @@ namespace FZ4P
             }
 
 
-            //SetEPA((int)AxisTypeDW.AxisX);
+            SetEPA((int)AxisTypeDW.AxisX);
             #endregion
 
             #region OIS Y Hall Calibration
@@ -2453,7 +2453,7 @@ namespace FZ4P
                 return;
             }
 
-            //SetEPA((int)AxisTypeDW.AxisY);
+            SetEPA((int)AxisTypeDW.AxisY);
             #endregion
         }
 
@@ -2463,13 +2463,19 @@ namespace FZ4P
             int targetStrockPos = -1;
             int targetStrockNeg = -1;
             double zeroCodeOffset = -1;
+            DrvIC.AFOnOff(0, true);
             DWDrvIC.OISOnOff(0,true);
+
+            LEDs_All_On(0, true);
+            
+            DrvIC.AFMove(0, DrvIC.AF_MID_CODE);
 
             if (iAxis == (int)AxisTypeDW.AxisX)
             {
                 DWDrvIC.OISMove(0, DWDrvIC.OIS_MIN_CODE, DWDrvIC.OIS_MID_CODE);
                 Wait(300);
                 res = Measure();
+                Wait(100);
                 zeroCodeOffset = res.cx[0];
                 targetStrockPos = Condition.OISXEPAPos;
                 targetStrockNeg = Condition.OISXEPANeg;
@@ -2492,19 +2498,29 @@ namespace FZ4P
             Wait(100);
 
             DWDrvIC.Set_PT(iAxis, false);
-            
+
+
             if (FindPosition_PCAL(iAxis, targetStrockPos, 5, zeroCodeOffset))
-                DWDrvIC.SetStore(iAxis);
+            {
+                DWDrvIC.OISMove(0, DWDrvIC.OIS_MIN_CODE, DWDrvIC.OIS_MID_CODE);
+
+                if (FindPosition_NCAL(iAxis, targetStrockNeg, 5, zeroCodeOffset))
+                {
+                    DWDrvIC.SetStore(iAxis);
+                }
+                else
+                {
+                    AddLog(0, $"NCAL Not Find");
+                    return;
+                }
+            }
             else
             {
                 AddLog(0, $"PCAL Not Find");
                 return;
             }
-
-            if (FindPosition_NCAL(iAxis, targetStrockNeg, 5, zeroCodeOffset))
-                DWDrvIC.SetStore(iAxis);
-            else
-                AddLog(0, $"NCAL Not Find");
+            
+            LEDs_All_On(0, false);
         }
 
         private bool FindPosition_PCAL(int Axis,int targetStrockPos, int MinMaxGap, double strokOffSet)
@@ -2533,11 +2549,11 @@ namespace FZ4P
                     return true;
                 }
 
-                if (RangeMin > res.cx[0] || movecode > 0xF0)
+                if (RangeMin > currentValue || movecode > 0xFF)
                 {
                     AddLog(0, $"PCAL NOT Find : Measure [{currentValue}], Code [{movecode - 1}]");       //후순위 처리로 이전 코드가 필요
                     return false;
-                }       
+                }
             }
         }
 
@@ -2566,7 +2582,7 @@ namespace FZ4P
                     return true;
                 }
 
-                if (RangeMin > currentValue || movecode > 0xF0)
+                if (RangeMin > currentValue || movecode > 0xFF)
                 {
                     AddLog(0, $"PCAL NOT Find : Measure [{currentValue}], Code [{movecode - 1}]");       //후순위 처리로 이전 코드가 필요
                     return false;
