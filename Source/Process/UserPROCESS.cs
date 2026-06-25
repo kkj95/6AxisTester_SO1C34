@@ -4036,15 +4036,15 @@ namespace FZ4P
 
         private bool NDataPointChecked()
         {
-            if (Condition.OISLincompStep > 32 ||
-                Condition.OISLincompStep > 16 ||
-                Condition.OISLincompStep > 8 ||
-                Condition.OISLincompStep > 4 )
+            if (Condition.OISLincompStep == 32 ||
+                Condition.OISLincompStep == 16 ||
+                Condition.OISLincompStep == 8 ||
+                Condition.OISLincompStep == 4 )
             {
-                return false;
+                return true;
             }
 
-            return true;
+            return false;
         }
         private void OISLCCComp(int ch, string testItem, int inspCnt)
         {
@@ -4054,7 +4054,8 @@ namespace FZ4P
                 return;
             }
 
-            OISLineCompCoefDW_EX oISLinCompCoef = new OISLineCompCoefDW_EX(); 
+            OISLineCompCoefDW_EX oISLinCompCoef = new OISLineCompCoefDW_EX();
+            OISLineCompCoefDW_EX oISLinCompCoefY = new OISLineCompCoefDW_EX();
             FindResult res = new FindResult();
             var step = Condition.OISLincompStep;
             List<short> TargetCode = new List<short>();
@@ -4103,30 +4104,52 @@ namespace FZ4P
             ldmDataX = bufferLDMX.ToArray();
             ldmDataY = bufferLDMY.ToArray();
 
+            oISLinCompCoefY.InputValLoad(ldmDataY);
             oISLinCompCoef.InputValLoad(ldmDataX);
-            //var RealValue = oISLinCompCoef.OutputCoeff();
-            int[] RealValue = new int[15];
-            List<int> RealValueCollection = new List<int>();
-            oISLinCompCoef.OutputCoeff(RealValue);
 
-            RealValueCollection.AddRange(RealValue);
+            int[] LinCompValueX = new int[15];
+            int[] LinCompValueY = new int[15];
+            List<int> RealValueCollectionX = new List<int>();
+            List<int> RealValueCollectionY = new List<int>();
 
-            DWDrvIC.LiearCompWrite(AxisX, RealValueCollection);
+            oISLinCompCoef.OutputCoeff(LinCompValueX);
+            oISLinCompCoefY.OutputCoeff(LinCompValueY);
+            RealValueCollectionX.AddRange(LinCompValueX);
+            RealValueCollectionY.AddRange(LinCompValueY);
+
+            DWDrvIC.LiearCompWrite(AxisX, RealValueCollectionX);
+            DWDrvIC.LiearCompWrite(AxisY, RealValueCollectionY);
 
             //DWDrvIC.LiearCompWrite(AxisX, RealValue);
             //DWDrvIC.LiearCompWrite(AxisY, RealValue);
 
             DWDrvIC.SetStore(AxisX);
-            //DWDrvIC.SetStore(AxisY);
+            DWDrvIC.SetStore(AxisY);
 
+            //DWDrvIC.SetStore(AxisY);
+            Wait(500);
+
+            Dln.PowerOnOff(0, false);
+            Wait(500);
+            Dln.PowerOnOff(0, true);
+            Wait(500);
+
+            DWDrvIC.OISOnOff(0, true);
+            Wait(500);
+            //DWDrvIC.OISICReset(0);
+            //Wait(500);
+            LEDs_All_On(0,true);
             for (int i = 0; i < TargetCode.Count; i++)
             {
                 DWDrvIC.OISMove(ch, TargetCode[i], TargetCode[i]);
+                res = Measure();
                 Wait(100);
-                
-                checkReadHallX.Add(DWDrvIC.ReadOISHall(0, AxisX, 0));
-                checkReadHallY.Add(DWDrvIC.ReadOISHall(0, AxisY, 0));
+                var positionx = DWDrvIC.ReadOISHall(0, AxisX, 0);
+                var positiony = DWDrvIC.ReadOISHall(0, AxisX, 0);
+                checkReadHallX.Add(positionx);
+                checkReadHallY.Add(positiony);
             }
+            LEDs_All_On(0, false);
             AddLog(ch, $"CheckedReadHall");
             AddLog(ch, $"TargetCodeX\tMoveX\tMoveY");
             for (int i = 1; i < checkReadHallX.Count; i++)

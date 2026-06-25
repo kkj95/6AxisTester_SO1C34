@@ -171,9 +171,10 @@ namespace FZ4P.UI
             while (!token.IsCancellationRequested)
             {
                 ReadHall = _oISFunction.ReadOISHall(0, 0, 0).ToString();
+                Thread.Sleep(5);
                 ReadHall2 = _oISFunction.ReadOISHall(0, 1, 0).ToString();
+                Thread.Sleep(5);
                 ReadHall3 = _afFunction.ReadAFHall(iCh).ToString();
-
                 Thread.Sleep(5);
                 //PeakCurrent = STATIC.DrvIC.GetPeakCurrent(iCh, iAixs).ToString();
                 Thread.Sleep(5);

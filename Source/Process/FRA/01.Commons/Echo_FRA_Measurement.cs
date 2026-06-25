@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FZ4P.Process.FRA._01.Commons
+namespace FZ4P
 {
     public class Echo_FRA_Measurement
     {

@@ -8,8 +8,8 @@ namespace FZ4P
 {
     public class OISLineCompCoefDW_EX
     {
-        public readonly int INPUT_NUM = 33;
-        public readonly int Curve_Order = 3;
+        public const int INPUT_NUM = 33;
+        public const int Curve_Order = 3;
 
         public double[] g_fRealStroke;                 // LDM data
         public double[] g_fFit_RealStroke;

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FZ4P.Process.FRA
+namespace FZ4P
 {
     public struct sFRA_TestSetting
     {

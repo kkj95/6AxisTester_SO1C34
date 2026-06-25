@@ -19,6 +19,7 @@ namespace FZ4P.DriverIc.OISIC
     //동윤보드 14bit Move 동작
     public class DW9836N : IOISFunction,IFRAFunction
     {
+        private object _lock = new object();
         private readonly IOneTwoBytesDrivingIC _controls;
 
         public int FRA_Addr { get; set; } = 0x12;
@@ -108,12 +109,13 @@ namespace FZ4P.DriverIc.OISIC
 
         public short ReadOISHall(int ch, int axis, int mode)
         {
+            short ReadData = 0x0000;
+
             int SlaveID = GetAxisTypeID((AxisTypeDW)axis);
 
-            var ReadDataHigh = Controls.ReadByte(SlaveID, (int)RegisterMapDW9836N.POSITION_READ_LOW, 1);
-            var ReadDataLow = Controls.ReadByte(SlaveID, (int)RegisterMapDW9836N.POSITION_READ_HIGH, 1);
+            var Wrod = Controls.Read2Byte(SlaveID, (int)RegisterMapDW9836N.POSITION_READ_LOW, 1);
 
-            short ReadData = (short)(((ReadDataHigh << 8) + (ReadDataHigh & 0xFF))>>2);
+            ReadData = (short)(Wrod >> 2);
 
             if (mode == 0)
             {
@@ -136,8 +138,8 @@ namespace FZ4P.DriverIc.OISIC
                 //    if (!res) return short.MaxValue;
                 //}
                 //return Dln.Read2Byte_signed(ch, OIS_Addr, 0x6062, 2);
-            }
-
+            }   
+            
             return (short)ReadData;
         }
 
