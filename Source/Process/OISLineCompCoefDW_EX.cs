@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace FZ4P
 {
-    public class OISLinCompCoefDW
+    public class OISLineCompCoefDW_EX
     {
-        public readonly int INPUT_NUM;
-        private int _version = 10;
-        private int _versionDetail = 240424;
+        public readonly int INPUT_NUM = 33;
+        public readonly int Curve_Order = 3;
 
         public double[] g_fRealStroke;                 // LDM data
         public double[] g_fFit_RealStroke;
@@ -23,13 +20,8 @@ namespace FZ4P
 
         public double[] output_debug;
 
-        public int Version { get => _version; }
-        public int VersionDetail { get => _versionDetail; }
-
-        public OISLinCompCoefDW(int InputNumber)
+        public OISLineCompCoefDW_EX()
         {
-            INPUT_NUM = InputNumber;
-
             g_fRealStroke = new double[INPUT_NUM];                          // LDM data
             g_fFit_RealStroke = new double[INPUT_NUM];
             g_fFit_RealStroke_temp = new double[INPUT_NUM];
@@ -59,6 +51,8 @@ namespace FZ4P
 
             Curve_Fitting_all(count);
 
+
+
             for (i = 0; i < INPUT_NUM - 1; i++)
             {
                 g_fRealTargetScale[i] = g_fFit_RealStroke[i] / g_fFit_RealStroke[INPUT_NUM - 1] * 16384;
@@ -68,32 +62,32 @@ namespace FZ4P
             g_fRealTargetScale[INPUT_NUM - 1] = 16383;
 
         }
+
+
         private void Curve_Fitting_all(int data_num)
         {
             int i, j, k, n, N;
             N = data_num;
             n = 3;
-            double[] x_axis = new double[INPUT_NUM];
+            double[] x_axis = new double[33];
             for (i = 0; i < data_num; i++)
             {
                 x_axis[i] = i;
                 //output_debug[i] = x_axis[i];
             }
-            double[] X = new double[2 * 10 + 1];
+            double[] X= new double[2 * 10 + 1];
             for (i = 0; i < 2 * n + 1; i++)
             {
                 X[i] = 0;
                 for (j = 0; j < N; j++)
                     X[i] = X[i] + Math.Pow(x_axis[j], i);        //consecutive positions of the array will store N,sigma(xi),sigma(xi^2),sigma(xi^3)....sigma(xi^2n)
             }
-            double[,] B = new double[10 + 1, 10 + 2];
+            double[,] B= new double [10 + 1,10 + 2];
             double[] a = new double[10 + 1];
-
             for (i = 0; i <= n; i++)
                 for (j = 0; j <= n; j++)
                     B[i,j] = X[i + j];
-
-            double[] Y =new double[10 + 1];                    //Array to store the values of sigma(yi),sigma(xi*yi),sigma(xi^2*yi)...sigma(xi^n*yi)
+            double[] Y = new double[10 + 1];                    //Array to store the values of sigma(yi),sigma(xi*yi),sigma(xi^2*yi)...sigma(xi^n*yi)
             for (i = 0; i < n + 1; i++)
             {
                 Y[i] = 0;
@@ -120,39 +114,36 @@ namespace FZ4P
                     for (j = 0; j <= n; j++)
                         B[k,j] = B[k,j] - t * B[i,j];
                 }
-            for (i = n - 1; i >= 0; i--)                                                //back-substitution
-            {                                                                           //x is an array whose values correspond to the values of x,y,z..
-                a[i] = B[i,n];                                                          //make the variable to be calculated equal to the rhs of the last equation
+            for (i = n - 1; i >= 0; i--)                //back-substitution
+            {                        //x is an array whose values correspond to the values of x,y,z..
+                a[i] = B[i,n];                //make the variable to be calculated equal to the rhs of the last equation
                 for (j = 0; j < n; j++)
-                    if (j != i)                                                         //then subtract all the lhs values except the coefficient of the variable whose value                                   is being calculated
+                    if (j != i)            //then subtract all the lhs values except the coefficient of the variable whose value                                   is being calculated
                         a[i] = a[i] - B[i,j] * a[j];
-                a[i] = a[i] / B[i,i];                                                   //now finally divide the rhs by the coefficient of the variable to be calculated
+                a[i] = a[i] / B[i,i];            //now finally divide the rhs by the coefficient of the variable to be calculated
+
             }
 
-            double input_ratio = ((INPUT_NUM - 1) / (double)(data_num - 1));
-            for (i = 0; i < INPUT_NUM; i++)
+            double input_ratio = ((33 - 1) / (double)(data_num - 1));
+            for (i = 0; i < 33; i++)
             {
                 g_fFit_RealStroke_temp[i] = ((a[3] * (double)(i) / input_ratio * (double)(i) / input_ratio * (double)(i) / input_ratio) + (a[2] * (double)(i) / input_ratio * (double)(i) / input_ratio) + (a[1] * (double)(i) / input_ratio) + a[0]);
                 //output_debug[i] = (g_fFit_RealStroke_temp[i]);
             }
 
-            for (i = 0; i < INPUT_NUM; i++)
+            for (i = 0; i < 33; i++)
             {
                 g_fFit_RealStroke[i] = g_fFit_RealStroke_temp[i] - g_fFit_RealStroke_temp[0];
                 output_debug[i] = (g_fFit_RealStroke[i]);
             }
         }
 
-        public List<int> OutputCoeff()
+
+        public void OutputCoeff(int[] coeff)
         {
             int i, j;
             int calpoint;
             double sectionslope;
-
-            int lastCoeffBuffer = -1;
-
-            //int[] resultcoeffBuffer = new int[INPUT_NUM];
-            List<int> resultCoeffCollection = new List<int>();
 
             for (i = 0; i < INPUT_NUM - 1; i++)
             {
@@ -169,14 +160,10 @@ namespace FZ4P
                     {
 
                         sectionslope = 512.0 / (g_fRealTargetScale[i + 1] - g_fRealTargetScale[i]);
-                        lastCoeffBuffer = (int)((sectionslope * (g_nTargetPoint[calpoint] - g_fRealTargetScale[i])) + g_nTargetPoint[i]) >> 6;
+                        coeff[j - 1] = (int)((sectionslope * (g_nTargetPoint[calpoint] - g_fRealTargetScale[i])) + g_nTargetPoint[i]) >> 6;
                     }
                 }
-                resultCoeffCollection.Add(lastCoeffBuffer);
             }
-
-            //resultCoeffCollection.AddRange(resultcoeffBuffer);
-            return resultCoeffCollection;
         }
     }
 }

@@ -4,13 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
-using System.Drawing.Text;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
 
 namespace FZ4P
 {
@@ -4038,9 +4035,27 @@ namespace FZ4P
             LEDs_All_On(0, false);
         }
 
+        private bool NDataPointChecked()
+        {
+            if (Condition.OISLincompStep > 32 ||
+                Condition.OISLincompStep > 16 ||
+                Condition.OISLincompStep > 8 ||
+                Condition.OISLincompStep > 4 )
+            {
+                return false;
+            }
+
+            return true;
+        }
         private void OISLCCComp(int ch, string testItem, int inspCnt)
         {
-            OISLinCompCoefDW oISLinCompCoef = new OISLinCompCoefDW(Condition.OISLincompStep); 
+            if(!NDataPointChecked())
+            {
+                AddLog(ch, "Invalid OIS Linear Compensation Step");
+                return;
+            }
+
+            OISLineCompCoefDW_EX oISLinCompCoef = new OISLineCompCoefDW_EX(); 
             FindResult res = new FindResult();
             var step = Condition.OISLincompStep;
             List<short> TargetCode = new List<short>();
@@ -4051,7 +4066,6 @@ namespace FZ4P
             int AxisX = (int)AxisTypeDW.AxisX;
             int AxisY = (int)AxisTypeDW.AxisY;
             //여기까지
-
             for (int i = 0; i < step+1; i++)
                 TargetCode.Add((short)(step_interval * (i)));
 
@@ -4061,8 +4075,6 @@ namespace FZ4P
             List<double> checkReadHallX = new List<double>();
             List<double> checkReadHallY = new List<double>();
 
-            //List<int> adjMatrixX = new List<int>();
-            //List<int> adjMatrixY = new List<int>();
             LEDs_All_On(0, true);
           
             DWDrvIC.OISOnOff(ch, true);
@@ -4093,9 +4105,16 @@ namespace FZ4P
             ldmDataY = bufferLDMY.ToArray();
 
             oISLinCompCoef.InputValLoad(ldmDataX);
-            var RealValue = oISLinCompCoef.OutputCoeff();
+            //var RealValue = oISLinCompCoef.OutputCoeff();
+            int[] RealValue = new int[15];
+            List<int> RealValueCollection = new List<int>();
+            oISLinCompCoef.OutputCoeff(RealValue);
 
-            DWDrvIC.LiearCompWrite(AxisX, RealValue);
+            RealValueCollection.AddRange(RealValue);
+
+            DWDrvIC.LiearCompWrite(AxisX, RealValueCollection);
+
+            //DWDrvIC.LiearCompWrite(AxisX, RealValue);
             //DWDrvIC.LiearCompWrite(AxisY, RealValue);
 
             DWDrvIC.SetStore(AxisX);

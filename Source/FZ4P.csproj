@@ -145,6 +145,7 @@
     <Compile Include="Process\AjinLibrary.cs" />
     <Compile Include="Process\OISLinCompCoef.cs" />
     <Compile Include="Process\OISLinCompCoefDW.cs" />
+    <Compile Include="Process\OISLineCompCoefDW_EX.cs" />
     <Compile Include="Process\PROCESSParam.cs" />
     <Compile Include="Process\PROCESS.cs" />
     <Compile Include="DriverIc\DLN.cs" />
