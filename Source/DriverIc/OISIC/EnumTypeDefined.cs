@@ -44,4 +44,32 @@ namespace FZ4P.DriverIc.OISIC
         PCAL = 0x46,
         NCAL = 0x47,
     }
+
+    public enum RegisterMapFRA
+    {
+        BOARD_INFO = 0x00,
+        FRA_START = 0x01,
+        STATUS = 0x02,
+        FRA_MODE = 0x03,
+        AMPLITUDE_H = 0x04,
+        AMPLITUDE_L = 0x05,
+        OFFSET_H = 0x06,
+        OFFSET_L = 0x07,
+        REG_INIT = 0x08,
+        ERROR_CODE = 0x09,
+        FRA_POINT_H = 0x0A,
+        FRA_POINT_L = 0x0B,
+        START_FREQ_H = 0x0C,
+        START_FREQ_L = 0x0D,
+        END_FREQ_H = 0x0E,
+        END_FREQ_L = 0x0F,
+        TARGET_POS_H = 0x10,
+        TARGET_POS_L = 0x11,
+        I2C_CH = 0x12,
+        FRA_CTRLER = 0x13,
+        TARGET_WAIT_CYCLE = 0x14,
+        TARGET_WAIT_TIME = 0x15,
+        TARGET_POS2_H = 0x16,
+        TARGET_POS2_L = 0x16,
+    }
 }

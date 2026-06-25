@@ -1186,7 +1186,6 @@ namespace FZ4P
 
         void OISPM(int ch, string testItem, int inspCnt)
         {
-
             double[] res = new double[2];
 
             res[0] = OISPMGM(ch, 0, 0, Condition.iXChirpFrom, Condition.iXChirpTo, Condition.XPMInspCnt, Condition.iXAmplitude);

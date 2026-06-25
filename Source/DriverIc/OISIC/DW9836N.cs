@@ -17,7 +17,7 @@ namespace FZ4P.DriverIc.OISIC
     /// IC 동작에 구현체 
     /// </summary>
     //동윤보드 14bit Move 동작
-    public class DW9836N : IOISFunction
+    public class DW9836N : IOISFunction,IFRAFunction
     {
         private readonly IOneTwoBytesDrivingIC _controls;
 
