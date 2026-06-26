@@ -4,13 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
-using System.Drawing.Text;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
 
 namespace FZ4P
 {
@@ -1192,25 +1189,32 @@ namespace FZ4P
 
             double[] res = new double[2];
 
-            res[0] = OISPMGM(ch, 0, 0, Condition.iXChirpFrom, Condition.iXChirpTo, Condition.XPMInspCnt, Condition.iXAmplitude);
-            res[1] = OISPMGM(ch, 1, 0, Condition.iYChirpFrom, Condition.iYChirpTo, Condition.YPMInspCnt, Condition.iYAmplitude);
+            OISPM(ch,(int)AxisTypeDW.AxisX);
+            OISPM(ch, (int)AxisTypeDW.AxisY);
 
-            PassFails[0].Results[(int)SpecItem.FRAX_PhaseMargin].Val = res[0];
-            ShowDataResults(ch, (int)SpecItem.FRAX_PhaseMargin, (int)SpecItem.FRAX_PhaseMargin, InspType.Normal, new double[] { });
-            PassFails[0].Results[(int)SpecItem.FRAY_PhaseMargin].Val = res[1];
-            ShowDataResults(ch, (int)SpecItem.FRAY_PhaseMargin, (int)SpecItem.FRAY_PhaseMargin, InspType.Normal, new double[] { });
+            //res[0] = OISPMGM(ch, 0, 0, Condition.iXChirpFrom, Condition.iXChirpTo, Condition.XPMInspCnt, Condition.iXAmplitude);
+            //res[1] = OISPMGM(ch, 1, 0, Condition.iYChirpFrom, Condition.iYChirpTo, Condition.YPMInspCnt, Condition.iYAmplitude);
+
+            //PassFails[0].Results[(int)SpecItem.FRAX_PhaseMargin].Val = res[0];
+            //ShowDataResults(ch, (int)SpecItem.FRAX_PhaseMargin, (int)SpecItem.FRAX_PhaseMargin, InspType.Normal, new double[] { });
+            //PassFails[0].Results[(int)SpecItem.FRAY_PhaseMargin].Val = res[1];
+            //ShowDataResults(ch, (int)SpecItem.FRAY_PhaseMargin, (int)SpecItem.FRAY_PhaseMargin, InspType.Normal, new double[] { });
         }
         void OISGM(int ch, string testItem, int inspCnt)
         {
             double[] res = new double[2];
 
-            res[0] = OISPMGM(ch, 0, 1, Condition.iXChirpFromGM, Condition.iXChirpToGM, Condition.XGMInspCnt, Condition.iXAmplitudeGM);
-            res[1] = OISPMGM(ch, 1, 1, Condition.iYChirpFromGM, Condition.iYChirpToGM, Condition.YGMInspCnt, Condition.iYAmplitudeGM);
+            OISGM(ch, (int)AxisTypeDW.AxisX);
+            OISGM(ch, (int)AxisTypeDW.AxisX);
 
-            PassFails[0].Results[(int)SpecItem.FRAX_GainMargin].Val = res[0];
-            ShowDataResults(ch, (int)SpecItem.FRAX_GainMargin, (int)SpecItem.FRAX_GainMargin, InspType.Normal, new double[] { });
-            PassFails[0].Results[(int)SpecItem.FRAY_GainMargin].Val = res[1];
-            ShowDataResults(ch, (int)SpecItem.FRAY_GainMargin, (int)SpecItem.FRAY_GainMargin, InspType.Normal, new double[] { });
+
+            //res[0] = OISPMGM(ch, 0, 1, Condition.iXChirpFromGM, Condition.iXChirpToGM, Condition.XGMInspCnt, Condition.iXAmplitudeGM);
+            //res[1] = OISPMGM(ch, 1, 1, Condition.iYChirpFromGM, Condition.iYChirpToGM, Condition.YGMInspCnt, Condition.iYAmplitudeGM);
+
+            //PassFails[0].Results[(int)SpecItem.FRAX_GainMargin].Val = res[0];
+            //ShowDataResults(ch, (int)SpecItem.FRAX_GainMargin, (int)SpecItem.FRAX_GainMargin, InspType.Normal, new double[] { });
+            //PassFails[0].Results[(int)SpecItem.FRAY_GainMargin].Val = res[1];
+            //ShowDataResults(ch, (int)SpecItem.FRAY_GainMargin, (int)SpecItem.FRAY_GainMargin, InspType.Normal, new double[] { });
         }
 
         void OISLoopGain(int ch, string testItem, int inspCnt)
@@ -2408,7 +2412,7 @@ namespace FZ4P
             }
 
 
-            SetEPA((int)AxisTypeDW.AxisX);
+            //SetEPA((int)AxisTypeDW.AxisX);
             #endregion
 
             #region OIS Y Hall Calibration
@@ -2453,7 +2457,7 @@ namespace FZ4P
                 return;
             }
 
-            SetEPA((int)AxisTypeDW.AxisY);
+            //SetEPA((int)AxisTypeDW.AxisY);
             #endregion
         }
 
@@ -4143,20 +4147,38 @@ namespace FZ4P
             LEDs_All_On(0, false);
         }
 
+        private bool NDataPointChecked()
+        {
+            if (Condition.OISLincompStep == 32 ||
+                Condition.OISLincompStep == 16 ||
+                Condition.OISLincompStep == 8 ||
+                Condition.OISLincompStep == 4 )
+            {
+                return true;
+            }
+
+            return false;
+        }
         private void OISLCCComp(int ch, string testItem, int inspCnt)
         {
-            OISLinCompCoefDW oISLinCompCoef = new OISLinCompCoefDW(Condition.OISLincompStep); 
+            if(!NDataPointChecked())
+            {
+                AddLog(ch, "Invalid OIS Linear Compensation Step");
+                return;
+            }
+
+            OISLineCompCoefDW_EX oISLinCompCoef = new OISLineCompCoefDW_EX();
+            OISLineCompCoefDW_EX oISLinCompCoefY = new OISLineCompCoefDW_EX();
             FindResult res = new FindResult();
             var step = Condition.OISLincompStep;
             List<short> TargetCode = new List<short>();
             var step_interval = DWDrvIC.OIS_MAX_CODE / step;
-            double[] ldmDataX = new double[step + 1];
-            double[] ldmDataY = new double[step + 1];
+            double[] ldmDataX = null;//new double;
+            double[] ldmDataY = null;//new double;
 
             int AxisX = (int)AxisTypeDW.AxisX;
             int AxisY = (int)AxisTypeDW.AxisY;
             //여기까지
-
             for (int i = 0; i < step+1; i++)
                 TargetCode.Add((short)(step_interval * (i)));
 
@@ -4166,8 +4188,6 @@ namespace FZ4P
             List<double> checkReadHallX = new List<double>();
             List<double> checkReadHallY = new List<double>();
 
-            //List<int> adjMatrixX = new List<int>();
-            //List<int> adjMatrixY = new List<int>();
             LEDs_All_On(0, true);
           
             DWDrvIC.OISOnOff(ch, true);
@@ -4196,91 +4216,58 @@ namespace FZ4P
 
             ldmDataX = bufferLDMX.ToArray();
             ldmDataY = bufferLDMY.ToArray();
-            //int normParam = 2048;
-            //int center = (SIZE_OFS_TBL * SIZE_OFS_TBL) / 2;
 
-            //int idx_x = SIZE_OFS_TBL * (SIZE_OFS_TBL / 2);
-            //int idx_x_e = idx_x + (SIZE_OFS_TBL - 1);
-            //int idx_y = (SIZE_OFS_TBL / 2);
-            //int idx_y_e = idx_y + SIZE_OFS_TBL * (SIZE_OFS_TBL - 1);
-
-            //double sense_px = ((double)(normParam * (SIZE_OFS_TBL - 1)) / (MeasX[idx_x_e] - MeasX[idx_x]));
-            //double sense_py = ((double)(normParam * (SIZE_OFS_TBL - 1)) / (MeasY[idx_y_e] - MeasY[idx_y]));
-
-            //for (int i = 0; i < SIZE_OFS_TBL * SIZE_OFS_TBL; i++)
-            //{
-            //    int tmpX = (int)((MeasX[i] - MeasX[center]) * sense_px);
-            //    int tmpY = (int)((MeasY[i] - MeasY[center]) * sense_py);
-
-            //    adjMatrixX.Add(tmpX);
-            //    adjMatrixY.Add(tmpY);
-            //}
-            //adjMatrixX.Add(0);
-            //adjMatrixY.Add(0);
-
-
-
-            //AddLog(ch, "Updata cal data of matrix y");
-            //int startAddr = 0x102408E1;
-            //for (int i = 0; i < 25; i++)
-            //{
-            //    int addr = startAddr + (i * 0x400);
-            //    uint data = (uint)((adjMatrixY[i * 2 + 1] << 16) + adjMatrixY[i * 2]);
-            //    Dln.Write4Byte(ch, DrvIC.OIS_Addr, 0x6080, 2, addr);
-            //    Dln.Write4Byte(ch, DrvIC.OIS_Addr, 0x6084, 2, data);
-            //    AddLog(ch, $"Addr : 0x{addr.ToString("X8")}, data : 0x{data.ToString("X8")}");
-            //    Status = DrvIC.OIS_StausCheck(ch, 0x01, 0x01);
-            //    if(!Status)
-            //    {
-            //        LEDs_All_On(0, false);
-            //        PassFails[ch].Results[(int)SpecItem.OISLCCComp].Val = 1;
-            //        ShowDataResults(ch, (int)SpecItem.OISLCCComp, (int)SpecItem.OISLCCComp, InspType.OKNG, new double[] { });
-            //        return;
-            //    }
-
-            //}
-            //AddLog(ch, "Updata cal data of matrix x");
-            //startAddr = 0x10246CE1;
-            //for (int i = 0; i < 25; i++)
-            //{
-            //    int addr = startAddr + (i * 0x400);
-            //    uint data = (uint)((adjMatrixX[i * 2 + 1] << 16) + adjMatrixX[i * 2]);
-            //    Dln.Write4Byte(ch, DrvIC.OIS_Addr, 0x6080, 2, addr);
-            //    Dln.Write4Byte(ch, DrvIC.OIS_Addr, 0x6084, 2, data);
-            //    AddLog(ch, $"Addr : 0x{addr.ToString("X8")}, data : 0x{data.ToString("X8")}");
-            //    Status = DrvIC.OIS_StausCheck(ch, 0x01, 0x01);
-            //    if (!Status)
-            //    {
-            //        LEDs_All_On(0, false);
-            //        PassFails[ch].Results[(int)SpecItem.OISLCCComp].Val = 1;
-            //        ShowDataResults(ch, (int)SpecItem.OISLCCComp, (int)SpecItem.OISLCCComp, InspType.OKNG, new double[] { });
-            //        return;
-            //    }
-            //}
-
-
+            oISLinCompCoefY.InputValLoad(ldmDataY);
             oISLinCompCoef.InputValLoad(ldmDataX);
-            var RealValue = oISLinCompCoef.OutputCoeff();
 
-            DWDrvIC.LiearCompWrite(AxisX, RealValue);
-            DWDrvIC.LiearCompWrite(AxisY, RealValue);
+            int[] LinCompValueX = new int[15];
+            int[] LinCompValueY = new int[15];
+            List<int> RealValueCollectionX = new List<int>();
+            List<int> RealValueCollectionY = new List<int>();
+
+            oISLinCompCoef.OutputCoeff(LinCompValueX);
+            oISLinCompCoefY.OutputCoeff(LinCompValueY);
+            RealValueCollectionX.AddRange(LinCompValueX);
+            RealValueCollectionY.AddRange(LinCompValueY);
+
+            DWDrvIC.LiearCompWrite(AxisX, RealValueCollectionX);
+            DWDrvIC.LiearCompWrite(AxisY, RealValueCollectionY);
+
+            //DWDrvIC.LiearCompWrite(AxisX, RealValue);
+            //DWDrvIC.LiearCompWrite(AxisY, RealValue);
 
             DWDrvIC.SetStore(AxisX);
             DWDrvIC.SetStore(AxisY);
 
+            //DWDrvIC.SetStore(AxisY);
+            Wait(500);
+
+            Dln.PowerOnOff(0, false);
+            Wait(500);
+            Dln.PowerOnOff(0, true);
+            Wait(500);
+
+            DWDrvIC.OISOnOff(0, true);
+            Wait(500);
+            //DWDrvIC.OISICReset(0);
+            //Wait(500);
+            LEDs_All_On(0,true);
             for (int i = 0; i < TargetCode.Count; i++)
             {
                 DWDrvIC.OISMove(ch, TargetCode[i], TargetCode[i]);
+                res = Measure();
                 Wait(100);
-                
-                checkReadHallX.Add(DWDrvIC.ReadOISHall(0, AxisX, 0));
-                checkReadHallY.Add(DWDrvIC.ReadOISHall(0, AxisY, 0));
+                var positionx = DWDrvIC.ReadOISHall(0, AxisX, 0);
+                var positiony = DWDrvIC.ReadOISHall(0, AxisX, 0);
+                checkReadHallX.Add(positionx);
+                checkReadHallY.Add(positiony);
             }
+            LEDs_All_On(0, false);
             AddLog(ch, $"CheckedReadHall");
-            AddLog(ch, $"TargetCode\tMoveX\tMoveY");
+            AddLog(ch, $"TargetCodeX\tMoveX\tMoveY");
             for (int i = 1; i < checkReadHallX.Count; i++)
             {
-                AddLog(ch, $"{checkReadHallX[i].ToString("F2")}\t{checkReadHallY[i].ToString("F2")}");
+                AddLog(ch, $"{TargetCode[i]}\t{checkReadHallX[i].ToString("F2")}\t{checkReadHallY[i].ToString("F2")}");
             }
 
 
@@ -4493,6 +4480,164 @@ namespace FZ4P
             }
             return resArr[1];
            
+        }
+        public bool OISPM(int ch, int axis)
+        {
+            Echo_FRA_Measurement measure = new Echo_FRA_Measurement(DWDrvIC, AddLog);
+            Echo_FRA_Serch serch = new Echo_FRA_Serch(AddLog);
+            sFRA_TestSetting fra_setting = new sFRA_TestSetting();
+
+            int msg = 0;
+
+            DWDrvIC.OISReset(ch, (int)AxisTypeDW.AxisX, true);
+            DWDrvIC.OISReset(ch, (int)AxisTypeDW.AxisY, true);
+
+            if (!DWDrvIC.Echo_Board_WhoAmI(ch))
+            {
+                //m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.PassFail] = (int)Global.NonSpecItem.PM_TEST_NG;
+                AddLog(ch, string.Format($"Not found Echo_Board info", false));
+                m__G.m_ChannelOn[ch] = false;
+                return false;
+            }
+
+            fra_setting.ois_slave_id = 0x78;
+
+            fra_setting.ois_control_freq = (byte)measure.CTRL_FREQ_10KHZ;
+            if (axis == 0)
+            {
+                fra_setting.ois_mode = (byte)measure.OPEN_FRA_X;
+                fra_setting.test_point = Condition.iFRAStep;
+                fra_setting.amplitude = Condition.iXAmplitude;
+                fra_setting.dc_bias_ofst = Condition.iXOffset;
+                fra_setting.start_freq = Condition.iXChirpTo;
+                fra_setting.end_freq = Condition.iXChirpFrom;
+            }
+            else
+            {
+                fra_setting.ois_mode = (byte)measure.OPEN_FRA_Y;
+                fra_setting.test_point = Condition.iFRAStep;
+                fra_setting.amplitude = Condition.iYAmplitude;
+                fra_setting.dc_bias_ofst = Condition.iYOffset;
+                fra_setting.start_freq = Condition.iYChirpTo;
+                fra_setting.end_freq = Condition.iYChirpFrom;
+            }
+
+            double[] freq_buf = new double[fra_setting.test_point];
+            double[] gain_buf = new double[fra_setting.test_point];
+            double[] phase_buf = new double[fra_setting.test_point];
+            int SearchCnt = 0;
+
+            sFRA_Margin fra_result = new sFRA_Margin();
+
+            msg = measure.Echo_FRA_Single_Measurement(ch, ref fra_result, ref fra_setting, ref freq_buf, ref gain_buf, ref phase_buf, ref SearchCnt);
+
+            //260309 : Single 풀시캔시 해당 SearchCnt를 리턴해줫지만 .. 필터 기능이 없어지면서 해당 배열을 전부 스캔해야됨.
+            msg = serch.Search_PM(ch, ref fra_result, fra_setting, freq_buf, gain_buf, phase_buf, SearchCnt);
+            var realpoint = fra_setting.test_point - 2;
+
+            if (axis == 0)
+            {
+                m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.FRAX_PMFreq] = fra_result.phase_margin_freq;
+                m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.FRAX_PhaseMargin] = fra_result.phase_margin;
+                m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.FRAX_Gain10Hz] = fra_result.freq10HzGain;
+
+                PassFails[0].Results[(int)SpecItem.FRAX_PhaseMargin].Val = fra_result.phase_margin;
+                ShowDataResults(ch, (int)SpecItem.FRAX_PhaseMargin, (int)SpecItem.FRAX_PhaseMargin, InspType.Normal, new double[] { });
+            }
+            else
+            {
+                m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.FRAY_PMFreq] = fra_result.phase_margin_freq;
+                m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.FRAY_PhaseMargin] = fra_result.phase_margin;
+                m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.FRAY_Gain10Hz] = fra_result.freq10HzGain;
+
+                PassFails[0].Results[(int)SpecItem.FRAY_PhaseMargin].Val = fra_result.phase_margin;
+                ShowDataResults(ch, (int)SpecItem.FRAY_PhaseMargin, (int)SpecItem.FRAX_PhaseMargin, InspType.Normal, new double[] { });
+
+                if (fra_result.phase_margin < Condition.iYPMMin || fra_result.phase_margin > Condition.iYPMMax || double.IsNaN(fra_result.phase_margin))
+                    return false;
+                else
+                    return true;
+            }
+            return true;
+
+        }
+        public bool OISGM(int ch, int axis)
+        {
+            Echo_FRA_Measurement measure = new Echo_FRA_Measurement(DWDrvIC, AddLog);
+            Echo_FRA_Serch serch = new Echo_FRA_Serch(AddLog);
+            sFRA_TestSetting fra_setting = new sFRA_TestSetting();
+
+            int msg = 0;
+
+            DWDrvIC.OISReset(ch, (int)AxisTypeDW.AxisX, true);
+            DWDrvIC.OISReset(ch, (int)AxisTypeDW.AxisY, true);
+
+            if (!DWDrvIC.Echo_Board_WhoAmI(ch))
+            {
+                //m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.PassFail] = (int)Global.NonSpecItem.PM_TEST_NG;
+                AddLog(ch, string.Format($"Not found Echo_Board info", false));
+                m__G.m_ChannelOn[ch] = false;
+                return false;
+            }
+
+            fra_setting.ois_slave_id = 0x78;
+
+            fra_setting.ois_control_freq = (byte)measure.CTRL_FREQ_10KHZ;
+            if (axis == 0)
+            {
+                fra_setting.ois_mode = (byte)measure.OPEN_FRA_X;
+                fra_setting.test_point = Condition.iFRAStep_GM;
+                fra_setting.amplitude = (int)Condition.iXAmplitude_GM;
+                fra_setting.dc_bias_ofst = (int)Condition.iXOffset_GM;
+                fra_setting.start_freq = Condition.iXChirpTo_GM;
+                fra_setting.end_freq = Condition.iXChirpFrom_GM;
+            }
+            else
+            {
+                fra_setting.ois_mode = (byte)measure.OPEN_FRA_Y;
+                fra_setting.test_point = Condition.iFRAStep_GM;
+                fra_setting.amplitude = (int)Condition.iYAmplitude_GM;
+                fra_setting.dc_bias_ofst = (int)Condition.iYOffset_GM;
+                fra_setting.start_freq = Condition.iYChirpTo_GM;
+                fra_setting.end_freq = Condition.iYChirpFrom_GM;
+            }
+
+            double[] freq_buf = new double[fra_setting.test_point];
+            double[] gain_buf = new double[fra_setting.test_point];
+            double[] phase_buf = new double[fra_setting.test_point];
+            int SearchCnt = 0;
+
+            sFRA_Margin fra_result = new sFRA_Margin();
+
+
+            msg = measure.Echo_FRA_Single_Measurement(ch, ref fra_result, ref fra_setting, ref freq_buf, ref gain_buf, ref phase_buf, ref SearchCnt, false, true);
+          
+
+            msg = serch.Search_GM(ch, ref fra_result, fra_setting, freq_buf, gain_buf, phase_buf, SearchCnt);
+            var realpoint = fra_setting.test_point - 2;
+            //msg = Search_GM(ch, ref fra_result, fra_setting, freq_buf, gain_buf, phase_buf, realpoint);
+
+            if (axis == 0)
+            {
+                m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.FRAX_GMFreq] = fra_result.gain_margin_freq;
+                m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.FRAX_GainMargin] = Math.Abs(fra_result.gain_margin);
+                //m__G.fManage.ShowDataResults(ch, 23, m__G.sCIndex[ch]);
+
+                PassFails[0].Results[(int)SpecItem.FRAX_GainMargin].Val = fra_result.gain_margin_freq;
+                ShowDataResults(ch, (int)SpecItem.FRAX_GainMargin, (int)SpecItem.FRAX_GainMargin, InspType.Normal, new double[] { });
+            }
+            else
+            {
+                m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.FRAY_GMFreq] = fra_result.gain_margin_freq;
+                m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.FRAY_GainMargin] = Math.Abs(fra_result.gain_margin);
+                //m__G.fManage.ShowDataResults(ch, 24, m__G.sCIndex[ch]);
+
+                PassFails[0].Results[(int)SpecItem.FRAY_GainMargin].Val = fra_result.gain_margin_freq;
+                ShowDataResults(ch, (int)SpecItem.FRAY_GainMargin, (int)SpecItem.FRAY_GainMargin, InspType.Normal, new double[] { });
+            }
+
+            return true;
+
         }
 
         void Xtalk2(int ch, string testItem, int inspCnt)

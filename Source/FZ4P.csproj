@@ -137,14 +137,19 @@
     <Compile Include="DriverIc\I2CBase\Interfaces\IOneTwoBytesDrivingIC.cs" />
     <Compile Include="DriverIc\I2CBase\Interfaces\ITwoBytesDrivingIC.cs" />
     <Compile Include="DriverIc\Interfaces\IAFunction.cs" />
+    <Compile Include="DriverIc\Interfaces\IFRAFunction.cs" />
     <Compile Include="DriverIc\Interfaces\IOISFunction.cs" />
     <Compile Include="DriverIc\OISIC\DW9836N.cs" />
     <Compile Include="DriverIc\OISIC\EnumTypeDefined.cs" />
     <Compile Include="Extensions\FIndResultExtension.cs" />
     <Compile Include="Process\AFLinCompCoef.cs" />
     <Compile Include="Process\AjinLibrary.cs" />
+    <Compile Include="Process\FRA\00.Types\StructTypeDef.cs" />
+    <Compile Include="Process\FRA\01.Commons\Echo_FRA_Measurement.cs" />
+    <Compile Include="Process\FRA\01.Commons\Echo_FRA_Serch.cs" />
     <Compile Include="Process\OISLinCompCoef.cs" />
     <Compile Include="Process\OISLinCompCoefDW.cs" />
+    <Compile Include="Process\OISLineCompCoefDW_EX.cs" />
     <Compile Include="Process\PROCESSParam.cs" />
     <Compile Include="Process\PROCESS.cs" />
     <Compile Include="DriverIc\DLN.cs" />
@@ -305,6 +310,10 @@
       <Project>{39752b05-88c4-4608-a3dc-695d165b7a94}</Project>
       <Name>FAutoLearn</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Process\FRA\GainMergin\" />
+    <Folder Include="Process\FRA\PhaseMergin\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

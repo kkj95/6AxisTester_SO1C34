@@ -2016,18 +2016,23 @@ namespace FZ4P
                     foreach (var Cal in CalList[j])
                         if (Cal.Name == name)
                         {
+                            Debug.WriteLine("target1");
                             Cal.HallX[framCnt[port]] = DWDrvIC.ReadOISHall(j, 0, 0);
+                            Debug.WriteLine("target2");
                             Cal.HallY[framCnt[port]] = DWDrvIC.ReadOISHall(j, 1, 0);
+                            Debug.WriteLine("target3");
                             Cal.HallZ[framCnt[port]] = DrvIC.ReadAFHall(j);
+
+                            Debug.WriteLine("target4"); 
                             //Get Hall
                             if (name.Contains("X"))
                             {
-                                Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 1);
+                                //Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 1);
                                 AddLog(j, string.Format("{0} == Code : {1}, Hall : {2}", name, Cal.CodeX[framCnt[port]], Cal.HallX[framCnt[port]]));
                             }
                             else if (name.Contains("Y"))
                             {
-                                Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 1);
+                                //Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 1);
                                 AddLog(j, string.Format("{0} == Code : {1}, Hall : {2}", name, Cal.CodeY[framCnt[port]], Cal.HallY[framCnt[port]]));
                             }
                             else if (name.Contains("AF"))
@@ -2038,7 +2043,7 @@ namespace FZ4P
                         }
                 }
                 STATIC.fVision.m__G.oCam[port].GrabA(framCnt[port]);
-
+                
                 for (int j = ch; j < ch + ChannelCnt; j++)
                 {
                     if (!m_ChannelOn[j]) continue;
@@ -2060,6 +2065,7 @@ namespace FZ4P
 
                         }
                 }
+                
                 framCnt[port]++;
             }
             long esec = sw.ElapsedMilliseconds;

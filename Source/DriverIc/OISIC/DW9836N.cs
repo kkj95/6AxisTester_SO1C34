@@ -17,8 +17,9 @@ namespace FZ4P.DriverIc.OISIC
     /// IC 동작에 구현체 
     /// </summary>
     //동윤보드 14bit Move 동작
-    public class DW9836N : IOISFunction
+    public class DW9836N : IOISFunction,IFRAFunction
     {
+        private object _lock = new object();
         private readonly IOneTwoBytesDrivingIC _controls;
 
         public int FRA_Addr { get; set; } = 0x12;
@@ -108,12 +109,13 @@ namespace FZ4P.DriverIc.OISIC
 
         public short ReadOISHall(int ch, int axis, int mode)
         {
+            short ReadData = 0x0000;
+
             int SlaveID = GetAxisTypeID((AxisTypeDW)axis);
 
-            var ReadDataHigh = Controls.ReadByte(SlaveID, (int)RegisterMapDW9836N.POSITION_READ_LOW, 1);
-            var ReadDataLow = Controls.ReadByte(SlaveID, (int)RegisterMapDW9836N.POSITION_READ_HIGH, 1);
+            var Wrod = Controls.Read2Byte(SlaveID, (int)RegisterMapDW9836N.POSITION_READ_LOW, 1);
 
-            short ReadData = (short)(((ReadDataHigh << 8) + (ReadDataHigh & 0xFF))>>2);
+            ReadData = (short)(Wrod >> 2);
 
             if (mode == 0)
             {
@@ -136,8 +138,8 @@ namespace FZ4P.DriverIc.OISIC
                 //    if (!res) return short.MaxValue;
                 //}
                 //return Dln.Read2Byte_signed(ch, OIS_Addr, 0x6062, 2);
-            }
-
+            }   
+            
             return (short)ReadData;
         }
 
@@ -216,6 +218,9 @@ namespace FZ4P.DriverIc.OISIC
                 case AxisTypeDW.AxisY:
                     SlaveID = OISY_Addr;
                     break;
+                case AxisTypeDW.AxisZ:
+                    SlaveID = FRA_Addr;
+                    break;
                 default:
                     throw new Exception("Type Not Difined Error");
             }
@@ -269,5 +274,28 @@ namespace FZ4P.DriverIc.OISIC
         }
 
 
+        public void FRA_Echoboard_StartStop(int ch, StartStopType iStep)
+        {
+            if (iStep == StartStopType.Stop)
+                _controls.WriteByte(ch, (int)RegisterMapFRA.FRA_START, 1, 0x00 ); //stop            
+            else if (iStep == StartStopType.Start)
+                _controls.WriteByte(ch, (int)RegisterMapFRA.FRA_START, 1, 0x03 ); //start
+            else if (iStep == StartStopType.Ready)
+                _controls.WriteByte(ch, (int)RegisterMapFRA.FRA_START, 1, 0x01); //Ready
+        }
+
+        public bool Echo_Board_WhoAmI(int ch)
+        {
+            byte[] board_info = new byte[1];
+            var SlaveID =GetAxisTypeID(AxisTypeDW.AxisZ);
+
+            board_info[0] = _controls.ReadByte(SlaveID, (int)RegisterMapFRA.BOARD_INFO, 1); 
+
+            if (board_info[0] != 0xAE)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }
