@@ -576,6 +576,23 @@ namespace FZ4P
             FRAZM_PMFreq2nd,
             FRAZM_PhaseMargin2nd,
             FRAZM_Gain10Hz,
+
+            FRAX_PMFreq,
+            FRAX_PhaseMargin,
+            FRAX_Gain10Hz,
+            FRAX_GMFreq,
+            FRAX_GainMargin,
+            FRAX_GMFreq2,
+            FRAX_GainMargin2,
+
+            FRAY_PMFreq,
+            FRAY_PhaseMargin,
+            FRAY_Gain10Hz,
+            FRAY_GMFreq,
+            FRAY_GainMargin,
+            FRAY_GMFreq2,
+            FRAY_GainMargin2,
+
             /// <summary>
             /// 다음부터는 순수하게 결과 출력 용
             /// </summary>

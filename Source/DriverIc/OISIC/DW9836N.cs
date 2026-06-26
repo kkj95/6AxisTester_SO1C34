@@ -218,6 +218,9 @@ namespace FZ4P.DriverIc.OISIC
                 case AxisTypeDW.AxisY:
                     SlaveID = OISY_Addr;
                     break;
+                case AxisTypeDW.AxisZ:
+                    SlaveID = FRA_Addr;
+                    break;
                 default:
                     throw new Exception("Type Not Difined Error");
             }
@@ -281,6 +284,18 @@ namespace FZ4P.DriverIc.OISIC
                 _controls.WriteByte(ch, (int)RegisterMapFRA.FRA_START, 1, 0x01); //Ready
         }
 
+        public bool Echo_Board_WhoAmI(int ch)
+        {
+            byte[] board_info = new byte[1];
+            var SlaveID =GetAxisTypeID(AxisTypeDW.AxisZ);
 
+            board_info[0] = _controls.ReadByte(SlaveID, (int)RegisterMapFRA.BOARD_INFO, 1); 
+
+            if (board_info[0] != 0xAE)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

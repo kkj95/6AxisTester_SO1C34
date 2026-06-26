@@ -15,6 +15,10 @@ namespace FZ4P
         public uint TEST_STS_CHK_ERR = 0x0102;
         public uint TEST_DELAY_TIME = 20;
 
+        public uint CTRL_FREQ_10KHZ = 0x01;
+        public uint OPEN_FRA_X = 0x11;
+        public uint OPEN_FRA_Y = 0x21;
+
         private IFRAFunction _fraFunction;
         private IOneTwoBytesDrivingIC _i2cControl;
 
