@@ -123,32 +123,50 @@ namespace FZ4P
 
             WriteByte((int)RegisterMapFRA.FRA_MODE, 0x01);                                                          // 0x01: Single 0x08: FullScan
             Thread.Sleep(10);
+            u08_dat1[0] = ReadByte((int)RegisterMapFRA.FRA_MODE);
+            LogAction(ch, string.Format($"[echo_fra_single_measurement] FRA MODE(REG 0x{1:X2}) = {0}", u08_dat1[0], RegisterMapFRA.FRA_MODE));
 
             WriteByte((int)RegisterMapFRA.TARGET_DEVICE, 0x10);                                                     //0x31: DW9781C  0x35 DW9785 0x10 DW9836
             Thread.Sleep(10);
+            u08_dat1[0] = ReadByte((int)RegisterMapFRA.TARGET_DEVICE);
+            LogAction(ch, string.Format($"[echo_fra_single_measurement] TARGET_DEVICE(REG 0x{1:X2}) = {0}", u08_dat1[0], RegisterMapFRA.TARGET_DEVICE));
 
             WriteByte((int)RegisterMapFRA.TARGET_SLAVE_ADDR, (byte)(fra_setting.ois_slave_id));                     //OIS Slave address    
             Thread.Sleep(10);
+            u08_dat1[0] = ReadByte((int)RegisterMapFRA.TARGET_SLAVE_ADDR);
+            LogAction(ch, string.Format($"[echo_fra_single_measurement] TARGET_DEVICE(REG 0x{1:X2}) = {0}", u08_dat1[0], RegisterMapFRA.TARGET_SLAVE_ADDR));
 
             WriteByte((int)0x6E, (byte)(fra_setting.ois_mode));                                                     //0x00: plant X, 0x01: Open X, 0x10: plant Y, 0x11: Open Y     
             Thread.Sleep(10);
+            u08_dat1[0] = ReadByte((int)0x6E);
+            LogAction(ch, string.Format($"[echo_fra_single_measurement] ___(REG 0x{1:X2}) = {0}", u08_dat1[0], 0x6E));
 
             WriteByte((int)RegisterMapFRA.TARGET_POS_H, 0x00);                                                      //target position 
             Thread.Sleep(10);
+            u08_dat1[0] = ReadByte((int)RegisterMapFRA.TARGET_POS_H);
+            LogAction(ch, string.Format($"[echo_fra_single_measurement] TARGET_POS_H(REG 0x{1:X2}) = {0}", u08_dat1[0], RegisterMapFRA.TARGET_POS_H));
 
             WriteByte((int)RegisterMapFRA.TARGET_POS_L, 0x00);                                                      //target position
             Thread.Sleep(10);
+            u08_dat1[0] = ReadByte((int)RegisterMapFRA.TARGET_POS_L);
+            LogAction(ch, string.Format($"[echo_fra_single_measurement] TARGET_POS_L(REG 0x{1:X2}) = {0}", u08_dat1[0], RegisterMapFRA.TARGET_POS_L));
 
             WriteByte((int)RegisterMapFRA.CONTROL_FREQ, (byte)fra_setting.ois_control_freq);                        //0: 5KHz, 1: 10KHz
             Thread.Sleep(10);
+            u08_dat1[0] = ReadByte((int)RegisterMapFRA.CONTROL_FREQ);
+            LogAction(ch, string.Format($"[echo_fra_single_measurement] CONTROL_FREQ(REG 0x{1:X2}) = {0}", u08_dat1[0], RegisterMapFRA.CONTROL_FREQ));
 
             WriteByte((int)RegisterMapFRA.AMPLITUDE_H, (byte)(fra_setting.amplitude >> 8));                         // Amplitude[mV] MSB    
             Thread.Sleep(10);
+            u08_dat1[0] = ReadByte((int)RegisterMapFRA.AMPLITUDE_H);
+            LogAction(ch, string.Format($"[echo_fra_single_measurement] AMPLITUDE_H(REG 0x{1:X2}) = {0}", u08_dat1[0], RegisterMapFRA.AMPLITUDE_H));
 
             WriteByte((int)RegisterMapFRA.AMPLITUDE_L, (byte)(fra_setting.amplitude & 0xFF));                       // Amplitude[mV] LSB
             Thread.Sleep(10);
+            u08_dat1[0] = ReadByte((int)RegisterMapFRA.AMPLITUDE_L);
+            LogAction(ch, string.Format($"[echo_fra_single_measurement] AMPLITUDE_L(REG 0x{1:X2}) = {0}", u08_dat1[0], RegisterMapFRA.AMPLITUDE_L));
 
-            
+
             u08_dat1[0] = ReadByte((int)RegisterMapFRA.AMPLITUDE_H);
             u08_dat2[0] = ReadByte((int)RegisterMapFRA.AMPLITUDE_L);
 
@@ -231,7 +249,7 @@ namespace FZ4P
                 Thread.Sleep(100);
 
                 _fraFunction.FRA_Echoboard_StartStop(ch, StartStopType.Start);
-                Thread.Sleep(20);
+                Thread.Sleep(30);
 
                 for (cnt = 0; cnt < TEST_LIMIT_CNT; cnt++)
                 {
