@@ -2412,7 +2412,7 @@ namespace FZ4P
             }
 
 
-            //SetEPA((int)AxisTypeDW.AxisX);
+            SetEPA((int)AxisTypeDW.AxisX);
             #endregion
 
             #region OIS Y Hall Calibration
@@ -2457,7 +2457,7 @@ namespace FZ4P
                 return;
             }
 
-            //SetEPA((int)AxisTypeDW.AxisY);
+            SetEPA((int)AxisTypeDW.AxisY);
             #endregion
         }
 
@@ -2594,7 +2594,7 @@ namespace FZ4P
             FindResult res = null;
             int tmp_position = 0;
             int movecode = 0x00;
-            int maxMoveCode = 0x10;
+            int maxMoveCode = 0xFF;
             int loop = 0, mac_loop_max = 100;
             int Top_Cut = 0;
             Wait(200);
@@ -4512,7 +4512,7 @@ namespace FZ4P
 
             //fra_setting.ois_slave_id = 0x78;
 
-            fra_setting.ois_control_freq = (byte)measure.CTRL_FREQ_10KHZ;
+            fra_setting.ois_control_freq = (byte)measure.CTRL_FREQ_15KHZ;
             if (axis == 0)
             {
                 fra_setting.ois_slave_id = (byte)DWDrvIC.OISX_Addr;

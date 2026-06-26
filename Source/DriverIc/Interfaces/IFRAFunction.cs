@@ -13,5 +13,6 @@ namespace FZ4P.DriverIc.Interfaces
 
         void FRA_Echoboard_StartStop(int ch, StartStopType type);
         bool Echo_Board_WhoAmI(int ch);
+        void Echo_Board_Select_Ch(int ch);
     }
 }

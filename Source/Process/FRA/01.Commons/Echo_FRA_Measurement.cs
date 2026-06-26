@@ -16,6 +16,7 @@ namespace FZ4P
         public uint TEST_DELAY_TIME = 20;
 
         public uint CTRL_FREQ_10KHZ = 0x01;
+        public uint CTRL_FREQ_15KHZ = 0x0B;
 
 
         public uint OPEN_FRA_X = 0x11;
@@ -70,16 +71,29 @@ namespace FZ4P
 
             u08_dat1[0] = _i2cControl.ReadByte(_fraFunction.FRA_Addr, (int)RegisterMapFRA.LOD_ENABLE, 1);
             LogAction(ch, string.Format("[echo_fra_single_measurement] VDD OUT(REG 0x32) = {0}", u08_dat1[0]));
+
+            WriteByte((int)RegisterMapFRA.I2C_CH1_AVDD, 0x01);
+            Thread.Sleep(10);
             u08_dat1[0] = _i2cControl.ReadByte(_fraFunction.FRA_Addr, (int)RegisterMapFRA.I2C_CH1_AVDD, 1);
             LogAction(ch, string.Format("[echo_fra_single_measurement] CH1 AVDD(REG 0x33) = {0}", u08_dat1[0]));
+
+            WriteByte((int)RegisterMapFRA.I2C_CH1_IOVDD, 0x01);
+            Thread.Sleep(10);
             u08_dat1[0] = _i2cControl.ReadByte(_fraFunction.FRA_Addr, (int)RegisterMapFRA.I2C_CH1_IOVDD, 1);
             LogAction(ch, string.Format("[echo_fra_single_measurement] CH1 IOVDD(REG 0x34) = {0}", u08_dat1[0]));
+
+            WriteByte((int)RegisterMapFRA.I2C_CH2_AVDD, 0x01);
+            Thread.Sleep(10);
             u08_dat1[0] = _i2cControl.ReadByte(_fraFunction.FRA_Addr, (int)RegisterMapFRA.I2C_CH2_AVDD, 1);
             LogAction(ch, string.Format("[echo_fra_single_measurement] CH2 AVDD(REG 0x35) = {0}", u08_dat1[0]));
+
+            WriteByte((int)RegisterMapFRA.I2C_CH2_IOVDD, 0x01);
+            Thread.Sleep(10);
             u08_dat1[0] = _i2cControl.ReadByte(_fraFunction.FRA_Addr, (int)RegisterMapFRA.I2C_CH2_IOVDD, 1);
             LogAction(ch, string.Format("[echo_fra_single_measurement] CH2 IOVDD(REG 0x36) = {0}", u08_dat1[0]));
-            u08_dat1[0] = _i2cControl.ReadByte(_fraFunction.FRA_Addr, (int)RegisterMapFRA.AMP_MODE, 1);
-            LogAction(ch, string.Format("[echo_fra_single_measurement] AMP MODE(REG 0x1E) = {0}", u08_dat1[0]));
+
+            //u08_dat1[0] = _i2cControl.ReadByte(_fraFunction.FRA_Addr, (int)RegisterMapFRA.AMP_MODE, 1);
+            //LogAction(ch, string.Format("[echo_fra_single_measurement] AMP MODE(REG 0x1E) = {0}", u08_dat1[0]));
 
             /* ==================================
              * Calculate Frequency step (+ dedup)
@@ -145,7 +159,7 @@ namespace FZ4P
             u08_dat1[0] = ReadByte((int)0x6E);
             LogAction(ch, string.Format("[echo_fra_single_measurement] ___(REG 0x{1:X2}) = {0}", u08_dat1[0], 0x6E));
 
-            WriteByte((int)RegisterMapFRA.TARGET_POS_H, 0x00);                                                      //target position 
+            WriteByte((int)RegisterMapFRA.TARGET_POS_H, 0x80);                                                      //target position 
             Thread.Sleep(10);
             u08_dat1[0] = ReadByte((int)RegisterMapFRA.TARGET_POS_H);
             LogAction(ch, string.Format("[echo_fra_single_measurement] TARGET_POS_H(REG 0x{1:X2}) = {0}", u08_dat1[0], (byte)RegisterMapFRA.TARGET_POS_H));
@@ -193,18 +207,20 @@ namespace FZ4P
             /* --------------------
              * FRA Mode ON + status check
              * -------------------- */
-
             WriteByte((int)RegisterMapFRA.FRA_MODE, 0x01); /* FRA Mode ON 0x01?*/
 
+            
             Thread.Sleep(200);
             //m__G.fGraph.DriverIC.ReadFromDW9785_FRA(ch, 0x02, 1, sts_check);
+            _fraFunction.FRA_Echoboard_StartStop(ch, StartStopType.Ready);
+            Thread.Sleep(500);
 
             for (cnt = 0; cnt <= TEST_LIMIT_CNT; cnt++)
             {
                 //Thread.Sleep(20);
                 sts_check[0] = ReadByte((int)RegisterMapFRA.STATUS);
 
-                Thread.Sleep(20);
+                Thread.Sleep(100);
                 if (sts_check[0] == 0x01)
                 {
                     LogAction(ch, string.Format($"[echo_fra_single_measurement] Mode ON OK (cnt={cnt})"));

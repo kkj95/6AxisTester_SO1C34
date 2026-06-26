@@ -41,6 +41,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.EditCondition = new System.Windows.Forms.CheckBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.btn_PositionMove = new System.Windows.Forms.Button();
             this.txt_PositionCode_AxisZ = new System.Windows.Forms.TextBox();
@@ -71,7 +72,7 @@
             this.lbl_ReadHall2 = new System.Windows.Forms.Label();
             this.lbl_ADC = new System.Windows.Forms.Label();
             this.lbl_ReadHall = new System.Windows.Forms.Label();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -244,6 +245,20 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Center Move";
             // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.checkBox3.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox3.ForeColor = System.Drawing.Color.White;
+            this.checkBox3.Location = new System.Drawing.Point(168, -2);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(91, 19);
+            this.checkBox3.TabIndex = 514;
+            this.checkBox3.Text = "OIS IC Reset";
+            this.checkBox3.UseVisualStyleBackColor = false;
+            this.checkBox3.CheckStateChanged += new System.EventHandler(this.checkBox3_CheckStateChanged);
+            // 
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
@@ -332,6 +347,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.checkBox4);
             this.groupBox2.Controls.Add(this.panel7);
             this.groupBox2.Controls.Add(this.panel8);
             this.groupBox2.Controls.Add(this.lbl_ReadHall3);
@@ -576,19 +592,19 @@
             this.lbl_ReadHall.Text = "-";
             this.lbl_ReadHall.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // checkBox3
+            // checkBox4
             // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.checkBox3.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox3.ForeColor = System.Drawing.Color.White;
-            this.checkBox3.Location = new System.Drawing.Point(168, -2);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(91, 19);
-            this.checkBox3.TabIndex = 514;
-            this.checkBox3.Text = "OIS IC Reset";
-            this.checkBox3.UseVisualStyleBackColor = false;
-            this.checkBox3.CheckStateChanged += new System.EventHandler(this.checkBox3_CheckStateChanged);
+            this.checkBox4.AutoSize = true;
+            this.checkBox4.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.checkBox4.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox4.ForeColor = System.Drawing.Color.White;
+            this.checkBox4.Location = new System.Drawing.Point(278, 254);
+            this.checkBox4.Name = "checkBox4";
+            this.checkBox4.Size = new System.Drawing.Size(89, 19);
+            this.checkBox4.TabIndex = 515;
+            this.checkBox4.Text = "ex Selected";
+            this.checkBox4.UseVisualStyleBackColor = false;
+            this.checkBox4.CheckStateChanged += new System.EventHandler(this.checkBox4_CheckStateChanged);
             // 
             // F_Manual
             // 
@@ -673,5 +689,6 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label lbl_ReadHall3;
         private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.CheckBox checkBox4;
     }
 }

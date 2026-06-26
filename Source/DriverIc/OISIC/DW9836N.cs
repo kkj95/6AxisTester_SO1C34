@@ -297,5 +297,15 @@ namespace FZ4P.DriverIc.OISIC
             }
             return true;
         }
+
+        public void Echo_Board_Select_Ch(int ch)
+        {
+            if(ch == 1)
+                _controls.WriteByte(FRA_Addr, (int)RegisterMapFRA.I2C_CH, 1, 0x01);
+            else if(ch == 2)
+                _controls.WriteByte(FRA_Addr, (int)RegisterMapFRA.I2C_CH, 1, 0x02);
+            else
+                _controls.WriteByte(FRA_Addr, (int)RegisterMapFRA.I2C_CH, 1, 0x01);
+        }
     }
 }
