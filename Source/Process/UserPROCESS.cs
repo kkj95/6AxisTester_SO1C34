@@ -4378,7 +4378,7 @@ namespace FZ4P
         }
         public bool OISPM(int ch, int axis)
         {
-            Echo_FRA_Measurement measure = new Echo_FRA_Measurement(DWDrvIC, AddLog);
+            Echo_FRA_Measurement measure = new Echo_FRA_Measurement(DWDrvIC, DWDrvIC.Controls, AddLog);
             Echo_FRA_Serch serch = new Echo_FRA_Serch(AddLog);
             sFRA_TestSetting fra_setting = new sFRA_TestSetting();
 
@@ -4458,7 +4458,7 @@ namespace FZ4P
         }
         public bool OISGM(int ch, int axis)
         {
-            Echo_FRA_Measurement measure = new Echo_FRA_Measurement(DWDrvIC, AddLog);
+            Echo_FRA_Measurement measure = new Echo_FRA_Measurement(DWDrvIC, DWDrvIC.Controls, AddLog);
             Echo_FRA_Serch serch = new Echo_FRA_Serch(AddLog);
             sFRA_TestSetting fra_setting = new sFRA_TestSetting();
 

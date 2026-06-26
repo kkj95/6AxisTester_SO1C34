@@ -23,10 +23,10 @@ namespace FZ4P
         private IOneTwoBytesDrivingIC _i2cControl;
 
         private Action<int,string> LogAction;
-        public Echo_FRA_Measurement(IFRAFunction fraFunction, Action<int,string> collback)
+        public Echo_FRA_Measurement(IFRAFunction fraFunction, IOneTwoBytesDrivingIC i2cControl, Action<int,string> collback)
         {
             _fraFunction = fraFunction;
-            _i2cControl = fraFunction as IOneTwoBytesDrivingIC ?? 
+            _i2cControl = i2cControl as IOneTwoBytesDrivingIC ?? 
                 throw new ArgumentException( $"{fraFunction.GetType().Name} must implement {nameof(IOneTwoBytesDrivingIC)}");
 
             LogAction = collback;
