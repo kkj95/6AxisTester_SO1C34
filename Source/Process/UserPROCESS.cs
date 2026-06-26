@@ -4073,6 +4073,9 @@ namespace FZ4P
 
             int AxisX = (int)AxisTypeDW.AxisX;
             int AxisY = (int)AxisTypeDW.AxisY;
+
+            double ldmOffSetX = 0.0;
+            double ldmOffSetY = 0.0;
             //여기까지
             for (int i = 0; i < step+1; i++)
                 TargetCode.Add((short)(step_interval * (i)));
@@ -4088,6 +4091,13 @@ namespace FZ4P
             DWDrvIC.OISOnOff(ch, true);
             Wait(100);
 
+            DWDrvIC.OISMove(ch, DWDrvIC.OIS_MIN_CODE, DWDrvIC.OIS_MIN_CODE);
+            Wait(100);
+            res = Measure();
+
+            ldmOffSetX = res.cx[0];
+            ldmOffSetY = res.cy[0];
+
             bufferLDMX.Add(step_interval);
             bufferLDMY.Add(step_interval);
 
@@ -4099,8 +4109,8 @@ namespace FZ4P
                 DWDrvIC.OISMove(ch, targetCode, targetCode);
                 Wait(100);
                 res = Measure();
-                bufferLDMX.Add(res.cx[0]);
-                bufferLDMY.Add(res.cy[0]);
+                bufferLDMX.Add(res.cx[0]- ldmOffSetX);
+                bufferLDMY.Add(res.cy[0]- ldmOffSetY);
             }
        
             AddLog(ch, $"MoveX\tMoveY");
@@ -4395,12 +4405,13 @@ namespace FZ4P
                 return false;
             }
 
-            fra_setting.ois_slave_id = 0x78;
+            //fra_setting.ois_slave_id = 0x78;
 
             fra_setting.ois_control_freq = (byte)measure.CTRL_FREQ_10KHZ;
             if (axis == 0)
             {
-                fra_setting.ois_mode = (byte)measure.OPEN_FRA_X;
+                fra_setting.ois_slave_id = (byte)DWDrvIC.OISX_Addr;
+                fra_setting.ois_mode = 0x00;
                 fra_setting.test_point = Condition.iFRAStep;
                 fra_setting.amplitude = Condition.iXAmplitude;
                 fra_setting.dc_bias_ofst = Condition.iXOffset;
@@ -4409,7 +4420,8 @@ namespace FZ4P
             }
             else
             {
-                fra_setting.ois_mode = (byte)measure.OPEN_FRA_Y;
+                fra_setting.ois_slave_id = (byte)DWDrvIC.OISY_Addr;
+                fra_setting.ois_mode = 0x00;
                 fra_setting.test_point = Condition.iFRAStep;
                 fra_setting.amplitude = Condition.iYAmplitude;
                 fra_setting.dc_bias_ofst = Condition.iYOffset;
@@ -4475,12 +4487,11 @@ namespace FZ4P
                 return false;
             }
 
-            fra_setting.ois_slave_id = 0x78;
-
             fra_setting.ois_control_freq = (byte)measure.CTRL_FREQ_10KHZ;
             if (axis == 0)
             {
-                fra_setting.ois_mode = (byte)measure.OPEN_FRA_X;
+                fra_setting.ois_slave_id = (byte)DWDrvIC.OISX_Addr;
+                fra_setting.ois_mode = 0x00;
                 fra_setting.test_point = Condition.iFRAStep_GM;
                 fra_setting.amplitude = (int)Condition.iXAmplitude_GM;
                 fra_setting.dc_bias_ofst = (int)Condition.iXOffset_GM;
@@ -4489,7 +4500,8 @@ namespace FZ4P
             }
             else
             {
-                fra_setting.ois_mode = (byte)measure.OPEN_FRA_Y;
+                fra_setting.ois_slave_id = (byte)DWDrvIC.OISY_Addr;
+                fra_setting.ois_mode = 0x00;
                 fra_setting.test_point = Condition.iFRAStep_GM;
                 fra_setting.amplitude = (int)Condition.iYAmplitude_GM;
                 fra_setting.dc_bias_ofst = (int)Condition.iYOffset_GM;
