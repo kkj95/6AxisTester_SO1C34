@@ -303,10 +303,13 @@ namespace FZ4P
 
         [Condition("OIS Linearity Comp", "Steps", "OIS LinearityCompensation", "", "code")] public int OISLincompStep { get; set; } = 32;
         [Condition("OIS Linearity Comp", "Code Margin", "OIS LinearityCompensation", "", "code")] public int OISLincompCodeMargin { get; set; } = 100;
-        [Condition("OIS EPA", "X EPA POS", "OIS LinearityCompensation", "", "um")] public int OISXEPAPos { get; set; } = 0;
-        [Condition("OIS EPA", "X EPA NEG", "OIS LinearityCompensation", "", "um")] public int OISXEPANeg { get; set; } = 0;
-        [Condition("OIS EPA", "Y EPA POS", "OIS LinearityCompensation", "", "um")] public int OISYEPAPos { get; set; } = 8;
-        [Condition("OIS EPA", "Y EPA NEG", "OIS LinearityCompensation", "", "um")] public int OISYEPANeg { get; set; } = 0;
+        [Condition("OIS X EPA", "BTM Cut Position", "OIS LinearityCompensation", "", "um")] public int iOISXEPABtmPos { get; set; } = 0;
+        [Condition("OIS X EPA", "Target Stroke Range", "OIS LinearityCompensation", "", "um")] public int iOISXEPATtlRng { get; set; } = 0;
+        [Condition("OIS X EPA", "Min TOP Margin", "OIS LinearityCompensation", "", "um")] public int iOISXEPATopMargin { get; set; } = 0;
+
+        [Condition("OIS Y EPA", "BTM Cut Position", "OIS LinearityCompensation", "", "um")] public int iOISYEPABtmPos { get; set; } = 0;
+        [Condition("OIS Y EPA", "Target Stroke Range", "OIS LinearityCompensation", "", "um")] public int iOISYEPATtlRng { get; set; } = 0;
+        [Condition("OIS Y EPA", "Min TOP Margin", "OIS LinearityCompensation", "", "um")] public int iOISYEPATopMargin { get; set; } = 0;
 
         [Condition("AF PM", "AF Step", "AF Phase Margin", "", "%")] public int iAFFRAstep { get; set; } = 5;
         [Condition("AF PM", "AF Chirp from", "AF Phase Margin", "", "Hz")] public int iAFChirpFrom { get; set; } = 250;
