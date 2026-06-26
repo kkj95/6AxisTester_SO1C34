@@ -2642,7 +2642,7 @@ namespace FZ4P
 
                 AddLog(0, $"Position:{tmp_position}, PCAL.ADJ:0x{movecode:X2}");
 
-                if (tmp_position + 10 > Top_Cut)
+                if (tmp_position > Top_Cut + 10)
                 {
                     AddLog(0, $"Position:{tmp_position}, PCAL.ADJ:0x{movecode:X2}");
                     movecode -= 3;
@@ -2690,7 +2690,7 @@ namespace FZ4P
 
             while (movecode <= maxMoveCode)
             {
-                AddLog(0, $"PCAL.ADJ:{movecode}");
+                AddLog(0, $"NCAL.ADJ:{movecode}");
 
                 DWDrvIC.SetPCAL(iAxis, movecode);
 
@@ -2707,22 +2707,22 @@ namespace FZ4P
                     tmp_position = (short)(res.cy[0] - refPos);
                 }
 
-                AddLog(0, $"Position:{tmp_position}, PCAL.ADJ:0x{movecode:X2}");
+                AddLog(0, $"Position:{tmp_position}, NCAL.ADJ:0x{movecode:X2}");
 
                 if (tmp_position + 10 > BTM_POS)
                 {
-                    AddLog(0, $"Position:{tmp_position}, PCAL.ADJ:0x{movecode:X2}");
+                    AddLog(0, $"Position:{tmp_position}, NCAL.ADJ:0x{movecode:X2}");
                     movecode -= 3;
                 }
 
                 if (tmp_position >= BTM_POS)
                 {
-                    AddLog(0, $"Reached Top position spec. Stop. Position:{tmp_position}, PCAL.ADJ:0x{movecode:X2}");
+                    AddLog(0, $"Reached Top position spec. Stop. Position:{tmp_position}, NCAL.ADJ:0x{movecode:X2}");
                     return true;
                 }
                 if (loop++ > mac_loop_max)
                 {
-                    AddLog(0, $"Loop count exceeded. Position:{tmp_position}, PCAL.ADJ:0x{movecode:X2}");
+                    AddLog(0, $"Loop count exceeded. Position:{tmp_position}, NCAL.ADJ:0x{movecode:X2}");
                     return false;
                 }
                 movecode++;
