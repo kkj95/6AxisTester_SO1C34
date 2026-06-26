@@ -2520,7 +2520,7 @@ namespace FZ4P
                 Wait(100);
                 res = Measure();
                 Wait(50);
-                fullStroke = res.cx[0] - min;
+                fullStroke = res.cy[0] - min;
             }
 
             DWDrvIC.Set_PT(iAxis, false);
@@ -2597,12 +2597,13 @@ namespace FZ4P
             int maxMoveCode = 0xFF;
             int loop = 0, mac_loop_max = 100;
             int Top_Cut = 0;
+            SoftLangdingForEPA(iAxis, 1);
             Wait(200);
             res = Measure();
             int refPos;
-            if (TargetStroke - fullStroke > Top_Margin)
+            if (fullStroke - TargetStroke> Top_Margin)
             {
-                Top_Cut = (int)TargetStroke - (int)fullStroke;
+                Top_Cut =  (int)fullStroke - (int)TargetStroke ;
             }
             else
             {
@@ -2638,9 +2639,10 @@ namespace FZ4P
                 else if (iAxis == (int)AxisTypeDW.AxisY)
                 {
                     tmp_position = (short)(refPos - res.cy[0]);
+                    
                 }
 
-                AddLog(0, $"Position:{tmp_position}, PCAL.ADJ:0x{movecode:X2}");
+                AddLog(0, $"Position:{tmp_position}, PCAL.ADJ:{movecode:X2}");
 
                 if (tmp_position > Top_Cut + 10)
                 {
@@ -2670,7 +2672,7 @@ namespace FZ4P
             FindResult res = null;
             int tmp_position = 0;
             int movecode = 0x00;
-            int maxMoveCode = 0x10;
+            int maxMoveCode = 0xFF;
             int loop = 0, mac_loop_max = 100;
             Wait(200);
             res = Measure();
@@ -2692,7 +2694,7 @@ namespace FZ4P
             {
                 AddLog(0, $"NCAL.ADJ:{movecode}");
 
-                DWDrvIC.SetPCAL(iAxis, movecode);
+                DWDrvIC.SetNCAL(iAxis, movecode);
 
                 Wait(200);
 
@@ -2709,7 +2711,7 @@ namespace FZ4P
 
                 AddLog(0, $"Position:{tmp_position}, NCAL.ADJ:0x{movecode:X2}");
 
-                if (tmp_position + 10 > BTM_POS)
+                if (tmp_position > BTM_POS + 10)
                 {
                     AddLog(0, $"Position:{tmp_position}, NCAL.ADJ:0x{movecode:X2}");
                     movecode -= 3;
