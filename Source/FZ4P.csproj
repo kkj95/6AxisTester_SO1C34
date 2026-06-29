@@ -148,6 +148,7 @@
     <Compile Include="Process\EchoBoard\AMA\01.Commons\Echo_AMA_ParamSet.cs" />
     <Compile Include="Process\EchoBoard\AMA\01.Commons\Echo_AMA_Measurement.cs" />
     <Compile Include="Process\EchoBoard\Base\Echo_ParamBase.cs" />
+    <Compile Include="Process\EchoBoard\Base\Ehco_BoardBase.cs" />
     <Compile Include="Process\EchoBoard\FRA\00.Types\StructTypeDef.cs" />
     <Compile Include="Process\EchoBoard\FRA\01.Commons\Echo_FRA_Measurement.cs" />
     <Compile Include="Process\EchoBoard\FRA\01.Commons\Echo_FRA_Serch.cs" />

@@ -146,11 +146,6 @@ namespace FZ4P.DriverIc.OISIC
         public bool SetManualDrvModeXY(int ch, int MidCodeX, int MidCodeY)
         {
             bool flag = false;
-            //flag = OIS_StausCheck(ch, 0x01, 0x02); if (!flag) return false;
-            //_controls.WriteByte(ch, OIS_Addr, 0x617A, 2, 0x01);
-            //flag = OIS_StausCheck(ch, 0x01, 0x02); if (!flag) return false;
-            //_controls.WriteByte(ch, OIS_Addr, 0x6020, 2, 0x07);
-            //flag = OIS_StausCheck(ch, 0x01, 0x02); if (!flag) return false;
             OISMove(ch, MidCodeX, MidCodeY);
 
             return true;
@@ -294,6 +289,18 @@ namespace FZ4P.DriverIc.OISIC
             else if (iStep == StartStopType.Ready)
                 _controls.WriteByte(slaveID, (int)RegisterMapFRA.FRA_START, 1, 0x01); //Ready
         }
+        public void AMA_Echoboard_StartStop(int ch, StartStopType iStep)
+        {
+            var slaveID = GetAxisTypeID(AxisTypeDW.AxisZ);
+
+            if (iStep == StartStopType.Stop)
+                _controls.WriteByte(slaveID, (int)RegisterMapAMA.AMA_START, 1, 0x00); //stop            
+            else if (iStep == StartStopType.Start)
+                _controls.WriteByte(slaveID, (int)RegisterMapAMA.AMA_START, 1, 0x03); //start
+            else if (iStep == StartStopType.Ready)
+                _controls.WriteByte(slaveID, (int)RegisterMapAMA.AMA_START, 1, 0x01); //Ready
+        }
+
 
         public bool Echo_Board_WhoAmI(int ch)
         {
@@ -307,16 +314,6 @@ namespace FZ4P.DriverIc.OISIC
                 return false;
             }
             return true;
-        }
-
-        public void Echo_Board_Ready(int ch)
-        {
-            
-        }
-
-        public void Echo_Board_SetErrorCount(int ch)
-        {
-
         }
 
         public void Echo_Board_SetParameter(Echo_ParamBase param)
@@ -341,21 +338,6 @@ namespace FZ4P.DriverIc.OISIC
                 _controls.WriteByte(FRA_Addr, (int)RegisterMapFRA.I2C_CH, 1, 0x02);
             else
                 _controls.WriteByte(FRA_Addr, (int)RegisterMapFRA.I2C_CH, 1, 0x01);
-        }
-
-        public bool Echo_Board_WhoAmI(int ch, int AxisType)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Echo_Board_Ready(int ch, int AxisType)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Echo_Board_SetErrorCount(int ch, int AxisType)
-        {
-            throw new NotImplementedException();
         }
     }
 }

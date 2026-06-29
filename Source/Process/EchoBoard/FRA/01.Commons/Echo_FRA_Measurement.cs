@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace FZ4P
 {
-    public class Echo_FRA_Measurement
+    public class Echo_FRA_Measurement : Ehco_BoardBase
     {
         private uint FRA_BOARD_INFO = 0xAE;
         private uint FRA_BOARD_INFO_NG = 0x0100;
@@ -28,7 +28,8 @@ namespace FZ4P
         private IOneTwoBytesDrivingIC _i2cControl;
 
         private Action<int,string> LogAction;
-        public Echo_FRA_Measurement(IFRAFunction fraFunction, IOneTwoBytesDrivingIC i2cControl, Action<int,string> collback)
+        public Echo_FRA_Measurement(IFRAFunction fraFunction, IOneTwoBytesDrivingIC i2cControl, Action<int,string> collback) : 
+            base(i2cControl, fraFunction)
         {
             _fraFunction = fraFunction;
             _i2cControl = i2cControl as IOneTwoBytesDrivingIC ?? 
@@ -707,16 +708,6 @@ namespace FZ4P
                 }
             }
             return 0;
-        }
-
-        private void WriteByte( int addr, byte data)
-        {
-            _i2cControl.WriteByte(_fraFunction.FRA_Addr, addr, 1, data);
-        }
-
-        private byte ReadByte(int addr)
-        {
-            return _i2cControl.ReadByte(_fraFunction.FRA_Addr, addr, 1);
         }
     }
 }

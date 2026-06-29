@@ -101,4 +101,38 @@ namespace FZ4P.DriverIc.OISIC
         VERSION_MAJOR = 0xF2,
         VERSION_MINOR = 0xF3,
     }
+
+    public enum RegisterMapAMA
+    {
+        AMA_START = 0x70,
+        AMA_STATUS = 0x71,
+        AMA_MODE = 0x72,
+        AMA_CLK_DIV = 0x73,
+        AMA_ADDR_0 = 0x74,
+        AMA_ADDR_1 = 0x75,
+        AMA_ADDR_2 = 0x76,
+        AMA_ADDR_3 = 0x77,
+        AMA_ADDR_NUM = 0x78,
+        AMA_ID_X = 0x7D,
+        AMA_ID_Y = 0x7E,
+        AMA_ID_Z = 0x7F,
+        AMA_OIS_NUM= 0x80,
+        AMA_Z_NUM = 0x81,
+        AMA_RINGING_ENDPOS = 0x8A,
+        AMA_RINGING_STARTPOS = 0x8B,
+        AMA_RINGING_STARTTIME = 0x8C,
+        AMA_RINGING_ENDTIME = 0x8D,
+        AMA_RINGING_THD = 0x8E,
+
+
+        AMA_SINEWAVE_FREQ = 0x97,
+        AMA_SINEWAVE_AMP = 0x98,
+        AMA_SINEWAVE_THD = 0x99,
+        AMA_SINEWAVE_FIXED_CYCLE = 0x9A,
+        AMA_SINEWAVE_DUMMY_CYCLE = 0x9B,
+        AMA_SINEWAVE_ERRCNT_X_H = 0x9C,
+        AMA_SINEWAVE_ERRCNT_X_L = 0x9D,
+        AMA_SINEWAVE_ERRCNT_Y_H = 0x9E,
+        AMA_SINEWAVE_ERRCNT_Y_L = 0x9F,
+    }
 }

@@ -3,7 +3,9 @@
     public class AMA_TestSetting_Params : Echo_ParamBase
     {
         private byte ois_mode;
-        private byte target_slave_id;
+        private byte target_slave_id_X;
+        private byte target_slave_id_Y;
+        private byte target_slave_id_Z;
         private byte clock_devision;
         private byte eOIS_target_device_number;
         private byte af_target_device_number;
@@ -16,7 +18,7 @@
         private byte dummy_cycle_count;
 
         public byte Ois_mode { get => ois_mode; set => ois_mode = value; }
-        public byte Target_slave_id { get => target_slave_id; set => target_slave_id = value; }
+
         public byte Clock_devision { get => clock_devision; set => clock_devision = value; }
         public byte EOIS_target_device_number { get => eOIS_target_device_number; set => eOIS_target_device_number = value; }
         public byte Af_target_device_number { get => af_target_device_number; set => af_target_device_number = value; }
@@ -27,6 +29,9 @@
         public byte Threshold { get => threshold; set => threshold = value; }
         public byte Measurement_cycle_count { get => measurement_cycle_count; set => measurement_cycle_count = value; }
         public byte Dummy_cycle_count { get => dummy_cycle_count; set => dummy_cycle_count = value; }
+        public byte Target_slave_id_X { get => target_slave_id_X; set => target_slave_id_X = value; }
+        public byte Target_slave_id_Y { get => target_slave_id_Y; set => target_slave_id_Y = value; }
+        public byte Target_slave_id_Z { get => target_slave_id_Z; set => target_slave_id_Z = value; }
     }
 
 }

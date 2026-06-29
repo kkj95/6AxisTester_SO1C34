@@ -541,6 +541,36 @@ namespace FZ4P
         [Condition("AF Fluctuation", "Count", "AF Fluctuation", "", "dec")] public int AFFluctuationCount { get; set; } = 100;
 
 
+        private byte ois_mode;
+        private byte target_slave_id_X;
+        private byte target_slave_id_Y;
+        private byte target_slave_id_Z;
+        private byte clock_devision;
+        private byte eOIS_target_device_number;
+        private byte af_target_device_number;
+        private byte set_read_address;
+        private byte read_address_count;
+        private byte frequency;
+        private byte amplitude;
+        private byte threshold;
+        private byte measurement_cycle_count;
+        private byte dummy_cycle_count;
+
+        [Condition("OIS SINEWAVE", "Slave_ID_X", "OIS SINEWAVE", "", "code")] public int Slave_ID_X { get; set; } = 2048;
+        [Condition("OIS SINEWAVE", "Slave_ID_Y", "OIS SINEWAVE", "", "code")] public int Slave_ID_Y { get; set; } = 2048;
+        [Condition("OIS SINEWAVE", "Slave_ID_Z", "OIS SINEWAVE", "", "code")] public int Slave_ID_Z { get; set; } = 2048;
+        [Condition("OIS SINEWAVE", "Clock_Devision", "OIS SINEWAVE", "", "--")] public int Clock_Devision { get; set; } = 2048;
+        [Condition("OIS SINEWAVE", "eOIS_Device_Number", "OIS SINEWAVE", "", "--")] public int eOIS_Device_Number { get; set; } = 2048;
+        [Condition("OIS SINEWAVE", "AF_Target_Device_Number", "OIS SINEWAVE", "", "--")] public int AF_Target_Device_Number { get; set; } = 2048;
+        [Condition("OIS SINEWAVE", "Set_Read_Address", "OIS SINEWAVE", "", "--")] public int Set_Read_Address { get; set; } = 2048;
+        [Condition("OIS SINEWAVE", "Read_Address_Count", "OIS SINEWAVE", "", "--")] public int Read_Address_Count { get; set; } = 2048;
+        [Condition("OIS SINEWAVE", "Frequency", "OIS SINEWAVE", "", "Hz")] public int Frequency { get; set; } = 2048;
+        [Condition("OIS SINEWAVE", "Amplitude", "OIS SINEWAVE", "", "mV")] public int Amplitude { get; set; } = 2048;
+        [Condition("OIS SINEWAVE", "Threshold", "OIS SINEWAVE", "", "--")] public int Threshold { get; set; } = 2048;
+        [Condition("OIS SINEWAVE", "MeasurementCycleCount", "OIS SINEWAVE", "", "cnt")] public int MeasurementCycleCount { get; set; } = 2048;
+        [Condition("OIS SINEWAVE", "DummyCycleCount", "OIS SINEWAVE", "", "cnt")] public int DummyCycleCount { get; set; } = 2048;
+
+
         [Condition("OIS X Fluctuation", "Min Code", "OIS X Fluctuation", "", "code")] public int XFluctuationMinCode { get; set; } = -2048;
         [Condition("OIS X Fluctuation", "Max Code", "OIS X Fluctuation", "", "code")] public int XFluctuationMaxCode { get; set; } = 2048;
         [Condition("OIS X Fluctuation", "Step Code", "OIS X Fluctuation", "", "code")] public int XFluctuationStepCode { get; set; } = 100;

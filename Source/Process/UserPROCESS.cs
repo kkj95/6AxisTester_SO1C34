@@ -1,4 +1,5 @@
 ﻿using FZ4P.DriverIc.I2CBase;
+using FZ4P.DriverIc.I2CBase.Interfaces;
 using FZ4P.DriverIc.Interfaces;
 using FZ4P.DriverIc.OISIC;
 using FZ4P.Extensions;
@@ -3996,28 +3997,21 @@ namespace FZ4P
         {
             byte[] u08_dat1 = new byte[1] { 0x00 };
             byte[] u08_dat2 = new byte[1] { 0x00 };
+            var _Measurement = new Echo_AMA_Measurement(DWDrvIC.Controls,DWDrvIC,AddLog);
 
             if (!DWDrvIC.Echo_Board_WhoAmI(ch))
             {
                 AddLog(ch, "Echo_FRA_Measurement] FRA Board Info Error!!!");
             }
-            else
+
+            AMA_TestSetting_Params param = new AMA_TestSetting_Params()
             {
-                //AddLog(ch, string.Format("[echo_fra_single_measurement] FRA Board Info = 0x{0:X2}", board_info[0]));
-            }
+                //설정 필요.
+            };
 
-            /* --------------------
-            * Board version / power info
-            * -------------------- */
-            u08_dat1[0] = DWDrvIC.Controls.ReadByte(DWDrvIC.FRA_Addr, (int)RegisterMapFRA.VERSION_MAJOR, 1);
-            u08_dat2[0] = DWDrvIC.Controls.ReadByte(DWDrvIC.FRA_Addr, (int)RegisterMapFRA.VERSION_MINOR, 1);
-
-            AddLog(ch, string.Format("[echo_fra_single_measurement] FRA Board Version(REG 0xF2): 0x{0:X2} 0x{1:X2}", u08_dat1[0], u08_dat2[0]));
-
-            u08_dat1[0] = DWDrvIC.Controls.ReadByte(DWDrvIC.FRA_Addr, (int)RegisterMapFRA.LOD_ENABLE, 1);
-            AddLog(ch, string.Format("[echo_fra_single_measurement] VDD OUT(REG 0x32) = {0}", u08_dat1[0]));
+            _Measurement.Echo_AMA_SineWave_Measurement(ch, param);
         }
-        
+
         void AF_OIS_Xtalk_Calibration(int ch, string testItem, int inspCnt)
         {
             LEDs_All_On(0, true);
