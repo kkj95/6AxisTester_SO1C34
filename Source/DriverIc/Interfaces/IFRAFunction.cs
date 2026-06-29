@@ -1,10 +1,4 @@
 ﻿using FZ4P.DriverIc.OISIC;
-using FZ4P.Process.AMA._00.Types;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FZ4P.DriverIc.Interfaces
 {

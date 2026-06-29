@@ -1,11 +1,4 @@
-﻿using FZ4P.Process.EchoBoard.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FZ4P
+﻿namespace FZ4P
 {
     public class AMA_TestSetting_Params : Echo_ParamBase
     {

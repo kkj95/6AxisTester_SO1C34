@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace FZ4P
 {
@@ -1199,17 +1200,17 @@ namespace FZ4P
             //res[0] = OISPMGM(ch, 0, 0, Condition.iXChirpFrom, Condition.iXChirpTo, Condition.XPMInspCnt, Condition.iXAmplitude);
             //res[1] = OISPMGM(ch, 1, 0, Condition.iYChirpFrom, Condition.iYChirpTo, Condition.YPMInspCnt, Condition.iYAmplitude);
 
-            //PassFails[0].Results[(int)SpecItem.FRAX_PhaseMargin].Val = res[0];
-            //ShowDataResults(ch, (int)SpecItem.FRAX_PhaseMargin, (int)SpecItem.FRAX_PhaseMargin, InspType.Normal, new double[] { });
-            //PassFails[0].Results[(int)SpecItem.FRAY_PhaseMargin].Val = res[1];
-            //ShowDataResults(ch, (int)SpecItem.FRAY_PhaseMargin, (int)SpecItem.FRAY_PhaseMargin, InspType.Normal, new double[] { });
+            PassFails[0].Results[(int)SpecItem.FRAX_PhaseMargin].Val = res[0];
+            ShowDataResults(ch, (int)SpecItem.FRAX_PhaseMargin, (int)SpecItem.FRAX_PhaseMargin, InspType.Normal, new double[] { });
+            PassFails[0].Results[(int)SpecItem.FRAY_PhaseMargin].Val = res[1];
+            ShowDataResults(ch, (int)SpecItem.FRAY_PhaseMargin, (int)SpecItem.FRAY_PhaseMargin, InspType.Normal, new double[] { });
         }
         void OISGM(int ch, string testItem, int inspCnt)
         {
             double[] res = new double[2];
 
             OISGM(ch, (int)AxisTypeDW.AxisX);
-            OISGM(ch, (int)AxisTypeDW.AxisX);
+            OISGM(ch, (int)AxisTypeDW.AxisY);
 
 
             //res[0] = OISPMGM(ch, 0, 1, Condition.iXChirpFromGM, Condition.iXChirpToGM, Condition.XGMInspCnt, Condition.iXAmplitudeGM);
@@ -2409,6 +2410,7 @@ namespace FZ4P
             }
             else
             {
+                
                 AddLog(ch, $"OIS X Hall Calibration Fail");
                 PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 1;
                 ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
@@ -2416,7 +2418,7 @@ namespace FZ4P
             }
 
 
-            SetEPA((int)AxisTypeDW.AxisX);
+            //SetEPA((int)AxisTypeDW.AxisX);
             #endregion
 
             #region OIS Y Hall Calibration
@@ -2461,7 +2463,7 @@ namespace FZ4P
                 return;
             }
 
-            SetEPA((int)AxisTypeDW.AxisY);
+            //SetEPA((int)AxisTypeDW.AxisY);
             #endregion
         }
 
@@ -4227,6 +4229,9 @@ namespace FZ4P
             DWDrvIC.OISOnOff(ch, true);
             Wait(100);
 
+            DWDrvIC.LiearCompClearWrite((int)AxisTypeDW.AxisX);
+            DWDrvIC.LiearCompClearWrite((int)AxisTypeDW.AxisY);
+
             DWDrvIC.OISMove(ch, DWDrvIC.OIS_MIN_CODE, DWDrvIC.OIS_MIN_CODE);
             Wait(100);
             res = Measure();
@@ -4546,7 +4551,7 @@ namespace FZ4P
             fra_setting.ois_control_freq = (byte)measure.CTRL_FREQ_15KHZ;
             if (axis == 0)
             {
-                fra_setting.ois_slave_id = (byte)DWDrvIC.OISX_Addr;
+                fra_setting.ois_slave_id = (byte)(DWDrvIC.OISX_Addr << 1);
                 fra_setting.ois_mode = 0x00;
                 fra_setting.test_point = Condition.iFRAStep;
                 fra_setting.amplitude = Condition.iXAmplitude;
@@ -4556,7 +4561,7 @@ namespace FZ4P
             }
             else
             {
-                fra_setting.ois_slave_id = (byte)DWDrvIC.OISY_Addr;
+                fra_setting.ois_slave_id = (byte)(DWDrvIC.OISY_Addr << 1);
                 fra_setting.ois_mode = 0x00;
                 fra_setting.test_point = Condition.iFRAStep;
                 fra_setting.amplitude = Condition.iYAmplitude;
@@ -4626,7 +4631,7 @@ namespace FZ4P
             fra_setting.ois_control_freq = (byte)measure.CTRL_FREQ_10KHZ;
             if (axis == 0)
             {
-                fra_setting.ois_slave_id = (byte)DWDrvIC.OISX_Addr;
+                fra_setting.ois_slave_id = (byte)(DWDrvIC.OISX_Addr << 1);
                 fra_setting.ois_mode = 0x00;
                 fra_setting.test_point = Condition.iFRAStep_GM;
                 fra_setting.amplitude = (int)Condition.iXAmplitude_GM;
@@ -4636,7 +4641,7 @@ namespace FZ4P
             }
             else
             {
-                fra_setting.ois_slave_id = (byte)DWDrvIC.OISY_Addr;
+                fra_setting.ois_slave_id = (byte)(DWDrvIC.OISY_Addr << 1);
                 fra_setting.ois_mode = 0x00;
                 fra_setting.test_point = Condition.iFRAStep_GM;
                 fra_setting.amplitude = (int)Condition.iYAmplitude_GM;

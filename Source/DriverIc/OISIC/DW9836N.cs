@@ -261,6 +261,15 @@ namespace FZ4P.DriverIc.OISIC
             });
         }
 
+        public void LiearCompClearWrite(int axis)
+        {
+            var slaveID = GetAxisTypeID((AxisTypeDW)axis);
+            Set_PT(axis, false);
+
+            int startAddress = 0x55;
+            _controls.WriteByte(slaveID, startAddress++, 1, 0x00);        // Linearity Enabled
+        }
+
 
         public void SetPCAL(int axis,int code)
         {
@@ -276,12 +285,14 @@ namespace FZ4P.DriverIc.OISIC
 
         public void FRA_Echoboard_StartStop(int ch, StartStopType iStep)
         {
+            var slaveID = GetAxisTypeID(AxisTypeDW.AxisZ);
+
             if (iStep == StartStopType.Stop)
-                _controls.WriteByte(ch, (int)RegisterMapFRA.FRA_START, 1, 0x00 ); //stop            
+                _controls.WriteByte(slaveID, (int)RegisterMapFRA.FRA_START, 1, 0x00 ); //stop            
             else if (iStep == StartStopType.Start)
-                _controls.WriteByte(ch, (int)RegisterMapFRA.FRA_START, 1, 0x03 ); //start
+                _controls.WriteByte(slaveID, (int)RegisterMapFRA.FRA_START, 1, 0x03 ); //start
             else if (iStep == StartStopType.Ready)
-                _controls.WriteByte(ch, (int)RegisterMapFRA.FRA_START, 1, 0x01); //Ready
+                _controls.WriteByte(slaveID, (int)RegisterMapFRA.FRA_START, 1, 0x01); //Ready
         }
 
         public bool Echo_Board_WhoAmI(int ch)
@@ -313,8 +324,8 @@ namespace FZ4P.DriverIc.OISIC
             //기능에 따라 분리가 필요할수도 있겠다. - 추후 펙토리로 빼서 else if 제거 <-FRA PM GM 세팅로직도 여기에 추가하기 위함.
             if (param is AMA_TestSetting_Params parmas)
             {
-                var executor = new Echo_AMA_ParamSet(parmas, _controls);
-                executor.SetParam();
+                //var executor = new Echo_AMA_ParamSet(parmas, _controls, FRA_Addr);
+                //executor.SetParam();
             }
             else
             {
@@ -330,6 +341,21 @@ namespace FZ4P.DriverIc.OISIC
                 _controls.WriteByte(FRA_Addr, (int)RegisterMapFRA.I2C_CH, 1, 0x02);
             else
                 _controls.WriteByte(FRA_Addr, (int)RegisterMapFRA.I2C_CH, 1, 0x01);
+        }
+
+        public bool Echo_Board_WhoAmI(int ch, int AxisType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Echo_Board_Ready(int ch, int AxisType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Echo_Board_SetErrorCount(int ch, int AxisType)
+        {
+            throw new NotImplementedException();
         }
     }
 }

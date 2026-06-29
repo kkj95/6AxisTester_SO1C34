@@ -73,24 +73,30 @@ namespace FZ4P
             LogAction(ch, string.Format("[echo_fra_single_measurement] VDD OUT(REG 0x32) = {0}", u08_dat1[0]));
 
             WriteByte((int)RegisterMapFRA.I2C_CH1_AVDD, 0x01);
-            Thread.Sleep(10);
+            Thread.Sleep(100);
             u08_dat1[0] = _i2cControl.ReadByte(_fraFunction.FRA_Addr, (int)RegisterMapFRA.I2C_CH1_AVDD, 1);
             LogAction(ch, string.Format("[echo_fra_single_measurement] CH1 AVDD(REG 0x33) = {0}", u08_dat1[0]));
 
             WriteByte((int)RegisterMapFRA.I2C_CH1_IOVDD, 0x01);
-            Thread.Sleep(10);
+            Thread.Sleep(100);
             u08_dat1[0] = _i2cControl.ReadByte(_fraFunction.FRA_Addr, (int)RegisterMapFRA.I2C_CH1_IOVDD, 1);
             LogAction(ch, string.Format("[echo_fra_single_measurement] CH1 IOVDD(REG 0x34) = {0}", u08_dat1[0]));
 
             WriteByte((int)RegisterMapFRA.I2C_CH2_AVDD, 0x01);
-            Thread.Sleep(10);
+            Thread.Sleep(100);
             u08_dat1[0] = _i2cControl.ReadByte(_fraFunction.FRA_Addr, (int)RegisterMapFRA.I2C_CH2_AVDD, 1);
             LogAction(ch, string.Format("[echo_fra_single_measurement] CH2 AVDD(REG 0x35) = {0}", u08_dat1[0]));
 
-            WriteByte((int)RegisterMapFRA.I2C_CH2_IOVDD, 0x01);
-            Thread.Sleep(10);
+            WriteByte((int)RegisterMapFRA.I2C_CH2_IOVDD, 0x00);                                                                 //0x00 1.2V 0x01 1.8V   0x02 2.8V
+            Thread.Sleep(100);
             u08_dat1[0] = _i2cControl.ReadByte(_fraFunction.FRA_Addr, (int)RegisterMapFRA.I2C_CH2_IOVDD, 1);
             LogAction(ch, string.Format("[echo_fra_single_measurement] CH2 IOVDD(REG 0x36) = {0}", u08_dat1[0]));
+
+
+            WriteByte((int)RegisterMapFRA.I2C_CH, 0x02);                                                                        //Default(0x01) : 0x01-Ch1(AF) 0x02-Ch1(OIS)
+            Thread.Sleep(100);
+            //u08_dat1[0] = _i2cControl.ReadByte(_fraFunction.FRA_Addr, (int)RegisterMapFRA.I2C_CH2_IOVDD, 1);
+            //LogAction(ch, string.Format("[echo_fra_single_measurement] CH2 IOVDD(REG 0x36) = {0}", u08_dat1[0]));
 
             //u08_dat1[0] = _i2cControl.ReadByte(_fraFunction.FRA_Addr, (int)RegisterMapFRA.AMP_MODE, 1);
             //LogAction(ch, string.Format("[echo_fra_single_measurement] AMP MODE(REG 0x1E) = {0}", u08_dat1[0]));
@@ -220,7 +226,7 @@ namespace FZ4P
                 //Thread.Sleep(20);
                 sts_check[0] = ReadByte((int)RegisterMapFRA.STATUS);
 
-                Thread.Sleep(100);
+                Thread.Sleep(30);
                 if (sts_check[0] == 0x01)
                 {
                     LogAction(ch, string.Format($"[echo_fra_single_measurement] Mode ON OK (cnt={cnt})"));
