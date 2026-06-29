@@ -303,10 +303,13 @@ namespace FZ4P
 
         [Condition("OIS Linearity Comp", "Steps", "OIS LinearityCompensation", "", "code")] public int OISLincompStep { get; set; } = 32;
         [Condition("OIS Linearity Comp", "Code Margin", "OIS LinearityCompensation", "", "code")] public int OISLincompCodeMargin { get; set; } = 100;
-        [Condition("OIS EPA", "X EPA POS", "OIS LinearityCompensation", "", "um")] public int OISXEPAPos { get; set; } = 0;
-        [Condition("OIS EPA", "X EPA NEG", "OIS LinearityCompensation", "", "um")] public int OISXEPANeg { get; set; } = 0;
-        [Condition("OIS EPA", "Y EPA POS", "OIS LinearityCompensation", "", "um")] public int OISYEPAPos { get; set; } = 8;
-        [Condition("OIS EPA", "Y EPA NEG", "OIS LinearityCompensation", "", "um")] public int OISYEPANeg { get; set; } = 0;
+        [Condition("OIS X EPA", "BTM Cut Position", "OIS LinearityCompensation", "", "um")] public int iOISXEPABtmPos { get; set; } = 10;
+        [Condition("OIS X EPA", "Target Stroke Range", "OIS LinearityCompensation", "", "um")] public int iOISXEPATtlRng { get; set; } = 500;
+        [Condition("OIS X EPA", "Min TOP Margin", "OIS LinearityCompensation", "", "um")] public int iOISXEPATopMargin { get; set; } = 10;
+
+        [Condition("OIS Y EPA", "BTM Cut Position", "OIS LinearityCompensation", "", "um")] public int iOISYEPABtmPos { get; set; } = 10;
+        [Condition("OIS Y EPA", "Target Stroke Range", "OIS LinearityCompensation", "", "um")] public int iOISYEPATtlRng { get; set; } = 500;
+        [Condition("OIS Y EPA", "Min TOP Margin", "OIS LinearityCompensation", "", "um")] public int iOISYEPATopMargin { get; set; } = 10;
 
         [Condition("AF PM", "AF Step", "AF Phase Margin", "", "%")] public int iAFFRAstep { get; set; } = 5;
         [Condition("AF PM", "AF Chirp from", "AF Phase Margin", "", "Hz")] public int iAFChirpFrom { get; set; } = 250;
@@ -363,20 +366,19 @@ namespace FZ4P
 
 
 
-        [Condition("OIS PM", "FRA Step", "OIS Phase Margin", "", "dec")] public int iFRAStep_GM { get; set; } = 50;
-        [Condition("OIS PM", "X Drv Amp", "OIS Phase Margin", "", "mV")] public int iXAmplitude_GM { get; set; } = 60;
-        [Condition("OIS PM", "X Chirp from", "OIS Phase Margin", "", "Hz")] public int iXChirpFrom_GM { get; set; } = 250;
-        [Condition("OIS PM", "X Chirp to", "OIS Phase Margin", "", "Hz")] public int iXChirpTo_GM { get; set; } = 20;
-        [Condition("OIS PM", "X Off Set", "OIS Phase Margin", "", "Hz")] public int iXOffset_GM { get; set; } = 20;
+        [Condition("OIS GM", "FRA Step", "OIS Phase Margin", "", "dec")] public int iFRAStep_GM { get; set; } = 50;
+        [Condition("OIS GM", "X Drv Amp", "OIS Phase Margin", "", "mV")] public int iXAmplitude_GM { get; set; } = 60;
+        [Condition("OIS GM", "X Chirp from", "OIS Phase Margin", "", "Hz")] public int iXChirpFrom_GM { get; set; } = 250;
+        [Condition("OIS GM", "X Chirp to", "OIS Phase Margin", "", "Hz")] public int iXChirpTo_GM { get; set; } = 20;
+        [Condition("OIS GM", "X Off Set", "OIS Phase Margin", "", "Hz")] public int iXOffset_GM { get; set; } = 20;
 
+        [Condition("OIS GM", "Y Drv Amp", "OIS Phase Margin", "", "mV")] public int iYAmplitude_GM { get; set; } = 60;
+        [Condition("OIS GM", "Y Chirp from", "OIS Phase Margin", "", "Hz")] public int iYChirpFrom_GM { get; set; } = 250;
+        [Condition("OIS GM", "Y Chirp to", "OIS Phase Margin", "", "Hz")] public int iYChirpTo_GM { get; set; } = 20;
+        [Condition("OIS GM", "Y Off Set", "OIS Phase Margin", "", "Hz")] public int iYOffset_GM { get; set; } = 20;
 
-        [Condition("OIS PM", "Y Drv Amp", "OIS Phase Margin", "", "mV")] public int iYAmplitude_GM { get; set; } = 60;
-        [Condition("OIS PM", "Y Chirp from", "OIS Phase Margin", "", "Hz")] public int iYChirpFrom_GM { get; set; } = 250;
-        [Condition("OIS PM", "Y Chirp to", "OIS Phase Margin", "", "Hz")] public int iYChirpTo_GM { get; set; } = 20;
-        [Condition("OIS PM", "Y Off Set", "OIS Phase Margin", "", "Hz")] public int iYOffset_GM { get; set; } = 20;
-
-        [Condition("OIS PM", "Y Repeat Min", "OIS Phase Margin", "", "deg")] public int iYPMMin_GM { get; set; } = 20;
-        [Condition("OIS PM", "Y Repeat Max", "OIS Phase Margin", "", "deg")] public int iYPMMax_GM { get; set; } = 20;
+        [Condition("OIS GM", "Y Repeat Min", "OIS Phase Margin", "", "deg")] public int iYPMMin_GM { get; set; } = 20;
+        [Condition("OIS GM", "Y Repeat Max", "OIS Phase Margin", "", "deg")] public int iYPMMax_GM { get; set; } = 20;
         [Condition("OIS GM", "AF Position", "OIS Gain Margin", "", "code")] public int AFPosOISGM { get; set; } = 2048;
 
        

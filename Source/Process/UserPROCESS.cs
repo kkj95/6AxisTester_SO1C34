@@ -2412,7 +2412,7 @@ namespace FZ4P
             }
 
 
-            //SetEPA((int)AxisTypeDW.AxisX);
+            SetEPA((int)AxisTypeDW.AxisX);
             #endregion
 
             #region OIS Y Hall Calibration
@@ -2457,16 +2457,32 @@ namespace FZ4P
                 return;
             }
 
-            //SetEPA((int)AxisTypeDW.AxisY);
+            SetEPA((int)AxisTypeDW.AxisY);
             #endregion
         }
 
         private void SetEPA(int iAxis)
         {
             FindResult res = null;
-            int targetStrockPos = -1;
-            int targetStrockNeg = -1;
-            double zeroCodeOffset = -1;
+            double fullStroke = -1;
+            int Btmpos = 0, TTL_RNG = 0, Top_pos =0, Top_Margin = 0;
+            if (iAxis == (int)AxisTypeDW.AxisX)
+            {
+                Btmpos = Condition.iOISXEPABtmPos;
+                TTL_RNG = Condition.iOISXEPATtlRng;
+                Top_Margin = Condition.iOISXEPATopMargin;
+            }
+            else if (iAxis == (int)AxisTypeDW.AxisY)
+            {
+                Btmpos = Condition.iOISYEPABtmPos;
+                TTL_RNG = Condition.iOISYEPATtlRng;
+                Top_Margin = Condition.iOISYEPATopMargin;
+            }
+            
+            Top_pos = Btmpos + TTL_RNG;
+
+           
+
             DrvIC.AFOnOff(0, true);
             DWDrvIC.OISOnOff(0,true);
 
@@ -2476,39 +2492,45 @@ namespace FZ4P
 
             if (iAxis == (int)AxisTypeDW.AxisX)
             {
-                DWDrvIC.OISMove(0, DWDrvIC.OIS_MIN_CODE, DWDrvIC.OIS_MID_CODE);
-                Wait(300);
+                //soft landing to min code
+                SoftLangdingForEPA(iAxis, 0);
                 res = Measure();
-                Wait(100);
-                zeroCodeOffset = res.cx[0];
-                targetStrockPos = Condition.OISXEPAPos;
-                targetStrockNeg = Condition.OISXEPANeg;
+                Wait(50);
+                double min = res.cx[0];
 
                 //Set Zero
-                DWDrvIC.OISMove(0, DWDrvIC.OIS_MAX_CODE - 1, DWDrvIC.OIS_MID_CODE);
+                SoftLangdingForEPA(iAxis, 1);
+                res = Measure();
+                Wait(50);
+                fullStroke = res.cx[0] - min;
             }
             else if (iAxis == (int)AxisTypeDW.AxisY)
             {
-                DWDrvIC.OISMove(0, DWDrvIC.OIS_MID_CODE, DWDrvIC.OIS_MIN_CODE);
-                Wait(300);
-                res = Measure();
-                zeroCodeOffset = res.cy[0];
 
-                targetStrockPos = Condition.OISYEPAPos;
-                targetStrockNeg = Condition.OISYEPANeg;
+                SoftLangdingForEPA(iAxis, 0);
+                res = Measure();
+                Wait(50);
+                double min = res.cy[0];
+
+
                 //Set Zero
-                DWDrvIC.OISMove(0, DWDrvIC.OIS_MID_CODE, DWDrvIC.OIS_MAX_CODE - 1);
+
+
+                SoftLangdingForEPA(iAxis, 1);
+                Wait(100);
+                res = Measure();
+                Wait(50);
+                fullStroke = res.cy[0] - min;
             }
-            Wait(100);
 
             DWDrvIC.Set_PT(iAxis, false);
 
 
-            if (FindPosition_PCAL(iAxis, targetStrockPos, 5, zeroCodeOffset))
+            if (FindPosition_PCAL(iAxis, Top_pos, Top_Margin, fullStroke, TTL_RNG))
             {
-                DWDrvIC.OISMove(0, DWDrvIC.OIS_MIN_CODE, DWDrvIC.OIS_MID_CODE);
+                SoftLangdingForEPA(iAxis, 0);
 
-                if (FindPosition_NCAL(iAxis, targetStrockNeg, 5, zeroCodeOffset))
+                if (FindPosition_NCAL(iAxis, Btmpos, fullStroke))
                 {
                     DWDrvIC.SetStore(iAxis);
                 }
@@ -2526,107 +2548,192 @@ namespace FZ4P
             
             LEDs_All_On(0, false);
         }
-
-        private bool FindPosition_PCAL(int Axis,int targetStrockPos, int MinMaxGap, double strokOffSet)
+        private void SoftLangdingForEPA(int iAxis, int mode)
         {
-            int RangeMin = (targetStrockPos - MinMaxGap);
-            int RangeMax = (targetStrockPos + MinMaxGap);
+            if (mode == 0)
+            {
+                if(iAxis == (int)AxisTypeDW.AxisX)
+                {
+                    DWDrvIC.OISMove(0, DWDrvIC.OIS_MIN_CODE + (100 * 4), DWDrvIC.OIS_MID_CODE); Wait(20);
+                    DWDrvIC.OISMove(0, DWDrvIC.OIS_MIN_CODE + (20 * 4), DWDrvIC.OIS_MID_CODE); Wait(20);
+                    DWDrvIC.OISMove(0, DWDrvIC.OIS_MIN_CODE + (10 * 4), DWDrvIC.OIS_MID_CODE); Wait(20);
+                    DWDrvIC.OISMove(0, DWDrvIC.OIS_MIN_CODE, DWDrvIC.OIS_MID_CODE); Wait(50);
+                     Wait(20);
+                }
+                else
+                {
+                    DWDrvIC.OISMove(0, DWDrvIC.OIS_MID_CODE, DWDrvIC.OIS_MIN_CODE + (100 * 4)); Wait(20);
+                    DWDrvIC.OISMove(0, DWDrvIC.OIS_MID_CODE, DWDrvIC.OIS_MIN_CODE + (20 * 4)); Wait(20);
+                    DWDrvIC.OISMove(0, DWDrvIC.OIS_MID_CODE, DWDrvIC.OIS_MIN_CODE + (10 * 4)); Wait(20);
+                    DWDrvIC.OISMove(0, DWDrvIC.OIS_MID_CODE, DWDrvIC.OIS_MIN_CODE); Wait(50);
+                }
+            }
+           if (mode ==1)
+            {
+                if (iAxis == (int)AxisTypeDW.AxisX)
+                {
+                    DWDrvIC.OISMove(0, DWDrvIC.OIS_MAX_CODE - (100 * 4), DWDrvIC.OIS_MID_CODE); Wait(20);
+                    DWDrvIC.OISMove(0, DWDrvIC.OIS_MAX_CODE - (20 * 4), DWDrvIC.OIS_MID_CODE); Wait(20);
+                    DWDrvIC.OISMove(0, DWDrvIC.OIS_MAX_CODE - (10 * 4), DWDrvIC.OIS_MID_CODE); Wait(20);
+                    DWDrvIC.OISMove(0, DWDrvIC.OIS_MAX_CODE - 1, DWDrvIC.OIS_MID_CODE); Wait(50);
+                }
+                else
+                {
+                    DWDrvIC.OISMove(0, DWDrvIC.OIS_MID_CODE, DWDrvIC.OIS_MAX_CODE - (100 * 4)); Wait(20);
+                    DWDrvIC.OISMove(0, DWDrvIC.OIS_MID_CODE, DWDrvIC.OIS_MAX_CODE - (20 * 4)); Wait(20);
+                    DWDrvIC.OISMove(0, DWDrvIC.OIS_MID_CODE, DWDrvIC.OIS_MAX_CODE - (10 * 4)); Wait(20);
+                    DWDrvIC.OISMove(0, DWDrvIC.OIS_MID_CODE, DWDrvIC.OIS_MAX_CODE - 1); Wait(50);
+                }
+            }
+
+        }
+
+        private bool FindPosition_PCAL(int iAxis, int Top_pos, int Top_Margin, double fullStroke, double TargetStroke)
+        {
+
             FindResult res = null;
+            int tmp_position = 0;
             int movecode = 0x00;
-            double currentValue = -1;
-
-            while (true)
+            int maxMoveCode = 0xFF;
+            int loop = 0, mac_loop_max = 100;
+            int Top_Cut = 0;
+            SoftLangdingForEPA(iAxis, 1);
+            Wait(200);
+            res = Measure();
+            int refPos;
+            if (fullStroke - TargetStroke> Top_Margin)
             {
-                DWDrvIC.SetPCAL(Axis, movecode++);
-                Wait(100);
+                Top_Cut =  (int)fullStroke - (int)TargetStroke ;
+            }
+            else
+            {
+                Top_Cut = Top_Margin;
+            }
+            if (iAxis == (int)AxisTypeDW.AxisX)
+            {
+                refPos = (int)res.cx[0];
+            }
+            else if (iAxis == (int)AxisTypeDW.AxisY)
+            {
+                refPos = (int)res.cy[0];
+            }
+            else
+            {
+                return false;
+            }
+
+            while (movecode <= maxMoveCode)
+            {
+                AddLog(0, $"PCAL.ADJ:{movecode}");
+
+                DWDrvIC.SetPCAL(iAxis, movecode);
+
+                Wait(200);
+
                 res = Measure();
 
-                if ((AxisTypeDW)Axis == AxisTypeDW.AxisX)
-                    currentValue = res.cx[0] + Math.Abs(strokOffSet);
-                else if ((AxisTypeDW)Axis == AxisTypeDW.AxisY)
-                    currentValue = res.cy[0] + Math.Abs(strokOffSet);
-
-
-                if (RangeMin < currentValue && RangeMax > currentValue)
+                if (iAxis == (int)AxisTypeDW.AxisX)
                 {
-                    AddLog(0, $"PCAL Find : Measure [{currentValue}], Code [{movecode - 1}]");       //후순위 처리로 이전 코드가 필요
+                    tmp_position = (short)(refPos - res.cx[0]);
+                }
+                else if (iAxis == (int)AxisTypeDW.AxisY)
+                {
+                    tmp_position = (short)(refPos - res.cy[0]);
+                    
+                }
+
+                AddLog(0, $"Position:{tmp_position}, PCAL.ADJ:{movecode:X2}");
+
+                if (tmp_position > Top_Cut + 10)
+                {
+                    AddLog(0, $"Position:{tmp_position}, PCAL.ADJ:0x{movecode:X2}");
+                    movecode -= 3;
+                }
+
+                if (tmp_position >= Top_Cut)
+                {
+                    AddLog(0, $"Reached Top position spec. Stop. Position:{tmp_position}, PCAL.ADJ:0x{movecode:X2}");
                     return true;
                 }
-
-                if (RangeMin > currentValue || movecode > 0xFF)
+                if (loop++ > mac_loop_max)
                 {
-                    AddLog(0, $"PCAL NOT Find : Measure [{currentValue}], Code [{movecode - 1}]");       //후순위 처리로 이전 코드가 필요
+                    AddLog(0, $"Loop count exceeded. Position:{tmp_position}, PCAL.ADJ:0x{movecode:X2}");
                     return false;
                 }
+                movecode++;
+
             }
+            return false;
         }
 
-        private bool FindPosition_NCAL(int Axis, int targetStrockPos, int MinMaxGap, double strokOffSet)
+
+        private bool FindPosition_NCAL(int iAxis, int BTM_POS, double fullStroke)
         {
-            int RangeMin = (targetStrockPos - MinMaxGap);
-            int RangeMax = (targetStrockPos + MinMaxGap);
-            FindResult res;
+            FindResult res = null;
+            int tmp_position = 0;
             int movecode = 0x00;
-            double currentValue = -1;
-
-            while (true)
+            int maxMoveCode = 0xFF;
+            int loop = 0, mac_loop_max = 100;
+            Wait(200);
+            res = Measure();
+            int refPos;
+            if (iAxis == (int)AxisTypeDW.AxisX)
             {
-                DWDrvIC.SetNCAL(Axis, movecode++);
-                Wait(100);
+                refPos = (int)res.cx[0];
+            }
+            else if (iAxis == (int)AxisTypeDW.AxisY)
+            {
+                refPos = (int)res.cy[0];
+            }
+            else
+            {
+                return false;
+            }
+
+            while (movecode <= maxMoveCode)
+            {
+                AddLog(0, $"NCAL.ADJ:{movecode}");
+
+                DWDrvIC.SetNCAL(iAxis, movecode);
+
+                Wait(200);
+
                 res = Measure();
 
-                if ((AxisTypeDW)Axis == AxisTypeDW.AxisX)
-                    currentValue = res.cx[0] + Math.Abs(strokOffSet);
-                else if ((AxisTypeDW)Axis == AxisTypeDW.AxisY)
-                    currentValue = res.cy[0] + Math.Abs(strokOffSet);
-
-                if (RangeMin < currentValue && RangeMax > currentValue)
+                if (iAxis == (int)AxisTypeDW.AxisX)
                 {
-                    AddLog(0, $"PCAL Find : Measure [{currentValue}], Code [{movecode - 1}]");       //후순위 처리로 이전 코드가 필요
+                    tmp_position = (short)(res.cx[0] - refPos);
+                }
+                else if (iAxis == (int)AxisTypeDW.AxisY)
+                {
+                    tmp_position = (short)(res.cy[0] - refPos);
+                }
+
+                AddLog(0, $"Position:{tmp_position}, NCAL.ADJ:0x{movecode:X2}");
+
+                if (tmp_position > BTM_POS + 10)
+                {
+                    AddLog(0, $"Position:{tmp_position}, NCAL.ADJ:0x{movecode:X2}");
+                    movecode -= 3;
+                }
+
+                if (tmp_position >= BTM_POS)
+                {
+                    AddLog(0, $"Reached Top position spec. Stop. Position:{tmp_position}, NCAL.ADJ:0x{movecode:X2}");
                     return true;
                 }
-
-                if (RangeMin > currentValue || movecode > 0xFF)
+                if (loop++ > mac_loop_max)
                 {
-                    AddLog(0, $"PCAL NOT Find : Measure [{currentValue}], Code [{movecode - 1}]");       //후순위 처리로 이전 코드가 필요
+                    AddLog(0, $"Loop count exceeded. Position:{tmp_position}, NCAL.ADJ:0x{movecode:X2}");
                     return false;
                 }
+                movecode++;
+
             }
+            return false;
+
         }
-        //(bool, int) OISRatedStrokeAdjustment(int ch)
-        //{
-        //    int BTM_POS = 20;
-        //    //int BTM_POS = 30;
-        //    //int TTL_RNG = 400;
-        //    int TTL_RNG = 530;
-        //    int TOP_POS = BTM_POS + TTL_RNG;
-        //    int TOP_MARGIN = 10;
-
-        //    DWDrvIC.OISOnOff(ch, false);
-        //    DWDrvIC.OISOnOff(ch, true);
-        //    DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x00, 1, 0xFF);
-        //    DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x01, 1, 0xF0);
-        //    DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x39);
-        //    DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0xA0);
-
-
-
-        //    DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x46, 1, 0x01);
-
-
-
-
-        //}
-
-
-
-
-
-
-
-
-
-
+        
 
         void OIS_Decenter_Calibration(int ch, string testItem, int InspCnt)
         {
@@ -4073,6 +4180,9 @@ namespace FZ4P
 
             int AxisX = (int)AxisTypeDW.AxisX;
             int AxisY = (int)AxisTypeDW.AxisY;
+
+            double ldmOffSetX = 0.0;
+            double ldmOffSetY = 0.0;
             //여기까지
             for (int i = 0; i < step+1; i++)
                 TargetCode.Add((short)(step_interval * (i)));
@@ -4088,6 +4198,13 @@ namespace FZ4P
             DWDrvIC.OISOnOff(ch, true);
             Wait(100);
 
+            DWDrvIC.OISMove(ch, DWDrvIC.OIS_MIN_CODE, DWDrvIC.OIS_MIN_CODE);
+            Wait(100);
+            res = Measure();
+
+            ldmOffSetX = res.cx[0];
+            ldmOffSetY = res.cy[0];
+
             bufferLDMX.Add(step_interval);
             bufferLDMY.Add(step_interval);
 
@@ -4099,8 +4216,8 @@ namespace FZ4P
                 DWDrvIC.OISMove(ch, targetCode, targetCode);
                 Wait(100);
                 res = Measure();
-                bufferLDMX.Add(res.cx[0]);
-                bufferLDMY.Add(res.cy[0]);
+                bufferLDMX.Add(res.cx[0]- ldmOffSetX);
+                bufferLDMY.Add(res.cy[0]- ldmOffSetY);
             }
        
             AddLog(ch, $"MoveX\tMoveY");
@@ -4378,7 +4495,7 @@ namespace FZ4P
         }
         public bool OISPM(int ch, int axis)
         {
-            Echo_FRA_Measurement measure = new Echo_FRA_Measurement(DWDrvIC, AddLog);
+            Echo_FRA_Measurement measure = new Echo_FRA_Measurement(DWDrvIC, DWDrvIC.Controls, AddLog);
             Echo_FRA_Serch serch = new Echo_FRA_Serch(AddLog);
             sFRA_TestSetting fra_setting = new sFRA_TestSetting();
 
@@ -4395,12 +4512,13 @@ namespace FZ4P
                 return false;
             }
 
-            fra_setting.ois_slave_id = 0x78;
+            //fra_setting.ois_slave_id = 0x78;
 
-            fra_setting.ois_control_freq = (byte)measure.CTRL_FREQ_10KHZ;
+            fra_setting.ois_control_freq = (byte)measure.CTRL_FREQ_15KHZ;
             if (axis == 0)
             {
-                fra_setting.ois_mode = (byte)measure.OPEN_FRA_X;
+                fra_setting.ois_slave_id = (byte)DWDrvIC.OISX_Addr;
+                fra_setting.ois_mode = 0x00;
                 fra_setting.test_point = Condition.iFRAStep;
                 fra_setting.amplitude = Condition.iXAmplitude;
                 fra_setting.dc_bias_ofst = Condition.iXOffset;
@@ -4409,7 +4527,8 @@ namespace FZ4P
             }
             else
             {
-                fra_setting.ois_mode = (byte)measure.OPEN_FRA_Y;
+                fra_setting.ois_slave_id = (byte)DWDrvIC.OISY_Addr;
+                fra_setting.ois_mode = 0x00;
                 fra_setting.test_point = Condition.iFRAStep;
                 fra_setting.amplitude = Condition.iYAmplitude;
                 fra_setting.dc_bias_ofst = Condition.iYOffset;
@@ -4458,7 +4577,7 @@ namespace FZ4P
         }
         public bool OISGM(int ch, int axis)
         {
-            Echo_FRA_Measurement measure = new Echo_FRA_Measurement(DWDrvIC, AddLog);
+            Echo_FRA_Measurement measure = new Echo_FRA_Measurement(DWDrvIC, DWDrvIC.Controls, AddLog);
             Echo_FRA_Serch serch = new Echo_FRA_Serch(AddLog);
             sFRA_TestSetting fra_setting = new sFRA_TestSetting();
 
@@ -4475,12 +4594,11 @@ namespace FZ4P
                 return false;
             }
 
-            fra_setting.ois_slave_id = 0x78;
-
             fra_setting.ois_control_freq = (byte)measure.CTRL_FREQ_10KHZ;
             if (axis == 0)
             {
-                fra_setting.ois_mode = (byte)measure.OPEN_FRA_X;
+                fra_setting.ois_slave_id = (byte)DWDrvIC.OISX_Addr;
+                fra_setting.ois_mode = 0x00;
                 fra_setting.test_point = Condition.iFRAStep_GM;
                 fra_setting.amplitude = (int)Condition.iXAmplitude_GM;
                 fra_setting.dc_bias_ofst = (int)Condition.iXOffset_GM;
@@ -4489,7 +4607,8 @@ namespace FZ4P
             }
             else
             {
-                fra_setting.ois_mode = (byte)measure.OPEN_FRA_Y;
+                fra_setting.ois_slave_id = (byte)DWDrvIC.OISY_Addr;
+                fra_setting.ois_mode = 0x00;
                 fra_setting.test_point = Condition.iFRAStep_GM;
                 fra_setting.amplitude = (int)Condition.iYAmplitude_GM;
                 fra_setting.dc_bias_ofst = (int)Condition.iYOffset_GM;

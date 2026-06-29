@@ -15,6 +15,7 @@ namespace FZ4P.UI
     public partial class F_Manual : ModelChangedBase
     {
         private readonly IOISFunction _oISFunction = null;
+        private readonly IFRAFunction _fraFunction = null;
         private readonly IAFunction _afFunction = null;
         private Task t1;
         private CancellationTokenSource cts;
@@ -84,7 +85,7 @@ namespace FZ4P.UI
             
             _oISFunction = oISFunction;
             _afFunction = afFunction;
-
+            _fraFunction = oISFunction as IFRAFunction;
             PropertyChanged += F_Manual_PropertyChanged;
             //cbb_Acturator_Model.DataSource = Enum.GetValues(typeof(ActuatorType));
             cbb_ADC_Select.DataSource = index;
@@ -254,6 +255,16 @@ namespace FZ4P.UI
             _oISFunction.OISReset(0, 0, State);
             _oISFunction.OISReset(0, 1, State);
             _afFunction.AF_ICReset(0);
+        }
+
+        private void checkBox4_CheckStateChanged(object sender, EventArgs e)
+        {
+            bool State = ((CheckBox)sender).Checked;
+            //int ch = Convert.ToInt32(cbb_Channel.Text);
+            if (State)
+                _fraFunction.Echo_Board_Select_Ch(1);
+            else if (!State)
+                _fraFunction.Echo_Board_Select_Ch(2);
         }
     }
 }
