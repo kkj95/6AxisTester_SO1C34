@@ -297,5 +297,20 @@ namespace FZ4P.DriverIc.OISIC
             }
             return true;
         }
+
+        public void Echo_Board_Ready(int ch)
+        {
+            
+        }
+
+        public void Echo_Board_SetErrorCount(int ch)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Echo_Board_SetParameter(Echo_ParamBase param)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

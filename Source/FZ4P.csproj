@@ -144,9 +144,12 @@
     <Compile Include="Extensions\FIndResultExtension.cs" />
     <Compile Include="Process\AFLinCompCoef.cs" />
     <Compile Include="Process\AjinLibrary.cs" />
-    <Compile Include="Process\FRA\00.Types\StructTypeDef.cs" />
-    <Compile Include="Process\FRA\01.Commons\Echo_FRA_Measurement.cs" />
-    <Compile Include="Process\FRA\01.Commons\Echo_FRA_Serch.cs" />
+    <Compile Include="Process\EchoBoard\AMA\00.Types\structTypeDef.cs" />
+    <Compile Include="Process\EchoBoard\AMA\01.Commons\Echo_AMA_Measurement.cs" />
+    <Compile Include="Process\EchoBoard\Base\Echo_ParamBase.cs" />
+    <Compile Include="Process\EchoBoard\FRA\00.Types\StructTypeDef.cs" />
+    <Compile Include="Process\EchoBoard\FRA\01.Commons\Echo_FRA_Measurement.cs" />
+    <Compile Include="Process\EchoBoard\FRA\01.Commons\Echo_FRA_Serch.cs" />
     <Compile Include="Process\OISLinCompCoef.cs" />
     <Compile Include="Process\OISLinCompCoefDW.cs" />
     <Compile Include="Process\OISLineCompCoefDW_EX.cs" />
@@ -312,8 +315,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Process\FRA\GainMergin\" />
-    <Folder Include="Process\FRA\PhaseMergin\" />
+    <Folder Include="Process\EchoBoard\FRA\GainMergin\" />
+    <Folder Include="Process\EchoBoard\FRA\PhaseMergin\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
