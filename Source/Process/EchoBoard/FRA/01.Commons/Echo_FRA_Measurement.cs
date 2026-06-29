@@ -95,8 +95,8 @@ namespace FZ4P
 
             WriteByte((int)RegisterMapFRA.I2C_CH, 0x02);                                                                        //Default(0x01) : 0x01-Ch1(AF) 0x02-Ch1(OIS)
             Thread.Sleep(100);
-            //u08_dat1[0] = _i2cControl.ReadByte(_fraFunction.FRA_Addr, (int)RegisterMapFRA.I2C_CH2_IOVDD, 1);
-            //LogAction(ch, string.Format("[echo_fra_single_measurement] CH2 IOVDD(REG 0x36) = {0}", u08_dat1[0]));
+            u08_dat1[0] = _i2cControl.ReadByte(_fraFunction.FRA_Addr, (int)RegisterMapFRA.I2C_CH2_IOVDD, 1);
+            LogAction(ch, string.Format("[echo_fra_single_measurement] I2C CH Selected (REG 0x12) = {0}", u08_dat1[0]));
 
             //u08_dat1[0] = _i2cControl.ReadByte(_fraFunction.FRA_Addr, (int)RegisterMapFRA.AMP_MODE, 1);
             //LogAction(ch, string.Format("[echo_fra_single_measurement] AMP MODE(REG 0x1E) = {0}", u08_dat1[0]));

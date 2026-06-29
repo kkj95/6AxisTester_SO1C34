@@ -1191,19 +1191,10 @@ namespace FZ4P
 
         void OISPM(int ch, string testItem, int inspCnt)
         {
-
             double[] res = new double[2];
 
             OISPM(ch,(int)AxisTypeDW.AxisX);
             OISPM(ch, (int)AxisTypeDW.AxisY);
-
-            //res[0] = OISPMGM(ch, 0, 0, Condition.iXChirpFrom, Condition.iXChirpTo, Condition.XPMInspCnt, Condition.iXAmplitude);
-            //res[1] = OISPMGM(ch, 1, 0, Condition.iYChirpFrom, Condition.iYChirpTo, Condition.YPMInspCnt, Condition.iYAmplitude);
-
-            PassFails[0].Results[(int)SpecItem.FRAX_PhaseMargin].Val = res[0];
-            ShowDataResults(ch, (int)SpecItem.FRAX_PhaseMargin, (int)SpecItem.FRAX_PhaseMargin, InspType.Normal, new double[] { });
-            PassFails[0].Results[(int)SpecItem.FRAY_PhaseMargin].Val = res[1];
-            ShowDataResults(ch, (int)SpecItem.FRAY_PhaseMargin, (int)SpecItem.FRAY_PhaseMargin, InspType.Normal, new double[] { });
         }
         void OISGM(int ch, string testItem, int inspCnt)
         {
@@ -4577,7 +4568,7 @@ namespace FZ4P
 
             sFRA_Margin fra_result = new sFRA_Margin();
 
-            msg = measure.Echo_FRA_Single_Measurement(ch, ref fra_result, ref fra_setting, ref freq_buf, ref gain_buf, ref phase_buf, ref SearchCnt);
+            msg = measure.Echo_FRA_Single_Measurement(ch, ref fra_result, ref fra_setting, ref freq_buf, ref gain_buf, ref phase_buf, ref SearchCnt,false);
 
             //260309 : Single 풀시캔시 해당 SearchCnt를 리턴해줫지만 .. 필터 기능이 없어지면서 해당 배열을 전부 스캔해야됨.
             msg = serch.Search_PM(ch, ref fra_result, fra_setting, freq_buf, gain_buf, phase_buf, SearchCnt);
@@ -4599,7 +4590,7 @@ namespace FZ4P
                 m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.FRAY_Gain10Hz] = fra_result.freq10HzGain;
 
                 PassFails[0].Results[(int)SpecItem.FRAY_PhaseMargin].Val = fra_result.phase_margin;
-                ShowDataResults(ch, (int)SpecItem.FRAY_PhaseMargin, (int)SpecItem.FRAX_PhaseMargin, InspType.Normal, new double[] { });
+                ShowDataResults(ch, (int)SpecItem.FRAY_PhaseMargin, (int)SpecItem.FRAY_PhaseMargin, InspType.Normal, new double[] { });
 
                 if (fra_result.phase_margin < Condition.iYPMMin || fra_result.phase_margin > Condition.iYPMMax || double.IsNaN(fra_result.phase_margin))
                     return false;
