@@ -13,7 +13,7 @@ namespace FZ4P.DriverIc.Interfaces
         int FRA_Addr { get; }
 
         void FRA_Echoboard_StartStop(int ch, StartStopType type);
-        bool Echo_Board_WhoAmI(int ch);
+        bool Echo_Board_WhoAmI(int ch,int AxisType);
         void Echo_Board_Ready(int ch,int AxisType);
         void Echo_Board_SetErrorCount(int ch, int AxisType);
         void Echo_Board_SetParameter(Echo_ParamBase param);

@@ -305,12 +305,21 @@ namespace FZ4P.DriverIc.OISIC
 
         public void Echo_Board_SetErrorCount(int ch)
         {
-            throw new NotImplementedException();
+
         }
 
         public void Echo_Board_SetParameter(Echo_ParamBase param)
         {
-            throw new NotImplementedException();
+            //기능에 따라 분리가 필요할수도 있겠다. - 추후 펙토리로 빼서 else if 제거 <-FRA PM GM 세팅로직도 여기에 추가하기 위함.
+            if (param is AMA_TestSetting_Params parmas)
+            {
+                var executor = new Echo_AMA_ParamSet(parmas, _controls);
+                executor.SetParam();
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public void Echo_Board_Select_Ch(int ch)

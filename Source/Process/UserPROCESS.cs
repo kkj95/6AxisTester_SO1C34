@@ -1,4 +1,6 @@
-﻿using FZ4P.DriverIc.OISIC;
+﻿using FZ4P.DriverIc.I2CBase;
+using FZ4P.DriverIc.Interfaces;
+using FZ4P.DriverIc.OISIC;
 using FZ4P.Extensions;
 using System;
 using System.Collections.Generic;
@@ -6,6 +8,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -70,7 +73,8 @@ namespace FZ4P
             ItemList.Add(new ActItems() { Name = "OIS X Fluctuation", Func = OISXFluctuation, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "OIS Y Fluctuation", Func = OISYFluctuation, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "Verify AF_OIS Xtalk", Func = AF_OIS_Xtalk_Verify, IsMulti = true });
-            
+            ItemList.Add(new ActItems() { Name = "SineWave Test", Func = OISSineWave, IsMulti = true });
+
         }
 
         #region AddSeq
@@ -3192,8 +3196,6 @@ namespace FZ4P
             byte backup, flag_2nd = 0;
             byte freq_en;
 
-
-
             byte[] rbuf3 = new byte[3];
 
             int zero_range = 3;
@@ -3996,6 +3998,33 @@ namespace FZ4P
             }
 
         }
+
+        private void OISSineWave(int ch, string testItem, int inspCnt)
+        {
+            byte[] u08_dat1 = new byte[1] { 0x00 };
+            byte[] u08_dat2 = new byte[1] { 0x00 };
+
+            if (!DWDrvIC.Echo_Board_WhoAmI(ch))
+            {
+                AddLog(ch, "Echo_FRA_Measurement] FRA Board Info Error!!!");
+            }
+            else
+            {
+                //AddLog(ch, string.Format("[echo_fra_single_measurement] FRA Board Info = 0x{0:X2}", board_info[0]));
+            }
+
+            /* --------------------
+            * Board version / power info
+            * -------------------- */
+            u08_dat1[0] = DWDrvIC.Controls.ReadByte(DWDrvIC.FRA_Addr, (int)RegisterMapFRA.VERSION_MAJOR, 1);
+            u08_dat2[0] = DWDrvIC.Controls.ReadByte(DWDrvIC.FRA_Addr, (int)RegisterMapFRA.VERSION_MINOR, 1);
+
+            AddLog(ch, string.Format("[echo_fra_single_measurement] FRA Board Version(REG 0xF2): 0x{0:X2} 0x{1:X2}", u08_dat1[0], u08_dat2[0]));
+
+            u08_dat1[0] = DWDrvIC.Controls.ReadByte(DWDrvIC.FRA_Addr, (int)RegisterMapFRA.LOD_ENABLE, 1);
+            AddLog(ch, string.Format("[echo_fra_single_measurement] VDD OUT(REG 0x32) = {0}", u08_dat1[0]));
+        }
+        
         void AF_OIS_Xtalk_Calibration(int ch, string testItem, int inspCnt)
         {
             LEDs_All_On(0, true);
