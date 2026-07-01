@@ -266,5 +266,10 @@ namespace FZ4P.UI
             else if (!State)
                 _fraFunction.Echo_Board_Select_Ch(2);
         }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

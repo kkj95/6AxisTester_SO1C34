@@ -1,19 +1,13 @@
-﻿using FZ4P.DriverIc.I2CBase;
-using FZ4P.DriverIc.I2CBase.Interfaces;
-using FZ4P.DriverIc.Interfaces;
-using FZ4P.DriverIc.OISIC;
+﻿using FZ4P.DriverIc.OISIC;
 using FZ4P.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
 
 namespace FZ4P
 {
@@ -3756,7 +3750,6 @@ namespace FZ4P
         {
             try
             {
-
                 if(!Option.BarcodeUse)
                 {
                     for (int i = 0; i < 5; i++)
@@ -3764,6 +3757,7 @@ namespace FZ4P
                         STATIC.ActID_Memory[i] = Dln.ReadByte(ch, DrvIC.AF_Addr, 0xF5 + i, 1);
                     }
                 }
+
                 var now = STATIC.LogDate;
                 var year = now.Year - 2000;
                 var month = now.Month;
@@ -3805,8 +3799,6 @@ namespace FZ4P
 
                 Dln.PowerSequence(ch);
                 DrvIC.AF_ICReset(ch);
-              
-              
              
                 byte[] afCheckData = new byte[AFWriteData.Length];
 
@@ -3881,6 +3873,60 @@ namespace FZ4P
 
             }
         }
+        private void WriteOISUserMem(int ch, int res)
+        {
+            NVMWriteCollection readCollection = new NVMWriteCollection();
+            ReadWirteNVM NVMReadWriter = new ReadWirteNVM(DWDrvIC.Controls,AddLog);
+
+            writeNVMParamX.AddRow(0xE0, res);
+            writeNVMParamX.AddRow(0xE1, Convert.ToInt32(Math.Round(PassFails[ch].Results[(int)SpecItem.OISX_Ratedstroke].Val, 0)));
+            writeNVMParamX.AddRow(0xE2, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISX_Hysteresis].Val));
+            writeNVMParamX.AddRow(0xE3, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISX_Linearity].Val));
+            writeNVMParamX.AddRow(0xE4, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.HallShiftVerify].Val));
+            //writeNVMParamX.AddRow(0xE5, Convert.ToInt32(Math.Round(PassFails[j].Results[(int)SpecItem.HallShiftVerify].Val, 0)));
+
+            /*
+                * 비어있음.....
+             */
+
+            //writeNVMParamX.AddRow(0xF8, Convert.ToInt32(PassFails[j].Results[(int)SpecItem.FRAX_PhaseMargin].Val));
+            writeNVMParamX.AddRow(0xF9, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.FRAX_PhaseMargin].Val));
+            writeNVMParamX.AddRow(0xFA, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.FRAX_LoopGain].Val));
+            //writeNVMParamX.AddRow(0xFB, Convert.ToInt32(PassFails[j].Results[(int)SpecItem.FRAX_Ringing].Val));
+            //writeNVMParamX.AddRow(0xFC, Convert.ToInt32(PassFails[j].Results[(int)SpecItem.FRAX_SineWave].Val));
+            //writeNVMParamX.AddRow(0xFD, Convert.ToInt32(PassFails[j].Results[(int)SpecItem.].Val));         //퓨런티어??
+            //writeNVMParamX.AddRow(0xFㄸ, Convert.ToInt32(PassFails[j].Results[(int)SpecItem.AFPIDVerifyRes].Val));         OIS PID 버전???
+            writeNVMParamX.AddRow(0xFF, 0x33);        //?? MX 배포기준?? 이해못함.
+
+            NVMReadWriter.SetWrite(ch,DWDrvIC.OISX_Addr, writeNVMParamX);
+            readCollection.CopyAddress(writeNVMParamX);
+            NVMReadWriter.GetReadAddress(ch, DWDrvIC.OISX_Addr, readCollection);
+            NVMReadWriter.CompareData(ch, writeNVMParamX, readCollection);
+
+            writeNVMParamY.AddRow(0xE1, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISY_Ratedstroke].Val));
+            writeNVMParamY.AddRow(0xE2, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISY_Hysteresis].Val));
+            writeNVMParamY.AddRow(0xE3, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISY_Linearity].Val));
+            writeNVMParamY.AddRow(0xE4, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.HallShiftVerify].Val));
+            // writeNVMParamY.AddRow(0xE5, Convert.ToInt32(Math.Round(PassFails[j].Results[(int)SpecItem.HallShiftVerify].Val, 0)));
+
+            /*
+                * 비어있음.....
+            */
+            //writeNVMParamY.AddRow(0xF8, Convert.ToInt32(PassFails[j].Results[(int)SpecItem.FRAY_PhaseMargin].Val));
+            writeNVMParamY.AddRow(0xF9, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.FRAY_PhaseMargin].Val));
+            writeNVMParamY.AddRow(0xFA, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.FRAY_LoopGain].Val));
+            //writeNVMParamY.AddRow(0xFB, Convert.ToInt32(PassFails[j].Results[(int)SpecItem.FRAX_Ringing].Val));
+            //writeNVMParamY.AddRow(0xFC, Convert.ToInt32(PassFails[j].Results[(int)SpecItem.FRAX_SineWave].Val));
+            //writeNVMParamY.AddRow(0xFD, Convert.ToInt32(PassFails[j].Results[(int)SpecItem.].Val));         //퓨런티어??
+            //writeNVMParamY.AddRow(0xFE, Convert.ToInt32(PassFails[j].Results[(int)SpecItem.AFPIDVerifyRes].Val));         OIS PID 버전???
+            writeNVMParamY.AddRow(0xFF, 0x33);        //?? AF FD Position Repeat Test flg????
+
+            NVMReadWriter.SetWrite(ch, DWDrvIC.OISY_Addr, writeNVMParamY);
+            readCollection.CopyAddress(writeNVMParamY);
+            NVMReadWriter.GetReadAddress(ch, DWDrvIC.OISY_Addr, readCollection);
+            NVMReadWriter.CompareData(ch, writeNVMParamY, readCollection);
+        }
+
         void AF_OIS_Xtalk_Verify(int ch, string testItem, int inspCnt)
         {
             LEDs_All_On(0, true);
@@ -4007,19 +4053,19 @@ namespace FZ4P
 
             AMA_TestSetting_Params param = new AMA_TestSetting_Params()
             {
-                Target_slave_id_X = Condition.Slave_ID_X,
-                Target_slave_id_Y = Condition.Slave_ID_Y,
-                Target_slave_id_Z = Condition.Slave_ID_Z,
-                Clock_devision = Condition.Clock_Devision,
-                EOIS_target_device_number = Condition.eOIS_Device_Number,
-                Af_target_device_number = Condition.AF_Target_Device_Number,
-                Set_read_address = Condition.Set_Read_Address,
-                Read_address_count = Condition.Read_Address_Count,
-                Frequency = Condition.Frequency,
-                Amplitude = Condition.Amplitude,
-                Threshold = Condition.Threshold,
-                Measurement_cycle_count = Condition.MeasurementCycleCount,
-                Dummy_cycle_count= Condition.DummyCycleCount
+                Target_slave_id_X = (Condition.Slave_ID_X == 0) ? -1 : Condition.Slave_ID_X,
+                Target_slave_id_Y = (Condition.Slave_ID_Y == 0) ? -1 : Condition.Slave_ID_Y,
+                Target_slave_id_Z = (Condition.Slave_ID_Z == 0) ? -1 : Condition.Slave_ID_Z,
+                Clock_devision =  (Condition.Clock_Devision == 0) ? -1 : Condition.Clock_Devision,
+                EOIS_target_device_number =  (Condition.eOIS_Device_Number == 0) ? -1 : Condition.eOIS_Device_Number,
+                Af_target_device_number = (Condition.AF_Target_Device_Number == 0) ? -1 : Condition.AF_Target_Device_Number,
+                Set_read_address = (Condition.Set_Read_Address == 0) ? -1 : Condition.Set_Read_Address,
+                Read_address_count = (Condition.Read_Address_Count == 0) ? -1 : Condition.Read_Address_Count,
+                Frequency = (Condition.Frequency == 0) ? -1 : Condition.Frequency,
+                Amplitude = (Condition.Amplitude == 0) ? -1 : Condition.Amplitude,
+                Threshold = (Condition.Threshold == 0) ? -1 : Condition.Threshold,
+                Measurement_cycle_count = (Condition.MeasurementCycleCount == 0) ? -1 : Condition.MeasurementCycleCount,
+                Dummy_cycle_count = (Condition.DummyCycleCount == 0) ? -1 : Condition.DummyCycleCount
             };
 
             var result = _Measurement.SineWaveMeasurement(ch, param);

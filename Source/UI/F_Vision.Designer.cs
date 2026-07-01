@@ -137,10 +137,10 @@
             this.btnSocketLd = new System.Windows.Forms.Button();
             this.btnCoverDn = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.button9 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.btnPowerOn = new System.Windows.Forms.Button();
             this.btnPowerOff = new System.Windows.Forms.Button();
-            this.button9 = new System.Windows.Forms.Button();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -992,7 +992,6 @@
             this.btnAutoLearn.BackColor = System.Drawing.Color.Green;
             this.btnAutoLearn.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnAutoLearn.BackgroundImage")));
             this.btnAutoLearn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btnAutoLearn.Enabled = false;
             this.btnAutoLearn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnAutoLearn.Font = new System.Drawing.Font("Calibri", 14F, System.Drawing.FontStyle.Bold);
             this.btnAutoLearn.ForeColor = System.Drawing.Color.Chartreuse;
@@ -1704,6 +1703,16 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Center Move";
             // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(22, 24);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(164, 59);
+            this.button9.TabIndex = 0;
+            this.button9.Text = "OIS FW_Cal";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
             // button2
             // 
             this.button2.Location = new System.Drawing.Point(208, 24);
@@ -1743,16 +1752,6 @@
             this.btnPowerOff.Text = "Power off";
             this.btnPowerOff.UseVisualStyleBackColor = false;
             this.btnPowerOff.Click += new System.EventHandler(this.btnPowerOff_Click);
-            // 
-            // button9
-            // 
-            this.button9.Location = new System.Drawing.Point(22, 24);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(164, 59);
-            this.button9.TabIndex = 0;
-            this.button9.Text = "OIS FW_Cal";
-            this.button9.UseVisualStyleBackColor = true;
-            this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
             // FVision
             // 

@@ -54,6 +54,8 @@ namespace FZ4P
 
         public ObservableCollection<ActItems> ItemList = new ObservableCollection<ActItems>();
         public List<NVMHallParam> HallParam = new List<NVMHallParam>();
+        public NVMWriteCollection writeNVMParamX = new NVMWriteCollection();
+        public NVMWriteCollection writeNVMParamY = new NVMWriteCollection();
         public List<Task> RunTasks = new List<Task>();
         public int RunTaskId1 = 0;
         public int RunTaskId2 = 0;
@@ -1347,7 +1349,7 @@ namespace FZ4P
             if (Option.DryRunMode) { Thread.Sleep(40000); return; }
             int index = Rcp.RetryCnt.RetryOption.FindIndex(x => x.InspName == "All");
             int LoopCnt = 1 + Rcp.RetryCnt.RetryOption[index].Count;
-            STATIC.Rcp.tt.CurrentST = 0;
+            STATIC.Rcp.tt.CurrentST = 0; 
             for (int Loop = 0; Loop < LoopCnt; Loop++)
             {
                 try
@@ -1378,11 +1380,13 @@ namespace FZ4P
                     OISXCurrentMinMax = new double[2];
                     OISYCurrentMinMax = new double[2];
                     g_IME = new int[2];
-                    
 
-                  
+                    writeNVMParamX.Clear();
+                    writeNVMParamY.Clear();
+
+
                     //      Dln.ReadArray(0, DrvIC.XSlaveAddr, 0xE5, b);
-                  //  AddLog(ch, $"AF Best Pos = {Condition.AFBestPos}");
+                    //  AddLog(ch, $"AF Best Pos = {Condition.AFBestPos}");
                     //  BestAFPos = b[0] << 4;
                     //  if (BestAFPos == 0) BestAFPos = 2048;
                     int count = Condition.ToDoList.Count;
@@ -2331,7 +2335,6 @@ namespace FZ4P
                                 }
                             }
 
-
                         }
                         if (!isCentered)
                         {
@@ -2425,7 +2428,6 @@ namespace FZ4P
                                             AddLog(j, string.Format("Code X\tStroke X\tTx\tTy\tTz"));
                                         AddLog(j, string.Format("{0}\t{1:0.000}\t{2:0.000}\t{3:0.000}\t{4:0.000}", Cal.CodeX[i], Cal.StrokeX[i], Cal.TiltX[i], Cal.TiltY[i], Cal.TiltZ[i]));
                                     }
-
                                     //AddLog(j, string.Format("Cross Y1 Hall Max {0:00} Y1 Hall Min {1:00}", Cal.HallY1.Max(), Cal.HallY1.Min()));
                                     //AddLog(j, string.Format("Cross Y1 Hall Diff {0:00}", Math.Abs(Cal.HallY1.Max() - Cal.HallY1.Min())));
                                     //AddLog(j, string.Format("Cross Y2 Hall Max {0:00} Y2 Hall Min {1:00}", Cal.HallY2.Max(), Cal.HallY2.Min()));

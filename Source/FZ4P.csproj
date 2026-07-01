@@ -152,6 +152,8 @@
     <Compile Include="Process\EchoBoard\FRA\00.Types\StructTypeDef.cs" />
     <Compile Include="Process\EchoBoard\FRA\01.Commons\Echo_FRA_Measurement.cs" />
     <Compile Include="Process\EchoBoard\FRA\01.Commons\Echo_FRA_Serch.cs" />
+    <Compile Include="Process\NVM\00.Types\TypeDef.cs" />
+    <Compile Include="Process\NVM\01.Commons\ReadWirteNVM.cs" />
     <Compile Include="Process\OISLinCompCoef.cs" />
     <Compile Include="Process\OISLinCompCoefDW.cs" />
     <Compile Include="Process\OISLineCompCoefDW_EX.cs" />

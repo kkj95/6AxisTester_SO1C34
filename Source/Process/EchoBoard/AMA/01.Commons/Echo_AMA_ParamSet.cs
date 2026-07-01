@@ -14,15 +14,16 @@ namespace FZ4P
     public class Echo_AMA_ParamSet : Ehco_BoardBase
     {
         private int _slaveID = 0x00;
-        private readonly Action<int, string> LogAction;
+        private readonly Action<int, string> _logAction;
         public Echo_AMA_ParamSet(IOneTwoBytesDrivingIC function, IFRAFunction fRA, Action<int, string> LogAction) :
             base(function, fRA)
         {
+            _logAction = LogAction;
         }
 
         public void SetAMA_MODE(int ch)
         {
-            SetToWrite(ch, RegisterMapAMA.AMA_MODE, 0x04 << 1, "AMA_MODE");                                          // 0x03: RING MODE 0x04: SINEWAVE MODE
+            SetToWrite(ch, RegisterMapAMA.AMA_MODE, 0x04, "AMA_MODE");                                          // 0x03: RING MODE 0x04: SINEWAVE MODE
         }
 
         public void SetParam(int ch, AMA_TestSetting_Params _param)
@@ -32,7 +33,8 @@ namespace FZ4P
              * -------------------- */
             SetToWrite(ch, RegisterMapAMA.AMA_ID_X, _param.Target_slave_id_X << 1, "AMA_ID_X");
             SetToWrite(ch, RegisterMapAMA.AMA_ID_Y, _param.Target_slave_id_Y << 1, "AMA_ID_Y");
-            SetToWrite(ch, RegisterMapAMA.AMA_ID_Z, _param.Target_slave_id_Z << 1, "AMA_ID_Z");
+            if(_param.Target_slave_id_Z != -1)
+                SetToWrite(ch, RegisterMapAMA.AMA_ID_Z, _param.Target_slave_id_Z << 1, "AMA_ID_Z");
             SetToWrite(ch, RegisterMapAMA.AMA_CLK_DIV, _param.Clock_devision, "AMA_CLK_DIV");                   //*
             SetToWrite(ch, RegisterMapAMA.AMA_OIS_NUM, _param.EOIS_target_device_number, "AMA_OIS_NUM");
             SetToWrite(ch, RegisterMapAMA.AMA_Z_NUM, _param.Af_target_device_number, "AMA_Z_NUM");              //*
@@ -48,7 +50,8 @@ namespace FZ4P
         public void SetErrorCount(int ch, int aixs, int iCount)
         {
             byte[] tmp = new byte[2] { 0x00, 0x00 };
-            tmp[0] = (byte)(iCount & 0xFF); tmp[1] = (byte)(iCount >> 8);
+            tmp[0] = (byte)(iCount & 0xFF);                 //LSB
+            tmp[1] = (byte)(iCount >> 8);                   //MSB
 
             var axisType = (AxisTypeDW)aixs;
             switch (axisType)
@@ -67,12 +70,12 @@ namespace FZ4P
         private void SetToWrite(int ch, RegisterMapAMA amaRegister,int data, string registerName)
         {
             byte[] u08_dat1 = new byte[1] { 0x00 };
-            if (data != 0)
+            if (data != -1)
             {
                 WriteByte((int)amaRegister, (byte)(data));                                                    
                 Thread.Sleep(10);
                 u08_dat1[0] = ReadByte((int)amaRegister);
-                LogAction(ch, string.Format("[echo_fra_single_measurement] {2}(REG 0x{1:X2}) = {0}", u08_dat1[0], (byte)data, registerName));
+                _logAction(ch, string.Format("[echo_sinewave_measurement] {2}(REG 0x{1:X2}) = 0x{0:X2}", u08_dat1[0], (byte)amaRegister, registerName));
             }
         }
     }

@@ -12,7 +12,7 @@ namespace FZ4P
 {
     public class Echo_AMA_Measurement : Ehco_BoardBase
     {
-        private int TEST_LIMIT_CNT = 500;
+        private int TEST_LIMIT_CNT = 100;
         private byte DATA_SUCESS = 0xDC;
         private readonly Echo_AMA_ParamSet ParamSetExecutor = null;
         private readonly Action<int, string> _logAction;
@@ -48,8 +48,8 @@ namespace FZ4P
 
             ParamSetExecutor.SetParam(ch, parmas);
 
-            ParamSetExecutor.SetErrorCount(ch, (int)AxisTypeDW.AxisX, 100);
-            ParamSetExecutor.SetErrorCount(ch, (int)AxisTypeDW.AxisY, 100);
+            ParamSetExecutor.SetErrorCount(ch, (int)AxisTypeDW.AxisX, 1);
+            ParamSetExecutor.SetErrorCount(ch, (int)AxisTypeDW.AxisY, 1);
 
             ParamSetExecutor.SetAMA_MODE(ch);
 
@@ -59,13 +59,13 @@ namespace FZ4P
 
             if (statusSuccess)
             {
-                _logAction(ch, string.Format($"[echo_fra_single_measurement] Mode ON OK (cnt={cnt})"));
+                _logAction(ch, string.Format($"[echo_sinewave_measurement] Read OK (cnt={cnt})"));
             }
             else
             {
-                err_list[0] = ReadByte((int)RegisterMapFRA.ERROR_CODE);
-                _logAction(ch, string.Format("[echo_fra_single_measurement] Mode ON timeout (Status={0}, Err={1})",
-                    sts_check[0], err_list[0]));
+                sts_check[0] = ReadByte((int)RegisterMapAMA.AMA_STATUS);
+                _logAction(ch, string.Format("[echo_sinewave_measurement] State timeout (Status=0x{0 :X2})",
+                    sts_check[0]));
                 FraFunction.FRA_Echoboard_StartStop(ch, StartStopType.Stop);
                 Thread.Sleep(100);
                 return false;
@@ -79,13 +79,13 @@ namespace FZ4P
 
             if (statusSuccess)
             {
-                _logAction(ch, string.Format($"[echo_fra_single_measurement] Mode ON OK (cnt={cnt})"));
+                _logAction(ch, string.Format($"[echo_fra_single_measurement] Test OK (cnt={cnt})"));
             }
             else
             {
-                err_list[0] = ReadByte((int)RegisterMapFRA.ERROR_CODE);
-                _logAction(ch, string.Format("[echo_fra_single_measurement] Mode ON timeout (Status={0}, Err={1})",
-                    sts_check[0], err_list[0]));
+                sts_check[0] = ReadByte((int)RegisterMapAMA.AMA_STATUS);
+                _logAction(ch, string.Format("[echo_fra_single_measurement] Test NG timeout (Status=0x{0 :X2})",
+                    sts_check[0]));
                 FraFunction.FRA_Echoboard_StartStop(ch, StartStopType.Stop);
                 Thread.Sleep(100);
                 return false;

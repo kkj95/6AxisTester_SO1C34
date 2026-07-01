@@ -548,11 +548,11 @@ namespace FZ4P
         [Condition("OIS SINEWAVE", "AF_Target_Device_Number", "OIS SINEWAVE", "", "--")] public int AF_Target_Device_Number { get; set; } = 0;
         [Condition("OIS SINEWAVE", "Set_Read_Address", "OIS SINEWAVE", "", "--")] public int Set_Read_Address { get; set; } = 0;
         [Condition("OIS SINEWAVE", "Read_Address_Count", "OIS SINEWAVE", "", "--")] public int Read_Address_Count { get; set; } = 0;
-        [Condition("OIS SINEWAVE", "Frequency", "OIS SINEWAVE", "", "Hz")] public int Frequency { get; set; } = 0;
-        [Condition("OIS SINEWAVE", "Amplitude", "OIS SINEWAVE", "", "mV")] public int Amplitude { get; set; } = 0;
-        [Condition("OIS SINEWAVE", "Threshold", "OIS SINEWAVE", "", "--")] public int Threshold { get; set; } = 0;
-        [Condition("OIS SINEWAVE", "MeasurementCycleCount", "OIS SINEWAVE", "", "cnt")] public int MeasurementCycleCount { get; set; } = 0;
-        [Condition("OIS SINEWAVE", "DummyCycleCount", "OIS SINEWAVE", "", "cnt")] public int DummyCycleCount { get; set; } = 0;
+        [Condition("OIS SINEWAVE", "Frequency", "OIS SINEWAVE", "", "Hz")] public int Frequency { get; set; } = 5;
+        [Condition("OIS SINEWAVE", "Amplitude", "OIS SINEWAVE", "", "mV")] public int Amplitude { get; set; } = 58;
+        [Condition("OIS SINEWAVE", "Threshold", "OIS SINEWAVE", "", "--")] public int Threshold { get; set; } = 90;
+        [Condition("OIS SINEWAVE", "MeasurementCycleCount", "OIS SINEWAVE", "", "cnt")] public int MeasurementCycleCount { get; set; } = 2;
+        [Condition("OIS SINEWAVE", "DummyCycleCount", "OIS SINEWAVE", "", "cnt")] public int DummyCycleCount { get; set; } = 1;
 
 
         [Condition("OIS X Fluctuation", "Min Code", "OIS X Fluctuation", "", "code")] public int XFluctuationMinCode { get; set; } = -2048;

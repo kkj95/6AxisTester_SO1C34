@@ -52,6 +52,7 @@
             this.btn_Move_Min = new System.Windows.Forms.Button();
             this.btn_Move_Mid = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.panel7 = new System.Windows.Forms.Panel();
             this.label9 = new System.Windows.Forms.Label();
             this.panel8 = new System.Windows.Forms.Panel();
@@ -72,7 +73,6 @@
             this.lbl_ReadHall2 = new System.Windows.Forms.Label();
             this.lbl_ADC = new System.Windows.Forms.Label();
             this.lbl_ReadHall = new System.Windows.Forms.Label();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -271,6 +271,7 @@
             this.checkBox1.TabIndex = 270;
             this.checkBox1.Text = "Power On/Off";
             this.checkBox1.UseVisualStyleBackColor = false;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             this.checkBox1.CheckStateChanged += new System.EventHandler(this.checkBox1_CheckStateChanged);
             // 
             // btn_PositionMove
@@ -367,6 +368,20 @@
             this.groupBox2.TabIndex = 513;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Real Data";
+            // 
+            // checkBox4
+            // 
+            this.checkBox4.AutoSize = true;
+            this.checkBox4.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.checkBox4.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox4.ForeColor = System.Drawing.Color.White;
+            this.checkBox4.Location = new System.Drawing.Point(278, 254);
+            this.checkBox4.Name = "checkBox4";
+            this.checkBox4.Size = new System.Drawing.Size(89, 19);
+            this.checkBox4.TabIndex = 515;
+            this.checkBox4.Text = "ex Selected";
+            this.checkBox4.UseVisualStyleBackColor = false;
+            this.checkBox4.CheckStateChanged += new System.EventHandler(this.checkBox4_CheckStateChanged);
             // 
             // panel7
             // 
@@ -591,20 +606,6 @@
             this.lbl_ReadHall.TabIndex = 282;
             this.lbl_ReadHall.Text = "-";
             this.lbl_ReadHall.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // checkBox4
-            // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.checkBox4.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox4.ForeColor = System.Drawing.Color.White;
-            this.checkBox4.Location = new System.Drawing.Point(278, 254);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(89, 19);
-            this.checkBox4.TabIndex = 515;
-            this.checkBox4.Text = "ex Selected";
-            this.checkBox4.UseVisualStyleBackColor = false;
-            this.checkBox4.CheckStateChanged += new System.EventHandler(this.checkBox4_CheckStateChanged);
             // 
             // F_Manual
             // 
