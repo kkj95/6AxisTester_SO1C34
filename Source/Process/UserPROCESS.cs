@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -4022,6 +4023,12 @@ namespace FZ4P
             };
 
             var result = _Measurement.SineWaveMeasurement(ch, param);
+
+            AddLog(ch, $"Sine Wave Measurement Complete :" +
+                $" DeltaX[{result.DeltaMaxX.ToString()}]," +
+                $" DeltaY[{result.DeltaMaxY.ToString()}]," +
+                $" NG Count X : {result.NgCountX.ToString()}," +
+                $" NG Count Y : {result.NgCountY.ToString()}");
         }
 
         void AF_OIS_Xtalk_Calibration(int ch, string testItem, int inspCnt)
