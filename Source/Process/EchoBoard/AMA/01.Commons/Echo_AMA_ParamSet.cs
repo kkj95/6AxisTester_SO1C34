@@ -11,6 +11,11 @@ using System.Threading.Tasks;
 
 namespace FZ4P
 {
+    public enum AMA_MODE
+    {
+        SINEWAVE = 0x04,
+        RINGING = 0x03,
+    }
     public class Echo_AMA_ParamSet : Ehco_BoardBase
     {
         private int _slaveID = 0x00;
@@ -21,9 +26,9 @@ namespace FZ4P
             _logAction = LogAction;
         }
 
-        public void SetAMA_MODE(int ch)
+        public void SetAMA_MODE(int ch, AMA_MODE mode)
         {
-            SetToWrite(ch, RegisterMapAMA.AMA_MODE, 0x04, "AMA_MODE");                                          // 0x03: RING MODE 0x04: SINEWAVE MODE
+            SetToWrite(ch, RegisterMapAMA.AMA_MODE, (int)mode, "AMA_MODE");                                          // 0x03: RING MODE 0x04: SINEWAVE MODE
         }
 
         public void SetParam(int ch, AMA_TestSetting_Params _param)
@@ -45,6 +50,33 @@ namespace FZ4P
             SetToWrite(ch, RegisterMapAMA.AMA_SINEWAVE_THD, _param.Threshold, "AMA_SINEWAVE_THD");
             SetToWrite(ch, RegisterMapAMA.AMA_SINEWAVE_FIXED_CYCLE, _param.Measurement_cycle_count, "AMA_SINEWAVE_FIXED_CYCLE");
             SetToWrite(ch, RegisterMapAMA.AMA_SINEWAVE_DUMMY_CYCLE, _param.Dummy_cycle_count, "AMA_SINEWAVE_DUMMY_CYCLE");
+        }
+
+        public void SetParam(int ch, AMA_RingingSetting_Params _param)
+        {
+            /* --------------------
+             * Board config
+             * -------------------- */
+            SetToWrite(ch, RegisterMapAMA.AMA_ID_X, _param.Target_slave_id_X << 1, "AMA_ID_X");
+            SetToWrite(ch, RegisterMapAMA.AMA_ID_Y, _param.Target_slave_id_Y << 1, "AMA_ID_Y");
+            if (_param.Target_slave_id_Z != -1)
+                SetToWrite(ch, RegisterMapAMA.AMA_ID_Z, _param.Target_slave_id_Z << 1, "AMA_ID_Z");
+            //SetToWrite(ch, RegisterMapAMA.AMA_CLK_DIV, _param.Clock_devision, "AMA_CLK_DIV");                   
+            SetToWrite(ch, RegisterMapAMA.AMA_OIS_NUM, _param.EOIS_target_device_number, "AMA_OIS_NUM");
+            SetToWrite(ch, RegisterMapAMA.AMA_Z_NUM, _param.Af_target_device_number, "AMA_Z_NUM");              
+
+            SetToWrite(ch, RegisterMapAMA.AMA_MODE, (int)AMA_MODE.RINGING, "AMA_MODE");
+            SetToWrite(ch, RegisterMapAMA.AMA_RINGING_SCALE, 0x02, "SCALE");
+            SetToWrite(ch, RegisterMapAMA.AMA_RINGING_OIS_MEASURE, 1, "OIS_MEASURE");
+
+            SetToWrite(ch, RegisterMapAMA.AMA_RINGING_ENDPOS, _param.End_positionX, "AMA_ENDPOSITION_X");          
+            SetToWrite(ch, RegisterMapAMA.AMA_RINGING_STARTPOS, _param.Start_positionX, "AMA_STARTPOSITION_X");      
+            SetToWrite(ch, RegisterMapAMA.AMA_RINGING_ENDPOS_Y, _param.End_positionY, "AMA_ENDPOSITION_Y");          
+            SetToWrite(ch, RegisterMapAMA.AMA_RINGING_STARTPOS_Y, _param.Start_positionY, "AMA_STARTPOSITION_Y");      
+
+            SetToWrite(ch, RegisterMapAMA.AMA_RINGING_STARTTIME, _param.End_time, "AMA_RINGING_STARTTIME");                 
+            SetToWrite(ch, RegisterMapAMA.AMA_RINGING_ENDTIME, _param.End_time, "AMA_RINGING_ENDTIME");           
+            SetToWrite(ch, RegisterMapAMA.AMA_RINGING_THD, _param.End_time, "AMA_RINGING_THD");           
         }
 
         public void SetErrorCount(int ch, int aixs, int iCount)

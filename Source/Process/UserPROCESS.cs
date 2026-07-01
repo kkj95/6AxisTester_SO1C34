@@ -73,6 +73,7 @@ namespace FZ4P
             ItemList.Add(new ActItems() { Name = "OIS Y Fluctuation", Func = OISYFluctuation, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "Verify AF_OIS Xtalk", Func = AF_OIS_Xtalk_Verify, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "SineWave Test", Func = OISSineWave, IsMulti = true });
+            ItemList.Add(new ActItems() { Name = "Ringing Test", Func = OISRinging, IsMulti = true });
 
         }
 
@@ -4213,6 +4214,54 @@ namespace FZ4P
             PassFails[0].Results[(int)SpecItem.FRAY_SineWave].Val = result.DeltaMaxY;
             ShowDataResults(ch, (int)SpecItem.FRAX_SineWave, (int)SpecItem.FRAX_SineWave, InspType.Normal, new double[] { });
             ShowDataResults(ch, (int)SpecItem.FRAY_SineWave, (int)SpecItem.FRAY_SineWave, InspType.Normal, new double[] { });
+        }
+        private void OISRinging(int ch, string testItem, int inspCnt)
+        {
+            byte[] u08_dat1 = new byte[1] { 0x00 };
+            byte[] u08_dat2 = new byte[1] { 0x00 };
+            var _Measurement = new Echo_AMA_Measurement(DWDrvIC.Controls, DWDrvIC, AddLog);
+
+            if (!DWDrvIC.Echo_Board_WhoAmI(ch))
+            {
+                AddLog(ch, "Echo_FRA_Measurement] FRA Board Info Error!!!");
+            }
+
+
+            //[Condition("OIS RINGING", "Set_Read_Address", "OIS SINEWAVE", "", "--")] public int Ringing_End_Position { get; set; } = 0;
+            //[Condition("OIS RINGING", "Read_Address_Count", "OIS SINEWAVE", "", "--")] public int Ringing_Start_Position { get; set; } = 0;
+            //[Condition("OIS RINGING", "Frequency", "OIS SINEWAVE", "", "Hz")] public int Ringing_End_Time { get; set; } = 5;
+            //[Condition("OIS RINGING", "Amplitude", "OIS SINEWAVE", "", "mV")] public int Ringing_Threshold { get; set; } = 58;
+
+            AMA_RingingSetting_Params param = new AMA_RingingSetting_Params()
+            {
+                Target_slave_id_X = (Condition.Slave_ID_X == 0) ? -1 : Condition.Slave_ID_X,
+                Target_slave_id_Y = (Condition.Slave_ID_Y == 0) ? -1 : Condition.Slave_ID_Y,
+                Target_slave_id_Z = (Condition.Slave_ID_Z == 0) ? -1 : Condition.Slave_ID_Z,
+                Clock_devision = (Condition.Clock_Devision == 0) ? -1 : Condition.Clock_Devision,
+                EOIS_target_device_number = (Condition.eOIS_Device_Number == 0) ? -1 : Condition.eOIS_Device_Number,
+                Af_target_device_number = (Condition.AF_Target_Device_Number == 0) ? -1 : Condition.AF_Target_Device_Number,
+                End_positionX = (Condition.Ringing_End_Position == 0) ? -1 : Condition.Ringing_End_Position,
+                Start_positionX = (Condition.Ringing_Start_Position == 0) ? -1 : Condition.Ringing_Start_Position,
+                End_positionY = (Condition.Ringing_End_PositionY == 0) ? -1 : Condition.Ringing_End_PositionY,
+                Start_positionY = (Condition.Ringing_Start_PositionY == 0) ? -1 : Condition.Ringing_Start_PositionY,
+                Start_time = (Condition.Ringing_Start_Time == 0) ? -1 : Condition.Ringing_Start_Time,
+                End_time = (Condition.Ringing_End_Time == 0) ? -1 : Condition.Ringing_End_Time,
+                Threshold = (Condition.Ringing_Threshold == 0) ? -1 : Condition.Ringing_Threshold,
+            };
+
+            var result = _Measurement.RingingMeasurement(ch, param);
+
+            //AddLog(ch, $"Sine Wave Measurement Complete :" +
+            //    $" DeltaX[{result.DeltaMaxX.ToString()}]," +
+            //    $" DeltaY[{result.DeltaMaxY.ToString()}]," +
+            //    $" NG Count X : {result.NgCountX.ToString()}," +
+            //    $" NG Count Y : {result.NgCountY.ToString()}");
+
+
+            //PassFails[0].Results[(int)SpecItem.FRAX_SineWave].Val = result.DeltaMaxX;
+            //PassFails[0].Results[(int)SpecItem.FRAY_SineWave].Val = result.DeltaMaxY;
+            //ShowDataResults(ch, (int)SpecItem.FRAX_SineWave, (int)SpecItem.FRAX_SineWave, InspType.Normal, new double[] { });
+            //ShowDataResults(ch, (int)SpecItem.FRAY_SineWave, (int)SpecItem.FRAY_SineWave, InspType.Normal, new double[] { });
         }
 
         void AF_OIS_Xtalk_Calibration(int ch, string testItem, int inspCnt)

@@ -50,7 +50,7 @@ namespace FZ4P
             ParamSetExecutor.SetErrorCount(ch, (int)AxisTypeDW.AxisX, 1);
             ParamSetExecutor.SetErrorCount(ch, (int)AxisTypeDW.AxisY, 1);
 
-            ParamSetExecutor.SetAMA_MODE(ch);
+            ParamSetExecutor.SetAMA_MODE(ch, AMA_MODE.SINEWAVE);
 
             FraFunction.AMA_Echoboard_StartStop(ch, StartStopType.Ready);
 
@@ -108,6 +108,80 @@ namespace FZ4P
                 result.DeltaMaxY = DeltaY;
                 result.NgCountX = ngCountX;
                 result.NgCountY = ngCountY;
+
+                FraFunction.AMA_Echoboard_StartStop(ch, StartStopType.Stop);
+                _logAction(ch, string.Format("[echo_sinewave_measurement] {2}(REG 0x{1:X4}) = 0x{0:X2}", 0x00, (byte)RegisterMapAMA.AMA_START, "AMA_STOP"));
+
+                return result;
+            }
+            else
+            {
+                FraFunction.AMA_Echoboard_StartStop(ch, StartStopType.Stop);
+                _logAction(ch, string.Format("[echo_sinewave_measurement] {2}(REG 0x{1:X4}) = 0x{0:X2}", 0x00, (byte)RegisterMapAMA.AMA_START, "AMA_STOP"));
+                return result;
+            }
+        }
+
+        public bool Echo_AMA_Ringing_Measurement(int ch, AMA_RingingSetting_Params parmas)
+        {
+            int cnt = 0;
+            byte[] sts_check = new byte[1] { 0x00 };
+            byte[] err_list = new byte[1] { 0x00 };
+
+            ParamSetExecutor.SetParam(ch, parmas);
+
+            //ParamSetExecutor.SetAMA_MODE(ch,AMA_MODE.RINGING);
+
+            FraFunction.AMA_Echoboard_StartStop(ch, StartStopType.Ready);
+
+            var statusSuccess = PollAmaStatus(0x01, 100, TEST_LIMIT_CNT);
+
+            if (statusSuccess)
+            {
+                _logAction(ch, string.Format($"[echo_sinewave_measurement] Read OK (cnt={cnt})"));
+            }
+            else
+            {
+                sts_check[0] = ReadByte((int)RegisterMapAMA.AMA_STATUS);
+                _logAction(ch, string.Format("[echo_sinewave_measurement] State timeout (Status=0x{0 :X2})",
+                    sts_check[0]));
+                FraFunction.FRA_Echoboard_StartStop(ch, StartStopType.Stop);
+                Thread.Sleep(100);
+                return false;
+            }
+
+            FraFunction.AMA_Echoboard_StartStop(ch, StartStopType.Start);
+
+            //Thread.Sleep(waitMs);
+            Thread.Sleep(100);
+
+            statusSuccess = PollAmaStatus(DATA_SUCESS, 100, TEST_LIMIT_CNT);
+
+            if (statusSuccess)
+            {
+                _logAction(ch, string.Format($"[echo_sinewave_measurement] Test OK (cnt={cnt})"));
+            }
+            else
+            {
+                sts_check[0] = ReadByte((int)RegisterMapAMA.AMA_STATUS);
+                _logAction(ch, string.Format("[echo_sinewave_measurement] Test NG timeout (Status=0x{0 :X2})",
+                    sts_check[0]));
+                FraFunction.FRA_Echoboard_StartStop(ch, StartStopType.Stop);
+                Thread.Sleep(100);
+                return false;
+            }
+            return true;
+        }
+        public SineResult RingingMeasurement(int ch, AMA_RingingSetting_Params parmas)
+        {
+            var result = new SineResult();
+
+            var seccess = Echo_AMA_Ringing_Measurement(ch, parmas);
+
+            if (seccess)
+            {
+                var OkCountX = ReadWord((int)RegisterMapAMA.AMA_RINGING_OK_X_1) << 16 + +ReadWord((int)RegisterMapAMA.AMA_RINGING_OK_X_3);
+                var OkCountY = ReadWord((int)RegisterMapAMA.AMA_RINGING_OK_Y_1) << 16 + +ReadWord((int)RegisterMapAMA.AMA_RINGING_OK_Y_3);
 
                 FraFunction.AMA_Echoboard_StartStop(ch, StartStopType.Stop);
                 _logAction(ch, string.Format("[echo_sinewave_measurement] {2}(REG 0x{1:X4}) = 0x{0:X2}", 0x00, (byte)RegisterMapAMA.AMA_START, "AMA_STOP"));

@@ -579,6 +579,19 @@ namespace FZ4P
         [Condition("OIS SINEWAVE", "MeasurementCycleCount", "OIS SINEWAVE", "", "cnt")] public int MeasurementCycleCount { get; set; } = 2;
         [Condition("OIS SINEWAVE", "DummyCycleCount", "OIS SINEWAVE", "", "cnt")] public int DummyCycleCount { get; set; } = 1;
 
+        [Condition("OIS RINGING", "Ringing_Slave_ID_X", "OIS RINGING", "", "code")] public int Ringing_Slave_ID_X { get; set; } = 0;
+        [Condition("OIS RINGING", "Ringing_Slave_ID_Y", "OIS RINGING", "", "code")] public int Ringing_Slave_ID_Y { get; set; } = 0;
+        [Condition("OIS RINGING", "Ringing_Slave_ID_Z", "OIS RINGING", "", "code")] public int Ringing_Slave_ID_Z { get; set; } = 0;
+        [Condition("OIS RINGING", "Ringing_Clock_Devision", "OIS RINGING", "", "--")] public int Ringing_Clock_Devision { get; set; } = 0;
+        [Condition("OIS RINGING", "Ringing_eOIS_Device_Number", "OIS RINGING", "", "--")] public int Ringing_eOIS_Device_Number { get; set; } = 0;
+        [Condition("OIS RINGING", "Ringing_AF_Target_Device_Number", "OIS RINGING", "", "--")] public int Ringing_AF_Target_Device_Number { get; set; } = 0;
+        [Condition("OIS RINGING", "Ringing_End_Position", "OIS RINGING", "", "--")] public int Ringing_End_Position { get; set; } = 0;
+        [Condition("OIS RINGING", "Ringing_Start_Position", "OIS RINGING", "", "--")] public int Ringing_Start_Position { get; set; } = 0;
+        [Condition("OIS RINGING", "Ringing_End_PositionY", "OIS RINGING", "", "--")] public int Ringing_End_PositionY { get; set; } = 0;
+        [Condition("OIS RINGING", "Ringing_Start_PositionY", "OIS RINGING", "", "--")] public int Ringing_Start_PositionY { get; set; } = 0;
+        [Condition("OIS RINGING", "Ringing_Start_Time", "OIS RINGING", "", "--")] public int Ringing_Start_Time { get; set; } = 0;
+        [Condition("OIS RINGING", "Ringing_End_Time", "OIS RINGING", "", "Hz")] public int Ringing_End_Time { get; set; } = 5;
+        [Condition("OIS RINGING", "Ringing_Threshold", "OIS RINGING", "", "mV")] public int Ringing_Threshold { get; set; } = 58;
 
         [Condition("OIS X Fluctuation", "Min Code", "OIS X Fluctuation", "", "code")] public int XFluctuationMinCode { get; set; } = -2048;
         [Condition("OIS X Fluctuation", "Max Code", "OIS X Fluctuation", "", "code")] public int XFluctuationMaxCode { get; set; } = 2048;

@@ -104,6 +104,9 @@ namespace FZ4P.DriverIc.OISIC
 
     public enum RegisterMapAMA
     {
+        AMA_RINGING_SCALE = 0x6C,
+        AMA_RINGING_OIS_MEASURE = 0xE9,
+
         AMA_START = 0x70,
         AMA_STATUS = 0x71,
         AMA_MODE = 0x72,
@@ -123,7 +126,14 @@ namespace FZ4P.DriverIc.OISIC
         AMA_RINGING_STARTTIME = 0x8C,
         AMA_RINGING_ENDTIME = 0x8D,
         AMA_RINGING_THD = 0x8E,
-
+        AMA_RINGING_OK_X_1 = 0x8F,
+        AMA_RINGING_OK_X_2 = 0x90,
+        AMA_RINGING_OK_X_3 = 0x91,
+        AMA_RINGING_OK_X_4 = 0x92,
+        AMA_RINGING_OK_Y_1 = 0x93,
+        AMA_RINGING_OK_Y_2 = 0x94,
+        AMA_RINGING_OK_Y_3 = 0x95,
+        AMA_RINGING_OK_Y_4 = 0x96,
 
         AMA_SINEWAVE_FREQ = 0x97,
         AMA_SINEWAVE_AMP = 0x98,
@@ -149,5 +159,8 @@ namespace FZ4P.DriverIc.OISIC
         SINE_WAVEY_NG_2 = 0xA5,
         SINE_WAVEY_NG_3 = 0xA6,
         SINE_WAVEY_NG_4 = 0xA7,
+
+        AMA_RINGING_ENDPOS_Y = 0xEA,
+        AMA_RINGING_STARTPOS_Y = 0xEB,
     }
 }

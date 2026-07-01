@@ -33,6 +33,39 @@
         public int Target_slave_id_Z { get => target_slave_id_Z; set => target_slave_id_Z = value; }
     }
 
+    public class AMA_RingingSetting_Params : Echo_ParamBase
+    {
+        private int target_slave_id_X;
+        private int target_slave_id_Y;
+        private int target_slave_id_Z;
+        private int clock_devision;
+        private int eOIS_target_device_number;
+        private int af_target_device_number;
+        private int end_positionx;
+        private int start_positionx;
+        private int end_positiony;
+        private int start_positiony;
+        private int start_time;
+        private int end_time;
+        private int threshold;
+
+        public int Target_slave_id_X { get => target_slave_id_X; set => target_slave_id_X = value; }
+        public int Target_slave_id_Y { get => target_slave_id_Y; set => target_slave_id_Y = value; }
+        public int Target_slave_id_Z { get => target_slave_id_Z; set => target_slave_id_Z = value; }
+        public int Clock_devision { get => clock_devision; set => clock_devision = value; }
+        public int EOIS_target_device_number { get => eOIS_target_device_number; set => eOIS_target_device_number = value; }
+        public int Af_target_device_number { get => af_target_device_number; set => af_target_device_number = value; }
+
+        public int Start_time { get => start_time; set => start_time = value; }
+        public int End_time { get => end_time; set => end_time = value; }
+        public int Threshold { get => threshold; set => threshold = value; }
+
+        public int End_positionX { get => end_positionx; set => end_positionx = value; }
+        public int Start_positionX { get => start_positionx; set => start_positionx = value; }
+        public int End_positionY { get => end_positiony; set => end_positiony = value; }
+        public int Start_positionY { get => start_positiony; set => start_positiony = value; }
+    }
+
 
     public class SineResult 
     {
