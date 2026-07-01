@@ -8,12 +8,12 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace FZ4P
 {
     public partial class Process
     {
-       
         int SinewaveXMaxDiff = 0;
         int SinewaveYMaxDiff = 0;
         int RingingXStabilizer = 0;
@@ -56,6 +56,8 @@ namespace FZ4P
             ItemList.Add(new ActItems() { Name = "OIS Linear/Crosstalk Calibration", Func = OISLCCComp, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "OIS Gain Margin", Func = OISGM, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "OIS Phase Margin", Func = OISPM, IsMulti = true });
+            ItemList.Add(new ActItems() { Name = "OIS Gain Margin Low", Func = OISGM_LOW, IsMulti = true });
+            ItemList.Add(new ActItems() { Name = "OIS Phase Margin Low", Func = OISPM_LOW, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "OIS Decenter Calibration", Func = OIS_Decenter_Calibration, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "AF Rated Stroke", Func = AFRatedStroke, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "AF HAT", Func = AF_HAT, IsMulti = true });
@@ -1189,24 +1191,154 @@ namespace FZ4P
         {
             double[] res = new double[2];
 
-            OISPM(ch,(int)AxisTypeDW.AxisX);
-            OISPM(ch, (int)AxisTypeDW.AxisY);
+            sFRA_Margin fra_result = new sFRA_Margin();
+            sFRA_TestSetting fra_setting = new sFRA_TestSetting()
+            {
+                ois_slave_id = (byte)(DWDrvIC.OISX_Addr << 1),
+                ois_mode = 0x00,
+                test_point = Condition.iFRAStep,
+                amplitude = Condition.iXAmplitude,
+                dc_bias_ofst = Condition.iXOffset,
+                start_freq = Condition.iXChirpTo,
+                end_freq = Condition.iXChirpFrom,
+            };
+
+            OISPM(ch, (int)AxisTypeDW.AxisX, fra_setting,ref fra_result);
+
+            PassFails[0].Results[(int)SpecItem.FRAX_PhaseMargin].Val = fra_result.phase_margin;
+            ShowDataResults(ch, (int)SpecItem.FRAX_PhaseMargin, (int)SpecItem.FRAX_PhaseMargin, InspType.Normal, new double[] { });
+
+            fra_result = new sFRA_Margin();
+            fra_setting = new sFRA_TestSetting()
+            {
+                ois_slave_id = (byte)(DWDrvIC.OISY_Addr << 1),
+                ois_mode = 0x00,
+                test_point = Condition.iFRAStep,
+                amplitude = Condition.iYAmplitude,
+                dc_bias_ofst = Condition.iYOffset,
+                start_freq = Condition.iYChirpTo,
+                end_freq = Condition.iYChirpFrom,
+            };
+            
+            OISPM(ch, (int)AxisTypeDW.AxisY, fra_setting, ref fra_result);
+
+            PassFails[0].Results[(int)SpecItem.FRAY_PhaseMargin].Val = fra_result.phase_margin;
+            ShowDataResults(ch, (int)SpecItem.FRAY_PhaseMargin, (int)SpecItem.FRAY_PhaseMargin, InspType.Normal, new double[] { });
         }
         void OISGM(int ch, string testItem, int inspCnt)
         {
             double[] res = new double[2];
 
-            OISGM(ch, (int)AxisTypeDW.AxisX);
-            OISGM(ch, (int)AxisTypeDW.AxisY);
+            sFRA_Margin fra_result = new sFRA_Margin();
+            sFRA_TestSetting fra_setting = new sFRA_TestSetting()
+            {
+                ois_slave_id = (byte)(DWDrvIC.OISX_Addr << 1),
+                ois_mode = 0x00,
+                test_point = Condition.iFRAStep_GM,
+                amplitude = (int)Condition.iXAmplitude_GM,
+                dc_bias_ofst = (int)Condition.iXOffset_GM,
+                start_freq = Condition.iXChirpTo_GM,
+                end_freq = Condition.iXChirpFrom_GM
+            };
+            
+            OISGM(ch, (int)AxisTypeDW.AxisX, fra_setting,ref fra_result);
 
+            PassFails[0].Results[(int)SpecItem.FRAX_GainMargin].Val = fra_result.gain_margin_freq;
+            ShowDataResults(ch, (int)SpecItem.FRAX_GainMargin, (int)SpecItem.FRAX_GainMargin, InspType.Normal, new double[] { });
 
-            //res[0] = OISPMGM(ch, 0, 1, Condition.iXChirpFromGM, Condition.iXChirpToGM, Condition.XGMInspCnt, Condition.iXAmplitudeGM);
-            //res[1] = OISPMGM(ch, 1, 1, Condition.iYChirpFromGM, Condition.iYChirpToGM, Condition.YGMInspCnt, Condition.iYAmplitudeGM);
+            fra_result = new sFRA_Margin();
+            fra_setting = new sFRA_TestSetting()
+            {
+                ois_slave_id = (byte)(DWDrvIC.OISY_Addr << 1),
+                ois_mode = 0x00,
+                test_point = Condition.iFRAStep_GM,
+                amplitude = (int)Condition.iYAmplitude_GM,
+                dc_bias_ofst = (int)Condition.iYOffset_GM,
+                start_freq = Condition.iYChirpTo_GM,
+                end_freq = Condition.iYChirpFrom_GM,
+            };
+            
+            OISGM(ch, (int)AxisTypeDW.AxisY, fra_setting, ref fra_result);
 
-            //PassFails[0].Results[(int)SpecItem.FRAX_GainMargin].Val = res[0];
-            //ShowDataResults(ch, (int)SpecItem.FRAX_GainMargin, (int)SpecItem.FRAX_GainMargin, InspType.Normal, new double[] { });
-            //PassFails[0].Results[(int)SpecItem.FRAY_GainMargin].Val = res[1];
-            //ShowDataResults(ch, (int)SpecItem.FRAY_GainMargin, (int)SpecItem.FRAY_GainMargin, InspType.Normal, new double[] { });
+            PassFails[0].Results[(int)SpecItem.FRAY_GainMargin].Val = fra_result.gain_margin_freq;
+            ShowDataResults(ch, (int)SpecItem.FRAY_GainMargin, (int)SpecItem.FRAY_GainMargin, InspType.Normal, new double[] { });
+        }
+
+        void OISPM_LOW(int ch, string testItem, int inspCnt)
+        {
+            double[] res = new double[2];
+
+            sFRA_Margin fra_result = new sFRA_Margin();
+            sFRA_TestSetting fra_setting = new sFRA_TestSetting()
+            {
+                ois_slave_id = (byte)(DWDrvIC.OISX_Addr << 1),
+                ois_mode = 0x00,
+                test_point = Condition.iFRAStep_LOW,
+                amplitude = Condition.iXAmplitude_LOW,
+                dc_bias_ofst = Condition.iXOffset_LOW,
+                start_freq = Condition.iXChirpTo_LOW,
+                end_freq = Condition.iXChirpFrom_LOW,
+            };
+
+            OISPM(ch, (int)AxisTypeDW.AxisX, fra_setting, ref fra_result);
+
+            PassFails[0].Results[(int)SpecItem.FRAX_PhaseMarginLow].Val = fra_result.phase_margin;
+            ShowDataResults(ch, (int)SpecItem.FRAX_PhaseMarginLow, (int)SpecItem.FRAX_PhaseMarginLow, InspType.Normal, new double[] { });
+
+            fra_result = new sFRA_Margin();
+            fra_setting = new sFRA_TestSetting()
+            {
+                ois_slave_id = (byte)(DWDrvIC.OISY_Addr << 1),
+                ois_mode = 0x00,
+                test_point = Condition.iFRAStep_LOW,
+                amplitude = Condition.iYAmplitude_LOW,
+                dc_bias_ofst = Condition.iYOffset_LOW,
+                start_freq = Condition.iYChirpTo_LOW,
+                end_freq = Condition.iYChirpFrom_LOW,
+            };
+
+            OISPM(ch, (int)AxisTypeDW.AxisY, fra_setting, ref fra_result);
+
+            PassFails[0].Results[(int)SpecItem.FRAY_PhaseMarginLow].Val = fra_result.phase_margin;
+            ShowDataResults(ch, (int)SpecItem.FRAY_PhaseMarginLow, (int)SpecItem.FRAY_PhaseMarginLow, InspType.Normal, new double[] { });
+        }
+        void OISGM_LOW(int ch, string testItem, int inspCnt)
+        {
+            double[] res = new double[2];
+
+            sFRA_Margin fra_result = new sFRA_Margin();
+            sFRA_TestSetting fra_setting = new sFRA_TestSetting()
+            {
+                ois_slave_id = (byte)(DWDrvIC.OISX_Addr << 1),
+                ois_mode = 0x00,
+                test_point = Condition.iFRAStep_GM_Low,
+                amplitude = (int)Condition.iXAmplitude_GM_Low,
+                dc_bias_ofst = (int)Condition.iXOffset_GM_Low,
+                start_freq = Condition.iXChirpTo_GM_Low,
+                end_freq = Condition.iXChirpFrom_GM_Low
+            };
+
+            OISGM(ch, (int)AxisTypeDW.AxisX, fra_setting,ref fra_result);
+
+            PassFails[0].Results[(int)SpecItem.FRAX_GainMarginLow].Val = fra_result.gain_margin_freq;
+            ShowDataResults(ch, (int)SpecItem.FRAX_GainMarginLow, (int)SpecItem.FRAX_GainMarginLow, InspType.Normal, new double[] { });
+
+            fra_result = new sFRA_Margin();
+            fra_setting = new sFRA_TestSetting()
+            {
+                ois_slave_id = (byte)(DWDrvIC.OISY_Addr << 1),
+                ois_mode = 0x00,
+                test_point = Condition.iFRAStep_GM_Low,
+                amplitude = (int)Condition.iYAmplitude_GM_Low,
+                dc_bias_ofst = (int)Condition.iYOffset_GM_Low,
+                start_freq = Condition.iYChirpTo_GM_Low,
+                end_freq = Condition.iYChirpFrom_GM_Low,
+            };
+
+            OISGM(ch, (int)AxisTypeDW.AxisY, fra_setting,ref fra_result);
+
+            PassFails[0].Results[(int)SpecItem.FRAY_GainMarginLow].Val = fra_result.gain_margin_freq;
+            ShowDataResults(ch, (int)SpecItem.FRAY_GainMarginLow, (int)SpecItem.FRAY_GainMarginLow, InspType.Normal, new double[] { });
         }
 
         void OISLoopGain(int ch, string testItem, int inspCnt)
@@ -4075,6 +4207,12 @@ namespace FZ4P
                 $" DeltaY[{result.DeltaMaxY.ToString()}]," +
                 $" NG Count X : {result.NgCountX.ToString()}," +
                 $" NG Count Y : {result.NgCountY.ToString()}");
+
+
+            PassFails[0].Results[(int)SpecItem.FRAX_SineWave].Val = result.DeltaMaxX;
+            PassFails[0].Results[(int)SpecItem.FRAY_SineWave].Val = result.DeltaMaxY;
+            ShowDataResults(ch, (int)SpecItem.FRAX_SineWave, (int)SpecItem.FRAX_SineWave, InspType.Normal, new double[] { });
+            ShowDataResults(ch, (int)SpecItem.FRAY_SineWave, (int)SpecItem.FRAY_SineWave, InspType.Normal, new double[] { });
         }
 
         void AF_OIS_Xtalk_Calibration(int ch, string testItem, int inspCnt)
@@ -4577,12 +4715,13 @@ namespace FZ4P
             return resArr[1];
            
         }
-        public bool OISPM(int ch, int axis)
+        public bool OISPM(int ch, int axis, sFRA_TestSetting fra_setting,ref sFRA_Margin fra_result)
         {
             Echo_FRA_Measurement measure = new Echo_FRA_Measurement(DWDrvIC, DWDrvIC.Controls, AddLog);
             Echo_FRA_Serch serch = new Echo_FRA_Serch(AddLog);
-            sFRA_TestSetting fra_setting = new sFRA_TestSetting();
 
+            fra_setting.ois_control_freq = (byte)measure.CTRL_FREQ_15KHZ;
+            
             int msg = 0;
 
             DWDrvIC.OISReset(ch, (int)AxisTypeDW.AxisX, true);
@@ -4598,34 +4737,12 @@ namespace FZ4P
 
             //fra_setting.ois_slave_id = 0x78;
 
-            fra_setting.ois_control_freq = (byte)measure.CTRL_FREQ_15KHZ;
-            if (axis == 0)
-            {
-                fra_setting.ois_slave_id = (byte)(DWDrvIC.OISX_Addr << 1);
-                fra_setting.ois_mode = 0x00;
-                fra_setting.test_point = Condition.iFRAStep;
-                fra_setting.amplitude = Condition.iXAmplitude;
-                fra_setting.dc_bias_ofst = Condition.iXOffset;
-                fra_setting.start_freq = Condition.iXChirpTo;
-                fra_setting.end_freq = Condition.iXChirpFrom;
-            }
-            else
-            {
-                fra_setting.ois_slave_id = (byte)(DWDrvIC.OISY_Addr << 1);
-                fra_setting.ois_mode = 0x00;
-                fra_setting.test_point = Condition.iFRAStep;
-                fra_setting.amplitude = Condition.iYAmplitude;
-                fra_setting.dc_bias_ofst = Condition.iYOffset;
-                fra_setting.start_freq = Condition.iYChirpTo;
-                fra_setting.end_freq = Condition.iYChirpFrom;
-            }
-
             double[] freq_buf = new double[fra_setting.test_point];
             double[] gain_buf = new double[fra_setting.test_point];
             double[] phase_buf = new double[fra_setting.test_point];
             int SearchCnt = 0;
 
-            sFRA_Margin fra_result = new sFRA_Margin();
+            
 
             msg = measure.Echo_FRA_Single_Measurement(ch, ref fra_result, ref fra_setting, ref freq_buf, ref gain_buf, ref phase_buf, ref SearchCnt,false);
 
@@ -4633,37 +4750,22 @@ namespace FZ4P
             msg = serch.Search_PM(ch, ref fra_result, fra_setting, freq_buf, gain_buf, phase_buf, SearchCnt);
             var realpoint = fra_setting.test_point - 2;
 
-            if (axis == 0)
+            if (axis != 0)
             {
-                m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.FRAX_PMFreq] = fra_result.phase_margin_freq;
-                m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.FRAX_PhaseMargin] = fra_result.phase_margin;
-                m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.FRAX_Gain10Hz] = fra_result.freq10HzGain;
-
-                PassFails[0].Results[(int)SpecItem.FRAX_PhaseMargin].Val = fra_result.phase_margin;
-                ShowDataResults(ch, (int)SpecItem.FRAX_PhaseMargin, (int)SpecItem.FRAX_PhaseMargin, InspType.Normal, new double[] { });
-            }
-            else
-            {
-                m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.FRAY_PMFreq] = fra_result.phase_margin_freq;
-                m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.FRAY_PhaseMargin] = fra_result.phase_margin;
-                m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.FRAY_Gain10Hz] = fra_result.freq10HzGain;
-
-                PassFails[0].Results[(int)SpecItem.FRAY_PhaseMargin].Val = fra_result.phase_margin;
-                ShowDataResults(ch, (int)SpecItem.FRAY_PhaseMargin, (int)SpecItem.FRAY_PhaseMargin, InspType.Normal, new double[] { });
-
                 if (fra_result.phase_margin < Condition.iYPMMin || fra_result.phase_margin > Condition.iYPMMax || double.IsNaN(fra_result.phase_margin))
                     return false;
                 else
                     return true;
             }
-            return true;
 
+            return true;
         }
-        public bool OISGM(int ch, int axis)
+        public bool OISGM(int ch, int axis, sFRA_TestSetting fra_setting,ref sFRA_Margin fra_result)
         {
             Echo_FRA_Measurement measure = new Echo_FRA_Measurement(DWDrvIC, DWDrvIC.Controls, AddLog);
             Echo_FRA_Serch serch = new Echo_FRA_Serch(AddLog);
-            sFRA_TestSetting fra_setting = new sFRA_TestSetting();
+
+            fra_setting.ois_control_freq = (byte)measure.CTRL_FREQ_15KHZ;
 
             int msg = 0;
 
@@ -4678,35 +4780,12 @@ namespace FZ4P
                 return false;
             }
 
-            fra_setting.ois_control_freq = (byte)measure.CTRL_FREQ_10KHZ;
-            if (axis == 0)
-            {
-                fra_setting.ois_slave_id = (byte)(DWDrvIC.OISX_Addr << 1);
-                fra_setting.ois_mode = 0x00;
-                fra_setting.test_point = Condition.iFRAStep_GM;
-                fra_setting.amplitude = (int)Condition.iXAmplitude_GM;
-                fra_setting.dc_bias_ofst = (int)Condition.iXOffset_GM;
-                fra_setting.start_freq = Condition.iXChirpTo_GM;
-                fra_setting.end_freq = Condition.iXChirpFrom_GM;
-            }
-            else
-            {
-                fra_setting.ois_slave_id = (byte)(DWDrvIC.OISY_Addr << 1);
-                fra_setting.ois_mode = 0x00;
-                fra_setting.test_point = Condition.iFRAStep_GM;
-                fra_setting.amplitude = (int)Condition.iYAmplitude_GM;
-                fra_setting.dc_bias_ofst = (int)Condition.iYOffset_GM;
-                fra_setting.start_freq = Condition.iYChirpTo_GM;
-                fra_setting.end_freq = Condition.iYChirpFrom_GM;
-            }
+           
 
             double[] freq_buf = new double[fra_setting.test_point];
             double[] gain_buf = new double[fra_setting.test_point];
             double[] phase_buf = new double[fra_setting.test_point];
             int SearchCnt = 0;
-
-            sFRA_Margin fra_result = new sFRA_Margin();
-
 
             msg = measure.Echo_FRA_Single_Measurement(ch, ref fra_result, ref fra_setting, ref freq_buf, ref gain_buf, ref phase_buf, ref SearchCnt, false, true);
           
@@ -4714,25 +4793,6 @@ namespace FZ4P
             msg = serch.Search_GM(ch, ref fra_result, fra_setting, freq_buf, gain_buf, phase_buf, SearchCnt);
             var realpoint = fra_setting.test_point - 2;
             //msg = Search_GM(ch, ref fra_result, fra_setting, freq_buf, gain_buf, phase_buf, realpoint);
-
-            if (axis == 0)
-            {
-                m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.FRAX_GMFreq] = fra_result.gain_margin_freq;
-                m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.FRAX_GainMargin] = Math.Abs(fra_result.gain_margin);
-                //m__G.fManage.ShowDataResults(ch, 23, m__G.sCIndex[ch]);
-
-                PassFails[0].Results[(int)SpecItem.FRAX_GainMargin].Val = fra_result.gain_margin_freq;
-                ShowDataResults(ch, (int)SpecItem.FRAX_GainMargin, (int)SpecItem.FRAX_GainMargin, InspType.Normal, new double[] { });
-            }
-            else
-            {
-                m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.FRAY_GMFreq] = fra_result.gain_margin_freq;
-                m__G.sHistArray[m__G.sCIndex[ch], (int)FZ4P.Global.SpecItem.FRAY_GainMargin] = Math.Abs(fra_result.gain_margin);
-                //m__G.fManage.ShowDataResults(ch, 24, m__G.sCIndex[ch]);
-
-                PassFails[0].Results[(int)SpecItem.FRAY_GainMargin].Val = fra_result.gain_margin_freq;
-                ShowDataResults(ch, (int)SpecItem.FRAY_GainMargin, (int)SpecItem.FRAY_GainMargin, InspType.Normal, new double[] { });
-            }
 
             return true;
 

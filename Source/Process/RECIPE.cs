@@ -366,22 +366,47 @@ namespace FZ4P
 
 
 
-        [Condition("OIS GM", "FRA Step", "OIS Phase Margin", "", "dec")] public int iFRAStep_GM { get; set; } = 50;
-        [Condition("OIS GM", "X Drv Amp", "OIS Phase Margin", "", "mV")] public int iXAmplitude_GM { get; set; } = 60;
-        [Condition("OIS GM", "X Chirp from", "OIS Phase Margin", "", "Hz")] public int iXChirpFrom_GM { get; set; } = 250;
-        [Condition("OIS GM", "X Chirp to", "OIS Phase Margin", "", "Hz")] public int iXChirpTo_GM { get; set; } = 20;
-        [Condition("OIS GM", "X Off Set", "OIS Phase Margin", "", "Hz")] public int iXOffset_GM { get; set; } = 20;
+        [Condition("OIS GM", "FRA Step", "OIS Gain Margin", "", "dec")] public int iFRAStep_GM { get; set; } = 50;
+        [Condition("OIS GM", "X Drv Amp", "OIS Gain Margin", "", "mV")] public int iXAmplitude_GM { get; set; } = 60;
+        [Condition("OIS GM", "X Chirp from", "OIS Gain Margin", "", "Hz")] public int iXChirpFrom_GM { get; set; } = 250;
+        [Condition("OIS GM", "X Chirp to", "OIS Gain Margin", "", "Hz")] public int iXChirpTo_GM { get; set; } = 20;
+        [Condition("OIS GM", "X Off Set", "OIS Gain Margin", "", "Hz")] public int iXOffset_GM { get; set; } = 20;
 
-        [Condition("OIS GM", "Y Drv Amp", "OIS Phase Margin", "", "mV")] public int iYAmplitude_GM { get; set; } = 60;
-        [Condition("OIS GM", "Y Chirp from", "OIS Phase Margin", "", "Hz")] public int iYChirpFrom_GM { get; set; } = 250;
-        [Condition("OIS GM", "Y Chirp to", "OIS Phase Margin", "", "Hz")] public int iYChirpTo_GM { get; set; } = 20;
-        [Condition("OIS GM", "Y Off Set", "OIS Phase Margin", "", "Hz")] public int iYOffset_GM { get; set; } = 20;
+        [Condition("OIS GM", "Y Drv Amp", "OIS Gain Margin", "", "mV")] public int iYAmplitude_GM { get; set; } = 60;
+        [Condition("OIS GM", "Y Chirp from", "OIS Gain Margin", "", "Hz")] public int iYChirpFrom_GM { get; set; } = 250;
+        [Condition("OIS GM", "Y Chirp to", "OIS Gain Margin", "", "Hz")] public int iYChirpTo_GM { get; set; } = 20;
+        [Condition("OIS GM", "Y Off Set", "OIS Gain Margin", "", "Hz")] public int iYOffset_GM { get; set; } = 20;
 
-        [Condition("OIS GM", "Y Repeat Min", "OIS Phase Margin", "", "deg")] public int iYPMMin_GM { get; set; } = 20;
-        [Condition("OIS GM", "Y Repeat Max", "OIS Phase Margin", "", "deg")] public int iYPMMax_GM { get; set; } = 20;
+        [Condition("OIS GM", "Y Repeat Min", "OIS Gain Margin", "", "deg")] public int iYPMMin_GM { get; set; } = 20;
+        [Condition("OIS GM", "Y Repeat Max", "OIS Gain Margin", "", "deg")] public int iYPMMax_GM { get; set; } = 20;
         [Condition("OIS GM", "AF Position", "OIS Gain Margin", "", "code")] public int AFPosOISGM { get; set; } = 2048;
 
-       
+        [Condition("OIS PM LOW", "FRA Step", "OIS Phase Margin", "", "dec")] public int iFRAStep_LOW { get; set; } = 50;
+        [Condition("OIS PM LOW", "X Drv Amp", "OIS Phase Margin", "", "mV")] public int iXAmplitude_LOW { get; set; } = 60;
+        [Condition("OIS PM LOW", "X Chirp from", "OIS Phase Margin", "", "Hz")] public int iXChirpFrom_LOW { get; set; } = 250;
+        [Condition("OIS PM LOW", "X Chirp to", "OIS Phase Margin", "", "Hz")] public int iXChirpTo_LOW { get; set; } = 20;
+        [Condition("OIS PM LOW", "X Off Set", "OIS Phase Margin", "", "Hz")] public int iXOffset_LOW { get; set; } = 20;
+
+        [Condition("OIS PM LOW", "Y Drv Amp", "OIS Phase Margin", "", "mV")] public int iYAmplitude_LOW { get; set; } = 60;
+        [Condition("OIS PM LOW", "Y Chirp from", "OIS Phase Margin", "", "Hz")] public int iYChirpFrom_LOW { get; set; } = 250;
+        [Condition("OIS PM LOW", "Y Chirp to", "OIS Phase Margin", "", "Hz")] public int iYChirpTo_LOW { get; set; } = 20;
+        [Condition("OIS PM LOW", "Y Off Set", "OIS Phase Margin", "", "Hz")] public int iYOffset_LOW { get; set; } = 20;
+        [Condition("OIS PM LOW", "AF Position", "OIS Phase Margin", "", "code")] public int AFPosOISPM_LOW { get; set; } = 2048;
+
+
+        [Condition("OIS GM LOW", "FRA Step", "OIS Gain Margin", "", "dec")] public int iFRAStep_GM_Low { get; set; } = 50;
+        [Condition("OIS GM LOW", "X Drv Amp", "OIS Gain Margin", "", "mV")] public int iXAmplitude_GM_Low { get; set; } = 60;
+        [Condition("OIS GM LOW", "X Chirp from", "OIS Gain Margin", "", "Hz")] public int iXChirpFrom_GM_Low { get; set; } = 250;
+        [Condition("OIS GM LOW", "X Chirp to", "OIS Gain Margin", "", "Hz")] public int iXChirpTo_GM_Low { get; set; } = 20;
+        [Condition("OIS GM LOW", "X Off Set", "OIS Gain Margin", "", "Hz")] public int iXOffset_GM_Low { get; set; } = 20;
+                           
+        [Condition("OIS GM LOW", "Y Drv Amp", "OIS Gain Margin", "", "mV")] public int iYAmplitude_GM_Low { get; set; } = 60;
+        [Condition("OIS GM LOW", "Y Chirp from", "OIS Gain Margin", "", "Hz")] public int iYChirpFrom_GM_Low { get; set; } = 250;
+        [Condition("OIS GM LOW", "Y Chirp to", "OIS Gain Margin", "", "Hz")] public int iYChirpTo_GM_Low { get; set; } = 20;
+        [Condition("OIS GM LOW", "Y Off Set", "OIS Gain Margin", "", "Hz")] public int iYOffset_GM_Low { get; set; } = 20;
+        [Condition("OIS GM LOW", "AF Position", "OIS Gain Margin", "", "code")] public int AFPosOISGM_Low { get; set; } = 2048;
+
+
         [Condition("OIS LoopGain", "X Amp", "OIS LoopGain", "", "mV")] public int OISXLoopGainAmp { get; set; } = 40;
         [Condition("OIS LoopGain", "X Freq", "OIS LoopGain", "", "Hz")] public int OISXLoopGainFreq { get; set; } = 10;
         [Condition("OIS LoopGain", "Y Amp", "OIS LoopGain", "", "mV")] public int OISYLoopGainAmp { get; set; } = 40;
@@ -636,8 +661,6 @@ namespace FZ4P
         [Spec("AF> Tilt", "min", InspType.Normal, "AF Scan")] AF_Tilt,
         [Spec("AF> DynamicTilt(Regional)", "min", InspType.Normal, "AF Scan")] AF_DynamicTilt_Regional,
         [Spec("AF> Hall Shift Verify", "OK/NG", InspType.OKNG, "X/Y Drift Test")] HallShiftVerify,
-     
-
 
         [Spec("AF Rated Stroke", "um", InspType.Normal, "AF Rated Stroke")] AF_Ratedstroke2,
         [Spec("AF Sensitivity", "um/code", InspType.Normal, "AF Rated Stroke")] AFSensitivity,
@@ -670,6 +693,13 @@ namespace FZ4P
         [Spec("OIS Y Phase Margin", "deg", InspType.Normal, "OIS Phase Margin")] FRAY_PhaseMargin,
         [Spec("OIS X Gain Margin", "dB", InspType.Normal, "OIS Gain Margin")] FRAX_GainMargin,
         [Spec("OIS Y Gain Margin", "dB", InspType.Normal, "OIS Gain Margin")] FRAY_GainMargin,
+        [Spec("OIS X Phase Margin Low", "deg", InspType.Normal, "OIS Phase Margin Low")] FRAX_PhaseMarginLow,
+        [Spec("OIS Y Phase Margin Low", "deg", InspType.Normal, "OIS Phase Margin Low")] FRAY_PhaseMarginLow,
+        [Spec("OIS X Gain Margin Low", "dB", InspType.Normal, "OIS Gain Margin Low")] FRAX_GainMarginLow,
+        [Spec("OIS Y Gain Margin Low", "dB", InspType.Normal, "OIS Gain Margin Low")] FRAY_GainMarginLow,
+
+        [Spec("OIS X SineWave", "code", InspType.Normal, "OIS X SineWave")] FRAX_SineWave,
+        [Spec("OIS Y SineWave", "code", InspType.Normal, "OIS Y SineWave")] FRAY_SineWave,
 
         [Spec("OIS X Loop Gain", "dB", InspType.Normal, "OIS LoopGain")] FRAX_LoopGain,
         [Spec("OIS Y Loop Gain", "dB", InspType.Normal, "OIS LoopGain")] FRAY_LoopGain,

@@ -33,6 +33,7 @@
         public int Target_slave_id_Z { get => target_slave_id_Z; set => target_slave_id_Z = value; }
     }
 
+
     public class SineResult 
     {
         private int _deltaMaxX = -1;

@@ -35,7 +35,6 @@ namespace FZ4P
             }
             return false;
         }
-
         public bool Echo_AMA_SineWave_Measurement(int ch, AMA_TestSetting_Params parmas)
         {
             int cnt = 0;
@@ -79,23 +78,19 @@ namespace FZ4P
 
             if (statusSuccess)
             {
-                _logAction(ch, string.Format($"[echo_fra_single_measurement] Test OK (cnt={cnt})"));
+                _logAction(ch, string.Format($"[echo_sinewave_measurement] Test OK (cnt={cnt})"));
             }
             else
             {
                 sts_check[0] = ReadByte((int)RegisterMapAMA.AMA_STATUS);
-                _logAction(ch, string.Format("[echo_fra_single_measurement] Test NG timeout (Status=0x{0 :X2})",
+                _logAction(ch, string.Format("[echo_sinewave_measurement] Test NG timeout (Status=0x{0 :X2})",
                     sts_check[0]));
                 FraFunction.FRA_Echoboard_StartStop(ch, StartStopType.Stop);
                 Thread.Sleep(100);
                 return false;
             }
-
-            FraFunction.AMA_Echoboard_StartStop(ch, StartStopType.Stop);
-
             return true;
         }
-
         public SineResult SineWaveMeasurement(int ch, AMA_TestSetting_Params parmas)
         {
             var result = new SineResult();
@@ -106,8 +101,7 @@ namespace FZ4P
             {
                 var DeltaX = ReadWord((int)RegisterMapAMA.SINE_WAVEX_MAX_H);
                 var DeltaY = ReadWord((int)RegisterMapAMA.SINE_WAVEY_MAX_H);
-
-                var ngCountX = ReadWord((int)RegisterMapAMA.SINE_WAVEX_NG_1)<<16 + ReadWord((int)RegisterMapAMA.SINE_WAVEX_NG_3);
+                var ngCountX = ReadWord((int)RegisterMapAMA.SINE_WAVEX_NG_1) << 16 + ReadWord((int)RegisterMapAMA.SINE_WAVEX_NG_3);
                 var ngCountY = ReadWord((int)RegisterMapAMA.SINE_WAVEY_NG_1) << 16 + ReadWord((int)RegisterMapAMA.SINE_WAVEY_NG_3);
 
                 result.DeltaMaxX = DeltaX;
@@ -115,10 +109,30 @@ namespace FZ4P
                 result.NgCountX = ngCountX;
                 result.NgCountY = ngCountY;
 
+                FraFunction.AMA_Echoboard_StartStop(ch, StartStopType.Stop);
+                _logAction(ch, string.Format("[echo_sinewave_measurement] {2}(REG 0x{1:X4}) = 0x{0:X2}", 0x00, (byte)RegisterMapAMA.AMA_START, "AMA_STOP"));
+
                 return result;
             }
             else
+            {
+                FraFunction.AMA_Echoboard_StartStop(ch, StartStopType.Stop);
+                _logAction(ch, string.Format("[echo_sinewave_measurement] {2}(REG 0x{1:X4}) = 0x{0:X2}", 0x00, (byte)RegisterMapAMA.AMA_START, "AMA_STOP"));
                 return result;
+            }
+        }
+
+        //2byte Read ?? 연속 읽기가 안되어 오버라이드 함.
+        protected override ushort ReadWord(int startAddress)
+        {
+            byte[] tmp = new byte[2] { 0x00, 0x00 };
+            tmp[0] = ReadByte(startAddress);
+            tmp[1] = ReadByte(startAddress+1);
+            
+            var data = (tmp[0] << 8 | tmp[1]);
+            _logAction(0, string.Format("[echo_sinewave_measurement] {2}(REG 0x{1:X4}) = 0x{0:X4}", (ushort)data, (ushort)(startAddress << 8)+ (startAddress+1), "Read Word"));
+
+            return (ushort)(data);
         }
     }
 }
