@@ -134,5 +134,20 @@ namespace FZ4P.DriverIc.OISIC
         AMA_SINEWAVE_ERRCNT_X_L = 0x9D,
         AMA_SINEWAVE_ERRCNT_Y_H = 0x9E,
         AMA_SINEWAVE_ERRCNT_Y_L = 0x9F,
+
+        SINE_WAVEX_MAX_H = 0xA8,
+        SINE_WAVEX_MAX_L = 0xA9,
+        SINE_WAVEY_MAX_H = 0xAA,
+        SINE_WAVEY_MAX_L = 0xAB,
+
+        SINE_WAVEX_NG_1 = 0xA0,
+        SINE_WAVEX_NG_2 = 0xA1,
+        SINE_WAVEX_NG_3 = 0xA2,
+        SINE_WAVEX_NG_4 = 0xA3,
+
+        SINE_WAVEY_NG_1 = 0xA4,
+        SINE_WAVEY_NG_2 = 0xA5,
+        SINE_WAVEY_NG_3 = 0xA6,
+        SINE_WAVEY_NG_4 = 0xA7,
     }
 }

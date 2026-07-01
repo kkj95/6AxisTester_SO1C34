@@ -4006,10 +4006,22 @@ namespace FZ4P
 
             AMA_TestSetting_Params param = new AMA_TestSetting_Params()
             {
-                //설정 필요.
+                Target_slave_id_X = Condition.Slave_ID_X,
+                Target_slave_id_Y = Condition.Slave_ID_Y,
+                Target_slave_id_Z = Condition.Slave_ID_Z,
+                Clock_devision = Condition.Clock_Devision,
+                EOIS_target_device_number = Condition.eOIS_Device_Number,
+                Af_target_device_number = Condition.AF_Target_Device_Number,
+                Set_read_address = Condition.Set_Read_Address,
+                Read_address_count = Condition.Read_Address_Count,
+                Frequency = Condition.Frequency,
+                Amplitude = Condition.Amplitude,
+                Threshold = Condition.Threshold,
+                Measurement_cycle_count = Condition.MeasurementCycleCount,
+                Dummy_cycle_count= Condition.DummyCycleCount
             };
 
-            _Measurement.Echo_AMA_SineWave_Measurement(ch, param);
+            var result = _Measurement.SineWaveMeasurement(ch, param);
         }
 
         void AF_OIS_Xtalk_Calibration(int ch, string testItem, int inspCnt)

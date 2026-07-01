@@ -29,5 +29,9 @@ namespace FZ4P
         {
             return _i2cControl.ReadByte(FraFunction.FRA_Addr, addr, 1);
         }
+        protected virtual ushort ReadWord(int addr)
+        {
+            return _i2cControl.Read2Byte(FraFunction.FRA_Addr, addr, 1);
+        }
     }
 }

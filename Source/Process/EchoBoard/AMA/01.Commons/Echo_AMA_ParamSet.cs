@@ -20,30 +20,24 @@ namespace FZ4P
         {
         }
 
+        public void SetAMA_MODE(int ch)
+        {
+            SetToWrite(ch, RegisterMapAMA.AMA_MODE, 0x04 << 1, "AMA_MODE");                                          // 0x03: RING MODE 0x04: SINEWAVE MODE
+        }
+
         public void SetParam(int ch, AMA_TestSetting_Params _param)
         {
-            byte[] u08_dat1 = new byte[1] { 0x00 };
-            byte[] u08_dat2 = new byte[1] { 0x00 };
-            byte[] board_info = new byte[1] { 0x00 };
-            int cnt = 0;
-            byte[] sts_check = new byte[1] { 0x00 };
-            byte[] err_list = new byte[1] { 0x00 };
-
-            //i2cControl.WriteByte();
-
             /* --------------------
              * Board config
              * -------------------- */
-            SetToWrite(ch, RegisterMapAMA.AMA_MODE, 0x04 << 1, "AMA_MODE");                                          // 0x03: RING MODE 0x04: SINEWAVE MODE
-
             SetToWrite(ch, RegisterMapAMA.AMA_ID_X, _param.Target_slave_id_X << 1, "AMA_ID_X");
             SetToWrite(ch, RegisterMapAMA.AMA_ID_Y, _param.Target_slave_id_Y << 1, "AMA_ID_Y");
             SetToWrite(ch, RegisterMapAMA.AMA_ID_Z, _param.Target_slave_id_Z << 1, "AMA_ID_Z");
-            SetToWrite(ch, RegisterMapAMA.AMA_CLK_DIV, _param.Clock_devision, "AMA_CLK_DIV");
+            SetToWrite(ch, RegisterMapAMA.AMA_CLK_DIV, _param.Clock_devision, "AMA_CLK_DIV");                   //*
             SetToWrite(ch, RegisterMapAMA.AMA_OIS_NUM, _param.EOIS_target_device_number, "AMA_OIS_NUM");
-            SetToWrite(ch, RegisterMapAMA.AMA_Z_NUM, _param.Af_target_device_number, "AMA_Z_NUM");
-            SetToWrite(ch, RegisterMapAMA.AMA_ADDR_0, _param.Set_read_address, "AMA_ADDR_0");
-            SetToWrite(ch, RegisterMapAMA.AMA_ADDR_NUM, _param.Read_address_count, "AMA_ADDR_NUM");
+            SetToWrite(ch, RegisterMapAMA.AMA_Z_NUM, _param.Af_target_device_number, "AMA_Z_NUM");              //*
+            SetToWrite(ch, RegisterMapAMA.AMA_ADDR_0, _param.Set_read_address, "AMA_ADDR_0");                   //*
+            SetToWrite(ch, RegisterMapAMA.AMA_ADDR_NUM, _param.Read_address_count, "AMA_ADDR_NUM");             //*
             SetToWrite(ch, RegisterMapAMA.AMA_SINEWAVE_FREQ, _param.Frequency, "AMA_SINEWAVE_FREQ");
             SetToWrite(ch, RegisterMapAMA.AMA_SINEWAVE_AMP, _param.Amplitude, "AMA_SINEWAVE_AMP");
             SetToWrite(ch, RegisterMapAMA.AMA_SINEWAVE_THD, _param.Threshold, "AMA_SINEWAVE_THD");
