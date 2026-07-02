@@ -4551,6 +4551,28 @@ namespace FZ4P
                 return;
             }
 
+            DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.StandbyMode);
+            DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.OpenMode);
+            DWDrvIC.OISMove(ch, 8191, 8191);      //current 0mA Position
+
+            for (int i = 0; i < 30; i++)
+            {
+                DWDrvIC.OISMove(ch, DWDrvIC.OIS_MIN_CODE, 8191);
+                Thread.Sleep(100);
+                DWDrvIC.OISMove(ch, DWDrvIC.OIS_MAX_CODE, 8191);
+                Thread.Sleep(100);
+            }
+
+            DWDrvIC.OISMove(ch, 8191, 8191);      //current 0mA Positio
+            for (int i = 0; i < 30; i++)
+            {
+                DWDrvIC.OISMove(ch, 8191, DWDrvIC.OIS_MIN_CODE);
+                Thread.Sleep(100);
+                DWDrvIC.OISMove(ch, 8191, DWDrvIC.OIS_MAX_CODE);
+                Thread.Sleep(100);
+            }
+
+
             OISLineCompCoefDW_EX oISLinCompCoef = new OISLineCompCoefDW_EX();
             OISLineCompCoefDW_EX oISLinCompCoefY = new OISLineCompCoefDW_EX();
             FindResult res = new FindResult();
