@@ -19,7 +19,6 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace FZ4P
 {
-    //동윤 14bit
 
     public class DrvIC : IOISFunction,IAFunction
     { 

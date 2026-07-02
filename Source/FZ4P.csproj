@@ -139,6 +139,10 @@
     <Compile Include="DriverIc\Interfaces\IAFunction.cs" />
     <Compile Include="DriverIc\Interfaces\IFRAFunction.cs" />
     <Compile Include="DriverIc\Interfaces\IOISFunction.cs" />
+    <Compile Include="DriverIc\OISIC\Adapter\AFAdapterAKM.cs" />
+    <Compile Include="DriverIc\OISIC\Adapter\FRAAdapterAKM.cs" />
+    <Compile Include="DriverIc\OISIC\Adapter\OISAdapterAKM.cs" />
+    <Compile Include="DriverIc\OISIC\AK73XX.cs" />
     <Compile Include="DriverIc\OISIC\DW9836N.cs" />
     <Compile Include="DriverIc\OISIC\EnumTypeDefined.cs" />
     <Compile Include="Extensions\FIndResultExtension.cs" />

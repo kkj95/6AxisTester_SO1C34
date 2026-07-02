@@ -58,8 +58,6 @@ namespace FZ4P.DriverIc.OISIC
             if (code < 0) code = 0;
             if (code > 0x1FFF) code = 0x1FFF; // 8191
 
-
-
             ushort raw = (ushort)(code << 3);
 
             byte data1 = (byte)((raw >> 8) & 0xFF);
@@ -116,29 +114,6 @@ namespace FZ4P.DriverIc.OISIC
             var Wrod = Controls.Read2Byte(SlaveID, (int)RegisterMapDW9836N.POSITION_READ_LOW, 1);
 
             ReadData = (short)(Wrod >> 2);
-
-            if (mode == 0)
-            {
-                //short Readhall = (short)((data[1] << 8 | data[2]) / 16);
-                //if (Readhall >= 2048) Readhall = (short)(Readhall - 4096);
-                //return Readhall;
-            }
-            else
-            {
-                //if (axis == 0)
-                //{
-                //    Dln.WriteByte(ch, OIS_Addr, 0x6060, 2, 0x00);
-                //    bool res = OIS_StausCheck(ch, 0x6060, 0x00, 0x00);
-                //    if (!res) return short.MaxValue;
-                //}
-                //else
-                //{
-                //    Dln.WriteByte(ch, OIS_Addr, 0x6060, 2, 0x01);
-                //    bool res = OIS_StausCheck(ch, 0x6060, 0x01, 0x01);
-                //    if (!res) return short.MaxValue;
-                //}
-                //return Dln.Read2Byte_signed(ch, OIS_Addr, 0x6062, 2);
-            }   
             
             return (short)ReadData;
         }
