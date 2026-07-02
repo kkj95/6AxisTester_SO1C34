@@ -6,6 +6,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
@@ -74,7 +75,6 @@ namespace FZ4P
             ItemList.Add(new ActItems() { Name = "Verify AF_OIS Xtalk", Func = AF_OIS_Xtalk_Verify, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "SineWave Test", Func = OISSineWave, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "Ringing Test", Func = OISRinging, IsMulti = true });
-
         }
 
         #region AddSeq
@@ -4078,7 +4078,19 @@ namespace FZ4P
             writeNVMParamX.AddRow(0xFE, 0);                                                                                     //OIS PID 버전???
             writeNVMParamX.AddRow(0xFF, 0x33);        //?? MX 배포기준?? 이해못함.
 
+            DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.StandbyMode);
+            Thread.Sleep(10);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x39); 
+
             NVMReadWriter.SetWrite(ch,DWDrvIC.OISX_Addr, writeNVMParamX);
+
+            DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.StandbyMode);
+            Thread.Sleep(10);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x03, 1, 0x03);               //STORE?
+            Thread.Sleep(10);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x14);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x04, 1, 0x01);               //Reset??
+
             readCollection.CopyAddress(writeNVMParamX);
             NVMReadWriter.GetReadAddress(ch, DWDrvIC.OISX_Addr, readCollection);
             NVMReadWriter.CompareData(ch, writeNVMParamX, readCollection);
@@ -4147,7 +4159,19 @@ namespace FZ4P
             writeNVMParamY.AddRow(0xFE, 0);         //OIS PID 버전???
             writeNVMParamY.AddRow(0xFF, 0);         //?? AF FD Position Repeat Test flg????
 
+            DWDrvIC.SetOperationMode(AxisTypeDW.AxisY, OperationTypeDW.StandbyMode);
+            Thread.Sleep(10);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0x39);
+
             NVMReadWriter.SetWrite(ch, DWDrvIC.OISY_Addr, writeNVMParamY);
+
+            DWDrvIC.SetOperationMode(AxisTypeDW.AxisY, OperationTypeDW.StandbyMode);
+            Thread.Sleep(10);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x03, 1, 0x03);               //STORE?
+            Thread.Sleep(10);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0x14);
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x04, 1, 0x01);               //Reset??
+
             readCollection.CopyAddress(writeNVMParamY);
             NVMReadWriter.GetReadAddress(ch, DWDrvIC.OISY_Addr, readCollection);
             NVMReadWriter.CompareData(ch, writeNVMParamY, readCollection);
