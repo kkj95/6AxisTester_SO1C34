@@ -101,8 +101,8 @@ namespace FZ4P
             {
                 var DeltaX = ReadWord((int)RegisterMapAMA.SINE_WAVEX_MAX_H);
                 var DeltaY = ReadWord((int)RegisterMapAMA.SINE_WAVEY_MAX_H);
-                var ngCountX = ReadWord((int)RegisterMapAMA.SINE_WAVEX_NG_1) << 16 + ReadWord((int)RegisterMapAMA.SINE_WAVEX_NG_3);
-                var ngCountY = ReadWord((int)RegisterMapAMA.SINE_WAVEY_NG_1) << 16 + ReadWord((int)RegisterMapAMA.SINE_WAVEY_NG_3);
+                var ngCountX = (ReadWord((int)RegisterMapAMA.SINE_WAVEX_NG_1) << 16) + ReadWord((int)RegisterMapAMA.SINE_WAVEX_NG_3);
+                var ngCountY = (ReadWord((int)RegisterMapAMA.SINE_WAVEY_NG_1) << 16) + ReadWord((int)RegisterMapAMA.SINE_WAVEY_NG_3);
 
                 result.DeltaMaxX = DeltaX;
                 result.DeltaMaxY = DeltaY;
@@ -127,10 +127,8 @@ namespace FZ4P
             int cnt = 0;
             byte[] sts_check = new byte[1] { 0x00 };
             byte[] err_list = new byte[1] { 0x00 };
-
-            ParamSetExecutor.SetParam(ch, parmas);
-
-            //ParamSetExecutor.SetAMA_MODE(ch,AMA_MODE.RINGING);
+            
+            ParamSetExecutor.SetParam(ch, parmas); //모드 선택은 Setparam 안에 정의되어있다.
 
             FraFunction.AMA_Echoboard_StartStop(ch, StartStopType.Ready);
 
@@ -138,12 +136,12 @@ namespace FZ4P
 
             if (statusSuccess)
             {
-                _logAction(ch, string.Format($"[echo_sinewave_measurement] Read OK (cnt={cnt})"));
+                _logAction(ch, string.Format($"[echo_ringing_measurement] Read OK (cnt={cnt})"));
             }
             else
             {
                 sts_check[0] = ReadByte((int)RegisterMapAMA.AMA_STATUS);
-                _logAction(ch, string.Format("[echo_sinewave_measurement] State timeout (Status=0x{0 :X2})",
+                _logAction(ch, string.Format("[echo_ringing_measurement] State timeout (Status=0x{0 :X2})",
                     sts_check[0]));
                 FraFunction.FRA_Echoboard_StartStop(ch, StartStopType.Stop);
                 Thread.Sleep(100);
@@ -159,12 +157,12 @@ namespace FZ4P
 
             if (statusSuccess)
             {
-                _logAction(ch, string.Format($"[echo_sinewave_measurement] Test OK (cnt={cnt})"));
+                _logAction(ch, string.Format($"[echo_ringing_measurement] Test OK (cnt={cnt})"));
             }
             else
             {
                 sts_check[0] = ReadByte((int)RegisterMapAMA.AMA_STATUS);
-                _logAction(ch, string.Format("[echo_sinewave_measurement] Test NG timeout (Status=0x{0 :X2})",
+                _logAction(ch, string.Format("[echo_ringing_measurement] Test NG timeout (Status=0x{0 :X2})",
                     sts_check[0]));
                 FraFunction.FRA_Echoboard_StartStop(ch, StartStopType.Stop);
                 Thread.Sleep(100);
@@ -172,19 +170,27 @@ namespace FZ4P
             }
             return true;
         }
-        public SineResult RingingMeasurement(int ch, AMA_RingingSetting_Params parmas)
+        public RingingResult RingingMeasurement(int ch, AMA_RingingSetting_Params parmas)
         {
-            var result = new SineResult();
+            var result = new RingingResult();
 
             var seccess = Echo_AMA_Ringing_Measurement(ch, parmas);
 
             if (seccess)
             {
-                var OkCountX = ReadWord((int)RegisterMapAMA.AMA_RINGING_OK_X_1) << 16 + +ReadWord((int)RegisterMapAMA.AMA_RINGING_OK_X_3);
-                var OkCountY = ReadWord((int)RegisterMapAMA.AMA_RINGING_OK_Y_1) << 16 + +ReadWord((int)RegisterMapAMA.AMA_RINGING_OK_Y_3);
+                var OkCountX = (ReadWord((int)RegisterMapAMA.AMA_RINGING_OK_X_1) << 16) + ReadWord((int)RegisterMapAMA.AMA_RINGING_OK_X_3);
+                var OkCountY = (ReadWord((int)RegisterMapAMA.AMA_RINGING_OK_Y_1) << 16) + ReadWord((int)RegisterMapAMA.AMA_RINGING_OK_Y_3);
+
+                var SettlingTimeX = parmas.End_time - OkCountX;
+                var SettlingTimeY = parmas.End_time - OkCountY;
+
+                result.OkCountX = OkCountX;
+                result.OkCountY = OkCountY;
+                result.SettlingTimeX = SettlingTimeX;
+                result.SettlingTimeY = SettlingTimeY;
 
                 FraFunction.AMA_Echoboard_StartStop(ch, StartStopType.Stop);
-                _logAction(ch, string.Format("[echo_sinewave_measurement] {2}(REG 0x{1:X4}) = 0x{0:X2}", 0x00, (byte)RegisterMapAMA.AMA_START, "AMA_STOP"));
+                _logAction(ch, string.Format("[echo_Ringing_measurement] {2}(REG 0x{1:X4}) = 0x{0:X2}", 0x00, (byte)RegisterMapAMA.AMA_START, "AMA_STOP"));
 
                 return result;
             }
@@ -204,7 +210,7 @@ namespace FZ4P
             tmp[1] = ReadByte(startAddress+1);
             
             var data = (tmp[0] << 8 | tmp[1]);
-            _logAction(0, string.Format("[echo_sinewave_measurement] {2}(REG 0x{1:X4}) = 0x{0:X4}", (ushort)data, (ushort)(startAddress << 8)+ (startAddress+1), "Read Word"));
+            _logAction(0, string.Format("[echo_measurement] {2}(REG 0x{1:X4}) = 0x{0:X4}", (ushort)data, (ushort)(startAddress << 8)+ (startAddress+1), "Read Word"));
 
             return (ushort)(data);
         }

@@ -585,13 +585,13 @@ namespace FZ4P
         [Condition("OIS RINGING", "Ringing_Clock_Devision", "OIS RINGING", "", "--")] public int Ringing_Clock_Devision { get; set; } = 0;
         [Condition("OIS RINGING", "Ringing_eOIS_Device_Number", "OIS RINGING", "", "--")] public int Ringing_eOIS_Device_Number { get; set; } = 0;
         [Condition("OIS RINGING", "Ringing_AF_Target_Device_Number", "OIS RINGING", "", "--")] public int Ringing_AF_Target_Device_Number { get; set; } = 0;
-        [Condition("OIS RINGING", "Ringing_End_Position", "OIS RINGING", "", "--")] public int Ringing_End_Position { get; set; } = 0;
-        [Condition("OIS RINGING", "Ringing_Start_Position", "OIS RINGING", "", "--")] public int Ringing_Start_Position { get; set; } = 0;
-        [Condition("OIS RINGING", "Ringing_End_PositionY", "OIS RINGING", "", "--")] public int Ringing_End_PositionY { get; set; } = 0;
-        [Condition("OIS RINGING", "Ringing_Start_PositionY", "OIS RINGING", "", "--")] public int Ringing_Start_PositionY { get; set; } = 0;
-        [Condition("OIS RINGING", "Ringing_Start_Time", "OIS RINGING", "", "--")] public int Ringing_Start_Time { get; set; } = 0;
-        [Condition("OIS RINGING", "Ringing_End_Time", "OIS RINGING", "", "Hz")] public int Ringing_End_Time { get; set; } = 5;
-        [Condition("OIS RINGING", "Ringing_Threshold", "OIS RINGING", "", "mV")] public int Ringing_Threshold { get; set; } = 58;
+        [Condition("OIS RINGING", "Ringing_End_Position", "OIS RINGING", "", "%")] public int Ringing_End_Position { get; set; } = 0;
+        [Condition("OIS RINGING", "Ringing_Start_Position", "OIS RINGING", "", "%")] public int Ringing_Start_Position { get; set; } = 0;
+        [Condition("OIS RINGING", "Ringing_End_PositionY", "OIS RINGING", "", "%")] public int Ringing_End_PositionY { get; set; } = 0;
+        [Condition("OIS RINGING", "Ringing_Start_PositionY", "OIS RINGING", "", "%")] public int Ringing_Start_PositionY { get; set; } = 0;
+        [Condition("OIS RINGING", "Ringing_Start_Time", "OIS RINGING", "", "ms")] public int Ringing_Start_Time { get; set; } = 0;
+        [Condition("OIS RINGING", "Ringing_End_Time", "OIS RINGING", "", "ms")] public int Ringing_End_Time { get; set; } = 5;
+        [Condition("OIS RINGING", "Ringing_Threshold", "OIS RINGING", "", "code")] public int Ringing_Threshold { get; set; } = 58;
 
         [Condition("OIS X Fluctuation", "Min Code", "OIS X Fluctuation", "", "code")] public int XFluctuationMinCode { get; set; } = -2048;
         [Condition("OIS X Fluctuation", "Max Code", "OIS X Fluctuation", "", "code")] public int XFluctuationMaxCode { get; set; } = 2048;
@@ -713,6 +713,9 @@ namespace FZ4P
 
         [Spec("OIS X SineWave", "code", InspType.Normal, "OIS X SineWave")] FRAX_SineWave,
         [Spec("OIS Y SineWave", "code", InspType.Normal, "OIS Y SineWave")] FRAY_SineWave,
+
+        [Spec("OIS X Ringing", "cnt", InspType.Normal, "OIS X Ringing")] FRAX_Ringing,
+        [Spec("OIS Y Ringing", "cnt", InspType.Normal, "OIS X Ringing")] FRAY_Ringing,
 
         [Spec("OIS X Loop Gain", "dB", InspType.Normal, "OIS LoopGain")] FRAX_LoopGain,
         [Spec("OIS Y Loop Gain", "dB", InspType.Normal, "OIS LoopGain")] FRAY_LoopGain,

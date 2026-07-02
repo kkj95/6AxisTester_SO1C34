@@ -107,7 +107,7 @@ namespace FZ4P
                 WriteByte((int)amaRegister, (byte)(data));                                                    
                 Thread.Sleep(10);
                 u08_dat1[0] = ReadByte((int)amaRegister);
-                _logAction(ch, string.Format("[echo_sinewave_measurement] {2}(REG 0x{1:X2}) = 0x{0:X2}", u08_dat1[0], (byte)amaRegister, registerName));
+                _logAction(ch, string.Format("[echo_measurement] {2}(REG 0x{1:X2}) = 0x{0:X2}", u08_dat1[0], (byte)amaRegister, registerName));
             }
         }
     }

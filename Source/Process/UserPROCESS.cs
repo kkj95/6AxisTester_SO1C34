@@ -4010,25 +4010,72 @@ namespace FZ4P
         {
             NVMWriteCollection readCollection = new NVMWriteCollection();
             ReadWirteNVM NVMReadWriter = new ReadWirteNVM(DWDrvIC.Controls,AddLog);
-
+            var testvalue = PassFails[ch].Results[(int)SpecItem.OISX_Ratedstroke].Val;
             writeNVMParamX.AddRow(0xE0, res);
-            writeNVMParamX.AddRow(0xE1, Convert.ToInt32(Math.Round(PassFails[ch].Results[(int)SpecItem.OISX_Ratedstroke].Val, 0)));
-            writeNVMParamX.AddRow(0xE2, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISX_Hysteresis].Val));
-            writeNVMParamX.AddRow(0xE3, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISX_Linearity].Val));
-            writeNVMParamX.AddRow(0xE4, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.HallShiftVerify].Val));
-            //writeNVMParamX.AddRow(0xE5, Convert.ToInt32(Math.Round(PassFails[j].Results[(int)SpecItem.HallShiftVerify].Val, 0)));
 
-            /*
-                * 비어있음.....
-             */
+            if(PassFails[ch].Results[(int)SpecItem.OISX_Ratedstroke].Val < int.MaxValue)
+                writeNVMParamX.AddRow(0xE1, Convert.ToInt32(Math.Round(PassFails[ch].Results[(int)SpecItem.OISX_Ratedstroke].Val, 0)));
+            else
+                writeNVMParamX.AddRow(0xE1, 0);
 
-            //writeNVMParamX.AddRow(0xF8, Convert.ToInt32(PassFails[j].Results[(int)SpecItem.FRAX_PhaseMargin].Val));
-            writeNVMParamX.AddRow(0xF9, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.FRAX_PhaseMargin].Val));
-            writeNVMParamX.AddRow(0xFA, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.FRAX_LoopGain].Val));
-            //writeNVMParamX.AddRow(0xFB, Convert.ToInt32(PassFails[j].Results[(int)SpecItem.FRAX_Ringing].Val));
-            //writeNVMParamX.AddRow(0xFC, Convert.ToInt32(PassFails[j].Results[(int)SpecItem.FRAX_SineWave].Val));
-            //writeNVMParamX.AddRow(0xFD, Convert.ToInt32(PassFails[j].Results[(int)SpecItem.].Val));         //퓨런티어??
-            //writeNVMParamX.AddRow(0xFㄸ, Convert.ToInt32(PassFails[j].Results[(int)SpecItem.AFPIDVerifyRes].Val));         OIS PID 버전???
+            if (PassFails[ch].Results[(int)SpecItem.OISX_Hysteresis].Val < int.MaxValue)
+                writeNVMParamX.AddRow(0xE2, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISX_Hysteresis].Val * 10));
+            else
+                writeNVMParamX.AddRow(0xE2, 0);
+
+            if (PassFails[ch].Results[(int)SpecItem.OISX_Linearity].Val < int.MaxValue)
+                writeNVMParamX.AddRow(0xE3, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISX_Linearity].Val * 10));
+            else
+                writeNVMParamX.AddRow(0xE3, 0);
+
+            writeNVMParamX.AddRow(0xE4, 0x01);
+            writeNVMParamX.AddRow(0xE5, Condition.OISCalAFPos);
+            writeNVMParamX.AddRow(0xE6, 0);
+            writeNVMParamX.AddRow(0xE7, 0);
+            writeNVMParamX.AddRow(0xE8, 0);
+            writeNVMParamX.AddRow(0xE9, 0);
+            writeNVMParamX.AddRow(0xEA, 0);
+            writeNVMParamX.AddRow(0xEB, 0);
+            writeNVMParamX.AddRow(0xEC, 0);
+            writeNVMParamX.AddRow(0xED, 0);
+            writeNVMParamX.AddRow(0xEE, 0);
+            writeNVMParamX.AddRow(0xEF, 0);
+            writeNVMParamX.AddRow(0xF0, 0);
+            writeNVMParamX.AddRow(0xF1, 0);
+            writeNVMParamX.AddRow(0xF2, 0);
+            writeNVMParamX.AddRow(0xF3, 0);
+            writeNVMParamX.AddRow(0xF4, 0);
+            writeNVMParamX.AddRow(0xF5, 0);
+            writeNVMParamX.AddRow(0xF6, 0);
+            writeNVMParamX.AddRow(0xF7, 0);
+
+            if (PassFails[ch].Results[(int)SpecItem.FRAX_PhaseMarginLow].Val < int.MaxValue)
+                writeNVMParamX.AddRow(0xF8, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.FRAX_PhaseMarginLow].Val));
+            else
+                writeNVMParamX.AddRow(0xF8, 0);
+
+            if (PassFails[ch].Results[(int)SpecItem.FRAX_PhaseMargin].Val < int.MaxValue)
+                writeNVMParamX.AddRow(0xF9, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.FRAX_PhaseMargin].Val));
+            else
+                writeNVMParamX.AddRow(0xF9, 0);
+
+            if (PassFails[ch].Results[(int)SpecItem.FRAX_LoopGain].Val < int.MaxValue)
+                writeNVMParamX.AddRow(0xFA, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.FRAX_LoopGain].Val));
+            else
+                writeNVMParamX.AddRow(0xFA, 0);
+
+            if (PassFails[ch].Results[(int)SpecItem.FRAX_Ringing].Val < int.MaxValue)
+                writeNVMParamX.AddRow(0xFB, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.FRAX_Ringing].Val));
+            else
+                writeNVMParamX.AddRow(0xFB, 0);
+
+            if (PassFails[ch].Results[(int)SpecItem.FRAX_SineWave].Val < int.MaxValue)
+                writeNVMParamX.AddRow(0xFC, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.FRAX_SineWave].Val));
+            else
+                writeNVMParamX.AddRow(0xFC, 0);
+
+            writeNVMParamX.AddRow(0xFD, 0);                                                                                     //퓨런티어??
+            writeNVMParamX.AddRow(0xFE, 0);                                                                                     //OIS PID 버전???
             writeNVMParamX.AddRow(0xFF, 0x33);        //?? MX 배포기준?? 이해못함.
 
             NVMReadWriter.SetWrite(ch,DWDrvIC.OISX_Addr, writeNVMParamX);
@@ -4036,23 +4083,69 @@ namespace FZ4P
             NVMReadWriter.GetReadAddress(ch, DWDrvIC.OISX_Addr, readCollection);
             NVMReadWriter.CompareData(ch, writeNVMParamX, readCollection);
 
-            writeNVMParamY.AddRow(0xE1, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISY_Ratedstroke].Val));
-            writeNVMParamY.AddRow(0xE2, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISY_Hysteresis].Val));
-            writeNVMParamY.AddRow(0xE3, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISY_Linearity].Val));
-            writeNVMParamY.AddRow(0xE4, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.HallShiftVerify].Val));
-            // writeNVMParamY.AddRow(0xE5, Convert.ToInt32(Math.Round(PassFails[j].Results[(int)SpecItem.HallShiftVerify].Val, 0)));
+            if (PassFails[ch].Results[(int)SpecItem.OISY_Ratedstroke].Val < int.MaxValue)
+                writeNVMParamY.AddRow(0xE1, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISY_Ratedstroke].Val));
+            else
+                writeNVMParamY.AddRow(0xE1, 0);
 
-            /*
-                * 비어있음.....
-            */
-            //writeNVMParamY.AddRow(0xF8, Convert.ToInt32(PassFails[j].Results[(int)SpecItem.FRAY_PhaseMargin].Val));
-            writeNVMParamY.AddRow(0xF9, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.FRAY_PhaseMargin].Val));
-            writeNVMParamY.AddRow(0xFA, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.FRAY_LoopGain].Val));
-            //writeNVMParamY.AddRow(0xFB, Convert.ToInt32(PassFails[j].Results[(int)SpecItem.FRAX_Ringing].Val));
-            //writeNVMParamY.AddRow(0xFC, Convert.ToInt32(PassFails[j].Results[(int)SpecItem.FRAX_SineWave].Val));
-            //writeNVMParamY.AddRow(0xFD, Convert.ToInt32(PassFails[j].Results[(int)SpecItem.].Val));         //퓨런티어??
-            //writeNVMParamY.AddRow(0xFE, Convert.ToInt32(PassFails[j].Results[(int)SpecItem.AFPIDVerifyRes].Val));         OIS PID 버전???
-            writeNVMParamY.AddRow(0xFF, 0x33);        //?? AF FD Position Repeat Test flg????
+            if (PassFails[ch].Results[(int)SpecItem.OISY_Hysteresis].Val < int.MaxValue)
+                writeNVMParamY.AddRow(0xE2, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISY_Hysteresis].Val));
+            else
+                writeNVMParamY.AddRow(0xE2, 0);
+
+            if (PassFails[ch].Results[(int)SpecItem.OISY_Linearity].Val < int.MaxValue)
+                writeNVMParamY.AddRow(0xE3, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISY_Linearity].Val));
+            else
+                writeNVMParamY.AddRow(0xE3, 0);
+
+            writeNVMParamY.AddRow(0xE4, 0x01);
+            writeNVMParamY.AddRow(0xE5, Condition.OISCalAFPos);
+            writeNVMParamX.AddRow(0xE6, 0);
+            writeNVMParamX.AddRow(0xE7, 0);
+            writeNVMParamX.AddRow(0xE8, 0);
+            writeNVMParamX.AddRow(0xE9, 0);
+            writeNVMParamX.AddRow(0xEA, 0);
+            writeNVMParamX.AddRow(0xEB, 0);
+            writeNVMParamX.AddRow(0xEC, 0);
+            writeNVMParamX.AddRow(0xED, 0);
+            writeNVMParamX.AddRow(0xEE, 0);
+            writeNVMParamX.AddRow(0xEF, 0);
+            writeNVMParamX.AddRow(0xF0, 0);
+            writeNVMParamX.AddRow(0xF1, 0);
+            writeNVMParamX.AddRow(0xF2, 0);
+            writeNVMParamX.AddRow(0xF3, 0);
+            writeNVMParamX.AddRow(0xF4, 0);
+            writeNVMParamX.AddRow(0xF5, 0);
+            writeNVMParamX.AddRow(0xF6, 0);
+            writeNVMParamX.AddRow(0xF7, 0);
+            if (PassFails[ch].Results[(int)SpecItem.FRAY_PhaseMarginLow].Val < int.MaxValue)
+                writeNVMParamY.AddRow(0xF8, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.FRAY_PhaseMarginLow].Val));
+            else
+                writeNVMParamY.AddRow(0xF8, 0);
+
+            if (PassFails[ch].Results[(int)SpecItem.FRAY_PhaseMargin].Val < int.MaxValue)
+                writeNVMParamY.AddRow(0xF9, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.FRAY_PhaseMargin].Val));
+            else
+                writeNVMParamY.AddRow(0xF9, 0);
+
+            if (PassFails[ch].Results[(int)SpecItem.FRAY_LoopGain].Val < int.MaxValue)
+                writeNVMParamY.AddRow(0xFA, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.FRAY_LoopGain].Val));
+            else
+                writeNVMParamY.AddRow(0xFA, 0);
+
+            if (PassFails[ch].Results[(int)SpecItem.FRAY_Ringing].Val < int.MaxValue)
+                writeNVMParamY.AddRow(0xFB, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.FRAY_Ringing].Val));
+            else
+                writeNVMParamY.AddRow(0xFB, 0);
+
+            if (PassFails[ch].Results[(int)SpecItem.FRAY_SineWave].Val < int.MaxValue)
+                writeNVMParamY.AddRow(0xFC, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.FRAY_SineWave].Val));
+            else
+                writeNVMParamY.AddRow(0xFC, 0);
+
+            writeNVMParamY.AddRow(0xFD, 0);         //퓨런티어??
+            writeNVMParamY.AddRow(0xFE, 0);         //OIS PID 버전???
+            writeNVMParamY.AddRow(0xFF, 0);         //?? AF FD Position Repeat Test flg????
 
             NVMReadWriter.SetWrite(ch, DWDrvIC.OISY_Addr, writeNVMParamY);
             readCollection.CopyAddress(writeNVMParamY);
@@ -4226,12 +4319,6 @@ namespace FZ4P
                 AddLog(ch, "Echo_FRA_Measurement] FRA Board Info Error!!!");
             }
 
-
-            //[Condition("OIS RINGING", "Set_Read_Address", "OIS SINEWAVE", "", "--")] public int Ringing_End_Position { get; set; } = 0;
-            //[Condition("OIS RINGING", "Read_Address_Count", "OIS SINEWAVE", "", "--")] public int Ringing_Start_Position { get; set; } = 0;
-            //[Condition("OIS RINGING", "Frequency", "OIS SINEWAVE", "", "Hz")] public int Ringing_End_Time { get; set; } = 5;
-            //[Condition("OIS RINGING", "Amplitude", "OIS SINEWAVE", "", "mV")] public int Ringing_Threshold { get; set; } = 58;
-
             AMA_RingingSetting_Params param = new AMA_RingingSetting_Params()
             {
                 Target_slave_id_X = (Condition.Slave_ID_X == 0) ? -1 : Condition.Slave_ID_X,
@@ -4251,17 +4338,17 @@ namespace FZ4P
 
             var result = _Measurement.RingingMeasurement(ch, param);
 
-            //AddLog(ch, $"Sine Wave Measurement Complete :" +
-            //    $" DeltaX[{result.DeltaMaxX.ToString()}]," +
-            //    $" DeltaY[{result.DeltaMaxY.ToString()}]," +
-            //    $" NG Count X : {result.NgCountX.ToString()}," +
-            //    $" NG Count Y : {result.NgCountY.ToString()}");
+            AddLog(ch, $"Sine Wave Measurement Complete :" +
+                $" DeltaX[{result.OkCountX.ToString()}]," +
+                $" DeltaY[{result.OkCountY.ToString()}]," +
+                $" SettlingTimeX[{result.SettlingTimeX.ToString()}]," +
+                $" SettlingTimeY[{result.SettlingTimeY.ToString()}],");
 
 
-            //PassFails[0].Results[(int)SpecItem.FRAX_SineWave].Val = result.DeltaMaxX;
-            //PassFails[0].Results[(int)SpecItem.FRAY_SineWave].Val = result.DeltaMaxY;
-            //ShowDataResults(ch, (int)SpecItem.FRAX_SineWave, (int)SpecItem.FRAX_SineWave, InspType.Normal, new double[] { });
-            //ShowDataResults(ch, (int)SpecItem.FRAY_SineWave, (int)SpecItem.FRAY_SineWave, InspType.Normal, new double[] { });
+            PassFails[0].Results[(int)SpecItem.FRAX_Ringing].Val = result.SettlingTimeX;
+            PassFails[0].Results[(int)SpecItem.FRAY_Ringing].Val = result.SettlingTimeY;
+            ShowDataResults(ch, (int)SpecItem.FRAX_Ringing, (int)SpecItem.FRAX_Ringing, InspType.Normal, new double[] { });
+            ShowDataResults(ch, (int)SpecItem.FRAY_Ringing, (int)SpecItem.FRAY_Ringing, InspType.Normal, new double[] { });
         }
 
         void AF_OIS_Xtalk_Calibration(int ch, string testItem, int inspCnt)

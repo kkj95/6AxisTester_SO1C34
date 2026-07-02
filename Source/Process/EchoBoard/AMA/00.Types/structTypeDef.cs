@@ -95,5 +95,18 @@
             set => _ngCountY = value; 
         }
     }
+    public class RingingResult
+    {
+        private int okCountX = -1;
+        private int okCountY = -1;
+
+        private int settlingTimeX = -1;
+        private int settlingTimeY = -1;
+
+        public int OkCountX { get => okCountX; set => okCountX = value; }
+        public int OkCountY { get => okCountY; set => okCountY = value; }
+        public int SettlingTimeX { get => settlingTimeX; set => settlingTimeX = value; }
+        public int SettlingTimeY { get => settlingTimeY; set => settlingTimeY = value; }
+    }
 
 }

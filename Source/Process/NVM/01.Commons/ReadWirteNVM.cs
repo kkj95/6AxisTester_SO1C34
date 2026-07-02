@@ -4,6 +4,7 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -25,29 +26,40 @@ namespace FZ4P
                 (element) =>
                 {
                     _control.WriteByte(slaveId,element.Address,1, (byte)element.PlayLoad);
-                    _addLog(ch, $"Addr : 0x{element.Address.ToString("X2")}, WData : 0x{element.PlayLoad.ToString("X2")}");
+                    _addLog(ch, $"Write - Addr : 0x{element.Address.ToString("X2")}, WData : 0x{element.PlayLoad.ToString("X2")}");
+                    Thread.Sleep(30);
                 });
         }
 
         public void GetReadAddress(int ch, int slaveId, NVMWriteCollection readCollection)
         {
-            readCollection.ForEach(element => element.PlayLoad = _control.ReadByte(slaveId, element.Address,1));
+            readCollection.ForEach(
+                element => 
+                {
+                    element.PlayLoad = _control.ReadByte(slaveId, element.Address, 1);
+                    Thread.Sleep(30);
+                }
+            );
         }
 
         public bool CompareData(int ch, NVMWriteCollection sourceWrite, NVMWriteCollection sourceRead)
         {
-            bool result = false;
+            bool result = true;
             foreach (var readValue in sourceRead)
             {
-                var writeValue = sourceWrite.FirstOrDefault(element => element.PlayLoad == readValue.PlayLoad && element.Address == readValue.Address);
+                var writeValue = sourceWrite.FirstOrDefault(element => (element.PlayLoad == readValue.PlayLoad) && (element.Address == readValue.Address));
 
-                if (sourceWrite.Any(element => (element.PlayLoad == readValue.PlayLoad) && (element.Address == readValue.Address)))
+                if (writeValue != null)
                 {
-                    _addLog(ch, $"Addr : 0x{readValue.Address.ToString("X2")}, WData : 0x{writeValue.PlayLoad.ToString("X2")}, RData : 0x{readValue.PlayLoad.ToString("X2")}");
-                    return result = true;
+                    _addLog(ch, $"[Seccess]Addr : 0x{readValue.Address.ToString("X2")}, WData : 0x{writeValue.PlayLoad.ToString("X2")}, RData : 0x{readValue.PlayLoad.ToString("X2")}");
                 }
                 else
                 {
+                    var write = sourceWrite.FirstOrDefault(element => (element.Address == readValue.Address));
+                    if(write != null)
+                        _addLog(ch, $"[Fail]Addr : 0x{readValue.Address.ToString("X2")}, WData : 0x{write.PlayLoad.ToString("X2")}, RData : 0x{readValue.PlayLoad.ToString("X2")}");
+                    else
+                        _addLog(ch, $"[Fail]Addr : 0x{readValue.Address.ToString("X2")}, WData : Not Find, RData : 0x{readValue.PlayLoad.ToString("X2")}");
                     result = false;
                 }
             }    

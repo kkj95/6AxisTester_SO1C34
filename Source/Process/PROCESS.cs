@@ -1559,8 +1559,15 @@ namespace FZ4P
                                 if (Option.WriteResultToDriverIC)
                                 {
                                     if (errMsg[0] == "" && PassFails[0].FirstFailIndex == 0)
+                                    {
                                         WriteUserMem(ch, 0x02);
-                                    else WriteUserMem(ch, 0x09);
+                                        WriteOISUserMem(ch, 0x02);
+                                    }
+                                    else
+                                    {
+                                        WriteUserMem(ch, 0x09);
+                                        WriteOISUserMem(ch, 0x02);
+                                    }
                                 }
                                 else
                                 {
@@ -1583,8 +1590,15 @@ namespace FZ4P
                                     if (Option.WriteResultToDriverIC)
                                     {
                                         if (errMsg[0] == "" && PassFails[0].FirstFailIndex == 0)
+                                        {
                                             WriteUserMem(ch, 0x02);
-                                        else WriteUserMem(ch, 0x09);
+                                            WriteOISUserMem(ch, 0x02);
+                                        }
+                                        else
+                                        {
+                                            WriteUserMem(ch, 0x09);
+                                            WriteOISUserMem(ch, 0x02);
+                                        }
                                     }
                                     else
                                     {
@@ -1613,8 +1627,15 @@ namespace FZ4P
                             if (Option.WriteResultToDriverIC)
                             {
                                 if (errMsg[0] == "" && PassFails[0].FirstFailIndex == 0)
+                                {
                                     WriteUserMem(ch, 0x02);
-                                else WriteUserMem(ch, 0x09);
+                                    WriteOISUserMem(ch, 0x02);
+                                }
+                                else
+                                {
+                                    WriteUserMem(ch, 0x09);
+                                    WriteOISUserMem(ch, 0x02);
+                                }
                             }
                             else
                             {
