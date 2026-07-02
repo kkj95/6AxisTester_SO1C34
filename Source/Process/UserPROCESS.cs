@@ -4029,7 +4029,7 @@ namespace FZ4P
                 writeNVMParamX.AddRow(0xE3, 0);
 
             writeNVMParamX.AddRow(0xE4, 0x01);
-            writeNVMParamX.AddRow(0xE5, Condition.OISCalAFPos);
+            writeNVMParamX.AddRow(0xE5, (Condition.OISCalAFPos >> 4));
             writeNVMParamX.AddRow(0xE6, 0);
             writeNVMParamX.AddRow(0xE7, 0);
             writeNVMParamX.AddRow(0xE8, 0);
@@ -4078,6 +4078,8 @@ namespace FZ4P
             writeNVMParamX.AddRow(0xFE, 0);                                                                                     //OIS PID 버전???
             writeNVMParamX.AddRow(0xFF, 0x33);        //?? MX 배포기준?? 이해못함.
 
+            AddLog(ch, "OIS X Nvm Data Check");
+
             DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.StandbyMode);
             Thread.Sleep(10);
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x39); 
@@ -4111,25 +4113,25 @@ namespace FZ4P
                 writeNVMParamY.AddRow(0xE3, 0);
 
             writeNVMParamY.AddRow(0xE4, 0x01);
-            writeNVMParamY.AddRow(0xE5, Condition.OISCalAFPos);
-            writeNVMParamX.AddRow(0xE6, 0);
-            writeNVMParamX.AddRow(0xE7, 0);
-            writeNVMParamX.AddRow(0xE8, 0);
-            writeNVMParamX.AddRow(0xE9, 0);
-            writeNVMParamX.AddRow(0xEA, 0);
-            writeNVMParamX.AddRow(0xEB, 0);
-            writeNVMParamX.AddRow(0xEC, 0);
-            writeNVMParamX.AddRow(0xED, 0);
-            writeNVMParamX.AddRow(0xEE, 0);
-            writeNVMParamX.AddRow(0xEF, 0);
-            writeNVMParamX.AddRow(0xF0, 0);
-            writeNVMParamX.AddRow(0xF1, 0);
-            writeNVMParamX.AddRow(0xF2, 0);
-            writeNVMParamX.AddRow(0xF3, 0);
-            writeNVMParamX.AddRow(0xF4, 0);
-            writeNVMParamX.AddRow(0xF5, 0);
-            writeNVMParamX.AddRow(0xF6, 0);
-            writeNVMParamX.AddRow(0xF7, 0);
+            writeNVMParamY.AddRow(0xE5, (Condition.OISCalAFPos >> 4));
+            writeNVMParamY.AddRow(0xE6, 0);
+            writeNVMParamY.AddRow(0xE7, 0);
+            writeNVMParamY.AddRow(0xE8, 0);
+            writeNVMParamY.AddRow(0xE9, 0);
+            writeNVMParamY.AddRow(0xEA, 0);
+            writeNVMParamY.AddRow(0xEB, 0);
+            writeNVMParamY.AddRow(0xEC, 0);
+            writeNVMParamY.AddRow(0xED, 0);
+            writeNVMParamY.AddRow(0xEE, 0);
+            writeNVMParamY.AddRow(0xEF, 0);
+            writeNVMParamY.AddRow(0xF0, 0);
+            writeNVMParamY.AddRow(0xF1, 0);
+            writeNVMParamY.AddRow(0xF2, 0);
+            writeNVMParamY.AddRow(0xF3, 0);
+            writeNVMParamY.AddRow(0xF4, 0);
+            writeNVMParamY.AddRow(0xF5, 0);
+            writeNVMParamY.AddRow(0xF6, 0);
+            writeNVMParamY.AddRow(0xF7, 0);
             if (PassFails[ch].Results[(int)SpecItem.FRAY_PhaseMarginLow].Val < int.MaxValue)
                 writeNVMParamY.AddRow(0xF8, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.FRAY_PhaseMarginLow].Val));
             else
@@ -4163,6 +4165,7 @@ namespace FZ4P
             Thread.Sleep(10);
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0x39);
 
+            AddLog(ch, "OIS Y Nvm Data Check");
             NVMReadWriter.SetWrite(ch, DWDrvIC.OISY_Addr, writeNVMParamY);
 
             DWDrvIC.SetOperationMode(AxisTypeDW.AxisY, OperationTypeDW.StandbyMode);
