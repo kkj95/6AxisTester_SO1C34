@@ -55,8 +55,8 @@ namespace FZ4P.DriverIc.OISIC
             //XSlaveAddr = 0x0E;
             //Y1SlaveAddr = 0x4E;
             //Y2SlaveAddr = 0x6C;
-            //FRA_Addr = 0x14;
-            //FRA_AFSlaveAddr = 0x18;
+            FRA_Addr = 0x14;
+            FRA_AFSlaveAddr = 0x18;
             //FRA_XSlaveAddr = 0x1C;
             //FRA_Y1SlaveAddr = 0x9C;
             //FRA_Y2SlaveAddr = 0xD8;
@@ -711,7 +711,7 @@ namespace FZ4P.DriverIc.OISIC
         public bool Set_Freq(int ch, int val)
         {
             int data = val << 1;
-
+            //if (!Dln.WriteArray(ch, FRA_Addr, FRA_AFSlaveAddr, 1, new byte[2] { (byte)(data >> 8), (byte)(data % 256) })) return false;
             if (!Dln.WriteArray(ch, FRA_Addr, 0x50, 1, new byte[2] { (byte)(data >> 8), (byte)(data % 256) })) return false;
 
             Process.Wait(20000 / val + 10);

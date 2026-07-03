@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FZ4P.DriverIc.OISIC
 {
-    public class AK73XX_Ext : AK73XX , IAFunction , IOISFunction
+    public class AK73XX_Ext : AK73XX , IAFunction , IOISFunction, IFRAFunction
     {
         public AK73XX_Ext()
         {
@@ -168,6 +168,35 @@ namespace FZ4P.DriverIc.OISIC
         {
             throw new NotImplementedException();
         }
+        #endregion
+
+        #region FRA Function
+
+        public void FRA_Echoboard_StartStop(int ch, StartStopType type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AMA_Echoboard_StartStop(int ch, StartStopType type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Echo_Board_WhoAmI(int ch)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Echo_Board_SetParameter(Echo_ParamBase param)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Echo_Board_Select_Ch(int ch)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

@@ -4084,7 +4084,7 @@ namespace FZ4P
             DrvIC.FRAModeEnable(ch);
 
             DrvIC.Set_Amp(ch, Condition.AFGMamp);
-            AddLog(ch, $"Amp\tFreq\tGain\tP/M");
+            AddLog(ch, $"SCnt\tAmp\tFreq\tGain\tP/M");
             for (oldfreq = freqval = Condition.AFGMEndFreq; freqval <= Condition.AFGMStartFreq; freqval += freqtemp)
             {
                 DrvIC.Set_Freq(ch, freqval);
