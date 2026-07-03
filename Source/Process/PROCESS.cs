@@ -38,8 +38,8 @@ namespace FZ4P
     public partial class Process
     {
         public DLN Dln { get { return STATIC.Dln; } }
-        public DrvIC DrvIC { get { return STATIC.DrvIC; } }
-        //public AK73XX_Ext DrvIC { get { return STATIC.DrvIC; } }
+        //public DrvIC DrvIC { get { return STATIC.DrvIC; } }
+        public AK73XX_Ext DrvIC { get { return STATIC.DrvIC; } }
         public DW9836N DWDrvIC { get { return STATIC.DW9836; } }
         public Recipe Rcp { get { return STATIC.Rcp; } }
         public Condition Condition { get { return STATIC.Rcp.Condition; } }

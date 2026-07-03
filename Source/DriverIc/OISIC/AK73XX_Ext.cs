@@ -38,7 +38,10 @@ namespace FZ4P.DriverIc.OISIC
 
         public void AFOnOff(int ch, bool isOn)
         {
-            throw new NotImplementedException();
+            if(isOn)
+                base.AK7314_Mode(ch, 1);
+            else
+                base.AK7314_Mode(ch, 0);
         }
 
         public void AFSleep(int ch)
@@ -104,7 +107,14 @@ namespace FZ4P.DriverIc.OISIC
 
         public void OISOnOff(int ch, bool isOn)
         {
-            throw new NotImplementedException();
+            
+            if (isOn)
+            {
+                Dln.WriteArray(ch, this.XSlaveAddr, 0x02, 1, new byte[] { 0x40 });
+                Dln.WriteArray(ch, this.Y1SlaveAddr, 0x02, 1, new byte[] { 0x40 });
+                if (this.Y2SlaveAddr != 0x00)
+                    Dln.WriteArray(ch, this.Y2SlaveAddr, 0x02, 1, new byte[] { 0x40 });
+            }
         }
 
         public void OISReset(int ch, int axis, bool OnOff)
