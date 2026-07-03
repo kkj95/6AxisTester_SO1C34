@@ -50,17 +50,28 @@ namespace FZ4P.DriverIc.OISIC
             //FRA_Y1SlaveAddr = 0x9C;
             //FRA_Y2SlaveAddr = 0xD8;
 
+            //1C34
+            AFSlaveAddr = 0x0C;
+            //XSlaveAddr = 0x0E;
+            //Y1SlaveAddr = 0x4E;
+            //Y2SlaveAddr = 0x6C;
+            //FRA_Addr = 0x14;
+            //FRA_AFSlaveAddr = 0x18;
+            //FRA_XSlaveAddr = 0x1C;
+            //FRA_Y1SlaveAddr = 0x9C;
+            //FRA_Y2SlaveAddr = 0xD8;
+
 
             //SU2810
-            AFSlaveAddr = 0x28;
-            XSlaveAddr = 0x70;
-            Y1SlaveAddr = 0x30;
-            Y2SlaveAddr = 0x00;
-            FRA_Addr = 0x14;
-            FRA_AFSlaveAddr = 0x50;
-            FRA_XSlaveAddr = 0xE0;
-            FRA_Y1SlaveAddr = 0x60;
-            FRA_Y2SlaveAddr = 0x00;
+            //AFSlaveAddr = 0x28;
+            //XSlaveAddr = 0x70;
+            //Y1SlaveAddr = 0x30;
+            //Y2SlaveAddr = 0x00;
+            //FRA_Addr = 0x14;
+            //FRA_AFSlaveAddr = 0x50;
+            //FRA_XSlaveAddr = 0xE0;
+            //FRA_Y1SlaveAddr = 0x60;
+            //FRA_Y2SlaveAddr = 0x00;
 
         }
 

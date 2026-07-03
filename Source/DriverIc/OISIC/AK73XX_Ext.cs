@@ -17,11 +17,11 @@ namespace FZ4P.DriverIc.OISIC
         #region AF Function
         public int AF_Addr => throw new NotImplementedException();
 
-        public int AF_MID_CODE => throw new NotImplementedException();
+        public int AF_MID_CODE => 2048;
 
-        public int AF_MIN_CODE => throw new NotImplementedException();
+        public int AF_MIN_CODE => 0;
 
-        public int AF_MAX_CODE => throw new NotImplementedException();
+        public int AF_MAX_CODE => 4096;
 
         public void AFMove(int ch, int code)
         {
@@ -39,9 +39,9 @@ namespace FZ4P.DriverIc.OISIC
         public void AFOnOff(int ch, bool isOn)
         {
             if(isOn)
-                base.AK7314_Mode(ch, 1);
-            else
                 base.AK7314_Mode(ch, 0);
+            else
+                base.AK7314_Mode(ch, 1);
         }
 
         public void AFSleep(int ch)
@@ -51,7 +51,13 @@ namespace FZ4P.DriverIc.OISIC
 
         public bool AF_ICReset(int ch)
         {
-            throw new NotImplementedException();
+            AFOnOff(ch, false);
+            Process.Wait(10);
+            AF_Memory_Update(ch, 5);
+            AFMove(ch, AF_MID_CODE);
+            AFOnOff(ch, true);
+            Process.AddLog(ch, $"AF was reset, 0x03 = 0x{Dln.ReadByte(ch, AF_Addr, 0x03, 1).ToString("x2")}");
+            return true;
         }
 
         public (int, int) AF_IC_Data(int ch)
@@ -61,7 +67,7 @@ namespace FZ4P.DriverIc.OISIC
 
         public bool AF_Memory_Update(int ch, int mode)
         {
-            throw new NotImplementedException();
+            return base.AK7314_memory_update(ch, (byte)mode);
         }
 
         public bool ChangeSlaveAddr(int ch)
@@ -71,7 +77,7 @@ namespace FZ4P.DriverIc.OISIC
 
         public int ReadAFHall(int ch)
         {
-            throw new NotImplementedException();
+            return base.ReadHall(ch, "AF");
         }
         #endregion
 
