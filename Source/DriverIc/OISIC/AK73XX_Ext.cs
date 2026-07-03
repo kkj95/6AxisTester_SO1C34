@@ -79,6 +79,23 @@ namespace FZ4P.DriverIc.OISIC
         {
             return base.ReadHall(ch, "AF");
         }
+
+        public void AF_LinearityComp_Reset(int ch)
+        {
+            Dln.WriteArray(ch, this.AFSlaveAddr, 0x30, 1, new byte[] { 0x00 });
+            Dln.WriteArray(ch, this.AFSlaveAddr, 0x31, 1, new byte[] { 0x00 });
+            Dln.WriteArray(ch, this.AFSlaveAddr, 0x32, 1, new byte[] { 0x00 });
+            Dln.WriteArray(ch, this.AFSlaveAddr, 0x33, 1, new byte[] { 0x00 });
+            Dln.WriteArray(ch, this.AFSlaveAddr, 0x34, 1, new byte[] { 0x00 });
+            Dln.WriteArray(ch, this.AFSlaveAddr, 0x35, 1, new byte[] { 0x00 });
+            Dln.WriteArray(ch, this.AFSlaveAddr, 0x36, 1, new byte[] { 0x00 });
+            Dln.WriteArray(ch, this.AFSlaveAddr, 0x37, 1, new byte[] { 0x00 });
+            Dln.WriteArray(ch, this.AFSlaveAddr, 0x38, 1, new byte[] { 0x00 });
+            Dln.WriteArray(ch, this.AFSlaveAddr, 0x39, 1, new byte[] { 0x00 });
+            Dln.WriteArray(ch, this.AFSlaveAddr, 0x3A, 1, new byte[] { 0x00 });
+            Dln.WriteArray(ch, this.AFSlaveAddr, 0x3B, 1, new byte[] { 0x00 });
+            Dln.WriteArray(ch, this.AFSlaveAddr, 0x3C, 1, new byte[] { 0x00 });
+        }
         #endregion
 
         #region OIS Function

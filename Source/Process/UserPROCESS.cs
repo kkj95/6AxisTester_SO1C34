@@ -1557,250 +1557,342 @@ namespace FZ4P
 
         void AF_HallCalibration(int ch, string testItem, int InspCnt)
         {
-            bool res = false;
-            res = DrvIC.ChangeSlaveAddr(ch);
-            if(!res)
+            bool AFChanged = true;
+
+            byte[] rDdata = new byte[1];
+            
+            if (!Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x3B })) AFChanged = false;
+
+            if (AFChanged)
+                AddLog(ch, string.Format("Already AF Slave Address Changed.."));
+            else
             {
-                PassFails[0].Results[(int)SpecItem.AF_NonEPAStroke].Val = 0;
-                ShowDataResults(ch, (int)SpecItem.AF_NonEPAStroke, (int)SpecItem.AF_NonEPAStroke, InspType.Normal, new double[] { });
-                return;
+                if (!Dln.WriteArray(ch, DrvIC.AFOriginAddr, 0xAE, 1, new byte[] { 0x3B })) return;
+                AddLog(ch, string.Format("Setting Mode = Write Mem : 0x{0:X2} AFData : 0x{1:X2}", 0xAE, 0x3B));
+
+                if (!Dln.WriteArray(ch, DrvIC.AFOriginAddr, 0x0B, 1, new byte[] { 0x02 })) return; // 02 : Normal, 04 : Reverse
+                AddLog(ch, string.Format("Set Pin Mode = Write Mem : 0x{0:X2} AFData : 0x{1:X2}", 0x0B, 0x02));
+
+                if (!Dln.WriteArray(ch, DrvIC.AFOriginAddr, 0x0A, 1, new byte[] { 0x70 })) return; // Setting Slave Address
+                AddLog(ch, string.Format("Setting Slave Address = Write Mem : 0x{0:X2} Y2Data : 0x{1:X2}", 0x0A, 0x70));
+                Wait(200);
+                if (!Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x03, 1, new byte[] { 0x01 })) return; // Store Memory
+                Wait(100);
+                AddLog(ch, string.Format("Store Memory = Write Mem : 0x{0:X2} Data : 0x{1:X2}", 0x03, 0x01));
+                AddLog(ch, string.Format(" AF SlaveAddr Change FinIsh."));
             }
-          
+
+            Dln.PowerSequence(0);
+            Wait(100);
+
+            int BTM_POS = 10;
+            int TOP_POS = 820;
+            int TOP_MARGIN = 10;
+
+            byte[] rbuf = new byte[1];
             int agingCount;
             double OldStroke = 0, NewStroke = 0;
-            FindResult tmpres = new FindResult();
+            FindResult res = new FindResult();
             double[] zVal = new double[2];
-            double AvgOLStroke = 0;
-            DrvIC.AFOnOff(ch, false);
+
+            DrvIC.AK7314_Mode(ch, 0);
             Wait(5);
-            byte backdata = 0xff;
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x3B });
+            Dln.ReadArray(ch, DrvIC.AFSlaveAddr, 0x0B, 1, rbuf);
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x0B, 1, new byte[] { (byte)(rbuf[0] & 0x7F) });
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xA6, 1, new byte[] { 0x7B });
+            DrvIC.AK7314_Mode(ch, 1);
+            AddLog(ch, $"AF Openloop Stroke Check");
 
-            Dln.WriteByte(ch, DrvIC.AF_Addr, 0xAE, 1, 0x3B);
-            if (Condition.AFMechaOnOff == 1)
+            LEDs_All_On(0, true);
+            for (agingCount = 0, NewStroke = 0; (agingCount < 10) || ((agingCount < 20) && (NewStroke > OldStroke)); agingCount++)
             {
-                backdata = Dln.ReadByte(ch, DrvIC.AF_Addr, 0x0B, 1);
-                Dln.WriteByte(ch, DrvIC.AF_Addr, 0x1A, 1, 0x00);
-                Dln.WriteByte(ch, DrvIC.AF_Addr, 0x0B, 1, (byte)(backdata & 0x7F));
-                Dln.WriteByte(ch, DrvIC.AF_Addr, 0xA6, 1, 0x7B);
-                DrvIC.AFOnOff(ch, true);
-                AddLog(ch, $"AF Openloop Aging");
-                LEDs_All_On(0, true);
-
-
-
-                for (int i = 0; i < Condition.AFOLLoopCount; i++)
-                {
-
-                    DrvIC.AFMoveOL(ch, Condition.AFOLMax);
-                    Wait(Condition.AFOLDelay);
-
-                    DrvIC.AFMoveOL(ch, Condition.AFOLMin);
-                    Wait(Condition.AFOLDelay);
-                }
-
-                DrvIC.AFOnOff(ch, false);
-                Wait(5);
-                Dln.WriteByte(ch, DrvIC.AF_Addr, 0x0B, 1, backdata);
-                Dln.WriteByte(ch, DrvIC.AF_Addr, 0xA6, 1, 0x00);
+                OldStroke = NewStroke;
+                DrvIC.Move(ch, "AF", 4095);
+                Wait(50);
+                res = Measure();
+                zVal[0] = res.cz[0];
+                DrvIC.Move(ch, "AF", 0);
+                Wait(50);
+                res = Measure();
+                zVal[1] = res.cz[0];
+                NewStroke = Math.Abs(zVal[1] - zVal[0]);
+                AddLog(ch, $"{agingCount + 1} : {NewStroke.ToString("F3")}");
             }
 
-            AddLog(ch, $"\r\nAuto calibration\r\n");
-            //Dln.WriteByte(ch, DrvIC.AF_Addr, 0xAE, 1, 0x3B);
-            Dln.WriteByte(ch, DrvIC.AF_Addr, IC_SETTING_AF_REG[1], 1, IC_SETTING_AF[1]);
-            Dln.WriteByte(ch, DrvIC.AF_Addr, IC_SETTING_AF_REG[0], 1, IC_SETTING_AF[0]);
+            DrvIC.AK7314_Mode(ch, 0);
+            Wait(5);
+            //Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xA6, 1, new byte[] { 0x00 });
 
-            Dln.WriteByte(ch, DrvIC.AF_Addr, IC_SETTING_AF_REG[3], 1, IC_SETTING_AF[3]);
-            Dln.WriteByte(ch, DrvIC.AF_Addr, IC_SETTING_AF_REG[4], 1, IC_SETTING_AF[4]);
-            Dln.WriteByte(ch, DrvIC.AF_Addr, IC_SETTING_AF_REG[5], 1, IC_SETTING_AF[5]);
-            Dln.WriteByte(ch, DrvIC.AF_Addr, IC_SETTING_AF_REG[6], 1, IC_SETTING_AF[6]);
+            //Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x0A, 1, new byte[] { AF_IC_Setting[0] });
+            //Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x0B, 1, new byte[] { AF_IC_Setting[1] });
+            //Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x08, 1, new byte[] { AF_IC_Setting[3] });
+            //Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x09, 1, new byte[] { AF_IC_Setting[4] });
 
-            for (int i = 0xC0; i <= 0xC3; i++)
-            {
-                Dln.WriteByte(ch, DrvIC.AF_Addr, i, 1, 0x00);
-               
-            }
-            AddLog(ch, $"Reset EPA Data.");
-            for (int i = 0xC5; i <= 0xDF; i++)
-            {
-                Dln.WriteByte(ch, DrvIC.AF_Addr, i, 1, 0x00);
-              
-            }
-            AddLog(ch, $"Reset Linearity comp coeff data.");
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x38 });
+
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, IC_SETTING_AF_REG[0], 1, new byte[] { IC_SETTING_AF[0] });
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, IC_SETTING_AF_REG[1], 1, new byte[] { IC_SETTING_AF[1] });
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, IC_SETTING_AF_REG[3], 1, new byte[] { IC_SETTING_AF[3] });
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, IC_SETTING_AF_REG[4], 1, new byte[] { IC_SETTING_AF[4] });
+
+            //EPA Reset
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x0E, 1, new byte[] { 0x00 });
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x0F, 1, new byte[] { 0x00 });
+            AddLog(ch, "Reset EPA Data.");
+            //Linearity Reset
+
+            DrvIC.AF_LinearityComp_Reset(ch);
+            AddLog(ch, "AF Linearity Comp Reset");
             for (int i = 0; i < IC_DATA_AF.Length; i++)
             {
                 Dln.WriteByte(ch, DrvIC.AF_Addr, IC_DATA_AF_REG[i], 1, IC_DATA_AF[i]);
             }
             AddLog(ch, $"PID Parameter setting.");
-
-            Dln.WriteByte(ch, DrvIC.AF_Addr, 0x5D, 1, 0x00);
-            Dln.WriteByte(ch, DrvIC.AF_Addr, 0x02, 1, 0x80);
+            //for (int i = 0; i < AFPID.Count; i++)
+            //{
+            //    Dln.WriteArray(ch, DrvIC.AFSlaveAddr, AFPID[i][0], new byte[] { AFPID[i][1] });
+            //}
+            AddLog(ch, "Temp register setting");
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xC9, 1, new byte[] { 0x00 });
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x02, 1, new byte[] { 0x80 });
             Wait(10);
-            byte rbuf = Dln.ReadByte(ch, DrvIC.AF_Addr, 0x70, 1);
-            byte cBackup;
-            byte cTemp;
-            cBackup = cTemp = rbuf;
-            AddLog(ch, $"1 Reg 0x70 : 0x{cBackup.ToString("X2")}");
-            cBackup &= 0x80;
-            AddLog(ch, $"2 Reg 0x70 : 0x{cBackup.ToString("X2")}");
-            cTemp = (byte)((cTemp << 1) & 0x7E);
-            cTemp |= cBackup;
-            AddLog(ch, $"3 Reg 0x70 : 0x{cTemp.ToString("X2")}");
-            rbuf = Dln.ReadByte(ch, DrvIC.AF_Addr, 0x71, 1);
-            cBackup = rbuf;
-            cBackup &= 0x80;
-            AddLog(ch, $"4 Reg 0x71 : 0x{cBackup.ToString("X2")}");
-            cTemp |= (byte)(cBackup >> 7);
-            AddLog(ch, $"4 Reg 0x5D : 0x{cTemp.ToString("X2")}");
-
-            Dln.WriteByte(ch, DrvIC.AF_Addr, 0x5D, 1, cTemp);
-            
-            
-            int index = 0;
-            cTemp = 0xff;
-            while(cTemp > 0x10 && index < 5)
+            Dln.ReadArray(ch, DrvIC.AFSlaveAddr, 0x70, 1, rbuf);
+            AddLog(ch, $"Read 0x70 : 0x{rbuf[0].ToString("X")}");
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xC9, 1, rbuf);
+            for (int i = 0; i < 5; i++)
             {
-                Dln.WriteByte(ch, DrvIC.AF_Addr, IC_SETTING_AF_REG[2], 1, IC_SETTING_AF[2]);
-                for (int i = 0; i < 2; i++)
+                Dln.WriteArray(ch, DrvIC.AFSlaveAddr, IC_SETTING_AF_REG[2], 1, new byte[] { IC_SETTING_AF[2] });
+                for (int j = 0; j < 2; j++)
                 {
-                    Dln.WriteByte(ch, DrvIC.AF_Addr, 0x02, 1, 0x18);
+                    Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x02, 1, new byte[] { 0x18 });
                     Wait(300);
                 }
-               
-                cTemp = Dln.ReadByte(ch, DrvIC.AF_Addr, 0x19, 1);
-                int iTemp = cTemp;
-             //   AddLog(ch, $"Reg : 0x19 = 0x{iTemp.ToString("X2")}");
-                iTemp = iTemp * 3 / 4;
-                if (iTemp < 0) iTemp = 0;
-                if (iTemp > 255) iTemp = 255;
-                cTemp = (byte)iTemp;
-                AddLog(ch, $"Reg : 0x19 = 0x{iTemp.ToString("X2")}");
-                if(cTemp > 0x10)
+                Dln.ReadArray(ch, DrvIC.AFSlaveAddr, 0x19, 1, rbuf);
+                byte tmpData = (byte)Math.Floor(rbuf[0] * 0.75);
+                if (tmpData >= 0x00 && tmpData <= 0x30)
                 {
-                    //Error처리
-                    AddLog(ch, $"AF calibration 2 (Reg 19) error[over 0x10]");
+                    Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x19, 1, new byte[] { tmpData });
+                    AddLog(ch, "AF Calibration OK!");
+                    break;
                 }
-                index++;
-            }
+                else
+                {
+                    // SetError(ch, NonSpecItem.AF_HallCalibration);
+                    AddLog(ch, "AF Calibration (Reg 19) error[over 0x90]");
 
-            if(index >= 5)
+                }
+            }
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xF3, 1, new byte[] { 0x1E });
+            Wait(25);
+            bool WriteRes = DrvIC.AK7314_memory_update(ch, 1);
+            WriteRes &= DrvIC.AK7314_memory_update(ch, 2);
+            WriteRes &= DrvIC.AK7314_memory_update(ch, 3);
+            WriteRes &= DrvIC.AK7314_memory_update(ch, 4);
+            WriteRes &= DrvIC.AK7314_memory_update(ch, 5);
+
+            if (!WriteRes)
             {
-                AddLog(ch, $"AF Hall Calibration NG");
                 PassFails[0].Results[(int)SpecItem.AF_NonEPAStroke].Val = 0;
                 ShowDataResults(ch, (int)SpecItem.AF_NonEPAStroke, (int)SpecItem.AF_NonEPAStroke, InspType.Normal, new double[] { });
+
+                AddLog(ch, "AF Calibration Memory Update Fail");
                 return;
             }
-            Dln.WriteByte(ch, DrvIC.AF_Addr, 0x19, 1, cTemp);
-            
-            res = DrvIC.AF_Memory_Update(ch, 1);
-            res &= DrvIC.AF_Memory_Update(ch, 2);
-            res &= DrvIC.AF_Memory_Update(ch, 3);
-            res &= DrvIC.AF_Memory_Update(ch, 4);
-            res &= DrvIC.AF_Memory_Update(ch, 5);
-            if(!res)
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x00 });
+            DrvIC.Move(ch, "AF", 2048);
+            DrvIC.AK7314_Mode(ch, 1);
+            DrvIC.AK7314_IC_Data(ch);
+
+            DrvIC.OISOn(ch, "X", false);
+            DrvIC.OISOn(ch, "Y", false);
+            Wait(100);
+
+            //  AF EPA
+            AddLog(ch, "<<<  AF EPA Start  >>>");
+            short btm_position, tmp_position, top_position, ctr_position;
+            short step, inf_cut, mac_cut;
+            ushort posvt, negvt, target_code;
+            short stroke;
+            int loop = 0, mac_loop = 0;
+            int new_con = 0, old_con = 0, cond = 0;
+            int mac_loop_max = 50;
+            ushort inf_tag_code, mac_tag_code;	// save code value
+
+            DrvIC.AK7314_IC_Data(ch);
+            DrvIC.Move(ch, "AF", 2048);
+            Wait(50);
+            res = Measure();
+            ctr_position = (short)res.cz[0];
+            DrvIC.Ak7314_soft_move(ch, 0, 10);
+            res = Measure();
+            short refPos = btm_position = (short)res.cz[0];
+            tmp_position = 0;
+            AddLog(ch, "Inf Cut Start");
+            for (target_code = 0, step = 0x200; step > 0; step >>= 1)
             {
-                AddLog(ch, $"AF Memory update NG");
+                AddLog(ch, $"tmp_pos:{tmp_position}, tar_code:{target_code}, step:{step}");
+                if (tmp_position < BTM_POS - 1) target_code += (ushort)step;
+                else if (tmp_position > BTM_POS + 1) target_code -= (ushort)step;
+                else break;
+                DrvIC.Move(ch, "AF", target_code);
+                Wait(50);
+                res = Measure();
+                tmp_position = btm_position = (short)(res.cz[0] - refPos);
+                loop++;
+            }
+            inf_tag_code = target_code;
+            AddLog(ch, $"Inf_loop:{loop}");
+            negvt = target_code; inf_cut = tmp_position;
+            AddLog(ch, $"Inf_cut:{inf_cut}");
+            if ((inf_cut < (BTM_POS - 1)) || (inf_cut > (BTM_POS + 1)))
+            {
+                AddLog(ch, $"EPA Error");
                 PassFails[0].Results[(int)SpecItem.AF_NonEPAStroke].Val = 0;
                 ShowDataResults(ch, (int)SpecItem.AF_NonEPAStroke, (int)SpecItem.AF_NonEPAStroke, InspType.Normal, new double[] { });
+
+                LEDs_All_On(0, false);
                 return;
             }
+            AddLog(ch, $"");
 
-            backdata = Dln.ReadByte(ch, DrvIC.AF_Addr, 0x0B, 1);
-            Dln.WriteByte(ch, DrvIC.AF_Addr, 0x1A, 1, 0x00);
-            Dln.WriteByte(ch, DrvIC.AF_Addr, 0x0B, 1, (byte)(backdata & 0x7F));
-            Dln.WriteByte(ch, DrvIC.AF_Addr, 0xA6, 1, 0x7B);
-            DrvIC.AFOnOff(ch, true);
-            AddLog(ch, $"AF Openloop Stroke Check");
-            LEDs_All_On(0, true);
+            DrvIC.Ak7314_soft_move(ch, 4095, 10);
+            res = Measure();
+            top_position = (short)res.cz[0];
+            tmp_position = 0;
+            stroke = (short)Math.Abs(refPos - top_position);
 
-            List<double> OLStroke = new List<double>();
-
-
-            for (int i = 0; i < Condition.AFOLLoopCount; i++)
+            if (stroke > TOP_POS + TOP_MARGIN)
             {
-                OldStroke = NewStroke;
-                DrvIC.AFMoveOL(ch, Condition.AFOLMax);
-                Wait(Condition.AFOLDelay);
-                tmpres = Measure();
-                zVal[0] = tmpres.cz[0];
-                DrvIC.AFMoveOL(ch, Condition.AFOLMin);
-                Wait(Condition.AFOLDelay);
-                tmpres = Measure();
-                zVal[1] = tmpres.cz[0];
-                NewStroke = Math.Abs(zVal[1] - zVal[0]);
-                AddLog(ch, $"{i + 1} : {NewStroke.ToString("F3")}");
-
-                OLStroke.Add(NewStroke);
-
+                mac_cut = (short)(stroke - (TOP_POS));
+                step = 0x300;
+                //step = 0xC0;
             }
-            if (Condition.AFOLLoopCount >= 3)
+            else
             {
-                int MaxIndex = OLStroke.Select((value, idx) => new { value, idx }).OrderByDescending(x => x.value).First().idx;
-                OLStroke.RemoveAt(MaxIndex);
-                int MinIndex = OLStroke.Select((value, idx) => new { value, idx }).OrderBy(x => x.value).First().idx;
-                OLStroke.RemoveAt(MinIndex);
+                mac_cut = (short)TOP_MARGIN;
+                step = 0x200;
+                //step = 0x80;
             }
+            AddLog(ch, "Mac Cut Start");
+            AddLog(ch, $"Mac_Cut:{mac_cut}, Mac_Step:{step}");
 
 
-            for (int i = 0; i < OLStroke.Count; i++)
+            for (target_code = 4095; step > 0; step >>= 1)
             {
-                AvgOLStroke += OLStroke[i];
+                string s = string.Empty;
+                s += $"tmp_pos:{tmp_position}, tar_code:{target_code},";
+
+                if (tmp_position < -1 - mac_cut)
+                {
+                    if (cond == 2)
+                    {
+                        step = (short)(step << 1);
+                    }
+                    target_code += (ushort)step;
+                    cond = 2;
+                    s += $"step:{step}, cond:{cond}";
+                    AddLog(ch, s);
+                }
+                else if (tmp_position > 1 - mac_cut)
+                {
+                    if (cond == 3)
+                    {
+                        step = (short)(step << 1);
+                    }
+                    target_code -= (ushort)step;
+                    cond = 3;
+                    s += $"step:{step}, cond:{cond}";
+                    AddLog(ch, s);
+                }
+                else break;
+                DrvIC.Move(ch, "AF", target_code);
+                Wait(50);
+                res = Measure();
+                tmp_position = (short)(res.cz[0] - top_position);
+                mac_loop++;
+
+                if (mac_loop > mac_loop_max) break;
             }
+            mac_tag_code = target_code;
 
+            if (mac_loop > mac_loop_max)
+            {
+                AddLog(ch, $"EPA Error");
+                PassFails[0].Results[(int)SpecItem.AF_NonEPAStroke].Val = 0;
+                ShowDataResults(ch, (int)SpecItem.AF_NonEPAStroke, (int)SpecItem.AF_NonEPAStroke, InspType.Normal, new double[] { });
 
-            AvgOLStroke = AvgOLStroke / OLStroke.Count;
-            PassFails[0].Results[(int)SpecItem.AFMechaStroke].Val = AvgOLStroke;
-            ShowDataResults(ch, (int)SpecItem.AFMechaStroke, (int)SpecItem.AFMechaStroke, InspType.Normal, new double[] { });
-            //    LEDs_All_On(0, false);
+                LEDs_All_On(0, false);
+                return;
+            }
+            AddLog(ch, $"tmp_pos:{tmp_position}, tar_code:{target_code}, mac_loop:{mac_loop}");
+            posvt = target_code;
+            AddLog(ch, "");
+            AddLog(ch, "---------------------------------");
+            AddLog(ch, $"Target stroke : {810}um");
+            AddLog(ch, $"Target btm_top MG : {BTM_POS}_{TOP_MARGIN} um");
+            AddLog(ch, $"Measured stroke : {stroke}um");
+            AddLog(ch, $"Measured Mac_cut : {mac_cut}um");
+            AddLog(ch, $"Inf cut-off size : {inf_cut}um");
+            AddLog(ch, $"Mac cut-off size : {Math.Abs(tmp_position)}um");
+            AddLog(ch, "---------------------------------");
+            AddLog(ch, $"Inf/Mac target_code : {inf_tag_code}, {mac_tag_code}um");
+            AddLog(ch, "---------------------------------");
 
-            DrvIC.AFOnOff(ch, false);
-            Wait(5);
-            Dln.WriteByte(ch, DrvIC.AF_Addr, 0x0B, 1, backdata);
-            Dln.WriteByte(ch, DrvIC.AF_Addr, 0xA6, 1, 0x00);
+            DrvIC.Move(ch, "AF", 2048);
+            Wait(50);
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x3B });
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, IC_SETTING_AF_REG[1], 1, new byte[] { IC_SETTING_AF[1] });
 
+            AFPOSVT = (byte)((4095 - posvt + 2) >> 4);      // for SU2810
+            AFNEGVT = (byte)((negvt + 2) >> 4);
 
+            AddLog(ch, $"posvt({posvt}) negvt({negvt}) POSVT({AFPOSVT}) NEGVT({AFNEGVT})");
 
-            Dln.WriteByte(ch, DrvIC.AF_Addr, 0xAE, 1, 0x00);
-            Dln.PowerSequence(0);
-
-            DrvIC.AFOnOff(ch, false);
-
-            int poscal = 0;
-            int negcal = 0;
-            (poscal, negcal) =  DrvIC.AF_IC_Data(ch);
-
-
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x0E, 1, new byte[] { (byte)AFPOSVT });
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x0F, 1, new byte[] { (byte)AFNEGVT });
+            DrvIC.AK7314_memory_update(ch, 1);
+            DrvIC.AK7314_memory_update(ch, 5);
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x00 });
+            DrvIC.AK7314_Mode(ch, 1);
             if (Option.SaveRawData)
             {
                 StreamWriter sw = null;
                 string dateDir = STATIC.CreateDateDir();
                 if (!Directory.Exists(dateDir)) Directory.CreateDirectory(dateDir);
-                string path = dateDir + $"AF_HallCalData.csv";
+                string path = dateDir + $"AF_EPA_CODE.csv";
 
                 if (!File.Exists(path))
                 {
                     sw = File.AppendText(path);
-                    string s = $"SPL No, Date, Time, PCAL, NCAL";
+                    string s = $"SPL No, Date, Time, INF Code, MAC Code";
                     sw.WriteLine(s);
                     sw.Close();
                 }
                 sw = File.AppendText(path);
                 string data = $"{m_StrIndex[ch]},{STATIC.LogDate.ToString("yyyy-MM-dd")},{STATIC.LogDate.Hour}h{STATIC.LogDate.Minute}m{STATIC.LogDate.Second}s," +
-                    $"{poscal},{negcal}";
+                    $"{inf_tag_code},{mac_tag_code}";
                 sw.WriteLine(data);
                 sw.Close();
             }
+            AddLog(ch, "<<<  AF EPA End  >>>");
 
-            (bool EPARes, int stroke) = AF_EPA(ch);
-            if (!EPARes)
-            {
-                AddLog(ch, $"AF EPA NG");
-                PassFails[0].Results[(int)SpecItem.AF_NonEPAStroke].Val = stroke;
-                ShowDataResults(ch, (int)SpecItem.AF_NonEPAStroke, (int)SpecItem.AF_NonEPAStroke, InspType.Normal, new double[] { });
-                return;
-            }
+
+            DrvIC.OISOn(ch, "X", false);
+            DrvIC.OISOn(ch, "Y", false);
+            Thread.Sleep(100);
+
+            //AF LinComp
             AddLog(ch, "<<<  AF Lin. Comp Start  >>>");
-            bool LinRes = AFLinComp(ch, 8, 4088, 34, 0, 0, 0, 0, 0);
+            bool LinRes = AFLinComp(ch, 8, 4088, 34, 0, 0, 6, 6, 0, (int)stroke);
             AddLog(ch, "<<<  AF Lin. Comp End  >>>");
+            DrvIC.OISOn(ch, "X", true);
+            DrvIC.OISOn(ch, "Y", true);
+            DrvIC.OISOn(ch, "X", false);
+            DrvIC.OISOn(ch, "Y", false);
+            Wait(100);
+
+            LEDs_All_On(0, false);
             if (!LinRes)
             {
                 PassFails[0].Results[(int)SpecItem.AF_NonEPAStroke].Val = 0;
@@ -1809,6 +1901,259 @@ namespace FZ4P
             }
             PassFails[0].Results[(int)SpecItem.AF_NonEPAStroke].Val = stroke;
             ShowDataResults(ch, (int)SpecItem.AF_NonEPAStroke, (int)SpecItem.AF_NonEPAStroke, InspType.Normal, new double[] { });
+
+            //bool res = false;
+            //res = DrvIC.ChangeSlaveAddr(ch);
+            //if(!res)
+            //{
+            //    PassFails[0].Results[(int)SpecItem.AF_NonEPAStroke].Val = 0;
+            //    ShowDataResults(ch, (int)SpecItem.AF_NonEPAStroke, (int)SpecItem.AF_NonEPAStroke, InspType.Normal, new double[] { });
+            //    return;
+            //}
+
+            //int agingCount;
+            //double OldStroke = 0, NewStroke = 0;
+            //FindResult tmpres = new FindResult();
+            //double[] zVal = new double[2];
+            //double AvgOLStroke = 0;
+            //DrvIC.AFOnOff(ch, false);
+            //Wait(5);
+            //byte backdata = 0xff;
+
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, 0xAE, 1, 0x3B);
+            //if (Condition.AFMechaOnOff == 1)
+            //{
+            //    backdata = Dln.ReadByte(ch, DrvIC.AF_Addr, 0x0B, 1);
+            //    Dln.WriteByte(ch, DrvIC.AF_Addr, 0x1A, 1, 0x00);
+            //    Dln.WriteByte(ch, DrvIC.AF_Addr, 0x0B, 1, (byte)(backdata & 0x7F));
+            //    Dln.WriteByte(ch, DrvIC.AF_Addr, 0xA6, 1, 0x7B);
+            //    DrvIC.AFOnOff(ch, true);
+            //    AddLog(ch, $"AF Openloop Aging");
+            //    LEDs_All_On(0, true);
+
+
+
+            //    for (int i = 0; i < Condition.AFOLLoopCount; i++)
+            //    {
+
+            //        DrvIC.AFMoveOL(ch, Condition.AFOLMax);
+            //        Wait(Condition.AFOLDelay);
+
+            //        DrvIC.AFMoveOL(ch, Condition.AFOLMin);
+            //        Wait(Condition.AFOLDelay);
+            //    }
+
+            //    DrvIC.AFOnOff(ch, false);
+            //    Wait(5);
+            //    Dln.WriteByte(ch, DrvIC.AF_Addr, 0x0B, 1, backdata);
+            //    Dln.WriteByte(ch, DrvIC.AF_Addr, 0xA6, 1, 0x00);
+            //}
+
+            //AddLog(ch, $"\r\nAuto calibration\r\n");
+            ////Dln.WriteByte(ch, DrvIC.AF_Addr, 0xAE, 1, 0x3B);
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, IC_SETTING_AF_REG[1], 1, IC_SETTING_AF[1]);
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, IC_SETTING_AF_REG[0], 1, IC_SETTING_AF[0]);
+
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, IC_SETTING_AF_REG[3], 1, IC_SETTING_AF[3]);
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, IC_SETTING_AF_REG[4], 1, IC_SETTING_AF[4]);
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, IC_SETTING_AF_REG[5], 1, IC_SETTING_AF[5]);
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, IC_SETTING_AF_REG[6], 1, IC_SETTING_AF[6]);
+
+            //for (int i = 0xC0; i <= 0xC3; i++)
+            //{
+            //    Dln.WriteByte(ch, DrvIC.AF_Addr, i, 1, 0x00);
+
+            //}
+            //AddLog(ch, $"Reset EPA Data.");
+            //for (int i = 0xC5; i <= 0xDF; i++)
+            //{
+            //    Dln.WriteByte(ch, DrvIC.AF_Addr, i, 1, 0x00);
+
+            //}
+            //AddLog(ch, $"Reset Linearity comp coeff data.");
+            //for (int i = 0; i < IC_DATA_AF.Length; i++)
+            //{
+            //    Dln.WriteByte(ch, DrvIC.AF_Addr, IC_DATA_AF_REG[i], 1, IC_DATA_AF[i]);
+            //}
+            //AddLog(ch, $"PID Parameter setting.");
+
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, 0x5D, 1, 0x00);
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, 0x02, 1, 0x80);
+            //Wait(10);
+            //byte rbuf = Dln.ReadByte(ch, DrvIC.AF_Addr, 0x70, 1);
+            //byte cBackup;
+            //byte cTemp;
+            //cBackup = cTemp = rbuf;
+            //AddLog(ch, $"1 Reg 0x70 : 0x{cBackup.ToString("X2")}");
+            //cBackup &= 0x80;
+            //AddLog(ch, $"2 Reg 0x70 : 0x{cBackup.ToString("X2")}");
+            //cTemp = (byte)((cTemp << 1) & 0x7E);
+            //cTemp |= cBackup;
+            //AddLog(ch, $"3 Reg 0x70 : 0x{cTemp.ToString("X2")}");
+            //rbuf = Dln.ReadByte(ch, DrvIC.AF_Addr, 0x71, 1);
+            //cBackup = rbuf;
+            //cBackup &= 0x80;
+            //AddLog(ch, $"4 Reg 0x71 : 0x{cBackup.ToString("X2")}");
+            //cTemp |= (byte)(cBackup >> 7);
+            //AddLog(ch, $"4 Reg 0x5D : 0x{cTemp.ToString("X2")}");
+
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, 0x5D, 1, cTemp);
+
+
+            //int index = 0;
+            //cTemp = 0xff;
+            //while(cTemp > 0x10 && index < 5)
+            //{
+            //    Dln.WriteByte(ch, DrvIC.AF_Addr, IC_SETTING_AF_REG[2], 1, IC_SETTING_AF[2]);
+            //    for (int i = 0; i < 2; i++)
+            //    {
+            //        Dln.WriteByte(ch, DrvIC.AF_Addr, 0x02, 1, 0x18);
+            //        Wait(300);
+            //    }
+
+            //    cTemp = Dln.ReadByte(ch, DrvIC.AF_Addr, 0x19, 1);
+            //    int iTemp = cTemp;
+            // //   AddLog(ch, $"Reg : 0x19 = 0x{iTemp.ToString("X2")}");
+            //    iTemp = iTemp * 3 / 4;
+            //    if (iTemp < 0) iTemp = 0;
+            //    if (iTemp > 255) iTemp = 255;
+            //    cTemp = (byte)iTemp;
+            //    AddLog(ch, $"Reg : 0x19 = 0x{iTemp.ToString("X2")}");
+            //    if(cTemp > 0x10)
+            //    {
+            //        //Error처리
+            //        AddLog(ch, $"AF calibration 2 (Reg 19) error[over 0x10]");
+            //    }
+            //    index++;
+            //}
+
+            //if(index >= 5)
+            //{
+            //    AddLog(ch, $"AF Hall Calibration NG");
+            //    PassFails[0].Results[(int)SpecItem.AF_NonEPAStroke].Val = 0;
+            //    ShowDataResults(ch, (int)SpecItem.AF_NonEPAStroke, (int)SpecItem.AF_NonEPAStroke, InspType.Normal, new double[] { });
+            //    return;
+            //}
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, 0x19, 1, cTemp);
+
+            //res = DrvIC.AF_Memory_Update(ch, 1);
+            //res &= DrvIC.AF_Memory_Update(ch, 2);
+            //res &= DrvIC.AF_Memory_Update(ch, 3);
+            //res &= DrvIC.AF_Memory_Update(ch, 4);
+            //res &= DrvIC.AF_Memory_Update(ch, 5);
+            //if(!res)
+            //{
+            //    AddLog(ch, $"AF Memory update NG");
+            //    PassFails[0].Results[(int)SpecItem.AF_NonEPAStroke].Val = 0;
+            //    ShowDataResults(ch, (int)SpecItem.AF_NonEPAStroke, (int)SpecItem.AF_NonEPAStroke, InspType.Normal, new double[] { });
+            //    return;
+            //}
+
+            //backdata = Dln.ReadByte(ch, DrvIC.AF_Addr, 0x0B, 1);
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, 0x1A, 1, 0x00);
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, 0x0B, 1, (byte)(backdata & 0x7F));
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, 0xA6, 1, 0x7B);
+            //DrvIC.AFOnOff(ch, true);
+            //AddLog(ch, $"AF Openloop Stroke Check");
+            //LEDs_All_On(0, true);
+
+            //List<double> OLStroke = new List<double>();
+
+
+            //for (int i = 0; i < Condition.AFOLLoopCount; i++)
+            //{
+            //    OldStroke = NewStroke;
+            //    DrvIC.AFMoveOL(ch, Condition.AFOLMax);
+            //    Wait(Condition.AFOLDelay);
+            //    tmpres = Measure();
+            //    zVal[0] = tmpres.cz[0];
+            //    DrvIC.AFMoveOL(ch, Condition.AFOLMin);
+            //    Wait(Condition.AFOLDelay);
+            //    tmpres = Measure();
+            //    zVal[1] = tmpres.cz[0];
+            //    NewStroke = Math.Abs(zVal[1] - zVal[0]);
+            //    AddLog(ch, $"{i + 1} : {NewStroke.ToString("F3")}");
+
+            //    OLStroke.Add(NewStroke);
+
+            //}
+            //if (Condition.AFOLLoopCount >= 3)
+            //{
+            //    int MaxIndex = OLStroke.Select((value, idx) => new { value, idx }).OrderByDescending(x => x.value).First().idx;
+            //    OLStroke.RemoveAt(MaxIndex);
+            //    int MinIndex = OLStroke.Select((value, idx) => new { value, idx }).OrderBy(x => x.value).First().idx;
+            //    OLStroke.RemoveAt(MinIndex);
+            //}
+
+
+            //for (int i = 0; i < OLStroke.Count; i++)
+            //{
+            //    AvgOLStroke += OLStroke[i];
+            //}
+
+
+            //AvgOLStroke = AvgOLStroke / OLStroke.Count;
+            //PassFails[0].Results[(int)SpecItem.AFMechaStroke].Val = AvgOLStroke;
+            //ShowDataResults(ch, (int)SpecItem.AFMechaStroke, (int)SpecItem.AFMechaStroke, InspType.Normal, new double[] { });
+            ////    LEDs_All_On(0, false);
+
+            //DrvIC.AFOnOff(ch, false);
+            //Wait(5);
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, 0x0B, 1, backdata);
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, 0xA6, 1, 0x00);
+
+
+
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, 0xAE, 1, 0x00);
+            //Dln.PowerSequence(0);
+
+            //DrvIC.AFOnOff(ch, false);
+
+            //int poscal = 0;
+            //int negcal = 0;
+            //(poscal, negcal) =  DrvIC.AF_IC_Data(ch);
+
+
+            //if (Option.SaveRawData)
+            //{
+            //    StreamWriter sw = null;
+            //    string dateDir = STATIC.CreateDateDir();
+            //    if (!Directory.Exists(dateDir)) Directory.CreateDirectory(dateDir);
+            //    string path = dateDir + $"AF_HallCalData.csv";
+
+            //    if (!File.Exists(path))
+            //    {
+            //        sw = File.AppendText(path);
+            //        string s = $"SPL No, Date, Time, PCAL, NCAL";
+            //        sw.WriteLine(s);
+            //        sw.Close();
+            //    }
+            //    sw = File.AppendText(path);
+            //    string data = $"{m_StrIndex[ch]},{STATIC.LogDate.ToString("yyyy-MM-dd")},{STATIC.LogDate.Hour}h{STATIC.LogDate.Minute}m{STATIC.LogDate.Second}s," +
+            //        $"{poscal},{negcal}";
+            //    sw.WriteLine(data);
+            //    sw.Close();
+            //}
+
+            //(bool EPARes, int stroke) = AF_EPA(ch);
+            //if (!EPARes)
+            //{
+            //    AddLog(ch, $"AF EPA NG");
+            //    PassFails[0].Results[(int)SpecItem.AF_NonEPAStroke].Val = stroke;
+            //    ShowDataResults(ch, (int)SpecItem.AF_NonEPAStroke, (int)SpecItem.AF_NonEPAStroke, InspType.Normal, new double[] { });
+            //    return;
+            //}
+            //AddLog(ch, "<<<  AF Lin. Comp Start  >>>");
+            //bool LinRes = AFLinComp(ch, 8, 4088, 34, 0, 0, 0, 0, 0);
+            //AddLog(ch, "<<<  AF Lin. Comp End  >>>");
+            //if (!LinRes)
+            //{
+            //    PassFails[0].Results[(int)SpecItem.AF_NonEPAStroke].Val = 0;
+            //    ShowDataResults(ch, (int)SpecItem.AF_NonEPAStroke, (int)SpecItem.AF_NonEPAStroke, InspType.Normal, new double[] { });
+            //    return;
+            //}
+            //PassFails[0].Results[(int)SpecItem.AF_NonEPAStroke].Val = stroke;
+            //ShowDataResults(ch, (int)SpecItem.AF_NonEPAStroke, (int)SpecItem.AF_NonEPAStroke, InspType.Normal, new double[] { });
 
         }
         void AF_OnlyHallCalibration(int ch, string testItem, int InspCnt)
@@ -3297,6 +3642,162 @@ namespace FZ4P
             DrvIC.OISOnOff(ch, true);
             DrvIC.OISOnOff(ch, false);
             Wait(50);
+            return true;
+        }
+        bool AFLinComp(int ch, int startpos, int endpos, int step, int margin_start, int margin_end, int s_value, int e_value, int linear_spec, int init_stroke)
+        {
+            int NUM_COEF = 13;
+            FindResult tmpres = new FindResult();
+            float[] targPosi = new float[step + 1]; // Array for storing target position data
+            float[] lensPosi = new float[step + 1]; // Array for storing lens position data
+            int[] readHall = new int[step + 1];
+            float[] refLensPosi = new float[step + 1];
+            int valueStepsize = step - s_value - e_value;
+            float[] valueLensPosi = new float[valueStepsize + 1];
+            float refStepsize = 0, gap = 0, valueStep = 0, valuegap = 0;
+            float max_gap = 0, max_valuegap = 0;
+
+
+            int ignInf = 0;
+            int ignMac = 0;
+            int numLinCompData;
+
+            float RefData = 0;
+            byte[] rbuf = new byte[1];
+            int temp_table = endpos;
+            int step_size = (endpos - startpos) / step;
+
+            int[] linCoef = new int[NUM_COEF]; // Array for storing line compensation coefficients
+            int pVtNew;    // Recalculation "POSVT" after linearity compensation
+            int nVtNew;    // Recalculation "NEGVT" after linearity compensation
+            float resError = 0;   // Variable for storing residual error after linearity compensation
+
+
+            Dln.ReadArray(ch, DrvIC.AFSlaveAddr, 0x0E, 1, rbuf);
+            byte pvt = rbuf[0];
+            Dln.ReadArray(ch, DrvIC.AFSlaveAddr, 0x0F, 1, rbuf);
+            byte nvt = rbuf[0];
+
+            AddLog(ch, $"POSVT = {pvt}, NEGVT = {nvt}");
+            AddLog(ch, $"Step Size : {step_size}");
+
+            DrvIC.AK7314_Mode(ch, 1);
+            DrvIC.Move(ch, "AF", endpos);
+            Thread.Sleep(200);
+            DrvIC.OISOn(ch, "X", false);
+            DrvIC.OISOn(ch, "Y", false);
+            Wait(200);
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x3B });
+            for (int i = 0; i < 13; i++)
+                Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x30 + i, 1, new byte[] { 0x00 });
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x00 });
+
+
+            AddLog(ch, $"Target\tReadHall\tPos");
+            for (int i = step; i >= 0; i--)
+            { // making input position table
+                targPosi[i] = (float)temp_table;
+                DrvIC.Move(ch, "AF", (int)targPosi[i]);
+                Wait(150);
+                readHall[i] = DrvIC.ReadHall(ch, "AF");
+                tmpres = Measure();
+                if (i != step) lensPosi[i] = (float)tmpres.cz[0] - RefData;
+                else { lensPosi[i] = 0; RefData = (float)tmpres.cz[0]; }
+
+
+                temp_table -= step_size; // From end to start
+                AddLog(ch, $"{targPosi[i]}\t{readHall[i]}\t{lensPosi[i].ToString("F2")}");
+            }
+            valueStep = (lensPosi[step - e_value] - lensPosi[s_value]) / (valueStepsize);
+            valueLensPosi[0] = lensPosi[s_value];
+            valueLensPosi[valueStepsize] = lensPosi[s_value + valueStepsize];
+
+            AddLog(ch, "");
+            AddLog(ch, "=== Linearity check ===");
+            AddLog(ch, $"ValueStepSize = {valueStepsize}");
+            AddLog(ch, $"ValueStep = {valueStep}");
+            AddLog(ch, "=======================");
+            AddLog(ch, $"{lensPosi[s_value].ToString("F3")}, {valueLensPosi[0].ToString("F3")}");
+
+            for (int i = 1; i < valueStepsize; i++)
+            {
+                valueLensPosi[i] = valueLensPosi[i - 1] + valueStep;
+                valuegap = valueLensPosi[i] - lensPosi[i + s_value];
+                if (valuegap >= 0) { }
+                else { valuegap *= -1; }
+                AddLog(ch, $"{lensPosi[i + s_value].ToString("F3")}, {valueLensPosi[i].ToString("F3")}, {valuegap.ToString("F3")}");
+                if (max_valuegap < valuegap) max_valuegap = valuegap;
+
+            }
+            AddLog(ch, $"{lensPosi[valueStepsize + s_value].ToString("F3")}, {valueLensPosi[valueStepsize].ToString("F3")}");
+            AddLog(ch, $"max valuegap= {max_valuegap.ToString("F3")}");
+
+            if (max_valuegap > linear_spec)
+            {
+                if (targPosi.Length == lensPosi.Length)
+                {
+                    AFLinCompCoef coef = new AFLinCompCoef();
+                    int[] lincoef = new int[AFLinCompCoef.NUM_COEF];
+                    numLinCompData = lensPosi.Length;
+                    AddLog(ch, $"numLinCompData = {numLinCompData}");
+                    int res = coef.LinCompMain(targPosi, lensPosi, numLinCompData, pvt, nvt, ignInf, ignMac, lincoef, ref resError);
+                    if (res != 0)
+                    {
+                        AddLog(ch, $"Linearity Comp Fail");
+
+                        return false;
+                    }
+                    string s = $"0x30 : 0x{lincoef[0].ToString("X")}, 0x31 : 0x{lincoef[1].ToString("X")}, 0x32 : 0x{lincoef[2].ToString("X")}, 0x33 : 0x{lincoef[3].ToString("X")}, 0x34 : 0x{lincoef[4].ToString("X")}\r\n" +
+                     $"0x35 : 0x{lincoef[5].ToString("X")}, 0x36 : 0x{lincoef[6].ToString("X")}, 0x37 : 0x{lincoef[7].ToString("X")}, 0x38 : 0x{lincoef[8].ToString("X")}, 0x39 : 0x{lincoef[9].ToString("X")}\r\n" +
+                     $"0x3A : 0x{lincoef[10].ToString("X")}, 0x3B : 0x{lincoef[11].ToString("X")}, 0x3C : 0x{lincoef[12].ToString("X")}";
+
+                    AddLog(ch, s);
+                    DrvIC.Move(ch, "AF", AFCenter);
+
+                    Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x3B });
+                                                                
+                    Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x30, 1, new byte[] { (byte)lincoef[0] });
+                    Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x31, 1, new byte[] { (byte)lincoef[1] });
+                    Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x32, 1, new byte[] { (byte)lincoef[2] });
+                    Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x33, 1, new byte[] { (byte)lincoef[3] });
+                    Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x34, 1, new byte[] { (byte)lincoef[4] });
+                    Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x35, 1, new byte[] { (byte)lincoef[5] });
+                    Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x36, 1, new byte[] { (byte)lincoef[6] });
+                    Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x37, 1, new byte[] { (byte)lincoef[7] });
+                    Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x38, 1, new byte[] { (byte)lincoef[8] });
+                    Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x39, 1, new byte[] { (byte)lincoef[9] });
+                    Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x3A, 1, new byte[] { (byte)lincoef[10] });
+                    Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x3B, 1, new byte[] { (byte)lincoef[11] });
+                    Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x3C, 1, new byte[] { (byte)lincoef[12] });
+                    DrvIC.AK7314_memory_update(ch, 1);
+                    DrvIC.AK7314_memory_update(ch, 3);
+                    Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x00 });
+
+                    int btm_position = 0, top_position = 0, measured_stroke = 0, spec_stroke = 0;
+                    DrvIC.Ak7314_soft_move(ch, 0, 10);
+                    tmpres = Measure();
+                    btm_position = (int)tmpres.cz[0];
+                    DrvIC.Ak7314_soft_move(ch, 4095, 10);
+                    tmpres = Measure();
+                    top_position = (int)tmpres.cz[0];
+                    measured_stroke = Math.Abs(btm_position - top_position);
+                    spec_stroke = init_stroke * 8 / 10;
+                    AddLog(ch, $"stroke : {measured_stroke}");
+                    if (measured_stroke < spec_stroke)
+                    {
+                        AddLog(ch, $"stroke NG  (spec : over cal stroke 80%)");
+
+                        return false;
+                    }
+
+                }
+            }
+            else
+            {
+                AddLog(ch, $"Linearity Comp Fail");
+                return false;
+            }
+            DrvIC.AK7314_IC_Data(ch);
             return true;
         }
         void Act_CloseLoopAging(int ch, string testitem, int InspCnt)
