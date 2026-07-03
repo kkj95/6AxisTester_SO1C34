@@ -9,6 +9,9 @@ namespace FZ4P.DriverIc.Interfaces
 {
     public interface IOISFunction
     {
+        int OISX_Addr { get; set; }
+        int OISY_Addr { get; set; }
+
         int OIS_MIN_CODE { get; }
         int OIS_MID_CODE { get; }
         int OIS_MAX_CODE { get; }

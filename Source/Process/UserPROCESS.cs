@@ -1565,10 +1565,6 @@ namespace FZ4P
                 ShowDataResults(ch, (int)SpecItem.AF_NonEPAStroke, (int)SpecItem.AF_NonEPAStroke, InspType.Normal, new double[] { });
                 return;
             }
-
-            //Dln.PowerSequence(0);
-            //Wait(100);
-
           
             int agingCount;
             double OldStroke = 0, NewStroke = 0;

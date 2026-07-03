@@ -33,6 +33,8 @@ namespace FZ4P
         public int OIS_MID_CODE { get; set; }
         public int OIS_MIN_CODE { get; set; }
         public int OIS_MAX_CODE { get; set; }
+        public int OISX_Addr { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int OISY_Addr { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public DrvIC()
         {

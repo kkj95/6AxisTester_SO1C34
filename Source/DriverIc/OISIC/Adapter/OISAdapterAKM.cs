@@ -13,6 +13,9 @@ namespace FZ4P.DriverIc.OISIC
         public int OIS_MID_CODE => throw new NotImplementedException();
         public int OIS_MAX_CODE => throw new NotImplementedException();
 
+        public int OISX_Addr { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int OISY_Addr { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         public readonly AK73XX _ak73xx;
 
         public OISAdapterAKM(AK73XX ak73xx)

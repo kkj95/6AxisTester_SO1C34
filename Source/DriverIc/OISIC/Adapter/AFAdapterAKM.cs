@@ -21,6 +21,9 @@ namespace FZ4P.DriverIc.OISIC.Adapter
 
         public int OIS_MAX_CODE => throw new NotImplementedException();
 
+        public int OISX_Addr { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int OISY_Addr { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         public void LiearCompWrite(int axis, List<int> CompValue)
         {
             throw new NotImplementedException();
