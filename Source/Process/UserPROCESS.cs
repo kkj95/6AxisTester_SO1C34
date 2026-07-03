@@ -3806,283 +3806,475 @@ namespace FZ4P
         }
         void AFPM(int ch, string testItem, int inspCnt)
         {
-            int freq_val, freq_temp = 0, gain_temp, freq_PM = 0, old_freq;
+            double resFreq = 0, respm = 0, res4dbpm = 0;
+            int freqval, freqtemp = 0, gaintemp, freqpm = 0, oldfreq;
             int[] before_after_zero_freq = new int[2];
-            double gain_val = 0, phasemargin_val = 0, phase_temp, pre_pm = 0;
+            double gainval = 0, pmval, phaestemp, prepm = 0, PM4dB;
             double[] before_after_zero_gain = new double[2];
-            double phase_min = 5000;
-            double PM_2nd = 0;
             byte backup, flag_2nd = 0;
-            byte freq_en;
+            byte fra_en;
+            bool dB4PhaseFouund = false;
+            bool PhaseFouund = false;
 
-            byte[] rbuf3 = new byte[3];
+            DrvIC.SetSlaveAddr(ch, DrvIC.FRA_AFSlaveAddr);
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x02, 1, new byte[] { 0x00 });
+            Wait(50);
 
-            int zero_range = 3;
-            int StartFreq = Condition.iAFChirpFrom;
-            int EndFreq = Condition.iAFChirpTo;
-            int Step = Condition.iAFFRAstep;
-            double amp = Condition.iAFAmplitude;
-            int GainTh = Condition.PMAFGainTH;
-
-
-            Dln.WriteByte(ch, DrvIC.AF_Addr, 0x02, 1, 0x00);
-            DrvIC.AFMove(ch, Condition.AfPosPM); // 가이드 받으면 적용 
-            Wait(100);
-
-            Dln.WriteByte(ch, DrvIC.FRA_Addr, 0x00, 1, 0x01);
-            Dln.WriteByte(ch, DrvIC.FRA_Addr, 0x00, 1, 0x00);
-            Dln.WriteByte(ch, DrvIC.FRA_Addr, 0x6F, 1, (byte)(DrvIC.AF_Addr << 1));
-
-            AddLog(ch, $"[AF Phase Margin test(High Freq Start)]");
-            Dln.WriteByte(ch, DrvIC.AF_Addr, 0x02, 1, 0x40);
+            DrvIC.Move(ch, "AF", 2048); Wait(50);
+            AddLog(ch, $"PM AF Code, Target {DrvIC.ReadHall(ch, "AF")}");
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x02, 1, new byte[] { 0x40 });
             Wait(1);
-            Dln.WriteByte(ch, DrvIC.AF_Addr, 0xAE, 1, 0x3B);
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x3B });
 
+            AddLog(ch, "Phase margin test start");
             DrvIC.FRAModeEnable(ch);
 
-            Dln.Write2Byte(ch, DrvIC.FRA_Addr, 0x52, 1, (ushort)((int)amp << 6));
-
-            AddLog(ch, "--------------------------------------------");
-            AddLog(ch, " Amp	Freq	Gain	P/M ");
-            AddLog(ch, " [Dec]	[Hz]	[dB]	[deg] ");
-            AddLog(ch, "--------------------------------------------");
-
-            for (old_freq = freq_val = StartFreq; freq_val >= EndFreq; freq_val -= freq_temp)
+            DrvIC.Set_Amp(ch, (int)Condition.iAFAmplitude);
+            AddLog(ch, $"Amp\tFreq\tGain\tP/M");
+            for (oldfreq = freqval = Condition.iAFChirpFrom; freqval >= Condition.iAFChirpTo; freqval -= freqtemp)
             {
-                Dln.Write2Byte(ch, DrvIC.FRA_Addr, 0x50, 1, (ushort)(freq_val << 1));
-                Wait((int)(1000.0 / old_freq + 5000.0 / freq_val + 10));
-                old_freq = freq_val;
+                DrvIC.Set_Freq(ch, freqval);
+                Wait(1000 / oldfreq + 5000 / freqval + 15);
+                oldfreq = freqval;
+                gainval = DrvIC.Get_Gain(ch);
+                pmval = DrvIC.Get_Phase(ch, 1);
+                AddLog(ch, $"{Condition.AFGMamp}\t{freqval}\t{gainval.ToString("F2")}\t{pmval.ToString("F0")}");
 
-                Dln.ReadArray(ch, DrvIC.FRA_Addr, 0x94, 1, rbuf3);
-                gain_temp = (rbuf3[0] << 16) + (rbuf3[1] << 8) + rbuf3[2];
-                gain_val = Math.Log10(((double)gain_temp / 65536)) * 20;
 
-                phase_temp = (double)Dln.Read2Byte(ch, DrvIC.FRA_Addr, 0x98, 1);
-                phase_temp /= 128;
-                if (phase_temp > 256) phase_temp -= 512;
-                phasemargin_val = 180 + phase_temp;
-                if (phasemargin_val > 180) phasemargin_val -= 360;
-                if (phasemargin_val < -180) phasemargin_val += 360;
-
-                AddLog(ch, $"{amp}, {freq_val}, {gain_val.ToString("F2")}, {phasemargin_val.ToString("F2")}");
-                if (phasemargin_val < phase_min) phase_min = phasemargin_val;
-
-                if(gain_val > 0)
+                if (!PhaseFouund && gainval > 0)
                 {
-                    phasemargin_val = ((gain_val * pre_pm) - (before_after_zero_gain[0] * phasemargin_val)) /
-                       (gain_val - before_after_zero_gain[0]);
-                    freq_PM = (int)(((gain_val * before_after_zero_freq[0]) - (before_after_zero_gain[0] *
-                                     freq_val)) / (gain_val - before_after_zero_gain[0]));
-
-                    before_after_zero_freq[1] = freq_val;
-                    before_after_zero_gain[1] = gain_val;
-                    break;
+                    respm = ((gainval * prepm) - (before_after_zero_gain[0] * pmval)) / (gainval - before_after_zero_gain[0]);
+                    resFreq = (int)(((gainval * before_after_zero_freq[0]) - (before_after_zero_gain[0] * freqpm)) / (gainval - before_after_zero_gain[0]));
+                    before_after_zero_freq[1] = freqval;
+                    before_after_zero_gain[1] = gainval;
+                    PhaseFouund = true;
+                    if (dB4PhaseFouund)
+                        break;
+                }
+                if (!dB4PhaseFouund && gainval >= -4 && before_after_zero_gain[0] <= -4)
+                {
+                    //pm1 + (targetGain - gain1) * (pm2 - pm1) / (gain2 - gain1);
+                    res4dbpm = prepm + ((-4) - before_after_zero_gain[0]) * (pmval - prepm) / (gainval - before_after_zero_gain[0]);
+                    //  res4dbpm = ((gainval * prepm) - (before_after_zero_gain[0] * pmval)) / (gainval - before_after_zero_gain[0]);
+                    dB4PhaseFouund = true;
+                    if (PhaseFouund) break;
                 }
                 else
                 {
-                    before_after_zero_freq[0] = freq_val;
-                    before_after_zero_gain[0] = gain_val;
+                    before_after_zero_freq[0] = freqval;
+                    before_after_zero_gain[0] = gainval;
                 }
+                prepm = pmval;
+                freqtemp = freqval * Condition.iAFFRAstep / 100;
 
-                if((Math.Abs(gain_val) < zero_range) && (flag_2nd !=1))
+                if (freqtemp < 1) freqtemp = 1;
+            }
+            AddLog(ch, $"Zero Freq before = {before_after_zero_freq[0]}Hz,{before_after_zero_gain[0].ToString("F2")}dB");
+            AddLog(ch, $"Zero Freq after = {before_after_zero_freq[1]}Hz,{before_after_zero_gain[1].ToString("F2")}dB");
+
+            if (freqval == Condition.iAFChirpFrom)
+            {
+
+                AddLog(ch, " Error type1 : Gain over zero at 1st cycle");
+                DrvIC.FRAModeDisable(ch);
+                resFreq = freqval;
+                respm = 1;
+            }
+            if ((freqval <= Condition.iAFChirpTo) && (gainval <= 0))
+            {
+
+                if (gainval > -2)
                 {
-                    PM_2nd = phasemargin_val;
-                    flag_2nd = 1;
+                    freqpm = before_after_zero_freq[0];
+                    gainval = before_after_zero_gain[0];
                 }
-                pre_pm = phasemargin_val;
-                freq_temp = freq_val * Step / 100;
+                else
+                {
+                    AddLog(ch, " Error type4 : No cross over point during period\n");
+                    DrvIC.FRAModeDisable(ch);
+                    resFreq = freqval;
+                    respm = 4;                                                //result=4;
+                }
 
-                if (freq_temp < 1) freq_temp = 1;
+                AddLog(ch, " Error type4 : No cross over point during period\n");
+                resFreq = freqval;
+                respm = 4;
+
             }
-
-            AddLog(ch, "--------------------------------------------");
-            AddLog(ch, $"Zero Freq Before = {before_after_zero_freq[0]} Hz,  {before_after_zero_gain[0].ToString("F2")} dB");
-            AddLog(ch, $"Zero Freq After  = {before_after_zero_freq[1]} Hz,  {before_after_zero_gain[1].ToString("F2")} dB");
-
-            if(freq_val == StartFreq)
+            if (Math.Abs(gainval - before_after_zero_gain[1]) > Condition.PMAFGainTH)
             {
-                AddLog(ch, $"Error type1 : Gain over zero at 1st cycle");
-                PassFails[ch].Results[(int)SpecItem.FRAAF_PhaseMargin].Val = 1; //plus Gain
-                ShowDataResults(ch, (int)SpecItem.FRAAF_PhaseMargin, (int)SpecItem.FRAAF_PhaseMargin, InspType.Normal, new double[] { });
+                AddLog(ch, $"Error type 2: gain is changed drastically over {Condition.PMAFGainTH}");
+                //---------------------------------------------------------
+                // disable
                 DrvIC.FRAModeDisable(ch);
-                return;
+                //---------------------------------------------------------
+                Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x00 });
+                DrvIC.AK7314_IC_reset(ch);
+                resFreq = freqval;
+                respm = 2;
             }
-            if((freq_val <= EndFreq) && (gain_val <= 0))
-            {
-                AddLog(ch, $"Error type4 : No cross over point during period");
-                PassFails[ch].Results[(int)SpecItem.FRAAF_PhaseMargin].Val = 4; //No cross
-                ShowDataResults(ch, (int)SpecItem.FRAAF_PhaseMargin, (int)SpecItem.FRAAF_PhaseMargin, InspType.Normal, new double[] { });
-                DrvIC.FRAModeDisable(ch);
-                return;
-            }
-            if(Math.Abs(gain_val - before_after_zero_gain[1]) > GainTh)
-            {
-                AddLog(ch, $"Error type2 : gain is changed drastically over {GainTh}");
-                PassFails[ch].Results[(int)SpecItem.FRAAF_PhaseMargin].Val = 2; //No cross
-                ShowDataResults(ch, (int)SpecItem.FRAAF_PhaseMargin, (int)SpecItem.FRAAF_PhaseMargin, InspType.Normal, new double[] { });
-                DrvIC.FRAModeDisable(ch);
-                return;
 
-            }
-            AddLog(ch, "\nUse Linear Interpolation");
-            AddLog(ch, "--------------------------------------------------");
-            AddLog(ch, $" {amp} amp, {freq_PM} Hz, {gain_val.ToString("F2")} dB, {phasemargin_val.ToString("F0")} deg");
-            AddLog(ch, "--------------------------------------------------");
-            AddLog(ch, $"Phase at -3dB : {PM_2nd.ToString("F0")} deg");
+            AddLog(ch, "Use Linear Interpolation");
+            AddLog(ch, $"{Condition.iAFAmplitude}, {resFreq}Hz, {gainval.ToString("F2")}dB, {respm.ToString("F0")}deg");
+            AddLog(ch, $"-4dB Phase Margin = {res4dbpm.ToString("F0")}");
 
             DrvIC.FRAModeDisable(ch);
-            Dln.WriteByte(ch, DrvIC.AF_Addr, 0xAE, 1, 0x00);
-            DrvIC.AF_ICReset(ch);
+            DrvIC.AK7314_IC_reset(ch);
+            //   PassFails[ch].Results[(int)SpecItem.FRAAF_PMFreq].Val = resFreq;
+            PassFails[ch].Results[(int)SpecItem.FRAAF_PhaseMargin].Val = respm;
+            PassFails[ch].Results[(int)SpecItem.FRAAF_4dB_PhaseMargin].Val = res4dbpm;
 
-            PassFails[ch].Results[(int)SpecItem.FRAAF_PhaseMargin].Val = phasemargin_val;
-            ShowDataResults(ch, (int)SpecItem.FRAAF_PhaseMargin, (int)SpecItem.FRAAF_PhaseMargin, InspType.Normal, new double[] { });
-         
+            ShowDataResults(ch, (int)SpecItem.FRAAF_PhaseMargin, (int)SpecItem.FRAAF_4dB_PhaseMargin, InspType.Normal, new double[] { });
 
+            //int freq_val, freq_temp = 0, gain_temp, freq_PM = 0, old_freq;
+            //int[] before_after_zero_freq = new int[2];
+            //double gain_val = 0, phasemargin_val = 0, phase_temp, pre_pm = 0;
+            //double[] before_after_zero_gain = new double[2];
+            //double phase_min = 5000;
+            //double PM_2nd = 0;
+            //byte backup, flag_2nd = 0;
+            //byte freq_en;
+
+            //byte[] rbuf3 = new byte[3];
+
+            //int zero_range = 3;
+            //int StartFreq = Condition.iAFChirpFrom;
+            //int EndFreq = Condition.iAFChirpTo;
+            //int Step = Condition.iAFFRAstep;
+            //double amp = Condition.iAFAmplitude;
+            //int GainTh = Condition.PMAFGainTH;
+
+
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, 0x02, 1, 0x00);
+            //DrvIC.AFMove(ch, Condition.AfPosPM); // 가이드 받으면 적용 
+            //Wait(100);
+
+            //Dln.WriteByte(ch, DrvIC.FRA_Addr, 0x00, 1, 0x01);
+            //Dln.WriteByte(ch, DrvIC.FRA_Addr, 0x00, 1, 0x00);
+            //Dln.WriteByte(ch, DrvIC.FRA_Addr, 0x6F, 1, (byte)(DrvIC.AF_Addr << 1));
+
+            //AddLog(ch, $"[AF Phase Margin test(High Freq Start)]");
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, 0x02, 1, 0x40);
+            //Wait(1);
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, 0xAE, 1, 0x3B);
+
+            //DrvIC.FRAModeEnable(ch);
+
+            //Dln.Write2Byte(ch, DrvIC.FRA_Addr, 0x52, 1, (ushort)((int)amp << 6));
+
+            //AddLog(ch, "--------------------------------------------");
+            //AddLog(ch, " Amp	Freq	Gain	P/M ");
+            //AddLog(ch, " [Dec]	[Hz]	[dB]	[deg] ");
+            //AddLog(ch, "--------------------------------------------");
+
+            //for (old_freq = freq_val = StartFreq; freq_val >= EndFreq; freq_val -= freq_temp)
+            //{
+            //    Dln.Write2Byte(ch, DrvIC.FRA_Addr, 0x50, 1, (ushort)(freq_val << 1));
+            //    Wait((int)(1000.0 / old_freq + 5000.0 / freq_val + 10));
+            //    old_freq = freq_val;
+
+            //    Dln.ReadArray(ch, DrvIC.FRA_Addr, 0x94, 1, rbuf3);
+            //    gain_temp = (rbuf3[0] << 16) + (rbuf3[1] << 8) + rbuf3[2];
+            //    gain_val = Math.Log10(((double)gain_temp / 65536)) * 20;
+
+            //    phase_temp = (double)Dln.Read2Byte(ch, DrvIC.FRA_Addr, 0x98, 1);
+            //    phase_temp /= 128;
+            //    if (phase_temp > 256) phase_temp -= 512;
+            //    phasemargin_val = 180 + phase_temp;
+            //    if (phasemargin_val > 180) phasemargin_val -= 360;
+            //    if (phasemargin_val < -180) phasemargin_val += 360;
+
+            //    AddLog(ch, $"{amp}, {freq_val}, {gain_val.ToString("F2")}, {phasemargin_val.ToString("F2")}");
+            //    if (phasemargin_val < phase_min) phase_min = phasemargin_val;
+
+            //    if(gain_val > 0)
+            //    {
+            //        phasemargin_val = ((gain_val * pre_pm) - (before_after_zero_gain[0] * phasemargin_val)) /
+            //           (gain_val - before_after_zero_gain[0]);
+            //        freq_PM = (int)(((gain_val * before_after_zero_freq[0]) - (before_after_zero_gain[0] *
+            //                         freq_val)) / (gain_val - before_after_zero_gain[0]));
+
+            //        before_after_zero_freq[1] = freq_val;
+            //        before_after_zero_gain[1] = gain_val;
+            //        break;
+            //    }
+            //    else
+            //    {
+            //        before_after_zero_freq[0] = freq_val;
+            //        before_after_zero_gain[0] = gain_val;
+            //    }
+
+            //    if((Math.Abs(gain_val) < zero_range) && (flag_2nd !=1))
+            //    {
+            //        PM_2nd = phasemargin_val;
+            //        flag_2nd = 1;
+            //    }
+            //    pre_pm = phasemargin_val;
+            //    freq_temp = freq_val * Step / 100;
+
+            //    if (freq_temp < 1) freq_temp = 1;
+            //}
+
+            //AddLog(ch, "--------------------------------------------");
+            //AddLog(ch, $"Zero Freq Before = {before_after_zero_freq[0]} Hz,  {before_after_zero_gain[0].ToString("F2")} dB");
+            //AddLog(ch, $"Zero Freq After  = {before_after_zero_freq[1]} Hz,  {before_after_zero_gain[1].ToString("F2")} dB");
+
+            //if(freq_val == StartFreq)
+            //{
+            //    AddLog(ch, $"Error type1 : Gain over zero at 1st cycle");
+            //    PassFails[ch].Results[(int)SpecItem.FRAAF_PhaseMargin].Val = 1; //plus Gain
+            //    ShowDataResults(ch, (int)SpecItem.FRAAF_PhaseMargin, (int)SpecItem.FRAAF_PhaseMargin, InspType.Normal, new double[] { });
+            //    DrvIC.FRAModeDisable(ch);
+            //    return;
+            //}
+            //if((freq_val <= EndFreq) && (gain_val <= 0))
+            //{
+            //    AddLog(ch, $"Error type4 : No cross over point during period");
+            //    PassFails[ch].Results[(int)SpecItem.FRAAF_PhaseMargin].Val = 4; //No cross
+            //    ShowDataResults(ch, (int)SpecItem.FRAAF_PhaseMargin, (int)SpecItem.FRAAF_PhaseMargin, InspType.Normal, new double[] { });
+            //    DrvIC.FRAModeDisable(ch);
+            //    return;
+            //}
+            //if(Math.Abs(gain_val - before_after_zero_gain[1]) > GainTh)
+            //{
+            //    AddLog(ch, $"Error type2 : gain is changed drastically over {GainTh}");
+            //    PassFails[ch].Results[(int)SpecItem.FRAAF_PhaseMargin].Val = 2; //No cross
+            //    ShowDataResults(ch, (int)SpecItem.FRAAF_PhaseMargin, (int)SpecItem.FRAAF_PhaseMargin, InspType.Normal, new double[] { });
+            //    DrvIC.FRAModeDisable(ch);
+            //    return;
+
+            //}
+            //AddLog(ch, "\nUse Linear Interpolation");
+            //AddLog(ch, "--------------------------------------------------");
+            //AddLog(ch, $" {amp} amp, {freq_PM} Hz, {gain_val.ToString("F2")} dB, {phasemargin_val.ToString("F0")} deg");
+            //AddLog(ch, "--------------------------------------------------");
+            //AddLog(ch, $"Phase at -3dB : {PM_2nd.ToString("F0")} deg");
+
+            //DrvIC.FRAModeDisable(ch);
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, 0xAE, 1, 0x00);
+            //DrvIC.AF_ICReset(ch);
+
+            //PassFails[ch].Results[(int)SpecItem.FRAAF_PhaseMargin].Val = phasemargin_val;
+            //ShowDataResults(ch, (int)SpecItem.FRAAF_PhaseMargin, (int)SpecItem.FRAAF_PhaseMargin, InspType.Normal, new double[] { });
         }
         void AFGM(int ch, string testItem, int inspCnt)
         {
-            int freq_val, freq_temp = 0, gain_temp, freq_GM = 0, old_freq;
+            double res = 0;
+            byte scancnt = 0;
+            int freqval, freqtemp = 0, gaintemp, oldfreq;
             int[] before_after_zero_freq = new int[2];
-            double gain_val = 0, phasemargin_val = 0, gainmargin_val = 0, phase_temp, pre_gm = 0;
             double[] before_after_zero_phase = new double[2];
+            int[] freq_PM, freq_GM = new int[2];
+            double[] gainval = new double[2] { 0, 0 };
+            double[] pmval = new double[2];
+            double gmval, phasetemp, prepm = 0;
+            double[] pregm = new double[2] { 0, 0 };
 
-            byte backup;
-            float result;
-            bool test_continue = true;
+            DrvIC.SetSlaveAddr(ch, DrvIC.FRA_AFSlaveAddr);
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x02, 1, new byte[] { 0x00 });
+            Wait(50);
 
-            byte[] rbuf3 = new byte[3];
+            DrvIC.Move(ch, "AF", 2048); Wait(50);
+            AddLog(ch, $"GM AF Code, Target {DrvIC.ReadHall(ch, "AF")}");
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x02, 1, new byte[] { 0x40 });
+            Wait(50);
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x3B });
 
-            
-            int StartFreq = Condition.AFGMStartFreq;
-            int EndFreq = Condition.AFGMEndFreq;
-            int Step = Condition.AFGMStep;
-            double amp = Condition.AFGMamp;
-            int GainTh = Condition.PMAFGainTH;
-
-
-            Dln.WriteByte(ch, DrvIC.AF_Addr, 0x02, 1, 0x00);
-            DrvIC.AFMove(ch, Condition.AFPosGM); // 가이드 받으면 적용 
-            Wait(100);
-
-            Dln.WriteByte(ch, DrvIC.FRA_Addr, 0x00, 1, 0x01);
-            Dln.WriteByte(ch, DrvIC.FRA_Addr, 0x00, 1, 0x00);
-            Dln.WriteByte(ch, DrvIC.FRA_Addr, 0x6F, 1, (byte)(DrvIC.AF_Addr << 1));
-
-            AddLog(ch, $"[AF Gain Margin test]");
-            Dln.WriteByte(ch, DrvIC.AF_Addr, 0x02, 1, 0x40);
-            Wait(1);
-            Dln.WriteByte(ch, DrvIC.AF_Addr, 0xAE, 1, 0x3B);
-
+            AddLog(ch, "GainMargin test start");
             DrvIC.FRAModeEnable(ch);
 
-            Dln.Write2Byte(ch, DrvIC.FRA_Addr, 0x52, 1, (ushort)((int)amp << 6));
-
-
-            freq_val = StartFreq;
-            freq_temp = freq_val * Step / 100;
-            freq_val += freq_temp;
-            Dln.Write2Byte(ch, DrvIC.FRA_Addr, 0x50, 1, (ushort)(freq_val << 1));
-            Wait(30000 / freq_val + 10);
-            Wait(100);
-            Dln.ReadArray(ch, DrvIC.FRA_Addr, 0x94, 1, rbuf3);
-            gain_temp = (rbuf3[0] << 16) + (rbuf3[1] << 8) + rbuf3[2];
-            gain_val = Math.Log10(((double)gain_temp / 65536)) * 20;
-
-
-            phase_temp = (double)Dln.Read2Byte(ch, DrvIC.FRA_Addr, 0x98, 1);
-            phase_temp /= 128;
-            if (phase_temp > 256) phase_temp -= 512;
-            phasemargin_val = 180 + phase_temp;
-            if (phasemargin_val > 180) phasemargin_val -= 360;
-            if (phasemargin_val < -180) phasemargin_val += 360;
-
-            AddLog(ch, "skip high freq for aging\n");
-            AddLog(ch, $"{amp},{freq_val} Hz, {gain_val.ToString("F2")} dB, {phasemargin_val.ToString("F0")} deg\n\n");
-
-
-            AddLog(ch, "--------------------------------------------");
-            AddLog(ch, " Amp	Freq	Gain	P/M ");
-            AddLog(ch, " [Dec]	[Hz]	[dB]	[deg] ");
-            AddLog(ch, "--------------------------------------------");
-
-            for (old_freq = freq_val = StartFreq; freq_val >= EndFreq; freq_val -= freq_temp)
+            DrvIC.Set_Amp(ch, Condition.AFGMamp);
+            AddLog(ch, $"Amp\tFreq\tGain\tP/M");
+            for (oldfreq = freqval = Condition.AFGMEndFreq; freqval <= Condition.AFGMStartFreq; freqval += freqtemp)
             {
-                Dln.Write2Byte(ch, DrvIC.FRA_Addr, 0x50, 1, (ushort)(freq_val << 1));
-                Wait((int)(1000.0 / old_freq + 5000.0 / freq_val + 10));
-                old_freq = freq_val;
-
-                Dln.ReadArray(ch, DrvIC.FRA_Addr, 0x94, 1, rbuf3);
-                gain_temp = (rbuf3[0] << 16) + (rbuf3[1] << 8) + rbuf3[2];
-                gain_val = Math.Log10(((double)gain_temp / 65536)) * 20;
-
-                phase_temp = (double)Dln.Read2Byte(ch, DrvIC.FRA_Addr, 0x98, 1);
-                phase_temp /= 128;
-                if (phase_temp > 256) phase_temp -= 512;
-                phasemargin_val = 180 + phase_temp;
-                if (phasemargin_val > 180) phasemargin_val -= 360;
-                if (phasemargin_val < -180) phasemargin_val += 360;
-
-                AddLog(ch, $"{amp}, {freq_val}, {gain_val.ToString("F2")}, {phasemargin_val.ToString("F2")}");
-               
-                if (phasemargin_val > 0)
+                DrvIC.Set_Freq(ch, freqval);
+                Wait(1000 / oldfreq + 5000 / freqval + 10);
+                oldfreq = freqval;
+                gainval[scancnt] = DrvIC.Get_Gain(ch);
+                pmval[scancnt] = DrvIC.Get_Phase(ch, 1);
+                AddLog(ch, $"{scancnt + 1} \t {Condition.AFGMamp}\t{freqval}\t{gainval[scancnt].ToString("F2")}\t{pmval[scancnt].ToString("F0")}");
+                if (pmval[scancnt] < 0)
                 {
-                    gain_val = ((phasemargin_val * pre_gm) - (before_after_zero_phase[0] * gain_val))  / (phasemargin_val - before_after_zero_phase[0]);
-                    freq_GM = (int)(((phasemargin_val * before_after_zero_freq[0]) - (before_after_zero_phase[0] *
-                                     freq_val)) / (phasemargin_val - before_after_zero_phase[0]));
+                    gainval[scancnt] = ((pmval[scancnt] * pregm[scancnt]) - (before_after_zero_phase[scancnt] * gainval[scancnt])) / (pmval[scancnt] - before_after_zero_phase[scancnt]);
+                    freq_GM[scancnt] = (int)(((pmval[scancnt] * before_after_zero_freq[scancnt]) - (before_after_zero_phase[scancnt] * freqval)) / (pmval[scancnt] - before_after_zero_phase[scancnt]));
 
-                    before_after_zero_freq[1] = freq_val;
-                    before_after_zero_phase[1] = phasemargin_val;
-                    break;
+                    scancnt++;
+                    if (scancnt == 2)
+                    {
+                        break;
+                    }
+
                 }
                 else
                 {
-                    before_after_zero_freq[0] = freq_val;
-                    before_after_zero_phase[0] = phasemargin_val;
+                    before_after_zero_freq[scancnt] = freqval;
+                    before_after_zero_phase[scancnt] = pmval[scancnt];
                 }
-
-             
-                pre_gm = gain_val;
-                freq_temp = freq_val * Step / 100;
-
-                if (freq_temp < 1) freq_temp = 1;
+                pregm[scancnt] = gainval[scancnt];
+                freqtemp = freqval * Condition.AFGMStep / 100;
+                if (freqtemp < 1) freqtemp = 1;
             }
-
-            AddLog(ch, "--------------------------------------------");
-            AddLog(ch, $"Zero Freq Before = {before_after_zero_freq[0]} Hz,  {before_after_zero_phase[0].ToString("F2")} dB");
-            AddLog(ch, $"Zero Freq After  = {before_after_zero_freq[1]} Hz,  {before_after_zero_phase[1].ToString("F2")} dB");
-
-            if (test_continue && (freq_val == StartFreq))
+            if (freqval == Condition.AFGMStartFreq && scancnt == 0)
             {
-                AddLog(ch, $"Error type1 : Phase over zero at 1st cycle");
-                PassFails[ch].Results[(int)SpecItem.FRAAF_GainMargin].Val = 1; //plus Gain
-                ShowDataResults(ch, (int)SpecItem.FRAAF_GainMargin, (int)SpecItem.FRAAF_GainMargin, InspType.Normal, new double[] { });
+                AddLog(ch, "Error type 1 : Gain over zero at 1st Scan");
                 DrvIC.FRAModeDisable(ch);
-                test_continue = false;
-                return;
+                res = 1;
             }
-            if(test_continue && (freq_val <= EndFreq) && (phasemargin_val <= 0))
-            {
-                AddLog(ch, $"Error type4 : No cross over point during period");
-                PassFails[ch].Results[(int)SpecItem.FRAAF_GainMargin].Val = 4; //plus Gain
-                ShowDataResults(ch, (int)SpecItem.FRAAF_GainMargin, (int)SpecItem.FRAAF_GainMargin, InspType.Normal, new double[] { });
-                DrvIC.FRAModeDisable(ch);
-                test_continue = false;
-                return;
-            }
-          
-            AddLog(ch, "\nUse Linear Interpolation");
-            AddLog(ch, "--------------------------------------------------");
-            AddLog(ch, $" {amp} amp, {freq_GM} Hz, {gain_val.ToString("F2")} dB, {phasemargin_val.ToString("F0")} deg");
-            AddLog(ch, "--------------------------------------------------");
-
-            PassFails[ch].Results[(int)SpecItem.FRAAF_GainMargin].Val = (float)(-1 * gain_val);
-            ShowDataResults(ch, (int)SpecItem.FRAAF_GainMargin, (int)SpecItem.FRAAF_GainMargin, InspType.Normal, new double[] { });
-           
+            AddLog(ch, "\r\nUse Linear Interpolation");
+            AddLog(ch, $"{1} \t {Condition.AFGMamp}\t{freq_GM[0]}\t{gainval[0].ToString("F2")}\t{pmval[0].ToString("F0")}");
             DrvIC.FRAModeDisable(ch);
-            Dln.WriteByte(ch, DrvIC.AF_Addr, 0xAE, 1, 0x00);
-            DrvIC.AF_ICReset(ch);
+            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x00 });
+            DrvIC.AK7314_IC_reset(ch);
 
-        
+            PassFails[ch].Results[(int)SpecItem.FRAAF_GainMargin].Val = Math.Abs(gainval[0]);
+            ShowDataResults(ch, (int)SpecItem.FRAAF_GainMargin, (int)SpecItem.FRAAF_GainMargin, InspType.Normal, new double[] { });
+
+
+
+
+
+            //int freq_val, freq_temp = 0, gain_temp, freq_GM = 0, old_freq;
+            //int[] before_after_zero_freq = new int[2];
+            //double gain_val = 0, phasemargin_val = 0, gainmargin_val = 0, phase_temp, pre_gm = 0;
+            //double[] before_after_zero_phase = new double[2];
+
+            //byte backup;
+            //float result;
+            //bool test_continue = true;
+
+            //byte[] rbuf3 = new byte[3];
+
+
+            //int StartFreq = Condition.AFGMStartFreq;
+            //int EndFreq = Condition.AFGMEndFreq;
+            //int Step = Condition.AFGMStep;
+            //double amp = Condition.AFGMamp;
+            //int GainTh = Condition.PMAFGainTH;
+
+
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, 0x02, 1, 0x00);
+            //DrvIC.AFMove(ch, Condition.AFPosGM); // 가이드 받으면 적용 
+            //Wait(100);
+
+            //Dln.WriteByte(ch, DrvIC.FRA_Addr, 0x00, 1, 0x01);
+            //Dln.WriteByte(ch, DrvIC.FRA_Addr, 0x00, 1, 0x00);
+            //Dln.WriteByte(ch, DrvIC.FRA_Addr, 0x6F, 1, (byte)(DrvIC.AF_Addr << 1));
+
+            //AddLog(ch, $"[AF Gain Margin test]");
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, 0x02, 1, 0x40);
+            //Wait(1);
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, 0xAE, 1, 0x3B);
+
+            //DrvIC.FRAModeEnable(ch);
+
+            //Dln.Write2Byte(ch, DrvIC.FRA_Addr, 0x52, 1, (ushort)((int)amp << 6));
+
+
+            //freq_val = StartFreq;
+            //freq_temp = freq_val * Step / 100;
+            //freq_val += freq_temp;
+            //Dln.Write2Byte(ch, DrvIC.FRA_Addr, 0x50, 1, (ushort)(freq_val << 1));
+            //Wait(30000 / freq_val + 10);
+            //Wait(100);
+            //Dln.ReadArray(ch, DrvIC.FRA_Addr, 0x94, 1, rbuf3);
+            //gain_temp = (rbuf3[0] << 16) + (rbuf3[1] << 8) + rbuf3[2];
+            //gain_val = Math.Log10(((double)gain_temp / 65536)) * 20;
+
+
+            //phase_temp = (double)Dln.Read2Byte(ch, DrvIC.FRA_Addr, 0x98, 1);
+            //phase_temp /= 128;
+            //if (phase_temp > 256) phase_temp -= 512;
+            //phasemargin_val = 180 + phase_temp;
+            //if (phasemargin_val > 180) phasemargin_val -= 360;
+            //if (phasemargin_val < -180) phasemargin_val += 360;
+
+            //AddLog(ch, "skip high freq for aging\n");
+            //AddLog(ch, $"{amp},{freq_val} Hz, {gain_val.ToString("F2")} dB, {phasemargin_val.ToString("F0")} deg\n\n");
+
+
+            //AddLog(ch, "--------------------------------------------");
+            //AddLog(ch, " Amp	Freq	Gain	P/M ");
+            //AddLog(ch, " [Dec]	[Hz]	[dB]	[deg] ");
+            //AddLog(ch, "--------------------------------------------");
+
+            //for (old_freq = freq_val = StartFreq; freq_val >= EndFreq; freq_val -= freq_temp)
+            //{
+            //    Dln.Write2Byte(ch, DrvIC.FRA_Addr, 0x50, 1, (ushort)(freq_val << 1));
+            //    Wait((int)(1000.0 / old_freq + 5000.0 / freq_val + 10));
+            //    old_freq = freq_val;
+
+            //    Dln.ReadArray(ch, DrvIC.FRA_Addr, 0x94, 1, rbuf3);
+            //    gain_temp = (rbuf3[0] << 16) + (rbuf3[1] << 8) + rbuf3[2];
+            //    gain_val = Math.Log10(((double)gain_temp / 65536)) * 20;
+
+            //    phase_temp = (double)Dln.Read2Byte(ch, DrvIC.FRA_Addr, 0x98, 1);
+            //    phase_temp /= 128;
+            //    if (phase_temp > 256) phase_temp -= 512;
+            //    phasemargin_val = 180 + phase_temp;
+            //    if (phasemargin_val > 180) phasemargin_val -= 360;
+            //    if (phasemargin_val < -180) phasemargin_val += 360;
+
+            //    AddLog(ch, $"{amp}, {freq_val}, {gain_val.ToString("F2")}, {phasemargin_val.ToString("F2")}");
+
+            //    if (phasemargin_val > 0)
+            //    {
+            //        gain_val = ((phasemargin_val * pre_gm) - (before_after_zero_phase[0] * gain_val))  / (phasemargin_val - before_after_zero_phase[0]);
+            //        freq_GM = (int)(((phasemargin_val * before_after_zero_freq[0]) - (before_after_zero_phase[0] *
+            //                         freq_val)) / (phasemargin_val - before_after_zero_phase[0]));
+
+            //        before_after_zero_freq[1] = freq_val;
+            //        before_after_zero_phase[1] = phasemargin_val;
+            //        break;
+            //    }
+            //    else
+            //    {
+            //        before_after_zero_freq[0] = freq_val;
+            //        before_after_zero_phase[0] = phasemargin_val;
+            //    }
+
+
+            //    pre_gm = gain_val;
+            //    freq_temp = freq_val * Step / 100;
+
+            //    if (freq_temp < 1) freq_temp = 1;
+            //}
+
+            //AddLog(ch, "--------------------------------------------");
+            //AddLog(ch, $"Zero Freq Before = {before_after_zero_freq[0]} Hz,  {before_after_zero_phase[0].ToString("F2")} dB");
+            //AddLog(ch, $"Zero Freq After  = {before_after_zero_freq[1]} Hz,  {before_after_zero_phase[1].ToString("F2")} dB");
+
+            //if (test_continue && (freq_val == StartFreq))
+            //{
+            //    AddLog(ch, $"Error type1 : Phase over zero at 1st cycle");
+            //    PassFails[ch].Results[(int)SpecItem.FRAAF_GainMargin].Val = 1; //plus Gain
+            //    ShowDataResults(ch, (int)SpecItem.FRAAF_GainMargin, (int)SpecItem.FRAAF_GainMargin, InspType.Normal, new double[] { });
+            //    DrvIC.FRAModeDisable(ch);
+            //    test_continue = false;
+            //    return;
+            //}
+            //if(test_continue && (freq_val <= EndFreq) && (phasemargin_val <= 0))
+            //{
+            //    AddLog(ch, $"Error type4 : No cross over point during period");
+            //    PassFails[ch].Results[(int)SpecItem.FRAAF_GainMargin].Val = 4; //plus Gain
+            //    ShowDataResults(ch, (int)SpecItem.FRAAF_GainMargin, (int)SpecItem.FRAAF_GainMargin, InspType.Normal, new double[] { });
+            //    DrvIC.FRAModeDisable(ch);
+            //    test_continue = false;
+            //    return;
+            //}
+
+            //AddLog(ch, "\nUse Linear Interpolation");
+            //AddLog(ch, "--------------------------------------------------");
+            //AddLog(ch, $" {amp} amp, {freq_GM} Hz, {gain_val.ToString("F2")} dB, {phasemargin_val.ToString("F0")} deg");
+            //AddLog(ch, "--------------------------------------------------");
+
+            //PassFails[ch].Results[(int)SpecItem.FRAAF_GainMargin].Val = (float)(-1 * gain_val);
+            //ShowDataResults(ch, (int)SpecItem.FRAAF_GainMargin, (int)SpecItem.FRAAF_GainMargin, InspType.Normal, new double[] { });
+
+            //DrvIC.FRAModeDisable(ch);
+            //Dln.WriteByte(ch, DrvIC.AF_Addr, 0xAE, 1, 0x00);
+            //DrvIC.AF_ICReset(ch);
+
+
 
         }
 

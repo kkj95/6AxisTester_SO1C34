@@ -722,6 +722,7 @@ namespace FZ4P
 
         [Spec("AF Gain Margin", "dB", InspType.Normal, "AF Gain Margin")] FRAAF_GainMargin,
         [Spec("AF Phase Margin", "deg", InspType.Normal, "AF Phase Margin")] FRAAF_PhaseMargin,
+        [Spec("AF -4dB Phase Margin", "deg", InspType.Normal, "AF Phase Margin")] FRAAF_4dB_PhaseMargin,
         [Spec("AF Loop Gain", "dB", InspType.Normal, "AF LoopGain")] AF_LoopGain,
         //   [Spec("USER> AF -4dB Phase Margin", "deg", InspType.Normal, "AF Phase Margin")] FRAAF_4dB_PhaseMargin,
         [Spec("AF OIS XTalk Calibration", "um", InspType.OnlyMax, "AF OIS XTalk Calibration")] xTaklMaxDiff,
