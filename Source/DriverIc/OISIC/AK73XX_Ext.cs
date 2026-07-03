@@ -15,7 +15,7 @@ namespace FZ4P.DriverIc.OISIC
         }
 
         #region AF Function
-        public int AF_Addr => throw new NotImplementedException();
+        public int AF_Addr => base.AFSlaveAddr;
 
         public int AF_MID_CODE => 2048;
 
@@ -39,9 +39,9 @@ namespace FZ4P.DriverIc.OISIC
         public void AFOnOff(int ch, bool isOn)
         {
             if(isOn)
-                base.AK7314_Mode(ch, 0);
-            else
                 base.AK7314_Mode(ch, 1);
+            else
+                base.AK7314_Mode(ch, 0);
         }
 
         public void AFSleep(int ch)
