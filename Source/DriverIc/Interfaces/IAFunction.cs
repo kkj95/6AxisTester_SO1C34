@@ -8,6 +8,7 @@ namespace FZ4P.DriverIc.Interfaces
 {
     public interface IAFunction
     {
+        int AF_Addr { get; }
         //ReadOnly Properties
         int AF_MID_CODE { get; }
         int AF_MIN_CODE { get; }
