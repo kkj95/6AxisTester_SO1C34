@@ -408,6 +408,8 @@ namespace FZ4P
             PropertyDescriptorCollection props = TypeDescriptor.GetProperties(Condition);
             for (int i = 0; i < props.Count; i++)
             {
+                if(DataIO.GetCustomAttribute<ActionListUseAttribute>(props[i]).InitUse) continue;
+
                 string Category = DataIO.GetCustomAttribute<ConditionAttribute>(props[i])?.Category;
                 string DisplayName = DataIO.GetCustomAttribute<ConditionAttribute>(props[i])?.DisplayName;
                 string Unit = DataIO.GetCustomAttribute<ConditionAttribute>(props[i])?.Unit;
