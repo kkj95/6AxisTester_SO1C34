@@ -613,7 +613,7 @@ namespace FZ4P
 
         [Condition("I2C", "I2C Clock", "", "", "KHz")] public int iI2Cclock { get; set; } = 400;
 
-        [Condition("AF Settling Time", "", "", "", "")] public SettlingRcp[] AFSettling { get; set; } = new SettlingRcp[50];
+        [ActionListUse(true)][Condition("AF Settling Time", "", "", "", "")] public SettlingRcp[] AFSettling { get; set; } = new SettlingRcp[50];
         public void InitAFSettling()
         {
             AFSettling = new SettlingRcp[50];
@@ -647,172 +647,172 @@ namespace FZ4P
   
     public enum SpecItem
     {
-        [Spec("AF> Mecha Stroke", "um", InspType.Normal, "AF HallCalibration")] AFMechaStroke,
-        [Spec("AF> HallCalibration", "um", InspType.Normal, "AF HallCalibration")] AF_NonEPAStroke,
-        [Spec("OIS FW Download", "", InspType.OKNG, "OIS FW Donwload")] OISFWDownload,
-        [Spec("OIS AutoBoot", "", InspType.OKNG, "OIS AutoBoot")] OISAutoBoot,
-        [Spec("XY> HallCalibration", "", InspType.OKNG, "OIS HallCalibration")] XYHallCalibration,
-        //[Spec("XY> OIS IC Mount Error", "any", InspType.Normal, "OIS IC Mount Error")] OISIMERes,
-        //[Spec("XY> OIS XYZ Temperature", "any", InspType.Normal, "OIS XYZ Temperature")] TempRes,
-        [Spec("XY> OIS XYZ aging", "OK/NG", InspType.Normal, "OIS XYZ Aging")] XYZAging,
-        [Spec("XY> LinearCompensation", "any", InspType.Normal, "OIS LinearityCompensation")] XYLinearComp,
-        [Spec("XY> X Decenter", "um", InspType.Normal, "X/Y Servo Decenter")] x_ServoDecenter,
-        [Spec("XY> Y Decenter", "um", InspType.Normal, "X/Y Servo Decenter")] y_ServoDecenter,
-        //[Spec("XY> OIS X OpenLoop", "any", InspType.Normal, "OIS X/Y OpenLoop")] OLTestXResult,
-        //[Spec("XY> OIS Y OpenLoop", "any", InspType.Normal, "OIS X/Y OpenLoop")] OLTestYResult,
-        //[Spec("XY> OIS AutoTest", "any", InspType.Normal, "Auto Test")] AutoTestRes,
+        [ActionListUse(true)][Spec("AF> Mecha Stroke", "um", InspType.Normal, "AF HallCalibration")] AFMechaStroke,
+        [ActionListUse(true)][Spec("AF> HallCalibration", "um", InspType.Normal, "AF HallCalibration")] AF_NonEPAStroke,
+        [ActionListUse(true)][Spec("OIS FW Download", "", InspType.OKNG, "OIS FW Donwload")] OISFWDownload,
+        [ActionListUse(true)][Spec("OIS AutoBoot", "", InspType.OKNG, "OIS AutoBoot")] OISAutoBoot,
+        [ActionListUse(true)][Spec("XY> HallCalibration", "", InspType.OKNG, "OIS HallCalibration")] XYHallCalibration,
+        //[ActionListUse(true)][Spec("XY> OIS IC Mount Error", "any", InspType.Normal, "OIS IC Mount Error")] OISIMERes,
+        //[ActionListUse(true)][Spec("XY> OIS XYZ Temperature", "any", InspType.Normal, "OIS XYZ Temperature")] TempRes,
+        [ActionListUse(true)][Spec("XY> OIS XYZ aging", "OK/NG", InspType.Normal, "OIS XYZ Aging")] XYZAging,
+        [ActionListUse(true)][Spec("XY> LinearCompensation", "any", InspType.Normal, "OIS LinearityCompensation")] XYLinearComp,
+        [ActionListUse(true)][Spec("XY> X Decenter", "um", InspType.Normal, "X/Y Servo Decenter")] x_ServoDecenter,
+        [ActionListUse(true)][Spec("XY> Y Decenter", "um", InspType.Normal, "X/Y Servo Decenter")] y_ServoDecenter,
+        //[ActionListUse(true)][Spec("XY> OIS X OpenLoop", "any", InspType.Normal, "OIS X/Y OpenLoop")] OLTestXResult,
+        //[ActionListUse(true)][Spec("XY> OIS Y OpenLoop", "any", InspType.Normal, "OIS X/Y OpenLoop")] OLTestYResult,
+        //[ActionListUse(true)][Spec("XY> OIS AutoTest", "any", InspType.Normal, "Auto Test")] AutoTestRes,
 
-      //  [Spec("USER> OIS Sensitivity test", "No.", InspType.Normal, "OIS Sensitivity Test")] OISSensitivityTestRes,
-        [Spec("USER> AF Aging", "any", InspType.OnlyMax, "AF Aging")] AFScanAging,
+        //  [ActionListUse(true)][Spec("USER> OIS Sensitivity test", "No.", InspType.Normal, "OIS Sensitivity Test")] OISSensitivityTestRes,
+        [ActionListUse(true)][Spec("USER> AF Aging", "any", InspType.OnlyMax, "AF Aging")] AFScanAging,
 
-        [Spec("AF> Displacement Range", "um", InspType.Normal, "AF Scan")] AF_Ratedstroke,
-        [Spec("AF> Displacement Min", "um", InspType.OnlyMax, "AF Scan")] AF_Backwardstroke,
-        [Spec("AF> Displacement Max", "um", InspType.OnlyMin, "AF Scan")] AF_Forwardstroke,
-        [Spec("AF> Hysteresis", "um", InspType.OnlyMax, "AF Scan")] AF_Hysteresis,
-        [Spec("AF> Linearity(R)", "um", InspType.OnlyMax, "AF Scan")] AF_Linearity,
-        [Spec("AF> Current", "mA", InspType.MintoMax, "AF Scan")] AF_Current,
-        [Spec("AF> Tilt", "min", InspType.Normal, "AF Scan")] AF_Tilt,
-        [Spec("AF> DynamicTilt(Regional)", "min", InspType.Normal, "AF Scan")] AF_DynamicTilt_Regional,
-        [Spec("AF> Hall Shift Verify", "OK/NG", InspType.OKNG, "X/Y Drift Test")] HallShiftVerify,
+        [ActionListUse(true)][Spec("AF> Displacement Range", "um", InspType.Normal, "AF Scan")] AF_Ratedstroke,
+        [ActionListUse(true)][Spec("AF> Displacement Min", "um", InspType.OnlyMax, "AF Scan")] AF_Backwardstroke,
+        [ActionListUse(true)][Spec("AF> Displacement Max", "um", InspType.OnlyMin, "AF Scan")] AF_Forwardstroke,
+        [ActionListUse(true)][Spec("AF> Hysteresis", "um", InspType.OnlyMax, "AF Scan")] AF_Hysteresis,
+        [ActionListUse(true)][Spec("AF> Linearity(R)", "um", InspType.OnlyMax, "AF Scan")] AF_Linearity,
+        [ActionListUse(true)][Spec("AF> Current", "mA", InspType.MintoMax, "AF Scan")] AF_Current,
+        [ActionListUse(true)][Spec("AF> Tilt", "min", InspType.Normal, "AF Scan")] AF_Tilt,
+        [ActionListUse(true)][Spec("AF> DynamicTilt(Regional)", "min", InspType.Normal, "AF Scan")] AF_DynamicTilt_Regional,
+        [ActionListUse(true)][Spec("AF> Hall Shift Verify", "OK/NG", InspType.OKNG, "X/Y Drift Test")] HallShiftVerify,
 
-        [Spec("AF Rated Stroke", "um", InspType.Normal, "AF Rated Stroke")] AF_Ratedstroke2,
-        [Spec("AF Sensitivity", "um/code", InspType.Normal, "AF Rated Stroke")] AFSensitivity,
+        [ActionListUse(true)][Spec("AF Rated Stroke", "um", InspType.Normal, "AF Rated Stroke")] AF_Ratedstroke2,
+        [ActionListUse(true)][Spec("AF Sensitivity", "um/code", InspType.Normal, "AF Rated Stroke")] AFSensitivity,
 
-        [Spec("X> Displacement Range", "um", InspType.Normal, "OIS X Scan")] OISX_Ratedstroke,
-        [Spec("X> Displacement Min", "um", InspType.OnlyMax, "OIS X Scan")] OISX_Backwardstroke,
-        [Spec("X> Displacement Max", "um", InspType.OnlyMin, "OIS X Scan")] OISX_Forwardstroke,
-        [Spec("X> Hysteresis", "um", InspType.OnlyMax, "OIS X Scan")] OISX_Hysteresis,      
-        [Spec("X> Linearity(R)", "um", InspType.OnlyMax, "OIS X Scan")] OISX_Linearity,
-        [Spec("X> Current", "mA", InspType.MintoMax, "OIS X Scan")] OISX_Current,
-        [Spec("X> Xy crosstalk", "um", InspType.OnlyMax, "OIS X Scan")] OISX_xTalk,
-        [Spec("X> Hall Decenter(Centering Error)", "um", InspType.Normal, "OIS X Scan")] x_HallDecenter,
-        [Spec("X> Sensitivity", "um/code", InspType.Normal, "OIS X Scan")] x_Sensitivity,
-        [Spec("X> Dynamic Tilt", "min", InspType.Normal, "OIS X Scan")] xDynamicTilt,
+        [ActionListUse(true)][Spec("X> Displacement Range", "um", InspType.Normal, "OIS X Scan")] OISX_Ratedstroke,
+        [ActionListUse(true)][Spec("X> Displacement Min", "um", InspType.OnlyMax, "OIS X Scan")] OISX_Backwardstroke,
+        [ActionListUse(true)][Spec("X> Displacement Max", "um", InspType.OnlyMin, "OIS X Scan")] OISX_Forwardstroke,
+        [ActionListUse(true)][Spec("X> Hysteresis", "um", InspType.OnlyMax, "OIS X Scan")] OISX_Hysteresis,
+        [ActionListUse(true)][Spec("X> Linearity(R)", "um", InspType.OnlyMax, "OIS X Scan")] OISX_Linearity,
+        [ActionListUse(true)][Spec("X> Current", "mA", InspType.MintoMax, "OIS X Scan")] OISX_Current,
+        [ActionListUse(true)][Spec("X> Xy crosstalk", "um", InspType.OnlyMax, "OIS X Scan")] OISX_xTalk,
+        [ActionListUse(true)][Spec("X> Hall Decenter(Centering Error)", "um", InspType.Normal, "OIS X Scan")] x_HallDecenter,
+        [ActionListUse(true)][Spec("X> Sensitivity", "um/code", InspType.Normal, "OIS X Scan")] x_Sensitivity,
+        [ActionListUse(true)][Spec("X> Dynamic Tilt", "min", InspType.Normal, "OIS X Scan")] xDynamicTilt,
 
-        [Spec("Y> Displacement Range", "um", InspType.Normal, "OIS Y Scan")] OISY_Ratedstroke,
-        [Spec("Y> Displacement Min", "um", InspType.OnlyMax, "OIS Y Scan")] OISY_Backwardstroke,
-        [Spec("Y> Displacement Max", "um", InspType.OnlyMin, "OIS Y Scan")] OISY_Forwardstroke,
-        [Spec("Y> Hysteresis", "um", InspType.OnlyMax, "OIS Y Scan")] OISY_Hysteresis,
-        [Spec("Y> Linearity(R)", "um", InspType.OnlyMax, "OIS Y Scan")] OISY_Linearity,
-        [Spec("Y> Current", "mA", InspType.MintoMax, "OIS Y Scan")] OISY_Current,
-        [Spec("Y> Yx crosstalk", "um", InspType.OnlyMax, "OIS Y Scan")] OISY_xTalk,
-        [Spec("Y> Hall Decenter(Centering Error)", "um", InspType.Normal, "OIS Y Scan")] y_HallDecenter,
-        [Spec("Y> Sensitivity", "um/code", InspType.Normal, "OIS Y Scan")] y_Sensitivity,
-        [Spec("Y> Dynamic Tilt", "min", InspType.Normal, "OIS Y Scan")] yDynamicTilt,
-        //[Spec("USER> X Through Peak 25", "dB", InspType.OnlyMax, "through Peak 25")] ThroughPeak_X_Gain,
-        //[Spec("USER> Y Through Peak 25", "dB", InspType.OnlyMax, "through Peak 25")] ThroughPeak_Y_Gain,
+        [ActionListUse(true)][Spec("Y> Displacement Range", "um", InspType.Normal, "OIS Y Scan")] OISY_Ratedstroke,
+        [ActionListUse(true)][Spec("Y> Displacement Min", "um", InspType.OnlyMax, "OIS Y Scan")] OISY_Backwardstroke,
+        [ActionListUse(true)][Spec("Y> Displacement Max", "um", InspType.OnlyMin, "OIS Y Scan")] OISY_Forwardstroke,
+        [ActionListUse(true)][Spec("Y> Hysteresis", "um", InspType.OnlyMax, "OIS Y Scan")] OISY_Hysteresis,
+        [ActionListUse(true)][Spec("Y> Linearity(R)", "um", InspType.OnlyMax, "OIS Y Scan")] OISY_Linearity,
+        [ActionListUse(true)][Spec("Y> Current", "mA", InspType.MintoMax, "OIS Y Scan")] OISY_Current,
+        [ActionListUse(true)][Spec("Y> Yx crosstalk", "um", InspType.OnlyMax, "OIS Y Scan")] OISY_xTalk,
+        [ActionListUse(true)][Spec("Y> Hall Decenter(Centering Error)", "um", InspType.Normal, "OIS Y Scan")] y_HallDecenter,
+        [ActionListUse(true)][Spec("Y> Sensitivity", "um/code", InspType.Normal, "OIS Y Scan")] y_Sensitivity,
+        [ActionListUse(true)][Spec("Y> Dynamic Tilt", "min", InspType.Normal, "OIS Y Scan")] yDynamicTilt,
+        //[ActionListUse(true)][Spec("USER> X Through Peak 25", "dB", InspType.OnlyMax, "through Peak 25")] ThroughPeak_X_Gain,
+        //[ActionListUse(true)][Spec("USER> Y Through Peak 25", "dB", InspType.OnlyMax, "through Peak 25")] ThroughPeak_Y_Gain,
 
-        [Spec("OIS X Phase Margin", "deg", InspType.Normal, "OIS Phase Margin")] FRAX_PhaseMargin,
-        [Spec("OIS Y Phase Margin", "deg", InspType.Normal, "OIS Phase Margin")] FRAY_PhaseMargin,
-        [Spec("OIS X Gain Margin", "dB", InspType.Normal, "OIS Gain Margin")] FRAX_GainMargin,
-        [Spec("OIS Y Gain Margin", "dB", InspType.Normal, "OIS Gain Margin")] FRAY_GainMargin,
-        [Spec("OIS X Phase Margin Low", "deg", InspType.Normal, "OIS Phase Margin Low")] FRAX_PhaseMarginLow,
-        [Spec("OIS Y Phase Margin Low", "deg", InspType.Normal, "OIS Phase Margin Low")] FRAY_PhaseMarginLow,
-        [Spec("OIS X Gain Margin Low", "dB", InspType.Normal, "OIS Gain Margin Low")] FRAX_GainMarginLow,
-        [Spec("OIS Y Gain Margin Low", "dB", InspType.Normal, "OIS Gain Margin Low")] FRAY_GainMarginLow,
+        [ActionListUse(true)][Spec("OIS X Phase Margin", "deg", InspType.Normal, "OIS Phase Margin")] FRAX_PhaseMargin,
+        [ActionListUse(true)][Spec("OIS Y Phase Margin", "deg", InspType.Normal, "OIS Phase Margin")] FRAY_PhaseMargin,
+        [ActionListUse(true)][Spec("OIS X Gain Margin", "dB", InspType.Normal, "OIS Gain Margin")] FRAX_GainMargin,
+        [ActionListUse(true)][Spec("OIS Y Gain Margin", "dB", InspType.Normal, "OIS Gain Margin")] FRAY_GainMargin,
+        [ActionListUse(true)][Spec("OIS X Phase Margin Low", "deg", InspType.Normal, "OIS Phase Margin Low")] FRAX_PhaseMarginLow,
+        [ActionListUse(true)][Spec("OIS Y Phase Margin Low", "deg", InspType.Normal, "OIS Phase Margin Low")] FRAY_PhaseMarginLow,
+        [ActionListUse(true)][Spec("OIS X Gain Margin Low", "dB", InspType.Normal, "OIS Gain Margin Low")] FRAX_GainMarginLow,
+        [ActionListUse(true)][Spec("OIS Y Gain Margin Low", "dB", InspType.Normal, "OIS Gain Margin Low")] FRAY_GainMarginLow,
 
-        [Spec("OIS X SineWave", "code", InspType.Normal, "OIS X SineWave")] FRAX_SineWave,
-        [Spec("OIS Y SineWave", "code", InspType.Normal, "OIS Y SineWave")] FRAY_SineWave,
+        [ActionListUse(true)][Spec("OIS X SineWave", "code", InspType.Normal, "OIS X SineWave")] FRAX_SineWave,
+        [ActionListUse(true)][Spec("OIS Y SineWave", "code", InspType.Normal, "OIS Y SineWave")] FRAY_SineWave,
 
-        [Spec("OIS X Ringing", "cnt", InspType.Normal, "OIS X Ringing")] FRAX_Ringing,
-        [Spec("OIS Y Ringing", "cnt", InspType.Normal, "OIS X Ringing")] FRAY_Ringing,
+        [ActionListUse(true)][Spec("OIS X Ringing", "cnt", InspType.Normal, "OIS X Ringing")] FRAX_Ringing,
+        [ActionListUse(true)][Spec("OIS Y Ringing", "cnt", InspType.Normal, "OIS X Ringing")] FRAY_Ringing,
 
-        [Spec("OIS X Loop Gain", "dB", InspType.Normal, "OIS LoopGain")] FRAX_LoopGain,
-        [Spec("OIS Y Loop Gain", "dB", InspType.Normal, "OIS LoopGain")] FRAY_LoopGain,
+        [ActionListUse(true)][Spec("OIS X Loop Gain", "dB", InspType.Normal, "OIS LoopGain")] FRAX_LoopGain,
+        [ActionListUse(true)][Spec("OIS Y Loop Gain", "dB", InspType.Normal, "OIS LoopGain")] FRAY_LoopGain,
 
-        [Spec("AF Gain Margin", "dB", InspType.Normal, "AF Gain Margin")] FRAAF_GainMargin,
-        [Spec("AF Phase Margin", "deg", InspType.Normal, "AF Phase Margin")] FRAAF_PhaseMargin,
-        [Spec("AF -4dB Phase Margin", "deg", InspType.Normal, "AF Phase Margin")] FRAAF_4dB_PhaseMargin,
-        [Spec("AF Loop Gain", "dB", InspType.Normal, "AF LoopGain")] AF_LoopGain,
-        //   [Spec("USER> AF -4dB Phase Margin", "deg", InspType.Normal, "AF Phase Margin")] FRAAF_4dB_PhaseMargin,
-        [Spec("AF OIS XTalk Calibration", "um", InspType.OnlyMax, "AF OIS XTalk Calibration")] xTaklMaxDiff,
-        [Spec("OIS Linear/Crosstalk Calibration", "", InspType.OKNG, "OIS Linear/Crosstalk Calibration")] OISLCCComp,
+        [ActionListUse(true)][Spec("AF Gain Margin", "dB", InspType.Normal, "AF Gain Margin")] FRAAF_GainMargin,
+        [ActionListUse(true)][Spec("AF Phase Margin", "deg", InspType.Normal, "AF Phase Margin")] FRAAF_PhaseMargin,
+        [ActionListUse(true)][Spec("AF -4dB Phase Margin", "deg", InspType.Normal, "AF Phase Margin")] FRAAF_4dB_PhaseMargin,
+        [ActionListUse(true)][Spec("AF Loop Gain", "dB", InspType.Normal, "AF LoopGain")] AF_LoopGain,
+        //   [ActionListUse(true)][Spec("USER> AF -4dB Phase Margin", "deg", InspType.Normal, "AF Phase Margin")] FRAAF_4dB_PhaseMargin,
+        [ActionListUse(true)][Spec("AF OIS XTalk Calibration", "um", InspType.OnlyMax, "AF OIS XTalk Calibration")] xTaklMaxDiff,
+        [ActionListUse(true)][Spec("OIS Linear/Crosstalk Calibration", "", InspType.OKNG, "OIS Linear/Crosstalk Calibration")] OISLCCComp,
 
-        [Spec("X Decenter Cal", "code", InspType.Normal, "OIS Decenter Calibration")] OISXDecenterCal,
-        [Spec("Y Decenter Cal", "code", InspType.Normal, "OIS Decenter Calibration")] OISYDecenterCal,
-       
-        [Spec("AF HAT Diff(M-m)", "code", InspType.OnlyMax, "AF HAT")] AFHAT_Diff,
-        [Spec("AF HAT Diff(Max Error)", "code", InspType.OnlyMax, "AF HAT")] AFHAT_Diff_MaxError,
-        [Spec("OIS X HAT Diff(M-m)", "code", InspType.OnlyMax, "OIS HAT")] OISXHAT_Diff,
-        [Spec("OIS X HAT Diff(Max Error)", "code", InspType.OnlyMax, "OIS HAT")] OISXHAT_Diff_MaxError,
-        [Spec("OIS Y HAT Diff(M-m)", "code", InspType.OnlyMax, "OIS HAT")] OISYHAT_Diff,
-        [Spec("OIS Y HAT Diff(Max Error)", "code", InspType.OnlyMax, "OIS HAT")] OISYHAT_Diff_MaxError,
+        [ActionListUse(true)][Spec("X Decenter Cal", "code", InspType.Normal, "OIS Decenter Calibration")] OISXDecenterCal,
+        [ActionListUse(true)][Spec("Y Decenter Cal", "code", InspType.Normal, "OIS Decenter Calibration")] OISYDecenterCal,
 
-        [Spec("AF RunUp 50ms Diff", "code", InspType.OnlyMax, "AF RunUp Test")] AF_Diff_50ms,
-        [Spec("AF RunUp 100ms Diff", "code", InspType.OnlyMax, "AF RunUp Test")] AF_Diff_100ms,
-        [Spec("AF RunUp 150ms Diff", "code", InspType.OnlyMax, "AF RunUp Test")] AF_Diff_150ms,
+        [ActionListUse(true)][Spec("AF HAT Diff(M-m)", "code", InspType.OnlyMax, "AF HAT")] AFHAT_Diff,
+        [ActionListUse(true)][Spec("AF HAT Diff(Max Error)", "code", InspType.OnlyMax, "AF HAT")] AFHAT_Diff_MaxError,
+        [ActionListUse(true)][Spec("OIS X HAT Diff(M-m)", "code", InspType.OnlyMax, "OIS HAT")] OISXHAT_Diff,
+        [ActionListUse(true)][Spec("OIS X HAT Diff(Max Error)", "code", InspType.OnlyMax, "OIS HAT")] OISXHAT_Diff_MaxError,
+        [ActionListUse(true)][Spec("OIS Y HAT Diff(M-m)", "code", InspType.OnlyMax, "OIS HAT")] OISYHAT_Diff,
+        [ActionListUse(true)][Spec("OIS Y HAT Diff(Max Error)", "code", InspType.OnlyMax, "OIS HAT")] OISYHAT_Diff_MaxError,
 
-        [Spec("OIS X RunUp Diff", "code", InspType.OnlyMax, "OIS RunUp Test")] OISX_Diff_ms,
-        //[Spec("OIS X RunUp 100ms Diff", "code", InspType.OnlyMax, "OIS RunUp Test")] OISX_Diff_100ms,
-        //[Spec("OIS X RunUp 150ms Diff", "code", InspType.OnlyMax, "OIS RunUp Test")] OISX_Diff_150ms,
+        [ActionListUse(true)][Spec("AF RunUp 50ms Diff", "code", InspType.OnlyMax, "AF RunUp Test")] AF_Diff_50ms,
+        [ActionListUse(true)][Spec("AF RunUp 100ms Diff", "code", InspType.OnlyMax, "AF RunUp Test")] AF_Diff_100ms,
+        [ActionListUse(true)][Spec("AF RunUp 150ms Diff", "code", InspType.OnlyMax, "AF RunUp Test")] AF_Diff_150ms,
 
-        [Spec("OIS Y RunUp Diff", "code", InspType.OnlyMax, "OIS RunUp Test")] OISY_Diff_ms,
-        //[Spec("OIS Y RunUp 100ms Diff", "code", InspType.OnlyMax, "OIS RunUp Test")] OISY_Diff_100ms,
-        //[Spec("OIS Y RunUp 150ms Diff", "code", InspType.OnlyMax, "OIS RunUp Test")] OISY_Diff_150ms,
+        [ActionListUse(true)][Spec("OIS X RunUp Diff", "code", InspType.OnlyMax, "OIS RunUp Test")] OISX_Diff_ms,
+        //[ActionListUse(true)][Spec("OIS X RunUp 100ms Diff", "code", InspType.OnlyMax, "OIS RunUp Test")] OISX_Diff_100ms,
+        //[ActionListUse(true)][Spec("OIS X RunUp 150ms Diff", "code", InspType.OnlyMax, "OIS RunUp Test")] OISX_Diff_150ms,
 
-        [Spec("Xy Crosstalk2", "%", InspType.OnlyMax, "OIS Xtalk 2")] XyCrosstalk2,
-        [Spec("Yx Crosstalk2", "%", InspType.OnlyMax, "OIS Xtalk 2")] YxCrosstalk2,
+        [ActionListUse(true)][Spec("OIS Y RunUp Diff", "code", InspType.OnlyMax, "OIS RunUp Test")] OISY_Diff_ms,
+        //[ActionListUse(true)][Spec("OIS Y RunUp 100ms Diff", "code", InspType.OnlyMax, "OIS RunUp Test")] OISY_Diff_100ms,
+        //[ActionListUse(true)][Spec("OIS Y RunUp 150ms Diff", "code", InspType.OnlyMax, "OIS RunUp Test")] OISY_Diff_150ms,
 
-        [Spec("AF Fluctuation", "um", InspType.Normal, "AF Fluctuation")] AFfluctuation,
-        [Spec("OIS X Fluctuation", "um", InspType.Normal, "OIS X Fluctuation")] Xfluctuation,
-        [Spec("OIS Y Fluctuation", "um", InspType.Normal, "OIS Y Fluctuation")] Yfluctuation,
+        [ActionListUse(true)][Spec("Xy Crosstalk2", "%", InspType.OnlyMax, "OIS Xtalk 2")] XyCrosstalk2,
+        [ActionListUse(true)][Spec("Yx Crosstalk2", "%", InspType.OnlyMax, "OIS Xtalk 2")] YxCrosstalk2,
 
-
-        [Spec("AF> Stabilize Time 1", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime1,
-        [Spec("AF> Stabilize Time 2", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime2,
-        [Spec("AF> Stabilize Time 3", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime3,
-        [Spec("AF> Stabilize Time 4", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime4,
-        [Spec("AF> Stabilize Time 5", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime5,
-        [Spec("AF> Stabilize Time 6", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime6,
-        [Spec("AF> Stabilize Time 7", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime7,
-        [Spec("AF> Stabilize Time 8", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime8,
-        [Spec("AF> Stabilize Time 9", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime9,
-        [Spec("AF> Stabilize Time 10", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime10,
-        [Spec("AF> Stabilize Time 11", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime11,
-        [Spec("AF> Stabilize Time 12", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime12,
-        [Spec("AF> Stabilize Time 13", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime13,
-        [Spec("AF> Stabilize Time 14", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime14,
-        [Spec("AF> Stabilize Time 15", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime15,
-        [Spec("AF> Stabilize Time 16", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime16,
-        [Spec("AF> Stabilize Time 17", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime17,
-        [Spec("AF> Stabilize Time 18", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime18,
-        [Spec("AF> Stabilize Time 19", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime19,
-        [Spec("AF> Stabilize Time 20", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime20,
-        [Spec("AF> Stabilize Time 21", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime21,
-        [Spec("AF> Stabilize Time 22", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime22,
-        [Spec("AF> Stabilize Time 23", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime23,
-        [Spec("AF> Stabilize Time 24", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime24,
-        [Spec("AF> Stabilize Time 25", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime25,
-        [Spec("AF> Stabilize Time 26", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime26,
-        [Spec("AF> Stabilize Time 27", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime27,
-        [Spec("AF> Stabilize Time 28", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime28,
-        [Spec("AF> Stabilize Time 29", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime29,
-        [Spec("AF> Stabilize Time 30", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime30,
-        [Spec("AF> Stabilize Time 31", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime31,
-        [Spec("AF> Stabilize Time 32", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime32,
-        [Spec("AF> Stabilize Time 33", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime33,
-        [Spec("AF> Stabilize Time 34", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime34,
-        [Spec("AF> Stabilize Time 35", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime35,
-        [Spec("AF> Stabilize Time 36", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime36,
-        [Spec("AF> Stabilize Time 37", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime37,
-        [Spec("AF> Stabilize Time 38", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime38,
-        [Spec("AF> Stabilize Time 39", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime39,
-        [Spec("AF> Stabilize Time 40", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime40,
-        [Spec("AF> Stabilize Time 41", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime41,
-        [Spec("AF> Stabilize Time 42", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime42,
-        [Spec("AF> Stabilize Time 43", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime43,
-        [Spec("AF> Stabilize Time 44", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime44,
-        [Spec("AF> Stabilize Time 45", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime45,
-        [Spec("AF> Stabilize Time 46", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime46,
-        [Spec("AF> Stabilize Time 47", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime47,
-        [Spec("AF> Stabilize Time 48", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime48,
-        [Spec("AF> Stabilize Time 49", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime49,
-        [Spec("AF> Stabilize Time 50", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime50,
-      
+        [ActionListUse(true)][Spec("AF Fluctuation", "um", InspType.Normal, "AF Fluctuation")] AFfluctuation,
+        [ActionListUse(true)][Spec("OIS X Fluctuation", "um", InspType.Normal, "OIS X Fluctuation")] Xfluctuation,
+        [ActionListUse(true)][Spec("OIS Y Fluctuation", "um", InspType.Normal, "OIS Y Fluctuation")] Yfluctuation,
 
 
-        [Spec("AF PID Verify", "any", InspType.Normal, "AF PID Verify")] AFPIDVerifyRes,
-      //  [Spec("USER> OIS PID Verify", "any", InspType.Normal, "OIS PID Verify")] OISPIDVerifyRes,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 1", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime1,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 2", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime2,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 3", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime3,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 4", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime4,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 5", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime5,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 6", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime6,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 7", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime7,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 8", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime8,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 9", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime9,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 10", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime10,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 11", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime11,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 12", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime12,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 13", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime13,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 14", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime14,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 15", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime15,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 16", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime16,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 17", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime17,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 18", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime18,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 19", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime19,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 20", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime20,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 21", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime21,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 22", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime22,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 23", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime23,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 24", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime24,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 25", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime25,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 26", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime26,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 27", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime27,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 28", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime28,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 29", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime29,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 30", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime30,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 31", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime31,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 32", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime32,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 33", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime33,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 34", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime34,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 35", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime35,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 36", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime36,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 37", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime37,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 38", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime38,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 39", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime39,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 40", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime40,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 41", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime41,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 42", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime42,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 43", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime43,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 44", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime44,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 45", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime45,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 46", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime46,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 47", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime47,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 48", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime48,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 49", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime49,
+        [ActionListUse(true)][Spec("AF> Stabilize Time 50", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime50,
+
+
+
+        [ActionListUse(true)][Spec("AF PID Verify", "any", InspType.Normal, "AF PID Verify")] AFPIDVerifyRes,
+        //  [ActionListUse( true)][Spec("USER> OIS PID Verify", "any", InspType.Normal, "OIS PID Verify")] OISPIDVerifyRes,
 
         Length,
 
@@ -823,16 +823,19 @@ namespace FZ4P
         public List<SpecArray> specList { get; set; } = new List<SpecArray>();
         public void InitSpecList()
         {
+            int useIndex = 0;
             specList.Clear();
             for (int i = 0; i < (int)SpecItem.Length; i++)
             {
                 SpecItem s = (SpecItem)i;
+                if (!(bool)DataIO.GetEnumArttribute<ActionListUseAttribute>(s)?.InitUse) continue;
                 specList.Add(new SpecArray());
               
-                specList[i].Unit = DataIO.GetEnumArttribute<SpecAttribute>(s)?.Unit;
-                specList[i].DisplayName = DataIO.GetEnumArttribute<SpecAttribute>(s)?.DisplayName;
-                specList[i].InspectionType = (InspType)DataIO.GetEnumArttribute<SpecAttribute>(s)?.InspType;
-                specList[i].Category = DataIO.GetEnumArttribute<SpecAttribute>(s)?.Category;
+                specList[useIndex].Unit = DataIO.GetEnumArttribute<SpecAttribute>(s)?.Unit;
+                specList[useIndex].DisplayName = DataIO.GetEnumArttribute<SpecAttribute>(s)?.DisplayName;
+                specList[useIndex].InspectionType = (InspType)DataIO.GetEnumArttribute<SpecAttribute>(s)?.InspType;
+                specList[useIndex].Category = DataIO.GetEnumArttribute<SpecAttribute>(s)?.Category;
+                useIndex++;
             }
         }
 
@@ -1049,6 +1052,18 @@ namespace FZ4P
             InspType = type;
         }
     }
+
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
+    public sealed class ActionListUseAttribute : Attribute
+    {
+        public bool InitUse { get; set; } = true;
+
+        public ActionListUseAttribute(bool used)
+        {
+            InitUse = used;
+        }
+    }
+
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
     public sealed class CommonAttribute : Attribute
     {

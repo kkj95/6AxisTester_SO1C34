@@ -165,7 +165,7 @@ namespace FZ4P
             ItemList.Add(new ActItems() { Name = "AF Scan", Func = Act_ScanCode });
             ItemList.Add(new ActItems() { Name = "OIS X Scan", Func = Act_ScanCode });
             ItemList.Add(new ActItems() { Name = "OIS Y Scan", Func = Act_ScanCode });
-            ItemList.Add(new ActItems() { Name = "AF Settling", Func = Act_ScanTimeCode });
+            ///ItemList.Add(new ActItems() { Name = "AF Settling", Func = Act_ScanTimeCode });
            
             AddSequence();
 

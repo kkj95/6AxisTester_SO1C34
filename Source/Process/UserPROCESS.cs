@@ -42,37 +42,37 @@ namespace FZ4P
         void AddSequence()
         {
             ItemList.Add(new ActItems() { Name = "AF HallCalibration", Func = AF_HallCalibration, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "AF Only HallCalibration", Func = AF_OnlyHallCalibration, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "OIS FW Donwload", Func = OIS_FWDownload, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "OIS AutoBoot", Func = OIS_AutoBoot, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "OIS HallCalibration", Func = OIS_HallCalibration, IsMulti = true });           
-            ItemList.Add(new ActItems() { Name = "XYZ Aging", Func = Act_CloseLoopAging });
-            ItemList.Add(new ActItems() { Name = "X/Y Servo Decenter", Func = ServoDecenter, IsMulti = true });      
-            ItemList.Add(new ActItems() { Name = "AF Aging", Func = Act_AFScanAging });
-            ItemList.Add(new ActItems() { Name = "AF Pre Driving", Func = Act_PreAFDriving });       
+            ///ItemList.Add(new ActItems() { Name = "AF Only HallCalibration", Func = AF_OnlyHallCalibration, IsMulti = true });
+            ///ItemList.Add(new ActItems() { Name = "OIS FW Donwload", Func = OIS_FWDownload, IsMulti = true });
+            ///ItemList.Add(new ActItems() { Name = "OIS AutoBoot", Func = OIS_AutoBoot, IsMulti = true });
+            ItemList.Add(new ActItems() { Name = "OIS HallCalibration", Func = OIS_HallCalibration, IsMulti = true });
+            ///ItemList.Add(new ActItems() { Name = "XYZ Aging", Func = Act_CloseLoopAging });
+            ///ItemList.Add(new ActItems() { Name = "X/Y Servo Decenter", Func = ServoDecenter, IsMulti = true });      
+            ///ItemList.Add(new ActItems() { Name = "AF Aging", Func = Act_AFScanAging });
+            ///ItemList.Add(new ActItems() { Name = "AF Pre Driving", Func = Act_PreAFDriving });       
             ItemList.Add(new ActItems() { Name = "AF Gain Margin", Func = AFGM, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "AF Phase Margin", Func = AFPM, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "AF PID Verify", Func = AFPID_Verify, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "AF OIS XTalk Calibration", Func = AF_OIS_Xtalk_Calibration, IsMulti = true });
+            ///ItemList.Add(new ActItems() { Name = "AF PID Verify", Func = AFPID_Verify, IsMulti = true });
+            ///ItemList.Add(new ActItems() { Name = "AF OIS XTalk Calibration", Func = AF_OIS_Xtalk_Calibration, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "OIS Linear/Crosstalk Calibration", Func = OISLCCComp, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "OIS Gain Margin", Func = OISGM, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "OIS Phase Margin", Func = OISPM, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "OIS Gain Margin Low", Func = OISGM_LOW, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "OIS Phase Margin Low", Func = OISPM_LOW, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "OIS Decenter Calibration", Func = OIS_Decenter_Calibration, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "AF Rated Stroke", Func = AFRatedStroke, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "AF HAT", Func = AF_HAT, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "OIS HAT(Hall read)", Func = OIS_HAT, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "OIS HAT(Rohm cmd)", Func = OIS_HAT2, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "AF RunUp Test", Func = AFRunUp, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "OIS RunUp Test", Func = OISRunUp, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "AF LoopGain", Func = AFLoopGain, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "OIS LoopGain", Func = OISLoopGain, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "OIS Xtalk 2", Func = Xtalk2, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "AF Fluctuation", Func = AFFluctuation, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "OIS X Fluctuation", Func = OISXFluctuation, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "OIS Y Fluctuation", Func = OISYFluctuation, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "Verify AF_OIS Xtalk", Func = AF_OIS_Xtalk_Verify, IsMulti = true });
+            ///ItemList.Add(new ActItems() { Name = "OIS Decenter Calibration", Func = OIS_Decenter_Calibration, IsMulti = true });
+            ///ItemList.Add(new ActItems() { Name = "AF Rated Stroke", Func = AFRatedStroke, IsMulti = true });
+            ///ItemList.Add(new ActItems() { Name = "AF HAT", Func = AF_HAT, IsMulti = true });
+            ///ItemList.Add(new ActItems() { Name = "OIS HAT(Hall read)", Func = OIS_HAT, IsMulti = true });
+            ///ItemList.Add(new ActItems() { Name = "OIS HAT(Rohm cmd)", Func = OIS_HAT2, IsMulti = true });
+            ///ItemList.Add(new ActItems() { Name = "AF RunUp Test", Func = AFRunUp, IsMulti = true });
+            ///ItemList.Add(new ActItems() { Name = "OIS RunUp Test", Func = OISRunUp, IsMulti = true });
+            ///ItemList.Add(new ActItems() { Name = "AF LoopGain", Func = AFLoopGain, IsMulti = true });
+            ///ItemList.Add(new ActItems() { Name = "OIS LoopGain", Func = OISLoopGain, IsMulti = true });
+            ///ItemList.Add(new ActItems() { Name = "OIS Xtalk 2", Func = Xtalk2, IsMulti = true });
+            ///ItemList.Add(new ActItems() { Name = "AF Fluctuation", Func = AFFluctuation, IsMulti = true });
+            ///ItemList.Add(new ActItems() { Name = "OIS X Fluctuation", Func = OISXFluctuation, IsMulti = true });
+            ///ItemList.Add(new ActItems() { Name = "OIS Y Fluctuation", Func = OISYFluctuation, IsMulti = true });
+            ///ItemList.Add(new ActItems() { Name = "Verify AF_OIS Xtalk", Func = AF_OIS_Xtalk_Verify, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "SineWave Test", Func = OISSineWave, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "Ringing Test", Func = OISRinging, IsMulti = true });
         }
@@ -1557,31 +1557,7 @@ namespace FZ4P
 
         void AF_HallCalibration(int ch, string testItem, int InspCnt)
         {
-            bool AFChanged = true;
-
-            byte[] rDdata = new byte[1];
-            
-            if (!DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x3B })) AFChanged = false;
-
-            if (AFChanged)
-                AddLog(ch, string.Format("Already AF Slave Address Changed.."));
-            else
-            {
-                if (!DrvIC.WriteArray(ch, DrvIC.AFOriginAddr, 0xAE, 1, new byte[] { 0x3B }, false)) return;
-                AddLog(ch, string.Format("Setting Mode = Write Mem : 0x{0:X2} AFData : 0x{1:X2}", 0xAE, 0x3B));
-
-                if (!DrvIC.WriteArray(ch, DrvIC.AFOriginAddr, 0x0B, 1, new byte[] { 0x02 }, false)) return; // 02 : Normal, 04 : Reverse
-                AddLog(ch, string.Format("Set Pin Mode = Write Mem : 0x{0:X2} AFData : 0x{1:X2}", 0x0B, 0x02));
-
-                if (!DrvIC.WriteArray(ch, DrvIC.AFOriginAddr, 0x0A, 1, new byte[] { 0x70 }, false)) return; // Setting Slave Address
-                AddLog(ch, string.Format("Setting Slave Address = Write Mem : 0x{0:X2} Y2Data : 0x{1:X2}", 0x0A, 0x70));
-                Wait(200);
-                if (!DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0x03, 1, new byte[] { 0x01 }, false)) return; // Store Memory
-                Wait(100);
-                AddLog(ch, string.Format("Store Memory = Write Mem : 0x{0:X2} Data : 0x{1:X2}", 0x03, 0x01));
-                AddLog(ch, string.Format(" AF SlaveAddr Change FinIsh."));
-            }
-
+           
             Dln.PowerSequence(0);
             Wait(100);
 
