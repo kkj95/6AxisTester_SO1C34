@@ -9,10 +9,35 @@ namespace FZ4P.DriverIc.OISIC
 {
     public class AK73XX_Ext : AK73XX , IAFunction , IOISFunction, IFRAFunction
     {
-        public AK73XX_Ext()
+        private Action<int, string> _logAction;
+        public AK73XX_Ext(Action<int, string> logAction)
         {
-                
+            _logAction = logAction;
         }
+
+        public override bool WriteArray(int ch, int slaveAddr, int memAddr, int memCnt, byte[] data, bool logAction = true)
+        {
+            bool result = base.WriteArray(ch, slaveAddr, memAddr, memCnt, data);
+            string text = string.Join(",", data.Select(x => $"0x{x:X2}"));
+
+            var fulldata = data;
+            if (_logAction != null && logAction)
+                _logAction(ch, $"Write : 0x{memAddr.ToString("X2")},0x{text}");
+
+            return result;
+        }
+
+        public override bool ReadArray(int ch, int slaveAddr, int memAddr, int memCnt, byte[] data, bool logAction = true)
+        {
+            bool result = base.ReadArray(ch, slaveAddr, memAddr, memCnt, data);
+            string text = string.Join(",", data.Select(x => $"0x{x:X2}"));
+
+            if (_logAction != null && logAction)
+                _logAction(ch, $"Read : 0x{memAddr.ToString("X2")},0x{text}");
+
+            return result;
+        }
+
 
         #region AF Function
         public int AF_Addr => base.AFSlaveAddr;

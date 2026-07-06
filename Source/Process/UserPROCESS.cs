@@ -1561,22 +1561,22 @@ namespace FZ4P
 
             byte[] rDdata = new byte[1];
             
-            if (!Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x3B })) AFChanged = false;
+            if (!DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x3B })) AFChanged = false;
 
             if (AFChanged)
                 AddLog(ch, string.Format("Already AF Slave Address Changed.."));
             else
             {
-                if (!Dln.WriteArray(ch, DrvIC.AFOriginAddr, 0xAE, 1, new byte[] { 0x3B })) return;
+                if (!DrvIC.WriteArray(ch, DrvIC.AFOriginAddr, 0xAE, 1, new byte[] { 0x3B }, false)) return;
                 AddLog(ch, string.Format("Setting Mode = Write Mem : 0x{0:X2} AFData : 0x{1:X2}", 0xAE, 0x3B));
 
-                if (!Dln.WriteArray(ch, DrvIC.AFOriginAddr, 0x0B, 1, new byte[] { 0x02 })) return; // 02 : Normal, 04 : Reverse
+                if (!DrvIC.WriteArray(ch, DrvIC.AFOriginAddr, 0x0B, 1, new byte[] { 0x02 }, false)) return; // 02 : Normal, 04 : Reverse
                 AddLog(ch, string.Format("Set Pin Mode = Write Mem : 0x{0:X2} AFData : 0x{1:X2}", 0x0B, 0x02));
 
-                if (!Dln.WriteArray(ch, DrvIC.AFOriginAddr, 0x0A, 1, new byte[] { 0x70 })) return; // Setting Slave Address
+                if (!DrvIC.WriteArray(ch, DrvIC.AFOriginAddr, 0x0A, 1, new byte[] { 0x70 }, false)) return; // Setting Slave Address
                 AddLog(ch, string.Format("Setting Slave Address = Write Mem : 0x{0:X2} Y2Data : 0x{1:X2}", 0x0A, 0x70));
                 Wait(200);
-                if (!Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x03, 1, new byte[] { 0x01 })) return; // Store Memory
+                if (!DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0x03, 1, new byte[] { 0x01 }, false)) return; // Store Memory
                 Wait(100);
                 AddLog(ch, string.Format("Store Memory = Write Mem : 0x{0:X2} Data : 0x{1:X2}", 0x03, 0x01));
                 AddLog(ch, string.Format(" AF SlaveAddr Change FinIsh."));
@@ -1597,10 +1597,10 @@ namespace FZ4P
 
             DrvIC.AK7314_Mode(ch, 0);
             Wait(5);
-            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x3B });
-            Dln.ReadArray(ch, DrvIC.AFSlaveAddr, 0x0B, 1, rbuf);
-            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x0B, 1, new byte[] { (byte)(rbuf[0] & 0x7F) });
-            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xA6, 1, new byte[] { 0x7B });
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x3B });
+            DrvIC.ReadArray(ch, DrvIC.AFSlaveAddr, 0x0B, 1, rbuf);
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0x0B, 1, new byte[] { (byte)(rbuf[0] & 0x7F) });
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0xA6, 1, new byte[] { 0x7B });
             DrvIC.AK7314_Mode(ch, 1);
             AddLog(ch, $"AF Openloop Stroke Check");
 
@@ -1622,23 +1622,17 @@ namespace FZ4P
 
             DrvIC.AK7314_Mode(ch, 0);
             Wait(5);
-            //Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xA6, 1, new byte[] { 0x00 });
 
-            //Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x0A, 1, new byte[] { AF_IC_Setting[0] });
-            //Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x0B, 1, new byte[] { AF_IC_Setting[1] });
-            //Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x08, 1, new byte[] { AF_IC_Setting[3] });
-            //Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x09, 1, new byte[] { AF_IC_Setting[4] });
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x3B });
 
-            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x38 });
-
-            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, IC_SETTING_AF_REG[0], 1, new byte[] { IC_SETTING_AF[0] });
-            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, IC_SETTING_AF_REG[1], 1, new byte[] { IC_SETTING_AF[1] });
-            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, IC_SETTING_AF_REG[3], 1, new byte[] { IC_SETTING_AF[3] });
-            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, IC_SETTING_AF_REG[4], 1, new byte[] { IC_SETTING_AF[4] });
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, IC_SETTING_AF_REG[0], 1, new byte[] { IC_SETTING_AF[0] });
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, IC_SETTING_AF_REG[1], 1, new byte[] { IC_SETTING_AF[1] });
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, IC_SETTING_AF_REG[3], 1, new byte[] { IC_SETTING_AF[3] });
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, IC_SETTING_AF_REG[4], 1, new byte[] { IC_SETTING_AF[4] });
 
             //EPA Reset
-            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x0E, 1, new byte[] { 0x00 });
-            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x0F, 1, new byte[] { 0x00 });
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0x0E, 1, new byte[] { 0x00 });
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0x0F, 1, new byte[] { 0x00 });
             AddLog(ch, "Reset EPA Data.");
             //Linearity Reset
 
@@ -1647,32 +1641,40 @@ namespace FZ4P
             for (int i = 0; i < IC_DATA_AF.Length; i++)
             {
                 Dln.WriteByte(ch, DrvIC.AF_Addr, IC_DATA_AF_REG[i], 1, IC_DATA_AF[i]);
+                AddLog(ch, $"PID Parameter 0x{IC_DATA_AF_REG[i].ToString("X2")},0x{IC_DATA_AF[i].ToString("X2")} ");
             }
             AddLog(ch, $"PID Parameter setting.");
-            //for (int i = 0; i < AFPID.Count; i++)
-            //{
-            //    Dln.WriteArray(ch, DrvIC.AFSlaveAddr, AFPID[i][0], new byte[] { AFPID[i][1] });
-            //}
-            AddLog(ch, "Temp register setting");
-            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xC9, 1, new byte[] { 0x00 });
-            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x02, 1, new byte[] { 0x80 });
+
+            /*임의 추가*/
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0xCA, 1, new byte[] { 0x46 });
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0xCB, 1, new byte[] { 0xD8 });
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0xCC, 1, new byte[] { 0x40 });
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0xCD, 1, new byte[] { 0x32 });
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0xCE, 1, new byte[] { 0x00 });
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0x3D, 1, new byte[] { 0x00 });
+            AddLog(ch, "Function Register Setting");
+
+
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0xC9, 1, new byte[] { 0x00 });
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0x02, 1, new byte[] { 0x80 });
             Wait(10);
-            Dln.ReadArray(ch, DrvIC.AFSlaveAddr, 0x70, 1, rbuf);
+            DrvIC.ReadArray(ch, DrvIC.AFSlaveAddr, 0x70, 1, rbuf);
             AddLog(ch, $"Read 0x70 : 0x{rbuf[0].ToString("X")}");
-            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xC9, 1, rbuf);
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0xC9, 1, rbuf);
+            AddLog(ch, "Temp register setting");
             for (int i = 0; i < 5; i++)
             {
-                Dln.WriteArray(ch, DrvIC.AFSlaveAddr, IC_SETTING_AF_REG[2], 1, new byte[] { IC_SETTING_AF[2] });
+                DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, IC_SETTING_AF_REG[2], 1, new byte[] { IC_SETTING_AF[2] });
                 for (int j = 0; j < 2; j++)
                 {
-                    Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x02, 1, new byte[] { 0x18 });
+                    DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0x02, 1, new byte[] { 0x18 });
                     Wait(300);
                 }
                 Dln.ReadArray(ch, DrvIC.AFSlaveAddr, 0x19, 1, rbuf);
                 byte tmpData = (byte)Math.Floor(rbuf[0] * 0.75);
                 if (tmpData >= 0x00 && tmpData <= 0x30)
                 {
-                    Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x19, 1, new byte[] { tmpData });
+                    DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0x19, 1, new byte[] { tmpData });
                     AddLog(ch, "AF Calibration OK!");
                     break;
                 }
@@ -1683,7 +1685,7 @@ namespace FZ4P
 
                 }
             }
-            Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xF3, 1, new byte[] { 0x1E });
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0xF3, 1, new byte[] { 0x1E });
             Wait(25);
             bool WriteRes = DrvIC.AK7314_memory_update(ch, 1);
             WriteRes &= DrvIC.AK7314_memory_update(ch, 2);

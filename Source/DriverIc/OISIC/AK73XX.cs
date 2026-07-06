@@ -75,6 +75,15 @@ namespace FZ4P.DriverIc.OISIC
 
         }
 
+        // 상속구조가 아니기 때문에 자식에게 추가 기능을 제공하기 위한 레퍼 함수
+        public virtual bool WriteArray(int ch, int slaveAddr,int memAddr,  int memCnt, byte[] data, bool logAction = true)
+        {
+            return Dln.WriteArray(ch, slaveAddr, memAddr, memCnt, data);
+        }
+        public virtual bool ReadArray(int ch, int slaveAddr, int memAddr, int memCnt, byte[] data,bool logAction = true)
+        {
+            return Dln.ReadArray(ch, slaveAddr, memAddr, memCnt, data);
+        }
 
         #region New Function
         public void AK7314_Mode(int ch, byte mode)
@@ -127,7 +136,7 @@ namespace FZ4P.DriverIc.OISIC
 
             for (temp = 0; temp < 5; temp++)
             {
-                Dln.WriteArray(ch, AFSlaveAddr, 0x03, 1, new byte[] { value });
+                Dln.WriteArray(ch, AFSlaveAddr, 0x03, 1, new byte[] { 0x00 });
                 Process.Wait(time);
 
                 Dln.ReadArray(ch, AFSlaveAddr, 0x4B, 1, check_update);// AK7314_Read_byte(0x4B) & 0x04;

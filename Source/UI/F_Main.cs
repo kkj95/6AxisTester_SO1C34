@@ -1078,7 +1078,6 @@ namespace FZ4P
                 DataIO.SerializeToXMLFile(Current, STATIC.CurrentPath);
                 AFPidSetPath.Text = Current.AFPidPath;
             }
-
         }
 
         private void Actionbox_SelectedIndexChanged(object sender, EventArgs e)
