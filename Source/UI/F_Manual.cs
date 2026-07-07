@@ -2,6 +2,7 @@
 using FZ4P.Commons.Helper;
 using FZ4P.DriverIc.I2CBase.Interfaces;
 using FZ4P.DriverIc.Interfaces;
+using FZ4P.DriverIc.OISIC;
 using System;
 using System.ComponentModel;
 using System.Threading;
@@ -79,6 +80,22 @@ namespace FZ4P.UI
             }
         }
 
+        private string _current2;
+        public string Current2
+        {
+            get => _current2;
+            set
+            {
+                if (_current2 != value)
+                {
+                    _current2 = value;
+                    OnPropertyChanged(nameof(Current2), value);
+                }
+            }
+        }
+
+        
+
         public F_Manual(IOISFunction oISFunction, IAFunction afFunction)
         {
             InitializeComponent();
@@ -117,6 +134,12 @@ namespace FZ4P.UI
             {
                 this.InvokeOnUIThread(() => {
                     lbl_ADC.Text = PropertiesHelper.GetValue<string>(e);
+                });
+            }
+            else if (e.PropertyName == nameof(Current2))
+            {
+                this.InvokeOnUIThread(() => {
+                    lbl_ADC_2.Text = PropertiesHelper.GetValue<string>(e);
                 });
             }
         }
@@ -167,7 +190,7 @@ namespace FZ4P.UI
                 cts?.Cancel();
         }
 
-        private void ReadHold(CancellationToken token,int iCh)
+        private void ReadHold(CancellationToken token,int iCh) 
         {
             while (!token.IsCancellationRequested)
             {
@@ -177,7 +200,10 @@ namespace FZ4P.UI
                 Thread.Sleep(5);
                 ReadHall3 = _afFunction.ReadAFHall(iCh).ToString();
                 Thread.Sleep(5);
-                //PeakCurrent = STATIC.DrvIC.GetPeakCurrent(iCh, iAixs).ToString();
+
+                PeakCurrent = _oISFunction.GetCurrent((int)AxisTypeDW.AxisX).ToString("00.00");
+                Thread.Sleep(5);
+                Current2 = _oISFunction.GetCurrent((int)AxisTypeDW.AxisY).ToString("00.00");
                 Thread.Sleep(5);
             }
         }

@@ -36,7 +36,10 @@ namespace FZ4P.DriverIc.OISIC
         //PID 0x44~0x83 0x7F제외
         POSITION_READ_LOW = 0x84,       //ReadHall??
         POSITION_READ_HIGH = 0x85,       //ReadHall??
-        IOUT_CURRENT_LOW = 0x8E,
+        IOUT_CURRENT_LOW = 0x86,        // Current_Low
+        IOUT_CURRENT_HIGH = 0x87,       // Current_High
+        IOUT_CURRENTDAC_LOW = 0x8E,        // CurrentDAC_Low
+        IOUT_CURRENTDAC_HIGH = 0x8F,       // CurrentDAC_High
         //PID
         //FREACCESS
     }

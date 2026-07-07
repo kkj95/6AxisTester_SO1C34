@@ -408,7 +408,7 @@ namespace FZ4P
             PropertyDescriptorCollection props = TypeDescriptor.GetProperties(Condition);
             for (int i = 0; i < props.Count; i++)
             {
-                if(DataIO.GetCustomAttribute<ActionListUseAttribute>(props[i]).InitUse) continue;
+                if(!DataIO.GetCustomAttribute<ActionListUseAttribute>(props[i]).InitUse) continue;
 
                 string Category = DataIO.GetCustomAttribute<ConditionAttribute>(props[i])?.Category;
                 string DisplayName = DataIO.GetCustomAttribute<ConditionAttribute>(props[i])?.DisplayName;
@@ -1062,8 +1062,8 @@ namespace FZ4P
         void InitFWPath()
         {
             AFPidSetPath.Text = Current.AFPidPath;
-            OISFWSetPath.Text = Current.OISXPidPath;
-            OISBaseCalSetPath.Text = Current.OISYPidPath;
+            OISXSetPath.Text = Current.OISXPidPath;
+            OISYSetPath.Text = Current.OISYPidPath;
         }
         private void SetAFPIDUpdate_Click(object sender, EventArgs e)
         {
@@ -1094,6 +1094,7 @@ namespace FZ4P
             PropertyDescriptorCollection props = TypeDescriptor.GetProperties(Condition);
             for (int i = 0; i < props.Count; i++)
             {
+                if (!DataIO.GetCustomAttribute<ActionListUseAttribute>(props[i]).InitUse) continue;
                 string Category = DataIO.GetCustomAttribute<ConditionAttribute>(props[i]).Category;
                 string Name = DataIO.GetCustomAttribute<ConditionAttribute>(props[i]).DisplayName;
                 string Unit = DataIO.GetCustomAttribute<ConditionAttribute>(props[i]).Unit;
@@ -1855,35 +1856,35 @@ namespace FZ4P
 
         private void SetOISFWUpdate_Click(object sender, EventArgs e)
         {
-            string filePath = STATIC.OISFWDir;
+            string filePath = STATIC.OISXPIDDir;
             OpenFileDialog opfd = new OpenFileDialog();
-            opfd.DefaultExt = "ntbrst";
+            opfd.DefaultExt = "txt";
             opfd.InitialDirectory = filePath;
-            opfd.Filter = "Ntbrst(*.ntbrst)|*.ntbrst";
+            opfd.Filter = "txt(*.txt)|*.txt";
             opfd.Title = "OIS FW Update Path";
 
             if (opfd.ShowDialog() == DialogResult.OK)
             {
-                Current.OISFWPath = opfd.FileName;
+                Current.OISXPidPath = opfd.FileName;
                 DataIO.SerializeToXMLFile(Current, STATIC.CurrentPath);
-                OISFWSetPath.Text = Current.OISFWPath;
+                OISXSetPath.Text = Current.OISXPidPath;
             }
         }
 
         private void SetOISBaseCalUpdate_Click(object sender, EventArgs e)
         {
-            string filePath = STATIC.OISBaseCalDir;
+            string filePath = STATIC.OISYPIDDir;
             OpenFileDialog opfd = new OpenFileDialog();
-            opfd.DefaultExt = "ntbrst";
+            opfd.DefaultExt = "txt";
             opfd.InitialDirectory = filePath;
-            opfd.Filter = "Ntbrst(*.ntbrst)|*.ntbrst";
+            opfd.Filter = "txt(*.txt)|*.txt";
             opfd.Title = "OIS BaseCal Update Path";
 
             if (opfd.ShowDialog() == DialogResult.OK)
             {
-                Current.OISBaseCalPath = opfd.FileName;
+                Current.OISYPidPath = opfd.FileName;
                 DataIO.SerializeToXMLFile(Current, STATIC.CurrentPath);
-                OISBaseCalSetPath.Text = Current.OISBaseCalPath;
+                OISYSetPath.Text = Current.OISYPidPath;
             }
         }
 

@@ -2,6 +2,7 @@
 using FZ4P.DriverIc.I2CBase;
 using FZ4P.DriverIc.I2CBase.Interfaces;
 using FZ4P.DriverIc.Interfaces;
+using MathNet.Numerics;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,6 +22,7 @@ namespace FZ4P.DriverIc.OISIC
     {
         private object _lock = new object();
         private readonly IOneTwoBytesDrivingIC _controls;
+        private CalculatorDW9836 cal = new CalculatorDW9836(160);           //160mA 세팅으로 되어있다고 하여 고정함.
 
         public int FRA_Addr { get; set; } = 0x12;
         public int OISX_Addr { get; set; } = 0x0E;
@@ -145,6 +147,17 @@ namespace FZ4P.DriverIc.OISIC
             }
 
             return bResult;
+        }
+
+        public double GetCurrent(int axis)
+        {
+            short ReadData = 0x0000;
+            int SlaveID = GetAxisTypeID((AxisTypeDW)axis);
+            var Wrod = Controls.Read2Byte(SlaveID, (int)RegisterMapDW9836N.IOUT_CURRENT_LOW, 1);
+            ReadData = (short)(Wrod >> 3);
+
+            double readCurrent = cal.CalculatorCurrent(ReadData);
+            return readCurrent.Round(2);
         }
 
         /// <summary>

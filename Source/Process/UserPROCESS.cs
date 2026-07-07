@@ -1575,6 +1575,7 @@ namespace FZ4P
             Wait(5);
             DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x3B });
             DrvIC.ReadArray(ch, DrvIC.AFSlaveAddr, 0x0B, 1, rbuf);
+            byte backdata = rbuf[0];
             DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0x0B, 1, new byte[] { (byte)(rbuf[0] & 0x7F) });
             DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0xA6, 1, new byte[] { 0x7B });
             DrvIC.AK7314_Mode(ch, 1);
@@ -1596,6 +1597,9 @@ namespace FZ4P
                 AddLog(ch, $"{agingCount + 1} : {NewStroke.ToString("F3")}");
             }
 
+            //DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0x0B, 1, new byte[] { backdata });
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0xA6, 1, new byte[] { 0x00 });
+            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x00 });
             DrvIC.AK7314_Mode(ch, 0);
             Wait(5);
 
@@ -1648,6 +1652,7 @@ namespace FZ4P
                 }
                 Dln.ReadArray(ch, DrvIC.AFSlaveAddr, 0x19, 1, rbuf);
                 byte tmpData = (byte)Math.Floor(rbuf[0] * 0.75);
+                //임시 주석
                 if (tmpData >= 0x00 && tmpData <= 0x30)
                 {
                     DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0x19, 1, new byte[] { tmpData });
@@ -1658,11 +1663,10 @@ namespace FZ4P
                 {
                     // SetError(ch, NonSpecItem.AF_HallCalibration);
                     AddLog(ch, "AF Calibration (Reg 19) error[over 0x90]");
-
                 }
             }
-            DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0xF3, 1, new byte[] { 0x1E });
-            Wait(25);
+       //     DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0xF3, 1, new byte[] { 0x1E });
+          //  Wait(25);
             bool WriteRes = DrvIC.AK7314_memory_update(ch, 1);
             WriteRes &= DrvIC.AK7314_memory_update(ch, 2);
             WriteRes &= DrvIC.AK7314_memory_update(ch, 3);
@@ -1682,8 +1686,7 @@ namespace FZ4P
             DrvIC.AK7314_Mode(ch, 1);
             DrvIC.AK7314_IC_Data(ch);
 
-            DrvIC.OISOn(ch, "X", false);
-            DrvIC.OISOn(ch, "Y", false);
+            DWDrvIC.OISOnOff(ch, false);
             Wait(100);
 
             //  AF EPA
@@ -1856,18 +1859,16 @@ namespace FZ4P
             AddLog(ch, "<<<  AF EPA End  >>>");
 
 
-            DrvIC.OISOn(ch, "X", false);
-            DrvIC.OISOn(ch, "Y", false);
+            DWDrvIC.OISOnOff(ch, false);
             Thread.Sleep(100);
 
-            //AF LinComp
+          //  AF LinCompDWDrvIC
             AddLog(ch, "<<<  AF Lin. Comp Start  >>>");
-            bool LinRes = AFLinComp(ch, 8, 4088, 34, 0, 0, 6, 6, 0, (int)stroke);
+            //bool LinRes = AFLinComp(ch, 8, 4088, 34, 0, 0, 6, 6, 0, (int)stroke);
+            bool LinRes = false;
             AddLog(ch, "<<<  AF Lin. Comp End  >>>");
-            DrvIC.OISOn(ch, "X", true);
-            DrvIC.OISOn(ch, "Y", true);
-            DrvIC.OISOn(ch, "X", false);
-            DrvIC.OISOn(ch, "Y", false);
+            DWDrvIC.OISOnOff(ch, true);
+            DWDrvIC.OISOnOff(ch, false);
             Wait(100);
 
             LEDs_All_On(0, false);
@@ -2857,7 +2858,7 @@ namespace FZ4P
             }
 
 
-            //SetEPA((int)AxisTypeDW.AxisX);
+            SetEPA((int)AxisTypeDW.AxisX);
             #endregion
 
             #region OIS Y Hall Calibration
@@ -2893,6 +2894,8 @@ namespace FZ4P
                 DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x03, 1, 0x01);
                 Wait(20);
                 DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0x14);
+                PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 0;
+                ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
             }
             else
             {
@@ -2902,7 +2905,7 @@ namespace FZ4P
                 return;
             }
 
-            //SetEPA((int)AxisTypeDW.AxisY);
+            SetEPA((int)AxisTypeDW.AxisY);
             #endregion
         }
 
@@ -3662,8 +3665,7 @@ namespace FZ4P
             DrvIC.AK7314_Mode(ch, 1);
             DrvIC.Move(ch, "AF", endpos);
             Thread.Sleep(200);
-            DrvIC.OISOn(ch, "X", false);
-            DrvIC.OISOn(ch, "Y", false);
+            DWDrvIC.OISOnOff(ch, false);
             Wait(200);
             Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x3B });
             for (int i = 0; i < 13; i++)
@@ -5245,7 +5247,8 @@ namespace FZ4P
             FindResult res = new FindResult();
             var step = Condition.OISLincompStep;
             List<short> TargetCode = new List<short>();
-            var step_interval = DWDrvIC.OIS_MAX_CODE / step;
+            int testinter = (int)(DWDrvIC.OIS_MAX_CODE * 1.0);
+            var step_interval = testinter / step;
             double[] ldmDataX = null;//new double;
             double[] ldmDataY = null;//new double;
 
@@ -5255,8 +5258,14 @@ namespace FZ4P
             double ldmOffSetX = 0.0;
             double ldmOffSetY = 0.0;
             //여기까지
+            short offset = (short)(DWDrvIC.OIS_MAX_CODE * 0.0);
             for (int i = 0; i < step+1; i++)
-                TargetCode.Add((short)(step_interval * (i)));
+            {
+                if ((step_interval * (i) > 16383))
+                    TargetCode.Add(16383);
+                else TargetCode.Add((short)((step_interval * (i)) + offset));
+            }
+                
 
             List<double> bufferLDMX = new List<double>();
             List<double> bufferLDMY = new List<double>();

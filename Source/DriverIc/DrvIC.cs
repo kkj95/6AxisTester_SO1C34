@@ -373,6 +373,11 @@ namespace FZ4P
         {
             throw new NotImplementedException();
         }
+
+        public double GetCurrent(int axis)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
     }

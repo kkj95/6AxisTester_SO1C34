@@ -24,6 +24,11 @@ namespace FZ4P.DriverIc.OISIC.Adapter
         public int OISX_Addr { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public int OISY_Addr { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
+        public double GetCurrent(int axis)
+        {
+            throw new NotImplementedException();
+        }
+
         public void LiearCompWrite(int axis, List<int> CompValue)
         {
             throw new NotImplementedException();
