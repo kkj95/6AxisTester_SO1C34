@@ -3541,7 +3541,7 @@ namespace FZ4P
 
                 if (targPosi.Length == lensPosi.Length)
                 {
-                    AFLinCompCoef coef = new AFLinCompCoef();
+                    AFLinCompCoef2 coef = new AFLinCompCoef2();
                     numLinCompData = targPosi.Length;
                     AddLog(ch, $"numLinCompData = {numLinCompData}");
 
@@ -3714,8 +3714,8 @@ namespace FZ4P
             {
                 if (targPosi.Length == lensPosi.Length)
                 {
-                    AFLinCompCoef coef = new AFLinCompCoef();
-                    int[] lincoef = new int[AFLinCompCoef.NUM_COEF];
+                    AFLinCompCoef2 coef = new AFLinCompCoef2();
+                    int[] lincoef = new int[AFLinCompCoef2.NUM_COEF];
                     numLinCompData = lensPosi.Length;
                     AddLog(ch, $"numLinCompData = {numLinCompData}");
                     int res = coef.LinCompMain(targPosi, lensPosi, numLinCompData, pvt, nvt, ignInf, ignMac, lincoef, ref resError);
