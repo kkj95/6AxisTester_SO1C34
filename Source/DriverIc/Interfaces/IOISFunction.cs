@@ -28,6 +28,7 @@ namespace FZ4P.DriverIc.Interfaces
 
         void OISMoveOL(int ch, int axis, int code);
         short ReadOISHall(int ch, int axis, int mode);
+        double GetCurrent(int axis);
 
         void OISReset(int ch, int axis, bool OnOff);
 

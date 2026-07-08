@@ -73,6 +73,11 @@
             this.lbl_ReadHall2 = new System.Windows.Forms.Label();
             this.lbl_ADC = new System.Windows.Forms.Label();
             this.lbl_ReadHall = new System.Windows.Forms.Label();
+            this.panel9 = new System.Windows.Forms.Panel();
+            this.label11 = new System.Windows.Forms.Label();
+            this.panel10 = new System.Windows.Forms.Panel();
+            this.label12 = new System.Windows.Forms.Label();
+            this.lbl_ADC_2 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -84,6 +89,8 @@
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.panel9.SuspendLayout();
+            this.panel10.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -348,6 +355,9 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.panel9);
+            this.groupBox2.Controls.Add(this.panel10);
+            this.groupBox2.Controls.Add(this.lbl_ADC_2);
             this.groupBox2.Controls.Add(this.checkBox4);
             this.groupBox2.Controls.Add(this.panel7);
             this.groupBox2.Controls.Add(this.panel8);
@@ -375,7 +385,7 @@
             this.checkBox4.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.checkBox4.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBox4.ForeColor = System.Drawing.Color.White;
-            this.checkBox4.Location = new System.Drawing.Point(278, 254);
+            this.checkBox4.Location = new System.Drawing.Point(297, 280);
             this.checkBox4.Name = "checkBox4";
             this.checkBox4.Size = new System.Drawing.Size(89, 19);
             this.checkBox4.TabIndex = 515;
@@ -607,6 +617,62 @@
             this.lbl_ReadHall.Text = "-";
             this.lbl_ReadHall.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // panel9
+            // 
+            this.panel9.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.panel9.Controls.Add(this.label11);
+            this.panel9.Location = new System.Drawing.Point(158, 248);
+            this.panel9.Name = "panel9";
+            this.panel9.Size = new System.Drawing.Size(134, 30);
+            this.panel9.TabIndex = 518;
+            // 
+            // label11
+            // 
+            this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label11.ForeColor = System.Drawing.Color.White;
+            this.label11.Location = new System.Drawing.Point(48, 9);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(12, 12);
+            this.label11.TabIndex = 279;
+            this.label11.Text = "-";
+            // 
+            // panel10
+            // 
+            this.panel10.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.panel10.Controls.Add(this.label12);
+            this.panel10.Location = new System.Drawing.Point(158, 152);
+            this.panel10.Name = "panel10";
+            this.panel10.Size = new System.Drawing.Size(134, 30);
+            this.panel10.TabIndex = 517;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label12.ForeColor = System.Drawing.Color.White;
+            this.label12.Location = new System.Drawing.Point(38, 9);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(59, 12);
+            this.label12.TabIndex = 278;
+            this.label12.Text = "Channel";
+            // 
+            // lbl_ADC_2
+            // 
+            this.lbl_ADC_2.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.lbl_ADC_2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbl_ADC_2.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_ADC_2.ForeColor = System.Drawing.Color.Yellow;
+            this.lbl_ADC_2.Location = new System.Drawing.Point(157, 183);
+            this.lbl_ADC_2.Name = "lbl_ADC_2";
+            this.lbl_ADC_2.Size = new System.Drawing.Size(135, 64);
+            this.lbl_ADC_2.TabIndex = 516;
+            this.lbl_ADC_2.Text = "-";
+            this.lbl_ADC_2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // F_Manual
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -640,6 +706,10 @@
             this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.panel9.ResumeLayout(false);
+            this.panel9.PerformLayout();
+            this.panel10.ResumeLayout(false);
+            this.panel10.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -691,5 +761,10 @@
         private System.Windows.Forms.Label lbl_ReadHall3;
         private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.CheckBox checkBox4;
+        private System.Windows.Forms.Panel panel9;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Panel panel10;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label lbl_ADC_2;
     }
 }

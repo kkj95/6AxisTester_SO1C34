@@ -67,5 +67,10 @@ namespace FZ4P.DriverIc.OISIC
         {
             throw new NotImplementedException();
         }
+
+        public double GetCurrent(int axis)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
