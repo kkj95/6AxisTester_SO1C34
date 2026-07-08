@@ -1864,8 +1864,8 @@ namespace FZ4P
 
           //  AF LinCompDWDrvIC
             AddLog(ch, "<<<  AF Lin. Comp Start  >>>");
-            //bool LinRes = AFLinComp(ch, 8, 4088, 34, 0, 0, 6, 6, 0, (int)stroke);
-            bool LinRes = false;
+            bool LinRes = AFLinComp(ch, 8, 4088, 34, 0, 0, 6, 6, 0, (int)stroke);
+            //bool LinRes = false;
             AddLog(ch, "<<<  AF Lin. Comp End  >>>");
             DWDrvIC.OISOnOff(ch, true);
             DWDrvIC.OISOnOff(ch, false);
@@ -3735,7 +3735,7 @@ namespace FZ4P
                     DrvIC.Move(ch, "AF", AFCenter);
 
                     Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x3B });
-                                                                
+
                     Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x30, 1, new byte[] { (byte)lincoef[0] });
                     Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x31, 1, new byte[] { (byte)lincoef[1] });
                     Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x32, 1, new byte[] { (byte)lincoef[2] });
@@ -3749,6 +3749,7 @@ namespace FZ4P
                     Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x3A, 1, new byte[] { (byte)lincoef[10] });
                     Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x3B, 1, new byte[] { (byte)lincoef[11] });
                     Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0x3C, 1, new byte[] { (byte)lincoef[12] });
+
                     DrvIC.AK7314_memory_update(ch, 1);
                     DrvIC.AK7314_memory_update(ch, 3);
                     Dln.WriteArray(ch, DrvIC.AFSlaveAddr, 0xAE, 1, new byte[] { 0x00 });

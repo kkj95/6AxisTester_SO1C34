@@ -279,7 +279,7 @@ namespace FZ4P
         [ActionListUse(Commm)][Condition("Common", "OIS Drv AF Pos", "OIS X Scan", "OIS Y Scan", "code")] public int OISDrvAFPos { get; set; } = 40;
         [ActionListUse(Commm)][Condition("Common", "Drv AF Step", "AF Scan", "", "code")] public int iDrvAFStep { get; set; } = 40;
         [ActionListUse(Commm)][Condition("Common", "Drv X Step", "OIS X Scan", "", "code")] public int iDrvXStep { get; set; } = 400;
-        [ActionListUse(Commm)][Condition("Common", "Drv Y Step", "OIS Y Scan", "", "code")] public int iDrvYStep { get; set; } = 400;ㅏㅡ구현러얀매러야ㅐㄴ머랴ㅐㅓㄷ먀ㅐ
+        [ActionListUse(Commm)][Condition("Common", "Drv Y Step", "OIS Y Scan", "", "code")] public int iDrvYStep { get; set; } = 400;
         [ActionListUse(Commm)][Condition("Common", "Drv Step Interval AF", "AF Scan", "", "msec")] public int iDrvStepIntervalZ { get; set; } = 40;
         [ActionListUse(Commm)][Condition("Common", "Drv Step interval X", "OIS X Scan", "", "msec")] public int iDrvStepIntervalX { get; set; } = 40;
         [ActionListUse(Commm)][Condition("Common", "Drv step Interval Y", "OIS Y Scan", "", "msec")] public int iDrvStepIntervalY { get; set; } = 40;
