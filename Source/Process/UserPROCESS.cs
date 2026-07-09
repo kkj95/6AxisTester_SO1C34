@@ -41,7 +41,7 @@ namespace FZ4P
             ItemList.Add(new ActItems() { Name = "OIS HallCalibration", Func = OIS_HallCalibration, IsMulti = true });      
             ItemList.Add(new ActItems() { Name = "AF Gain Margin", Func = AFGM, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "AF Phase Margin", Func = AFPM, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "OIS Linear Calibration", Func = OISLCCComp, IsMulti = true });
+            ItemList.Add(new ActItems() { Name = "OIS LinearityCompensation", Func = OISLCCComp, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "OIS Gain Margin", Func = OISGM, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "OIS Phase Margin", Func = OISPM, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "OIS Gain Margin Low", Func = OISGM_LOW, IsMulti = true });
@@ -1853,9 +1853,7 @@ namespace FZ4P
             else
                 writeNVMParamX.AddRow(0xF9, 0);
 
-            if (PassFails[ch].Results[(int)SpecItem.FRAX_LoopGain].Val < int.MaxValue)
-                writeNVMParamX.AddRow(0xFA, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.FRAX_LoopGain].Val));
-            else
+
                 writeNVMParamX.AddRow(0xFA, 0);
 
             if (PassFails[ch].Results[(int)SpecItem.FRAX_Ringing].Val < int.MaxValue)
@@ -1941,9 +1939,7 @@ namespace FZ4P
             else
                 writeNVMParamY.AddRow(0xF9, 0);
 
-            if (PassFails[ch].Results[(int)SpecItem.FRAY_LoopGain].Val < int.MaxValue)
-                writeNVMParamY.AddRow(0xFA, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.FRAY_LoopGain].Val));
-            else
+
                 writeNVMParamY.AddRow(0xFA, 0);
 
             if (PassFails[ch].Results[(int)SpecItem.FRAY_Ringing].Val < int.MaxValue)
@@ -1982,9 +1978,18 @@ namespace FZ4P
             {
                 if (PassFails[ch].FirstFailIndex == 0)
                 {
-                    AddLog(ch, "NVM Verify NG");
-                    PassFails[ch].Results[(int)SpecItem.AFPIDVerifyRes].Val = 1;
-                    ShowDataResults(ch, (int)SpecItem.AFPIDVerifyRes, (int)SpecItem.AFPIDVerifyRes, InspType.Normal, new double[] { });
+                    AddLog(ch, "OIS NVM Verify NG");
+                    PassFails[ch].Results[(int)SpecItem.OISPIDVerifyRes].Val = 1;
+                    ShowDataResults(ch, (int)SpecItem.OISPIDVerifyRes, (int)SpecItem.OISPIDVerifyRes, InspType.Normal, new double[] { });
+                }
+            }
+            else
+            {
+                if (PassFails[ch].FirstFailIndex == 0)
+                {
+                    AddLog(ch, "OIS NVM Verify OK");
+                    PassFails[ch].Results[(int)SpecItem.OISPIDVerifyRes].Val = 0;
+                    ShowDataResults(ch, (int)SpecItem.OISPIDVerifyRes, (int)SpecItem.OISPIDVerifyRes, InspType.Normal, new double[] { });
                 }
             }
         }

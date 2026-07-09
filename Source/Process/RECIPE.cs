@@ -337,13 +337,13 @@ namespace FZ4P
 
         [ActionListUse(OISLinearComp)][Condition("OIS Linearity Comp", "Steps", "OIS LinearityCompensation", "", "code")] public int OISLincompStep { get; set; } = 32;
         [ActionListUse(OISLinearComp)][Condition("OIS Linearity Comp", "Code Margin", "OIS LinearityCompensation", "", "code")] public int OISLincompCodeMargin { get; set; } = 100;
-        [ActionListUse(OISEPAX)][Condition("OIS X EPA", "BTM Cut Position", "OIS LinearityCompensation", "", "um")] public int iOISXEPABtmPos { get; set; } = 10;
-        [ActionListUse(OISEPAX)][Condition("OIS X EPA", "Target Stroke Range", "OIS LinearityCompensation", "", "um")] public int iOISXEPATtlRng { get; set; } = 500;
-        [ActionListUse(OISEPAX)][Condition("OIS X EPA", "Min TOP Margin", "OIS LinearityCompensation", "", "um")] public int iOISXEPATopMargin { get; set; } = 10;
+        [ActionListUse(OISEPAX)][Condition("OIS X EPA", "BTM Cut Position", "OIS X EPA", "", "um")] public int iOISXEPABtmPos { get; set; } = 10;
+        [ActionListUse(OISEPAX)][Condition("OIS X EPA", "Target Stroke Range", "OIS X EPA", "", "um")] public int iOISXEPATtlRng { get; set; } = 500;
+        [ActionListUse(OISEPAX)][Condition("OIS X EPA", "Min TOP Margin", "OIS X EPA", "", "um")] public int iOISXEPATopMargin { get; set; } = 10;
 
-        [ActionListUse(OISEPAY)][Condition("OIS Y EPA", "BTM Cut Position", "OIS LinearityCompensation", "", "um")] public int iOISYEPABtmPos { get; set; } = 10;
-        [ActionListUse(OISEPAY)][Condition("OIS Y EPA", "Target Stroke Range", "OIS LinearityCompensation", "", "um")] public int iOISYEPATtlRng { get; set; } = 500;
-        [ActionListUse(OISEPAY)][Condition("OIS Y EPA", "Min TOP Margin", "OIS LinearityCompensation", "", "um")] public int iOISYEPATopMargin { get; set; } = 10;
+        [ActionListUse(OISEPAY)][Condition("OIS Y EPA", "BTM Cut Position", "OIS Y EPA", "", "um")] public int iOISYEPABtmPos { get; set; } = 10;
+        [ActionListUse(OISEPAY)][Condition("OIS Y EPA", "Target Stroke Range", "OIS Y EPA", "", "um")] public int iOISYEPATtlRng { get; set; } = 500;
+        [ActionListUse(OISEPAY)][Condition("OIS Y EPA", "Min TOP Margin", "OIS Y EPA", "", "um")] public int iOISYEPATopMargin { get; set; } = 10;
 
         [ActionListUse(AF_PMGM)][Condition("AF PM", "AF Step", "AF Phase Margin", "", "%")] public int iAFFRAstep { get; set; } = 5;
         [ActionListUse(AF_PMGM)][Condition("AF PM", "AF Chirp from", "AF Phase Margin", "", "Hz")] public int iAFChirpFrom { get; set; } = 250;
@@ -599,33 +599,33 @@ namespace FZ4P
         [ActionListUse(false)][Condition("AF Fluctuation", "Delay", "AF Fluctuation", "", "ms")] public int AFFluctuationDelay { get; set; } = 100;
         [ActionListUse(false)][Condition("AF Fluctuation", "Count", "AF Fluctuation", "", "dec")] public int AFFluctuationCount { get; set; } = 100;
 
-        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "Slave_ID_X", "OIS SINEWAVE", "", "code")] public int Slave_ID_X { get; set; } = 0;
-        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "Slave_ID_Y", "OIS SINEWAVE", "", "code")] public int Slave_ID_Y { get; set; } = 0;
-        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "Slave_ID_Z", "OIS SINEWAVE", "", "code")] public int Slave_ID_Z { get; set; } = 0;
-        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "Clock_Devision", "OIS SINEWAVE", "", "--")] public int Clock_Devision { get; set; } = 0;
-        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "eOIS_Device_Number", "OIS SINEWAVE", "", "--")] public int eOIS_Device_Number { get; set; } = 0;
-        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "AF_Target_Device_Number", "OIS SINEWAVE", "", "--")] public int AF_Target_Device_Number { get; set; } = 0;
-        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "Set_Read_Address", "OIS SINEWAVE", "", "--")] public int Set_Read_Address { get; set; } = 0;
-        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "Read_Address_Count", "OIS SINEWAVE", "", "--")] public int Read_Address_Count { get; set; } = 0;
-        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "Frequency", "OIS SINEWAVE", "", "Hz")] public int Frequency { get; set; } = 5;
-        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "Amplitude", "OIS SINEWAVE", "", "mV")] public int Amplitude { get; set; } = 58;
-        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "Threshold", "OIS SINEWAVE", "", "--")] public int Threshold { get; set; } = 90;
-        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "MeasurementCycleCount", "OIS SINEWAVE", "", "cnt")] public int MeasurementCycleCount { get; set; } = 2;
-        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "DummyCycleCount", "OIS SINEWAVE", "", "cnt")] public int DummyCycleCount { get; set; } = 1;
+        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "Slave_ID_X", "SineWave Test", "", "code")] public int Slave_ID_X { get; set; } = 0;
+        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "Slave_ID_Y", "SineWave Test", "", "code")] public int Slave_ID_Y { get; set; } = 0;
+        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "Slave_ID_Z", "SineWave Test", "", "code")] public int Slave_ID_Z { get; set; } = 0;
+        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "Clock_Devision", "SineWave Test", "", "--")] public int Clock_Devision { get; set; } = 0;
+        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "eOIS_Device_Number", "SineWave Test", "", "--")] public int eOIS_Device_Number { get; set; } = 0;
+        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "AF_Target_Device_Number", "SineWave Test", "", "--")] public int AF_Target_Device_Number { get; set; } = 0;
+        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "Set_Read_Address", "SineWave Test", "", "--")] public int Set_Read_Address { get; set; } = 0;
+        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "Read_Address_Count", "SineWave Test", "", "--")] public int Read_Address_Count { get; set; } = 0;
+        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "Frequency", "SineWave Test", "", "Hz")] public int Frequency { get; set; } = 5;
+        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "Amplitude", "SineWave Test", "", "mV")] public int Amplitude { get; set; } = 58;
+        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "Threshold", "SineWave Test", "", "--")] public int Threshold { get; set; } = 90;
+        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "MeasurementCycleCount", "SineWave Test", "", "cnt")] public int MeasurementCycleCount { get; set; } = 2;
+        [ActionListUse(OISSINEWAVE)][Condition("OIS SINEWAVE", "DummyCycleCount", "SineWave Test", "", "cnt")] public int DummyCycleCount { get; set; } = 1;
 
-        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_Slave_ID_X", "OIS RINGING", "", "code")] public int Ringing_Slave_ID_X { get; set; } = 0;
-        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_Slave_ID_Y", "OIS RINGING", "", "code")] public int Ringing_Slave_ID_Y { get; set; } = 0;
-        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_Slave_ID_Z", "OIS RINGING", "", "code")] public int Ringing_Slave_ID_Z { get; set; } = 0;
-        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_Clock_Devision", "OIS RINGING", "", "--")] public int Ringing_Clock_Devision { get; set; } = 0;
-        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_eOIS_Device_Number", "OIS RINGING", "", "--")] public int Ringing_eOIS_Device_Number { get; set; } = 0;
-        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_AF_Target_Device_Number", "OIS RINGING", "", "--")] public int Ringing_AF_Target_Device_Number { get; set; } = 0;
-        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_End_Position", "OIS RINGING", "", "%")] public int Ringing_End_Position { get; set; } = 0;
-        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_Start_Position", "OIS RINGING", "", "%")] public int Ringing_Start_Position { get; set; } = 0;
-        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_End_PositionY", "OIS RINGING", "", "%")] public int Ringing_End_PositionY { get; set; } = 0;
-        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_Start_PositionY", "OIS RINGING", "", "%")] public int Ringing_Start_PositionY { get; set; } = 0;
-        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_Start_Time", "OIS RINGING", "", "ms")] public int Ringing_Start_Time { get; set; } = 0;
-        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_End_Time", "OIS RINGING", "", "ms")] public int Ringing_End_Time { get; set; } = 5;
-        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_Threshold", "OIS RINGING", "", "code")] public int Ringing_Threshold { get; set; } = 58;
+        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_Slave_ID_X", "Ringing Test", "", "code")] public int Ringing_Slave_ID_X { get; set; } = 0;
+        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_Slave_ID_Y", "Ringing Test", "", "code")] public int Ringing_Slave_ID_Y { get; set; } = 0;
+        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_Slave_ID_Z", "Ringing Test", "", "code")] public int Ringing_Slave_ID_Z { get; set; } = 0;
+        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_Clock_Devision", "Ringing Test", "", "--")] public int Ringing_Clock_Devision { get; set; } = 0;
+        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_eOIS_Device_Number", "Ringing Test", "", "--")] public int Ringing_eOIS_Device_Number { get; set; } = 0;
+        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_AF_Target_Device_Number", "Ringing Test", "", "--")] public int Ringing_AF_Target_Device_Number { get; set; } = 0;
+        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_End_Position", "Ringing Test", "", "%")] public int Ringing_End_Position { get; set; } = 0;
+        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_Start_Position", "Ringing Test", "", "%")] public int Ringing_Start_Position { get; set; } = 0;
+        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_End_PositionY", "Ringing Test", "", "%")] public int Ringing_End_PositionY { get; set; } = 0;
+        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_Start_PositionY", "Ringing Test", "", "%")] public int Ringing_Start_PositionY { get; set; } = 0;
+        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_Start_Time", "Ringing Test", "", "ms")] public int Ringing_Start_Time { get; set; } = 0;
+        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_End_Time", "Ringing Test", "", "ms")] public int Ringing_End_Time { get; set; } = 5;
+        [ActionListUse(OISRINGING)][Condition("OIS RINGING", "Ringing_Threshold", "Ringing Test", "", "code")] public int Ringing_Threshold { get; set; } = 58;
 
         [ActionListUse(false)][Condition("OIS X Fluctuation", "Min Code", "OIS X Fluctuation", "", "code")] public int XFluctuationMinCode { get; set; } = -2048;
         [ActionListUse(false)][Condition("OIS X Fluctuation", "Max Code", "OIS X Fluctuation", "", "code")] public int XFluctuationMaxCode { get; set; } = 2048;
@@ -683,6 +683,7 @@ namespace FZ4P
     {
         [ActionListUse(true)][Spec("AF> HallCalibration", "um", InspType.Normal, "AF HallCalibration")] AF_NonEPAStroke,
         [ActionListUse(true)][Spec("XY> HallCalibration", "", InspType.OKNG, "OIS HallCalibration")] XYHallCalibration,
+        [ActionListUse(true)][Spec("OIS Linear Compensation", "", InspType.OKNG, "OIS Linear Compensation")] OISLCCComp,
 
         [ActionListUse(true)][Spec("AF> Displacement Range", "um", InspType.Normal, "AF Scan")] AF_Ratedstroke,
         [ActionListUse(true)][Spec("AF> Displacement Min", "um", InspType.OnlyMax, "AF Scan")] AF_Backwardstroke,
@@ -730,14 +731,10 @@ namespace FZ4P
         [ActionListUse(true)][Spec("OIS X Ringing", "cnt", InspType.Normal, "OIS X Ringing")] FRAX_Ringing,
         [ActionListUse(true)][Spec("OIS Y Ringing", "cnt", InspType.Normal, "OIS X Ringing")] FRAY_Ringing,
 
-        [ActionListUse(true)][Spec("OIS X Loop Gain", "dB", InspType.Normal, "OIS LoopGain")] FRAX_LoopGain,
-        [ActionListUse(true)][Spec("OIS Y Loop Gain", "dB", InspType.Normal, "OIS LoopGain")] FRAY_LoopGain,
-
         [ActionListUse(true)][Spec("AF Gain Margin", "dB", InspType.Normal, "AF Gain Margin")] FRAAF_GainMargin,
         [ActionListUse(true)][Spec("AF Phase Margin", "deg", InspType.Normal, "AF Phase Margin")] FRAAF_PhaseMargin,
         [ActionListUse(true)][Spec("AF -4dB Phase Margin", "deg", InspType.Normal, "AF Phase Margin")] FRAAF_4dB_PhaseMargin,
-        [ActionListUse(true)][Spec("OIS Linear Compensation", "", InspType.OKNG, "OIS Linear Compensation")] OISLCCComp,
-
+        
         [ActionListUse(true)][Spec("AF> Stabilize Time 1", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime1,
 
         [ActionListUse(true)][Spec("AF PID Verify", "any", InspType.Normal, "AF PID Verify")] AFPIDVerifyRes,
