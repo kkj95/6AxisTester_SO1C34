@@ -146,7 +146,7 @@
     <Compile Include="DriverIc\OISIC\AK73XX_Ext.cs" />
     <Compile Include="DriverIc\OISIC\DW9836N.cs" />
     <Compile Include="DriverIc\OISIC\EnumTypeDefined.cs" />
-    <Compile Include="Process\AFLinCompCoef2.cs" />
+    <Compile Include="Process\AFLinCompCoefAKM7314.cs" />
     <Compile Include="Extensions\FIndResultExtension.cs" />
     <Compile Include="Process\AFLinCompCoef.cs" />
     <Compile Include="Process\AjinLibrary.cs" />

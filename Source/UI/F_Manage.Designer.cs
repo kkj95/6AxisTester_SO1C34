@@ -203,7 +203,7 @@ namespace FZ4P
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(474, 55);
             this.label4.TabIndex = 259;
-            this.label4.Text = "SO1C86";
+            this.label4.Text = "SO1C34";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnCheckContact

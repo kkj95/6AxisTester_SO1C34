@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FZ4P
 {
-    public class AFLinCompCoef2
+    public class AFLinCompCoefAKM7314
     {
         public const int PRE_ERROR = 5000;  // initial error vaule	
 
@@ -1339,8 +1339,8 @@ namespace FZ4P
     }
     public class ringBufLinComp2
     {
-        public float[] dataX = new float[AFLinCompCoef2.MAX_NUM_DATA];
-        public float[] dataY = new float[AFLinCompCoef2.MAX_NUM_DATA];
+        public float[] dataX = new float[AFLinCompCoefAKM7314.MAX_NUM_DATA];
+        public float[] dataY = new float[AFLinCompCoefAKM7314.MAX_NUM_DATA];
         public int startIndex;
         public int endIndex;
         public int size;

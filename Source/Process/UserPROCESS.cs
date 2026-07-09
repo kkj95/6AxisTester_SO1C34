@@ -54,7 +54,7 @@ namespace FZ4P
             ItemList.Add(new ActItems() { Name = "AF Phase Margin", Func = AFPM, IsMulti = true });
             ///ItemList.Add(new ActItems() { Name = "AF PID Verify", Func = AFPID_Verify, IsMulti = true });
             ///ItemList.Add(new ActItems() { Name = "AF OIS XTalk Calibration", Func = AF_OIS_Xtalk_Calibration, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "OIS Linear/Crosstalk Calibration", Func = OISLCCComp, IsMulti = true });
+            ItemList.Add(new ActItems() { Name = "OIS Linear Calibration", Func = OISLCCComp, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "OIS Gain Margin", Func = OISGM, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "OIS Phase Margin", Func = OISPM, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "OIS Gain Margin Low", Func = OISGM_LOW, IsMulti = true });
@@ -3043,7 +3043,7 @@ namespace FZ4P
             int tmp_position = 0;
             int movecode = 0x00;
             int maxMoveCode = 0xFF;
-            int loop = 0, mac_loop_max = 100;
+            int loop = 0, mac_loop_max = 200;
             int Top_Cut = 0;
             SoftLangdingForEPA(iAxis, 1);
             Wait(200);
@@ -3544,11 +3544,11 @@ namespace FZ4P
 
                 if (targPosi.Length == lensPosi.Length)
                 {
-                    AFLinCompCoef2 coef = new AFLinCompCoef2();
+                    AFLinCompCoefAKM7314 coef = new AFLinCompCoefAKM7314();
                     numLinCompData = targPosi.Length;
                     AddLog(ch, $"numLinCompData = {numLinCompData}");
 
-                    result = coef.LinCompMain(targPosi, lensPosi, numLinCompData, pVt, nVt, ignInf, ignMac, linCoef, ref resError);
+                    result = coef.LinCompMain(targPosi, lensPosi, numLinCompData, pVt, nVt, ignInf, ignMac, ref linCoef, ref resError);
                     if (result != 0)
                     {
                         AddLog(ch, $"Linearity Comp Fail");
@@ -3716,11 +3716,11 @@ namespace FZ4P
             {
                 if (targPosi.Length == lensPosi.Length)
                 {
-                    AFLinCompCoef2 coef = new AFLinCompCoef2();
-                    int[] lincoef = new int[AFLinCompCoef2.NUM_COEF];
+                    AFLinCompCoefAKM7314 coef = new AFLinCompCoefAKM7314();
+                    int[] lincoef = new int[AFLinCompCoefAKM7314.NUM_COEF];
                     numLinCompData = lensPosi.Length;
                     AddLog(ch, $"numLinCompData = {numLinCompData}");
-                    int res = coef.LinCompMain(targPosi, lensPosi, numLinCompData, pvt, nvt, ignInf, ignMac, lincoef, ref resError);
+                    int res = coef.LinCompMain(targPosi, lensPosi, numLinCompData, pvt, nvt, ignInf, ignMac, ref lincoef, ref resError);
                     if (res != 0)
                     {
                         AddLog(ch, $"Linearity Comp Fail");
@@ -4682,19 +4682,23 @@ namespace FZ4P
             ReadWirteNVM NVMReadWriter = new ReadWirteNVM(DWDrvIC.Controls,AddLog);
             var testvalue = PassFails[ch].Results[(int)SpecItem.OISX_Ratedstroke].Val;
             writeNVMParamX.AddRow(0xE0, res);
-
-            if(PassFails[ch].Results[(int)SpecItem.OISX_Ratedstroke].Val < int.MaxValue)
-                writeNVMParamX.AddRow(0xE1, Convert.ToInt32(Math.Round(PassFails[ch].Results[(int)SpecItem.OISX_Ratedstroke].Val, 0)));
+            
+            var strokeX = Convert.ToInt32(Math.Round(PassFails[ch].Results[(int)SpecItem.OISX_Ratedstroke].Val / 4));
+            if (strokeX < int.MaxValue)
+                writeNVMParamX.AddRow(0xE1, strokeX);
             else
                 writeNVMParamX.AddRow(0xE1, 0);
 
-            if (PassFails[ch].Results[(int)SpecItem.OISX_Hysteresis].Val < int.MaxValue)
-                writeNVMParamX.AddRow(0xE2, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISX_Hysteresis].Val * 10));
+            var HysteresisX = Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISX_Hysteresis].Val * 10);
+
+            if (HysteresisX < int.MaxValue)
+                writeNVMParamX.AddRow(0xE2, HysteresisX);
             else
                 writeNVMParamX.AddRow(0xE2, 0);
 
-            if (PassFails[ch].Results[(int)SpecItem.OISX_Linearity].Val < int.MaxValue)
-                writeNVMParamX.AddRow(0xE3, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISX_Linearity].Val * 10));
+            var LinearityX = Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISX_Linearity].Val * 10);
+            if (LinearityX < int.MaxValue)
+                writeNVMParamX.AddRow(0xE3, LinearityX);
             else
                 writeNVMParamX.AddRow(0xE3, 0);
 
@@ -4767,18 +4771,21 @@ namespace FZ4P
             NVMReadWriter.GetReadAddress(ch, DWDrvIC.OISX_Addr, readCollection);
             NVMReadWriter.CompareData(ch, writeNVMParamX, readCollection);
 
-            if (PassFails[ch].Results[(int)SpecItem.OISY_Ratedstroke].Val < int.MaxValue)
-                writeNVMParamY.AddRow(0xE1, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISY_Ratedstroke].Val));
+            var strokeY = Convert.ToInt32(Math.Round(PassFails[ch].Results[(int)SpecItem.OISY_Ratedstroke].Val / 4));
+            if (strokeY < int.MaxValue)
+                writeNVMParamY.AddRow(0xE1, strokeY);
             else
                 writeNVMParamY.AddRow(0xE1, 0);
 
-            if (PassFails[ch].Results[(int)SpecItem.OISY_Hysteresis].Val < int.MaxValue)
-                writeNVMParamY.AddRow(0xE2, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISY_Hysteresis].Val));
+            var HisteresisY = Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISY_Hysteresis].Val * 10);
+            if (HisteresisY < int.MaxValue)
+                writeNVMParamY.AddRow(0xE2, HisteresisY);
             else
                 writeNVMParamY.AddRow(0xE2, 0);
 
-            if (PassFails[ch].Results[(int)SpecItem.OISY_Linearity].Val < int.MaxValue)
-                writeNVMParamY.AddRow(0xE3, Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISY_Linearity].Val));
+            var LinearityY = Convert.ToInt32(PassFails[ch].Results[(int)SpecItem.OISY_Linearity].Val * 10);
+            if (LinearityY < int.MaxValue)
+                writeNVMParamY.AddRow(0xE3, LinearityY);
             else
                 writeNVMParamY.AddRow(0xE3, 0);
 
