@@ -110,8 +110,6 @@ namespace FZ4P
         public int[] AFOISVerifyXPOSOIS = new int[2];
         public int[] AFOISVerifyYPOSOIS = new int[2];
 
-
-
         public int OISXCenter = 8192;
         public int OISYCenter = 8192;
         public int AFCenter = 2048;
@@ -187,8 +185,6 @@ namespace FZ4P
 
             m__G = Global.GetInstance();
         }
-
-
 
         #region Default
 
@@ -1045,7 +1041,6 @@ namespace FZ4P
             }
         }
 
-
         public void LoadSeq()
         {
             try
@@ -1101,7 +1096,6 @@ namespace FZ4P
             catch
             { }
         }
-
 
         void RunPosture(int InspType)
         {
@@ -1372,10 +1366,6 @@ namespace FZ4P
                     int ch = port * 2;
                     DrvIC.FRAModeDisable(ch);
                     DrvIC.AF_ICReset(ch);
-                    SinewaveXMaxDiff = 0;
-                    SinewaveYMaxDiff = 0;
-                    RingingXStabilizer = 0;
-                    RingingYStabilizer = 0;
 
                     AFCurrentMinMax = new double[2];
                     OISXCurrentMinMax = new double[2];
@@ -2247,8 +2237,6 @@ namespace FZ4P
 
         }
 
-
-
         public void Process_CalcCodeTest(int port, string name, int InspCnt)
         {
           
@@ -2844,9 +2832,6 @@ namespace FZ4P
 
         }
 
-
-
-
         public void AddHeadResult(string sFilePath)
         {
             StreamWriter writer;
@@ -3157,11 +3142,7 @@ namespace FZ4P
             return res; 
         }
 
- 
-
         #endregion
-
-
     }
     public class OISCalParameter
     {
