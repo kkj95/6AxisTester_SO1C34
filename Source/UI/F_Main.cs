@@ -1,4 +1,5 @@
 ﻿
+using FZ4P.Commons.Helper;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -887,18 +888,24 @@ namespace FZ4P
         private void SaveCondition_Click(object sender, EventArgs e)
         {
             string path = STATIC.RecipeDir + Current.ConditionName;
+            string viewPath = STATIC.ViewRecipeDir + Current.ConditionName;
             UpdateUI();
             DataIO.SerializeToXMLFile(Condition, path);
+
+            DataIOHelper.SerializeToXMLViewerFile(Condition, viewPath);
         }
 
         private void SaveAsCondition_Click(object sender, EventArgs e)
         {
             string result = STATIC.OpenFile(STATIC.RecipeDir, ".rcp", true);
+            string viewPath = STATIC.ViewRecipeDir + Current.ConditionName;
             UpdateUI();
             DataIO.SerializeToXMLFile(Condition, result);
             Current.ConditionName = Path.GetFileName(result);
             DataIO.SerializeToXMLFile(Current, STATIC.CurrentPath);
             RecipeFileName.Text = Current.ConditionName;
+
+            DataIOHelper.SerializeToXMLViewerFile(Condition, viewPath);
 
         }
        

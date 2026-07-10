@@ -38,6 +38,7 @@ namespace FZ4P
             if (!Directory.Exists(STATIC.RootDir)) Directory.CreateDirectory(STATIC.RootDir);
             if (!Directory.Exists(STATIC.DataDir)) Directory.CreateDirectory(STATIC.DataDir);
             if (!Directory.Exists(STATIC.RecipeDir)) Directory.CreateDirectory(STATIC.RecipeDir);
+            if (!Directory.Exists(STATIC.ViewRecipeDir)) Directory.CreateDirectory(STATIC.ViewRecipeDir);
             if (!Directory.Exists(STATIC.SpecDir)) Directory.CreateDirectory(STATIC.SpecDir);
             if (!Directory.Exists(STATIC.PackageDir)) Directory.CreateDirectory(STATIC.PackageDir);
             if (!Directory.Exists(STATIC.PackageDir + "AFPID\\")) Directory.CreateDirectory(STATIC.PackageDir + "AFPID\\");
@@ -50,6 +51,7 @@ namespace FZ4P
             if (!Directory.Exists(STATIC.OISYPIDDir)) Directory.CreateDirectory(STATIC.OISYPIDDir);
             if (!Directory.Exists(STATIC.OISFWDir)) Directory.CreateDirectory(STATIC.OISFWDir);
             if (!Directory.Exists(STATIC.OISBaseCalDir)) Directory.CreateDirectory(STATIC.OISBaseCalDir);
+
             string res = string.Empty;
             res = STATIC.PKGRelease(STATIC.PackageDir, "*.rcp", STATIC.RecipeDir);
             if (res != string.Empty) Current.ConditionName = Path.GetFileName(res);
@@ -92,7 +94,7 @@ namespace FZ4P
             {
                 Spec compare = new Spec();
                 compare = DataIO.DeserializeXMLFileToObject<Spec>(STATIC.SpecDir + Current.SpecName);
-                for (int i = 0; i < compare.specList.Count; i++)
+                for (int i = 0; i < compare?.specList?.Count; i++)
                 {
                     int index = Spec.specList.FindIndex(x => x.DisplayName == compare.specList[i].DisplayName);
                     if (index != -1)

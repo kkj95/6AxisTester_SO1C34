@@ -2,6 +2,7 @@
 using FZ4P.DriverIc.OISIC;
 using FZ4P.UI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -46,6 +47,7 @@ namespace FZ4P
 
         public static string BaseDir = "C:\\6AxisTester\\";
         public static string RecipeDir = BaseDir + "Recipe\\";
+        public static string ViewRecipeDir = BaseDir + "RecipeViewer\\";
         public static string SpecDir = BaseDir + "Spec\\";
         public static string RootDir = BaseDir + "\\DoNotTouch\\";
         public static string DataDir = BaseDir + "\\Data\\";
@@ -238,6 +240,7 @@ namespace FZ4P
                 if (File.Exists(backFile))
                     File.Delete(backFile);
                 try { File.WriteAllText(backFile, toSerialize.SerializeToXML<T>()); }
+                //try { File.WriteAllText(backFile, toSerialize.SerializeToXMLWithCategory<T>()); }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.ToString());
@@ -254,6 +257,8 @@ namespace FZ4P
             }
             catch { return false; }
         }
+        
+        
         public static object Deserialize<T>(this string toDeserialize) where T : class, new()
         {
             try

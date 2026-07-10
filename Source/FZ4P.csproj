@@ -128,6 +128,7 @@
     <Compile Include="Commons\Events\ArrayChangedEventArgs.cs" />
     <Compile Include="Commons\Events\CustomPropertyChangedEventArgs.cs" />
     <Compile Include="Commons\Helper\AppHelper.cs" />
+    <Compile Include="Commons\Helper\DataIOHelper.cs" />
     <Compile Include="Commons\Helper\PropertiesHelper.cs" />
     <Compile Include="Commons\ModelChangedBase.cs">
       <SubType>Form</SubType>
