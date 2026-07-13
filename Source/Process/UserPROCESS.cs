@@ -2160,6 +2160,9 @@ namespace FZ4P
             DWDrvIC.LiearCompClearWrite((int)AxisTypeDW.AxisX);
             DWDrvIC.LiearCompClearWrite((int)AxisTypeDW.AxisY);
 
+            DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.StandbyMode);
+            DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.ClosedMode);
+            Wait(30);
             DWDrvIC.OISMove(ch, DWDrvIC.OIS_MIN_CODE, DWDrvIC.OIS_MIN_CODE);
             Wait(100);
             res = Measure();
