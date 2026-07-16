@@ -202,6 +202,8 @@ namespace FZ4P
 
 
         public static F_Manual fManual = new F_Manual(DW9836,DrvIC);
+
+        public static BootLoadinit AppLazyinit = new BootLoadinit();
     }
     public static class DataIO
     {

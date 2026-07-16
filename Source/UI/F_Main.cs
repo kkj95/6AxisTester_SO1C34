@@ -891,8 +891,7 @@ namespace FZ4P
             string viewPath = STATIC.ViewRecipeDir + Current.ConditionName;
             UpdateUI();
             DataIO.SerializeToXMLFile(Condition, path);
-
-            DataIOHelper.SerializeToXMLViewerFile(Condition, viewPath);
+            DataIOHelper.SerializeToXMLViewerFile<Condition, ConditionExtra>(Condition, Rcp.ConditionExt, viewPath);
         }
 
         private void SaveAsCondition_Click(object sender, EventArgs e)
@@ -905,8 +904,7 @@ namespace FZ4P
             DataIO.SerializeToXMLFile(Current, STATIC.CurrentPath);
             RecipeFileName.Text = Current.ConditionName;
 
-            DataIOHelper.SerializeToXMLViewerFile(Condition, viewPath);
-
+            DataIOHelper.SerializeToXMLViewerFile<Condition, ConditionExtra>(Condition, Rcp.ConditionExt, viewPath);
         }
        
         private void OpenSpec_Click(object sender, EventArgs e)

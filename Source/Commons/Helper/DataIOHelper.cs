@@ -44,6 +44,133 @@ namespace FZ4P.Commons.Helper
             catch { return false; }
         }
 
+        public static bool SerializeToXMLViewerFile<T, U>(this T toSerialize, U toSerializeExtra, string FileName) where T : class, new()
+        {
+            try
+            {
+                string fullPath = string.Empty;
+                fullPath = FileExtensionChanged(FileName);
+                string dir = Path.GetDirectoryName(fullPath);
+                try { Directory.CreateDirectory(dir); }
+                catch
+                { return false; }
+                string backFile = Path.ChangeExtension(fullPath, ".bak");
+                if (File.Exists(backFile))
+                    File.Delete(backFile);
+                try { File.WriteAllText(backFile, toSerialize.SerializeToXMLWithCategory<T,U>(toSerializeExtra)); }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                    return false;
+                }
+                FileInfo info = new FileInfo(backFile);
+                if (info.Length == 0)
+                { return false; }
+
+                if (File.Exists(fullPath))
+                    File.Delete(fullPath);
+                File.Move(backFile, fullPath);
+                return true;
+            }
+            catch { return false; }
+        }
+
+
+        public static string SerializeToXMLWithCategory<T,U>(this T obj, U objExtra)
+        {
+            if (obj == null)
+                return string.Empty;
+
+            try
+            {
+                var settings = new XmlWriterSettings
+                {
+                    Encoding = new UTF8Encoding(false),
+                    Indent = true
+                };
+
+                using (var ms = new MemoryStream())
+                using (var xw = XmlWriter.Create(ms, settings))
+                {
+                    Type type = typeof(T);
+
+                    xw.WriteStartDocument();
+                    xw.WriteStartElement(type.Name);
+
+                    PropertyInfo[] props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+                    foreach (var prop in props)
+                    {
+                        if (!prop.CanRead)
+                            continue;
+
+                        object value = prop.GetValue(obj, null);
+
+                        xw.WriteStartElement(prop.Name);
+
+                        var categoryAttr = prop.GetCustomAttribute<ConditionAttribute>();
+                        if (categoryAttr != null)
+                        {
+                            xw.WriteAttributeString("Category", categoryAttr.Category ?? string.Empty);
+                            xw.WriteAttributeString("ToDo1", categoryAttr.ToDo1 ?? string.Empty);
+                            xw.WriteAttributeString("ToDo2", categoryAttr.ToDo2 ?? string.Empty);
+                            xw.WriteAttributeString("Unit", categoryAttr.Unit ?? string.Empty);
+                        }
+
+                        WriteValue(xw, value);
+
+                        xw.WriteEndElement();
+                    }
+                    // 추가 클래스 데이터
+                    if (objExtra != null)
+                    {
+                        Type additionalType = objExtra.GetType();
+
+                        xw.WriteStartElement(additionalType.Name);
+
+                        PropertyInfo[] additionalProps = additionalType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+                        foreach (var prop in additionalProps)
+                        {
+                            if (!prop.CanRead)
+                                continue;
+
+                            object value =
+                                prop.GetValue(objExtra, null);
+
+                            xw.WriteStartElement(prop.Name);
+
+                            var categoryAttr = prop.GetCustomAttribute<ConditionAttribute>();
+
+                            if (categoryAttr != null)
+                            {
+                                xw.WriteAttributeString("Category", categoryAttr.Category ?? string.Empty);
+                                xw.WriteAttributeString("ToDo1", categoryAttr.ToDo1 ?? string.Empty);
+                                xw.WriteAttributeString("ToDo2", categoryAttr.ToDo2 ?? string.Empty);
+                                xw.WriteAttributeString("Unit", categoryAttr.Unit ?? string.Empty);
+                            }
+
+                            WriteValue(xw, value);
+
+                            xw.WriteEndElement();
+                        }
+
+                        xw.WriteEndElement();
+                    }
+
+                    xw.WriteEndElement();
+                    xw.WriteEndDocument();
+                    xw.Flush();
+
+                    return Encoding.UTF8.GetString(ms.ToArray());
+                }
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
         public static string SerializeToXMLWithCategory<T>(this T obj)
         {
             if (obj == null)
@@ -210,9 +337,9 @@ namespace FZ4P.Commons.Helper
         {
             string fileName = file;
 
-            if (Path.GetExtension(fileName).ToLower() != ".rpcv")
+            if (Path.GetExtension(fileName).ToLower() != ".rcpv")
             {
-                fileName = Path.ChangeExtension(fileName, ".rpcv");
+                fileName = Path.ChangeExtension(fileName, ".rcpv");
             }
             return fileName;
         }

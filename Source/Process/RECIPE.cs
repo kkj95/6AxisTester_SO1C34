@@ -15,6 +15,7 @@ namespace FZ4P
     {
         public CurrentPath Current { get; set; }
         public Condition Condition { get; set; }
+        public ConditionExtra ConditionExt { get; set; }
 
         public Spec Spec { get; set; }
         public Model Model { get; set; }
@@ -86,7 +87,7 @@ namespace FZ4P
                     }
                 }
             }
-
+            ConditionExt = new ConditionExtra();
 
             Spec = new Spec();
             Spec.InitSpecList();
@@ -659,6 +660,10 @@ namespace FZ4P
             }
         }
 
+    }
+    public class ConditionExtra
+    {
+        [Condition("ActionList", "", "", "", "")] public List<string> ActionList { get; set; } = new List<string>();
     }
     public class RetryCount
     {
