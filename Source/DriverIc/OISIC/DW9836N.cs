@@ -31,6 +31,10 @@ namespace FZ4P.DriverIc.OISIC
         public int OIS_MID_CODE { get; set; } = 8192;
         public int OIS_MAX_CODE { get; set; } = 16384;
 
+        //public int OIS_MIN_CODE { get; set; } = 0;
+        //public int OIS_MID_CODE { get; set; } = 2048;
+        //public int OIS_MAX_CODE { get; set; } = 4095;
+
         public IOneTwoBytesDrivingIC Controls => _controls;
 
         public DW9836N(IOneTwoBytesDrivingIC controls)
@@ -156,7 +160,7 @@ namespace FZ4P.DriverIc.OISIC
             var Wrod = Controls.Read2Byte(SlaveID, (int)RegisterMapDW9836N.IOUT_CURRENT_LOW, 1);
             ReadData = (short)(Wrod >> 3);
 
-            double readCurrent = cal.CalculatorCurrent(ReadData);
+            double readCurrent = Math.Abs(cal.CalculatorCurrent(ReadData));
             return readCurrent.Round(2);
         }
 

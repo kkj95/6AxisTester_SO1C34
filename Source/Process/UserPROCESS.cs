@@ -663,6 +663,29 @@ namespace FZ4P
         }
         void OIS_HallCalibration(int ch, string testItem, int InspCnt)
         {
+            LEDs_All_On(ch, true);
+            DWDrvIC.SetOperationMode(AxisTypeDW.AxisX,OperationTypeDW.OpenMode);
+
+            for (int i = 0; i< 10 ; i++)
+            {  
+                DWDrvIC.OISMove(ch, DWDrvIC.OIS_MIN_CODE, DWDrvIC.OIS_MID_CODE);
+                Thread.Sleep(200);
+                var position = Measure();
+                double[] cx = new double[2];
+                cx[0] = position.cx[0];
+                Thread.Sleep(50);
+
+                DWDrvIC.OISMove(ch, DWDrvIC.OIS_MAX_CODE-1, DWDrvIC.OIS_MID_CODE);
+                Thread.Sleep(200);
+                position = Measure();
+                cx[1] = position.cx[0];
+                var stroke = cx[1] - cx[0];
+                var d= Math.Round(stroke, 2);
+                AddLog(ch, $"Open Loop Stroke : {d} um");
+                Thread.Sleep(50);
+            }
+            LEDs_All_On(ch, false);
+
             //AF BestPos Move
             DrvIC.AFOnOff(ch, true);
             DrvIC.AFMove(ch, Condition.OISCalAFPos);
@@ -682,8 +705,6 @@ namespace FZ4P
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x39);
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0xA0);
-
-
 
             for (int i = 0; i < IC_DATA_OIS_X.Length; i++)
             {
@@ -716,7 +737,7 @@ namespace FZ4P
             }
 
 
-            SetEPA((int)AxisTypeDW.AxisX);
+            //SetEPA((int)AxisTypeDW.AxisX);
             #endregion
 
             #region OIS Y Hall Calibration
@@ -763,7 +784,7 @@ namespace FZ4P
                 return;
             }
 
-            SetEPA((int)AxisTypeDW.AxisY);
+            //SetEPA((int)AxisTypeDW.AxisY);
             #endregion
         }
 

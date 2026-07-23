@@ -22,7 +22,7 @@ namespace FZ4P
             }
                 
             else if(currentCode < 4096)
-                return -1.0 * (_maxCurrentValue * ((4096.0 - currentCode) / 4096.0));
+                return  ((-1.0 *_maxCurrentValue) * ((4096.0 - currentCode) / 4096.0));
 
             throw new ArgumentOutOfRangeException("범위 초과");
         }
