@@ -199,9 +199,10 @@ namespace FZ4P
 
         public static I2CControl dln_control = new I2CControl(Dln.DLNi2c[3], Dln.SetError);
         public static DW9836N DW9836 = new DW9836N(dln_control);
+        public static MCUH503 MCUH503 = new MCUH503(DW9836, dln_control);
 
 
-        public static F_Manual fManual = new F_Manual(DW9836,DrvIC);
+        public static F_Manual fManual = new F_Manual(MCUH503.OIS, DrvIC,Process.AddLog, MCUH503);
 
         public static BootLoadinit AppLazyinit = new BootLoadinit();
     }

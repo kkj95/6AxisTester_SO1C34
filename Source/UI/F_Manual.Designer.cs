@@ -52,6 +52,11 @@
             this.btn_Move_Min = new System.Windows.Forms.Button();
             this.btn_Move_Mid = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.panel9 = new System.Windows.Forms.Panel();
+            this.label11 = new System.Windows.Forms.Label();
+            this.panel10 = new System.Windows.Forms.Panel();
+            this.label12 = new System.Windows.Forms.Label();
+            this.lbl_ADC_2 = new System.Windows.Forms.Label();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.panel7 = new System.Windows.Forms.Panel();
             this.label9 = new System.Windows.Forms.Label();
@@ -73,14 +78,27 @@
             this.lbl_ReadHall2 = new System.Windows.Forms.Label();
             this.lbl_ADC = new System.Windows.Forms.Label();
             this.lbl_ReadHall = new System.Windows.Forms.Label();
-            this.panel9 = new System.Windows.Forms.Panel();
-            this.label11 = new System.Windows.Forms.Label();
-            this.panel10 = new System.Windows.Forms.Panel();
-            this.label12 = new System.Windows.Forms.Label();
-            this.lbl_ADC_2 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
+            this.checkBox5 = new System.Windows.Forms.CheckBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.panel11 = new System.Windows.Forms.Panel();
+            this.label13 = new System.Windows.Forms.Label();
+            this.lbl_Y_42 = new System.Windows.Forms.Label();
+            this.lbl_Y_40 = new System.Windows.Forms.Label();
+            this.panel14 = new System.Windows.Forms.Panel();
+            this.label19 = new System.Windows.Forms.Label();
+            this.checkBox6 = new System.Windows.Forms.CheckBox();
+            this.panel13 = new System.Windows.Forms.Panel();
+            this.label16 = new System.Windows.Forms.Label();
+            this.lbl_X_42 = new System.Windows.Forms.Label();
+            this.lbl_X_40 = new System.Windows.Forms.Label();
+            this.panel12 = new System.Windows.Forms.Panel();
+            this.label15 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.panel9.SuspendLayout();
+            this.panel10.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel8.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -89,8 +107,11 @@
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.panel9.SuspendLayout();
-            this.panel10.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            this.panel11.SuspendLayout();
+            this.panel14.SuspendLayout();
+            this.panel13.SuspendLayout();
+            this.panel12.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -105,12 +126,13 @@
             this.groupBox1.Controls.Add(this.cbb_ADC_Select);
             this.groupBox1.Controls.Add(this.checkBox2);
             this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Location = new System.Drawing.Point(410, 17);
+            this.groupBox1.Location = new System.Drawing.Point(410, 352);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(392, 134);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "PeakCurrent";
+            this.groupBox1.Visible = false;
             // 
             // radioButton2
             // 
@@ -379,6 +401,62 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Real Data";
             // 
+            // panel9
+            // 
+            this.panel9.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.panel9.Controls.Add(this.label11);
+            this.panel9.Location = new System.Drawing.Point(158, 248);
+            this.panel9.Name = "panel9";
+            this.panel9.Size = new System.Drawing.Size(134, 30);
+            this.panel9.TabIndex = 518;
+            // 
+            // label11
+            // 
+            this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label11.ForeColor = System.Drawing.Color.White;
+            this.label11.Location = new System.Drawing.Point(48, 9);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(12, 12);
+            this.label11.TabIndex = 279;
+            this.label11.Text = "-";
+            // 
+            // panel10
+            // 
+            this.panel10.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.panel10.Controls.Add(this.label12);
+            this.panel10.Location = new System.Drawing.Point(158, 152);
+            this.panel10.Name = "panel10";
+            this.panel10.Size = new System.Drawing.Size(134, 30);
+            this.panel10.TabIndex = 517;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label12.ForeColor = System.Drawing.Color.White;
+            this.label12.Location = new System.Drawing.Point(38, 9);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(59, 12);
+            this.label12.TabIndex = 278;
+            this.label12.Text = "Channel";
+            // 
+            // lbl_ADC_2
+            // 
+            this.lbl_ADC_2.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.lbl_ADC_2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbl_ADC_2.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_ADC_2.ForeColor = System.Drawing.Color.Yellow;
+            this.lbl_ADC_2.Location = new System.Drawing.Point(157, 183);
+            this.lbl_ADC_2.Name = "lbl_ADC_2";
+            this.lbl_ADC_2.Size = new System.Drawing.Size(135, 64);
+            this.lbl_ADC_2.TabIndex = 516;
+            this.lbl_ADC_2.Text = "-";
+            this.lbl_ADC_2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // checkBox4
             // 
             this.checkBox4.AutoSize = true;
@@ -617,67 +695,202 @@
             this.lbl_ReadHall.Text = "-";
             this.lbl_ReadHall.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // panel9
+            // button2
             // 
-            this.panel9.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.panel9.Controls.Add(this.label11);
-            this.panel9.Location = new System.Drawing.Point(158, 248);
-            this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(134, 30);
-            this.panel9.TabIndex = 518;
+            this.button2.Location = new System.Drawing.Point(292, 57);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(88, 28);
+            this.button2.TabIndex = 521;
+            this.button2.Text = "Wake Up";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // label11
+            // checkBox5
             // 
-            this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label11.ForeColor = System.Drawing.Color.White;
-            this.label11.Location = new System.Drawing.Point(48, 9);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(12, 12);
-            this.label11.TabIndex = 279;
-            this.label11.Text = "-";
+            this.checkBox5.AutoSize = true;
+            this.checkBox5.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.checkBox5.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox5.ForeColor = System.Drawing.Color.White;
+            this.checkBox5.Location = new System.Drawing.Point(292, 31);
+            this.checkBox5.Name = "checkBox5";
+            this.checkBox5.Size = new System.Drawing.Size(94, 19);
+            this.checkBox5.TabIndex = 519;
+            this.checkBox5.Text = "ByPassMode";
+            this.checkBox5.UseVisualStyleBackColor = false;
+            this.checkBox5.CheckStateChanged += new System.EventHandler(this.checkBox5_CheckStateChanged);
             // 
-            // panel10
+            // groupBox3
             // 
-            this.panel10.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.panel10.Controls.Add(this.label12);
-            this.panel10.Location = new System.Drawing.Point(158, 152);
-            this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(134, 30);
-            this.panel10.TabIndex = 517;
+            this.groupBox3.Controls.Add(this.panel11);
+            this.groupBox3.Controls.Add(this.lbl_Y_42);
+            this.groupBox3.Controls.Add(this.lbl_Y_40);
+            this.groupBox3.Controls.Add(this.panel14);
+            this.groupBox3.Controls.Add(this.checkBox6);
+            this.groupBox3.Controls.Add(this.panel13);
+            this.groupBox3.Controls.Add(this.lbl_X_42);
+            this.groupBox3.Controls.Add(this.lbl_X_40);
+            this.groupBox3.Controls.Add(this.panel12);
+            this.groupBox3.Controls.Add(this.checkBox5);
+            this.groupBox3.Controls.Add(this.button2);
+            this.groupBox3.Location = new System.Drawing.Point(410, 14);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(392, 245);
+            this.groupBox3.TabIndex = 514;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "I2C To I3C Checked";
             // 
-            // label12
+            // panel11
             // 
-            this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label12.ForeColor = System.Drawing.Color.White;
-            this.label12.Location = new System.Drawing.Point(38, 9);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(59, 12);
-            this.label12.TabIndex = 278;
-            this.label12.Text = "Channel";
+            this.panel11.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.panel11.Controls.Add(this.label13);
+            this.panel11.Location = new System.Drawing.Point(136, 141);
+            this.panel11.Name = "panel11";
+            this.panel11.Size = new System.Drawing.Size(112, 30);
+            this.panel11.TabIndex = 532;
             // 
-            // lbl_ADC_2
+            // label13
             // 
-            this.lbl_ADC_2.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.lbl_ADC_2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbl_ADC_2.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_ADC_2.ForeColor = System.Drawing.Color.Yellow;
-            this.lbl_ADC_2.Location = new System.Drawing.Point(157, 183);
-            this.lbl_ADC_2.Name = "lbl_ADC_2";
-            this.lbl_ADC_2.Size = new System.Drawing.Size(135, 64);
-            this.lbl_ADC_2.TabIndex = 516;
-            this.lbl_ADC_2.Text = "-";
-            this.lbl_ADC_2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label13.ForeColor = System.Drawing.Color.White;
+            this.label13.Location = new System.Drawing.Point(27, 9);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(60, 12);
+            this.label13.TabIndex = 278;
+            this.label13.Text = "Y - 0x42";
+            // 
+            // lbl_Y_42
+            // 
+            this.lbl_Y_42.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.lbl_Y_42.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbl_Y_42.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_Y_42.ForeColor = System.Drawing.Color.Yellow;
+            this.lbl_Y_42.Location = new System.Drawing.Point(136, 172);
+            this.lbl_Y_42.Name = "lbl_Y_42";
+            this.lbl_Y_42.Size = new System.Drawing.Size(112, 64);
+            this.lbl_Y_42.TabIndex = 531;
+            this.lbl_Y_42.Text = "-";
+            this.lbl_Y_42.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbl_Y_40
+            // 
+            this.lbl_Y_40.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.lbl_Y_40.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbl_Y_40.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_Y_40.ForeColor = System.Drawing.Color.Yellow;
+            this.lbl_Y_40.Location = new System.Drawing.Point(18, 172);
+            this.lbl_Y_40.Name = "lbl_Y_40";
+            this.lbl_Y_40.Size = new System.Drawing.Size(112, 64);
+            this.lbl_Y_40.TabIndex = 529;
+            this.lbl_Y_40.Text = "-";
+            this.lbl_Y_40.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panel14
+            // 
+            this.panel14.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.panel14.Controls.Add(this.label19);
+            this.panel14.Location = new System.Drawing.Point(18, 141);
+            this.panel14.Name = "panel14";
+            this.panel14.Size = new System.Drawing.Size(112, 30);
+            this.panel14.TabIndex = 530;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label19.ForeColor = System.Drawing.Color.White;
+            this.label19.Location = new System.Drawing.Point(27, 9);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(60, 12);
+            this.label19.TabIndex = 278;
+            this.label19.Text = "Y - 0x40";
+            // 
+            // checkBox6
+            // 
+            this.checkBox6.AutoSize = true;
+            this.checkBox6.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.checkBox6.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox6.ForeColor = System.Drawing.Color.White;
+            this.checkBox6.Location = new System.Drawing.Point(328, 0);
+            this.checkBox6.Name = "checkBox6";
+            this.checkBox6.Size = new System.Drawing.Size(58, 19);
+            this.checkBox6.TabIndex = 528;
+            this.checkBox6.Text = "START";
+            this.checkBox6.UseVisualStyleBackColor = false;
+            this.checkBox6.CheckStateChanged += new System.EventHandler(this.checkBox6_CheckStateChanged);
+            // 
+            // panel13
+            // 
+            this.panel13.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.panel13.Controls.Add(this.label16);
+            this.panel13.Location = new System.Drawing.Point(136, 31);
+            this.panel13.Name = "panel13";
+            this.panel13.Size = new System.Drawing.Size(112, 30);
+            this.panel13.TabIndex = 526;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label16.ForeColor = System.Drawing.Color.White;
+            this.label16.Location = new System.Drawing.Point(27, 9);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(60, 12);
+            this.label16.TabIndex = 278;
+            this.label16.Text = "X - 0x42";
+            // 
+            // lbl_X_42
+            // 
+            this.lbl_X_42.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.lbl_X_42.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbl_X_42.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_X_42.ForeColor = System.Drawing.Color.Yellow;
+            this.lbl_X_42.Location = new System.Drawing.Point(136, 62);
+            this.lbl_X_42.Name = "lbl_X_42";
+            this.lbl_X_42.Size = new System.Drawing.Size(112, 64);
+            this.lbl_X_42.TabIndex = 525;
+            this.lbl_X_42.Text = "-";
+            this.lbl_X_42.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbl_X_40
+            // 
+            this.lbl_X_40.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.lbl_X_40.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbl_X_40.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_X_40.ForeColor = System.Drawing.Color.Yellow;
+            this.lbl_X_40.Location = new System.Drawing.Point(18, 62);
+            this.lbl_X_40.Name = "lbl_X_40";
+            this.lbl_X_40.Size = new System.Drawing.Size(112, 64);
+            this.lbl_X_40.TabIndex = 522;
+            this.lbl_X_40.Text = "-";
+            this.lbl_X_40.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panel12
+            // 
+            this.panel12.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.panel12.Controls.Add(this.label15);
+            this.panel12.Location = new System.Drawing.Point(18, 31);
+            this.panel12.Name = "panel12";
+            this.panel12.Size = new System.Drawing.Size(112, 30);
+            this.panel12.TabIndex = 523;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label15.ForeColor = System.Drawing.Color.White;
+            this.label15.Location = new System.Drawing.Point(27, 9);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(60, 12);
+            this.label15.TabIndex = 278;
+            this.label15.Text = "X - 0x40";
             // 
             // F_Manual
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(409, 522);
+            this.ClientSize = new System.Drawing.Size(851, 522);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox1);
@@ -690,6 +903,10 @@
             this.groupBox5.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.panel9.ResumeLayout(false);
+            this.panel9.PerformLayout();
+            this.panel10.ResumeLayout(false);
+            this.panel10.PerformLayout();
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
             this.panel8.ResumeLayout(false);
@@ -706,10 +923,16 @@
             this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.panel9.ResumeLayout(false);
-            this.panel9.PerformLayout();
-            this.panel10.ResumeLayout(false);
-            this.panel10.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            this.panel11.ResumeLayout(false);
+            this.panel11.PerformLayout();
+            this.panel14.ResumeLayout(false);
+            this.panel14.PerformLayout();
+            this.panel13.ResumeLayout(false);
+            this.panel13.PerformLayout();
+            this.panel12.ResumeLayout(false);
+            this.panel12.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -766,5 +989,21 @@
         private System.Windows.Forms.Panel panel10;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label lbl_ADC_2;
+        private System.Windows.Forms.CheckBox checkBox5;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.CheckBox checkBox6;
+        private System.Windows.Forms.Panel panel13;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label lbl_X_42;
+        private System.Windows.Forms.Label lbl_X_40;
+        private System.Windows.Forms.Panel panel12;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Panel panel11;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label lbl_Y_42;
+        private System.Windows.Forms.Label lbl_Y_40;
+        private System.Windows.Forms.Panel panel14;
+        private System.Windows.Forms.Label label19;
     }
 }

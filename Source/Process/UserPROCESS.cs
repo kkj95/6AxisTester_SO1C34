@@ -48,6 +48,9 @@ namespace FZ4P
             ItemList.Add(new ActItems() { Name = "OIS Phase Margin Low", Func = OISPM_LOW, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "SineWave Test", Func = OISSineWave, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "Ringing Test", Func = OISRinging, IsMulti = true });
+
+            ItemList.Add(new ActItems() { Name = "Changed I3C Mode", Func = OIS_ChangedI3C, IsMulti = true });
+            ItemList.Add(new ActItems() { Name = "Changed I2C Mode", Func = OIS_ChangedI2C, IsMulti = true });
         }
 
         #region AddSeq
@@ -2445,6 +2448,40 @@ namespace FZ4P
             //        break;
             //    }
             //}
+        }
+
+
+        public void OIS_ChangedI3C(int ch, string testItem, int InspCnt)
+        {
+            OISSetI3C(AxisTypeDW.AxisX);
+            Thread.Sleep(100);
+            OISSetI3C(AxisTypeDW.AxisY);
+            Thread.Sleep(100);
+        }
+
+        public void OIS_ChangedI2C(int ch, string testItem, int InspCnt)
+        {
+            OISSetI2C(AxisTypeDW.AxisX);
+            Thread.Sleep(100);
+            OISSetI2C(AxisTypeDW.AxisY);
+            Thread.Sleep(100);
+        }
+
+        private void OISSetI2C(AxisTypeDW axisTypeDW)
+        {
+            DWDrvIC.SetOperationMode(axisTypeDW, OperationTypeDW.StandbyMode);
+            Thread.Sleep(10);
+            DWDrvIC.Set_PT((int)axisTypeDW, false);
+            Thread.Sleep(10);
+            DWDrvIC.SetRegisterI2CMode(axisTypeDW);
+        }
+        private void OISSetI3C(AxisTypeDW axisTypeDW)
+        {
+            DWDrvIC.SetOperationMode(axisTypeDW, OperationTypeDW.StandbyMode);
+            Thread.Sleep(10);
+            DWDrvIC.Set_PT((int)axisTypeDW, false);
+            Thread.Sleep(10);
+            DWDrvIC.SetRegisterI3CMode(axisTypeDW);
         }
         #endregion
     }

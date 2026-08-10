@@ -137,6 +137,7 @@
     <Compile Include="DriverIc\I2CBase\Interfaces\IOneBytesDrivingIC.cs" />
     <Compile Include="DriverIc\I2CBase\Interfaces\IOneTwoBytesDrivingIC.cs" />
     <Compile Include="DriverIc\I2CBase\Interfaces\ITwoBytesDrivingIC.cs" />
+    <Compile Include="DriverIc\Interfaces\I2CTOI3C_Function.cs" />
     <Compile Include="DriverIc\Interfaces\IAFunction.cs" />
     <Compile Include="DriverIc\Interfaces\IFRAFunction.cs" />
     <Compile Include="DriverIc\Interfaces\IOISFunction.cs" />
@@ -145,8 +146,10 @@
     <Compile Include="DriverIc\OISIC\Adapter\OISAdapterAKM.cs" />
     <Compile Include="DriverIc\OISIC\AK73XX.cs" />
     <Compile Include="DriverIc\OISIC\AK73XX_Ext.cs" />
+    <Compile Include="DriverIc\OISIC\Base\DriveICBase.cs" />
     <Compile Include="DriverIc\OISIC\DW9836N.cs" />
     <Compile Include="DriverIc\OISIC\EnumTypeDefined.cs" />
+    <Compile Include="DriverIc\OISIC\MCUH503.cs" />
     <Compile Include="Process\AFLinCompCoefAKM7314.cs" />
     <Compile Include="Extensions\FIndResultExtension.cs" />
     <Compile Include="Process\AFLinCompCoef.cs" />

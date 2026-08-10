@@ -18,8 +18,10 @@ namespace FZ4P.UI
         private readonly IOISFunction _oISFunction = null;
         private readonly IFRAFunction _fraFunction = null;
         private readonly IAFunction _afFunction = null;
+        private readonly I2CTOI3C_Function _i2CToI3C= null;
+        private readonly Action<int, string> _actionLog;
         private Task t1;
-        private CancellationTokenSource cts;
+        private CancellationTokenSource[] cts = new CancellationTokenSource[2];
 
         string[] index = { "OIS", "AF" };
         string[] indexCh = { "0", "1" };
@@ -94,20 +96,80 @@ namespace FZ4P.UI
             }
         }
 
-        
+        private string _checkBuffer_I3C_X;
+        public string CheckBuffer_I3C_X
+        {
+            get => _checkBuffer_I3C_X;
+            set
+            {
+                if (_checkBuffer_I3C_X != value)
+                {
+                    _checkBuffer_I3C_X = value;
+                    OnPropertyChanged(nameof(CheckBuffer_I3C_X), value);
+                }
+            }
+        }
 
-        public F_Manual(IOISFunction oISFunction, IAFunction afFunction)
+        private string _checkBuffer_I3C_X_2;
+        public string CheckBuffer_I3C_X_2
+        {
+            get => _checkBuffer_I3C_X_2;
+            set
+            {
+                if (_checkBuffer_I3C_X_2 != value)
+                {
+                    _checkBuffer_I3C_X_2 = value;
+                    OnPropertyChanged(nameof(CheckBuffer_I3C_X_2), value);
+                }
+            }
+        }
+
+        private string _checkBuffer_I3C_Y;
+        public string CheckBuffer_I3C_Y
+        {
+            get => _checkBuffer_I3C_Y;
+            set
+            {
+                if (_checkBuffer_I3C_Y != value)
+                {
+                    _checkBuffer_I3C_Y = value;
+                    OnPropertyChanged(nameof(CheckBuffer_I3C_Y), value);
+                }
+            }
+        }
+
+        private string _checkBuffer_I3C_Y_2;
+        public string CheckBuffer_I3C_Y_2
+        {
+            get => _checkBuffer_I3C_Y_2;
+            set
+            {
+                if (_checkBuffer_I3C_Y_2 != value)
+                {
+                    _checkBuffer_I3C_Y_2 = value;
+                    OnPropertyChanged(nameof(CheckBuffer_I3C_Y_2), value);
+                }
+            }
+        }
+
+
+
+        public F_Manual(IOISFunction oISFunction, IAFunction afFunction,Action<int, string> actionLog, I2CTOI3C_Function i2cFunction = null)
         {
             InitializeComponent();
             
             _oISFunction = oISFunction;
+            _i2CToI3C = i2cFunction;
             _afFunction = afFunction;
             _fraFunction = oISFunction as IFRAFunction;
             PropertyChanged += F_Manual_PropertyChanged;
+            _actionLog = actionLog;
             //cbb_Acturator_Model.DataSource = Enum.GetValues(typeof(ActuatorType));
             cbb_ADC_Select.DataSource = index;
             cbb_Aixs.DataSource = indexAxis;
             cbb_Channel.DataSource = indexCh;
+
+            var _ = this.Handle;
         }
 
         private void F_Manual_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -142,6 +204,32 @@ namespace FZ4P.UI
                     lbl_ADC_2.Text = PropertiesHelper.GetValue<string>(e);
                 });
             }
+            else if (e.PropertyName == nameof(CheckBuffer_I3C_X))
+            {
+                this.InvokeOnUIThread(() => {
+                    lbl_X_40.Text = PropertiesHelper.GetValue<string>(e);
+                });
+            }
+            else if (e.PropertyName == nameof(CheckBuffer_I3C_X_2))
+            {
+                this.InvokeOnUIThread(() => {
+                    lbl_X_42.Text = PropertiesHelper.GetValue<string>(e);
+                });
+            }
+            else if (e.PropertyName == nameof(CheckBuffer_I3C_Y))
+            {
+                this.InvokeOnUIThread(() => {
+                    lbl_Y_40.Text = PropertiesHelper.GetValue<string>(e);
+                });
+            }
+            else if (e.PropertyName == nameof(CheckBuffer_I3C_Y_2))
+            {
+                this.InvokeOnUIThread(() => {
+                    lbl_Y_42.Text = PropertiesHelper.GetValue<string>(e);
+                });
+            }
+
+            
         }
 
         private void F_Manual_FormClosing(object sender, FormClosingEventArgs e)
@@ -155,9 +243,17 @@ namespace FZ4P.UI
             bool State= ((CheckBox)sender).Checked;
 
             if (State)
+            {
                 STATIC.Dln.PowerOnOff(0, true);
+                STATIC.Dln.PowerOnOff(1, true);
+            }
+
             else
+            {
                 STATIC.Dln.PowerOnOff(0, false);
+                STATIC.Dln.PowerOnOff(1, false);
+            }
+                
         }
 
         private void btn_PositionMove_Click(object sender, EventArgs e)
@@ -183,28 +279,36 @@ namespace FZ4P.UI
             int ch = Convert.ToInt32(cbb_Channel.Text);
             if (State)
             {
-                cts = new CancellationTokenSource();
-                Task.Run(() => ReadHold(cts.Token, ch));
+                cts[0] = new CancellationTokenSource();
+                Task.Run(() => ReadHold(cts[0].Token, ch));
             }
             else
-                cts?.Cancel();
+                cts[0]?.Cancel();
         }
 
         private void ReadHold(CancellationToken token,int iCh) 
         {
             while (!token.IsCancellationRequested)
             {
-                ReadHall = _oISFunction.ReadOISHall(0, 0, 0).ToString();
-                Thread.Sleep(5);
-                ReadHall2 = _oISFunction.ReadOISHall(0, 1, 0).ToString();
-                Thread.Sleep(5);
-                ReadHall3 = _afFunction.ReadAFHall(iCh).ToString();
-                Thread.Sleep(5);
+                try
+                {
+                    //ReadHall = _oISFunction.GetI3CData(AxisTypeDW.AxisX).ToString();
+                    ReadHall = _oISFunction.ReadOISHall(0, 0, 0).ToString();
+                    Thread.Sleep(5);
+                    ReadHall2 = _oISFunction.ReadOISHall(0, 1, 0).ToString();
+                    Thread.Sleep(5);
+                    //ReadHall3 = _afFunction.ReadAFHall(iCh).ToString();
+                    //Thread.Sleep(5);
 
-                PeakCurrent = _oISFunction.GetCurrent((int)AxisTypeDW.AxisX).ToString("00.00");
-                Thread.Sleep(5);
-                Current2 = _oISFunction.GetCurrent((int)AxisTypeDW.AxisY).ToString("00.00");
-                Thread.Sleep(5);
+                    PeakCurrent = _oISFunction.GetCurrent((int)AxisTypeDW.AxisX).ToString("00.00");
+                    Thread.Sleep(5);
+                    Current2 = _oISFunction.GetCurrent((int)AxisTypeDW.AxisY).ToString("00.00");
+                    Thread.Sleep(5);
+                }
+                catch(Exception ex)
+                {
+                    _actionLog(iCh, ex.Message);
+                }
             }
         }
 
@@ -296,6 +400,52 @@ namespace FZ4P.UI
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void checkBox5_CheckStateChanged(object sender, EventArgs e)
+        {
+            bool State = ((CheckBox)sender).Checked;
+            _i2CToI3C.SetI3CByPaaMode(State);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            _i2CToI3C.SetH503WakeUp();
+        }
+
+        private void checkBox6_CheckStateChanged(object sender, EventArgs e)
+        {
+            bool State = ((CheckBox)sender).Checked;
+            int ch = Convert.ToInt32(cbb_Channel.Text);
+            if (State)
+            {
+                cts[1] = new CancellationTokenSource();
+                Task.Run(() => ReadI2CBuffer(cts[1].Token, ch));
+            }
+            else
+                cts[1]?.Cancel();
+        }
+
+        private void ReadI2CBuffer(CancellationToken token, int iCh)
+        {
+            while (!token.IsCancellationRequested)
+            {
+                try
+                {
+                    CheckBuffer_I3C_X = _i2CToI3C.GetI3CCheckBuffer(AxisTypeDW.AxisX,0).ToString();
+                    Thread.Sleep(5);
+                    CheckBuffer_I3C_X_2 = _i2CToI3C.GetI3CCheckBuffer(AxisTypeDW.AxisX, 1).ToString();
+                    Thread.Sleep(5);
+                    CheckBuffer_I3C_Y = _i2CToI3C.GetI3CCheckBuffer(AxisTypeDW.AxisY, 0).ToString();
+                    Thread.Sleep(5);
+                    CheckBuffer_I3C_Y_2 = _i2CToI3C.GetI3CCheckBuffer(AxisTypeDW.AxisY, 1).ToString();
+                    Thread.Sleep(5);
+                }
+                catch (Exception ex)
+                {
+                    _actionLog(iCh, ex.Message);
+                }
+            }
         }
     }
 }

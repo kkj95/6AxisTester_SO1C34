@@ -2,6 +2,7 @@
 using FZ4P.DriverIc.I2CBase;
 using FZ4P.DriverIc.I2CBase.Interfaces;
 using FZ4P.DriverIc.Interfaces;
+using FZ4P.DriverIc.OISIC.Base;
 using MathNet.Numerics;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace FZ4P.DriverIc.OISIC
     /// IC 동작에 구현체 
     /// </summary>
     //동윤보드 14bit Move 동작
-    public class DW9836N : IOISFunction,IFRAFunction
+    public class DW9836N : DriveICBase,IOISFunction, IFRAFunction
     {
         private object _lock = new object();
         private readonly IOneTwoBytesDrivingIC _controls;
@@ -169,6 +170,7 @@ namespace FZ4P.DriverIc.OISIC
         /// </summary>
         /// <param name="axisType"></param>
         /// <param name="ModeType"></param>
+        /// 
         public void SetOperationMode(AxisTypeDW axisType, OperationTypeDW ModeType)
         {
             int SlaveID = GetAxisTypeID(axisType);
@@ -193,6 +195,21 @@ namespace FZ4P.DriverIc.OISIC
             }
 
             Controls.WriteByte(SlaveID, (int)RegisterMapDW9836N.Mode, 1, writeData);
+        }
+
+        public void SetRegisterI3CMode(AxisTypeDW axisType)
+        {
+            int SlaveID = GetAxisTypeID(axisType);
+            Controls.WriteByte(SlaveID, 0x7F, 1, 0x10);
+            Controls.WriteByte(SlaveID, 0x7C, 1, 0x0C);
+            Controls.WriteByte(SlaveID, (int)RegisterMapDW9836N.STORE_PROD_ID, 1, 0x01);
+        }
+        public void SetRegisterI2CMode(AxisTypeDW axisType)
+        {
+            int SlaveID = GetAxisTypeID(axisType);
+            Controls.WriteByte(SlaveID, 0x7F, 1, 0x00);
+            Controls.WriteByte(SlaveID, 0x7C, 1, 0x04);
+            Controls.WriteByte(SlaveID, (int)RegisterMapDW9836N.STORE_PROD_ID, 1, 0x01);
         }
         private int GetAxisTypeID(AxisTypeDW axisType)
         {
@@ -223,14 +240,25 @@ namespace FZ4P.DriverIc.OISIC
             int slaveID = GetAxisTypeID((AxisTypeDW)axis);
             _controls.WriteByte(slaveID, (int)RegisterMapDW9836N.STORE_PROD_ID, 1, data);
         }
-        
+
+        //PT 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="axis"></param>
+        /// <param name="OnOff">Off 는 Act 설정 파일을 쓸수있게 하는 상태. On은 Act 설정 파일을 쓸수 없게 하는 상태</param>
         public void Set_PT(int axis,bool OnOff)
         {
             var SlaveID = GetAxisTypeID((AxisTypeDW)axis);
 
-            if (!OnOff) {
+            if (!OnOff)
+            {
                 _controls.WriteByte(SlaveID, 0x28, 1, 0x39);
                 _controls.WriteByte(SlaveID, 0x28, 1, 0xA0);
+            }
+            else
+            {
+                _controls.WriteByte(SlaveID, 0x28, 1, 0x14);
             }
         }
 
@@ -331,5 +359,38 @@ namespace FZ4P.DriverIc.OISIC
             else
                 _controls.WriteByte(FRA_Addr, (int)RegisterMapFRA.I2C_CH, 1, 0x01);
         }
+
+        public byte ReadAddress(AxisTypeDW axisType,int RegisterAddress)
+        {
+            var slaveID = GetAxisTypeID(axisType);
+            return _controls.ReadByte(slaveID, RegisterAddress, 1); 
+        }
+
+        
+        //public void SetI3CByPaaMode(bool Onoff)
+        //{
+        //    int slaveId = GetAxisTypeID(AxisTypeDW.AxisY);
+        //    if(Onoff)
+        //        _controls.WriteByte(slaveId,0xE6,1,0x01);
+        //    else
+        //        _controls.WriteByte(slaveId, 0xE6, 1, 0x00);
+        //}
+
+        //public void SetH503WakeUp()
+        //{
+        //    int slaveId = GetAxisTypeID(AxisTypeDW.AxisY);
+        //    _controls.WriteByte(slaveId, 0x00, 1, 0x00);
+        //}
+
+        //public short GetI3CData(AxisTypeDW axisTypeDW)
+        //{
+        //    int slaveId = GetAxisTypeID(axisTypeDW);
+        //    var v1 = _controls.Read2Byte(slaveId, 0x40, 1);
+        //    var v2 = _controls.Read2Byte(slaveId, 0x42, 1);
+            
+        //    var ReadData = (short)(v1);
+
+        //    return (short)ReadData;
+        //}
     }
 }
