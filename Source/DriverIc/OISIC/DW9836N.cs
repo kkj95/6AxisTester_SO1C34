@@ -325,7 +325,7 @@ namespace FZ4P.DriverIc.OISIC
         public bool Echo_Board_WhoAmI(int ch)
         {
             byte[] board_info = new byte[1];
-            var SlaveID =GetAxisTypeID(AxisTypeDW.AxisZ);
+            var SlaveID = GetAxisTypeID(AxisTypeDW.AxisZ);
 
             board_info[0] = _controls.ReadByte(SlaveID, (int)RegisterMapFRA.BOARD_INFO, 1); 
 
@@ -366,7 +366,27 @@ namespace FZ4P.DriverIc.OISIC
             return _controls.ReadByte(slaveID, RegisterAddress, 1); 
         }
 
-        
+        public void Set_FRA_I2C_Speed()
+        {
+            //var slaveID = GetAxisTypeID(AxisTypeDW.AxisX);
+            _controls.WriteByte(FRA_Addr, (int)RegisterMapFRA.FRA_I2C_SPEED, 1, 0x11);
+        }
+
+        public void Set_Control_Freq(ControlFreqMode controlFreqMode)
+        {
+            byte byData = 0x00;
+            var slaveID = GetAxisTypeID(AxisTypeDW.AxisX);
+            
+            if (controlFreqMode == ControlFreqMode.Freq5KHz)
+                byData = 0x00;
+            else if (controlFreqMode == ControlFreqMode.Freq10KHz)
+                byData = 0x01;
+            else if (controlFreqMode == ControlFreqMode.Freq15KHz)
+                byData = 0x0B;
+            _controls.WriteByte(FRA_Addr, (int)RegisterMapFRA.CONTROL_FREQ, 1, byData);
+        }
+
+
         //public void SetI3CByPaaMode(bool Onoff)
         //{
         //    int slaveId = GetAxisTypeID(AxisTypeDW.AxisY);
@@ -387,7 +407,7 @@ namespace FZ4P.DriverIc.OISIC
         //    int slaveId = GetAxisTypeID(axisTypeDW);
         //    var v1 = _controls.Read2Byte(slaveId, 0x40, 1);
         //    var v2 = _controls.Read2Byte(slaveId, 0x42, 1);
-            
+
         //    var ReadData = (short)(v1);
 
         //    return (short)ReadData;

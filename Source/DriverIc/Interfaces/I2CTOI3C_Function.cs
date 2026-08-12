@@ -17,5 +17,7 @@ namespace FZ4P.DriverIc.Interfaces
         void SetI3CByPaaMode(bool Onoff);
         void SetH503WakeUp();
         short GetI3CCheckBuffer(AxisTypeDW axisTypeDW, int bufferCheckType);
+
+        ushort GetVersionChecked(AxisTypeDW axisTypeDW);
     }
 }

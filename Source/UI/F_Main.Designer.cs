@@ -941,6 +941,7 @@ namespace FZ4P
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.F_Main_FormClosing);
             this.Load += new System.EventHandler(this.F_Main_Load);
+            this.Shown += new System.EventHandler(this.F_Main_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.SpecGrid)).EndInit();
             this.ModelGroup.ResumeLayout(false);
             this.ModelGroup.PerformLayout();

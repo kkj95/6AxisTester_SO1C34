@@ -181,6 +181,11 @@ namespace FZ4P
             u08_dat1[0] = ReadByte((int)RegisterMapFRA.CONTROL_FREQ);
             LogAction(ch, string.Format("[echo_fra_single_measurement] CONTROL_FREQ(REG 0x{1:X2}) = {0}", u08_dat1[0], (byte)RegisterMapFRA.CONTROL_FREQ));
 
+            WriteByte((int)RegisterMapFRA.FRA_I2C_SPEED, (byte)0x0C);                        //11: 1MHz
+            Thread.Sleep(10);
+            u08_dat1[0] = ReadByte((int)RegisterMapFRA.FRA_I2C_SPEED);
+            LogAction(ch, string.Format("[echo_fra_single_measurement] FRA_I2C_SPEED(REG 0x{1:X2}) = {0}", u08_dat1[0], (byte)RegisterMapFRA.FRA_I2C_SPEED));
+
             WriteByte((int)RegisterMapFRA.AMPLITUDE_H, (byte)(fra_setting.amplitude >> 8));                         // Amplitude[mV] MSB    
             Thread.Sleep(10);
             u08_dat1[0] = ReadByte((int)RegisterMapFRA.AMPLITUDE_H);

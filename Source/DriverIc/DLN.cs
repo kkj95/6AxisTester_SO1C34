@@ -744,10 +744,11 @@ namespace FZ4P
             catch
             {
                 STATIC.I2CFailcnt++;
-                if (STATIC.I2CFailcnt > 20)
-                {
-                    SetError("Dln WriteFail");                    
-                }
+                //TODO : 임시 제거 
+                //if (STATIC.I2CFailcnt > 20)
+                //{
+                //    SetError("Dln WriteFail");                    
+                //}
                 return false;
             }
         }
@@ -767,11 +768,12 @@ namespace FZ4P
             catch
             {
                 STATIC.I2CFailcnt++;
-                if (STATIC.I2CFailcnt > 20)
-                {
-                    SetError("Dln ReadFail");
+                //TODO : 임시 제거 
+                //if (STATIC.I2CFailcnt > 20)
+                //{
+                //    SetError("Dln ReadFail");
                     
-                }
+                //}
                 return false;
             }
         }
@@ -788,10 +790,11 @@ namespace FZ4P
             catch
             {
                 STATIC.I2CFailcnt++;
-                if (STATIC.I2CFailcnt > 20)
-                {
-                    SetError("Dln WriteFail");
-                }
+                //TODO : 임시 제거
+                //if (STATIC.I2CFailcnt > 20)
+                //{
+                //    SetError("Dln WriteFail");
+                //}
                 return false;
             }
         }
@@ -806,10 +809,11 @@ namespace FZ4P
             catch
             {
                 STATIC.I2CFailcnt++;
-                if (STATIC.I2CFailcnt > 20)
-                {
-                    SetError("Dln WriteFail");
-                }
+                //TODO : 임시 제거 
+                //if (STATIC.I2CFailcnt > 20)
+                //{
+                //    SetError("Dln WriteFail");
+                //}
                 return false;
             }
         }
@@ -824,10 +828,11 @@ namespace FZ4P
             catch
             {
                 STATIC.I2CFailcnt++;
-                if (STATIC.I2CFailcnt > 20)
-                {
-                    SetError("Dln WriteFail");
-                }
+                //TODO : 임시 제거 
+                //if (STATIC.I2CFailcnt > 20)
+                //{
+                //    SetError("Dln WriteFail");
+                //}
                 return false;
             }
         }
@@ -842,10 +847,11 @@ namespace FZ4P
             catch
             {
                 STATIC.I2CFailcnt++;
-                if (STATIC.I2CFailcnt > 20)
-                {
-                    SetError("Dln WriteFail");
-                }
+                //TODO : 임시 제거 
+                //if (STATIC.I2CFailcnt > 20)
+                //{
+                //    SetError("Dln WriteFail");
+                //}
                 return false;
             }
         }
@@ -860,10 +866,11 @@ namespace FZ4P
             catch
             {
                 STATIC.I2CFailcnt++;
-                if (STATIC.I2CFailcnt > 20)
-                {
-                    SetError("Dln WriteFail");
-                }
+                //TODO : 임시 제거 
+                //if (STATIC.I2CFailcnt > 20)
+                //{
+                //    SetError("Dln WriteFail");
+                //}
                 return false;
             }
         }
@@ -904,11 +911,12 @@ namespace FZ4P
             catch
             {
                 STATIC.I2CFailcnt++;
-                if (STATIC.I2CFailcnt > 20)
-                {
-                    SetError("Dln ReadFail");
+                //TODO : 임시 제거 
+                //if (STATIC.I2CFailcnt > 20)
+                //{
+                //    SetError("Dln ReadFail");
 
-                }
+                //}
                 return byte.MaxValue;
             }
         }
@@ -926,11 +934,12 @@ namespace FZ4P
             catch
             {
                 STATIC.I2CFailcnt++;
-                if (STATIC.I2CFailcnt > 20)
-                {
-                    SetError("Dln ReadFail");
+                //TODO : 임시 제거 
+                //if (STATIC.I2CFailcnt > 20)
+                //{
+                //    SetError("Dln ReadFail");
 
-                }
+                //}
                 return ushort.MaxValue;
             }
         }

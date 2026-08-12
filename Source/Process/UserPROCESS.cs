@@ -740,7 +740,7 @@ namespace FZ4P
             }
 
 
-            //SetEPA((int)AxisTypeDW.AxisX);
+            SetEPA((int)AxisTypeDW.AxisX);
             #endregion
 
             #region OIS Y Hall Calibration
@@ -920,7 +920,6 @@ namespace FZ4P
 
         private bool FindPosition_PCAL(int iAxis, int Top_pos, int Top_Margin, double fullStroke, double TargetStroke)
         {
-
             FindResult res = null;
             int tmp_position = 0;
             int movecode = 0x00;
@@ -1892,7 +1891,8 @@ namespace FZ4P
 
             writeNVMParamX.AddRow(0xFD, 0);                                                                                     //퓨런티어??
             writeNVMParamX.AddRow(0xFE, 0);                                                                                     //OIS PID 버전???
-            writeNVMParamX.AddRow(0xFF, 0x33);        //?? MX 배포기준?? 이해못함.
+            //TODO : FF 33 못날림??
+            //writeNVMParamX.AddRow(0xFF, 0x33);        //?? MX 배포기준?? 이해못함.
 
             AddLog(ch, "OIS X Nvm Data Check");
 
@@ -1978,7 +1978,7 @@ namespace FZ4P
 
             writeNVMParamY.AddRow(0xFD, 0);         //퓨런티어??
             writeNVMParamY.AddRow(0xFE, 0);         //OIS PID 버전???
-            writeNVMParamY.AddRow(0xFF, 0);         //?? AF FD Position Repeat Test flg????
+            //writeNVMParamY.AddRow(0xFF, 0);         //?? AF FD Position Repeat Test flg????
 
             DWDrvIC.SetOperationMode(AxisTypeDW.AxisY, OperationTypeDW.StandbyMode);
             Thread.Sleep(10);
@@ -2315,11 +2315,16 @@ namespace FZ4P
 
         public bool OISPM(int ch, int axis, sFRA_TestSetting fra_setting,ref sFRA_Margin fra_result)
         {
+            if (axis == (int)AxisTypeDW.AxisX)
+                AddLog(ch, $"Phase Margin Axis X");
+            if (axis == (int)AxisTypeDW.AxisY)
+                AddLog(ch, $"Phase Margin Axis Y");
+
             Echo_FRA_Measurement measure = new Echo_FRA_Measurement(DWDrvIC, DWDrvIC.Controls, AddLog);
             Echo_FRA_Serch serch = new Echo_FRA_Serch(AddLog);
 
-            fra_setting.ois_control_freq = (byte)measure.CTRL_FREQ_15KHZ;
-            
+            fra_setting.ois_control_freq = (byte)measure.CTRL_FREQ_10KHZ;
+           
             int msg = 0;
 
             DWDrvIC.OISReset(ch, (int)AxisTypeDW.AxisX, true);
@@ -2340,8 +2345,6 @@ namespace FZ4P
             double[] phase_buf = new double[fra_setting.test_point];
             int SearchCnt = 0;
 
-            
-
             msg = measure.Echo_FRA_Single_Measurement(ch, ref fra_result, ref fra_setting, ref freq_buf, ref gain_buf, ref phase_buf, ref SearchCnt,false);
 
             //260309 : Single 풀시캔시 해당 SearchCnt를 리턴해줫지만 .. 필터 기능이 없어지면서 해당 배열을 전부 스캔해야됨.
@@ -2360,10 +2363,14 @@ namespace FZ4P
         }
         public bool OISGM(int ch, int axis, sFRA_TestSetting fra_setting,ref sFRA_Margin fra_result)
         {
+            if(axis == (int)AxisTypeDW.AxisX)
+                AddLog(ch, $"Gain Margin Axis X");
+            if (axis == (int)AxisTypeDW.AxisY)
+                AddLog(ch, $"Gain Margin Axis Y");
             Echo_FRA_Measurement measure = new Echo_FRA_Measurement(DWDrvIC, DWDrvIC.Controls, AddLog);
             Echo_FRA_Serch serch = new Echo_FRA_Serch(AddLog);
 
-            fra_setting.ois_control_freq = (byte)measure.CTRL_FREQ_15KHZ;
+            fra_setting.ois_control_freq = (byte)measure.CTRL_FREQ_10KHZ;
 
             int msg = 0;
 
@@ -2378,15 +2385,12 @@ namespace FZ4P
                 return false;
             }
 
-           
-
             double[] freq_buf = new double[fra_setting.test_point];
             double[] gain_buf = new double[fra_setting.test_point];
             double[] phase_buf = new double[fra_setting.test_point];
             int SearchCnt = 0;
 
             msg = measure.Echo_FRA_Single_Measurement(ch, ref fra_result, ref fra_setting, ref freq_buf, ref gain_buf, ref phase_buf, ref SearchCnt, false, true);
-          
 
             msg = serch.Search_GM(ch, ref fra_result, fra_setting, freq_buf, gain_buf, phase_buf, SearchCnt);
             var realpoint = fra_setting.test_point - 2;

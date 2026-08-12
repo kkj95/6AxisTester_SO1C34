@@ -23,6 +23,13 @@ namespace FZ4P.DriverIc.OISIC
         AxisZ = 2,
     }
 
+    public enum s
+    {
+        Freq5KHz = 0,
+        Freq10KHz = 1,
+        Freq15KHz = 2,
+    }
+
     public enum RegisterMapDW9836N
     {
         Target = 0x00,                 //무브
@@ -48,6 +55,13 @@ namespace FZ4P.DriverIc.OISIC
     {
         PCAL = 0x46,
         NCAL = 0x47,
+    }
+
+    public enum ControlFreqMode
+    {
+        Freq5KHz = 0,
+        Freq10KHz = 1,
+        Freq15KHz = 2,
     }
 
     public enum RegisterMapFRA
@@ -99,7 +113,7 @@ namespace FZ4P.DriverIc.OISIC
         CURRENT_SET_READ = 0x40,
 
         AMP_MODE = 0xE1,
-
+        FRA_I2C_SPEED = 0xE2,
 
         VERSION_MAJOR = 0xF2,
         VERSION_MINOR = 0xF3,

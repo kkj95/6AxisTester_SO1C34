@@ -4,11 +4,16 @@ using FZ4P.DriverIc.I2CBase.Interfaces;
 using FZ4P.DriverIc.Interfaces;
 using FZ4P.DriverIc.OISIC;
 using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
+using System.Net.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace FZ4P.UI
@@ -152,7 +157,39 @@ namespace FZ4P.UI
             }
         }
 
+        private string fw_Version;
+        public string FW_Version
+        {
+            get => fw_Version;
+            set
+            {
+                if (fw_Version != value)
+                {
+                    fw_Version = value;
+                    OnPropertyChanged(nameof(FW_Version), value);
+                }
+            }
+        }
 
+        private ObservableCollection<SlaveId> _scanSlaveID = new ObservableCollection<SlaveId>();
+        public ObservableCollection<SlaveId> ScanSlaveID { 
+            get => _scanSlaveID;
+            set
+            {
+                if (_scanSlaveID == value)
+                    return;
+
+                if (_scanSlaveID != null)
+                    _scanSlaveID.CollectionChanged -= ScanSlaveID_CollectionChanged;
+
+                _scanSlaveID = value;
+
+                if (_scanSlaveID != null)
+                    _scanSlaveID.CollectionChanged += ScanSlaveID_CollectionChanged;
+
+                OnPropertyChanged(nameof(ScanSlaveID));
+            }
+        }
 
         public F_Manual(IOISFunction oISFunction, IAFunction afFunction,Action<int, string> actionLog, I2CTOI3C_Function i2cFunction = null)
         {
@@ -168,6 +205,8 @@ namespace FZ4P.UI
             cbb_ADC_Select.DataSource = index;
             cbb_Aixs.DataSource = indexAxis;
             cbb_Channel.DataSource = indexCh;
+
+            _scanSlaveID.CollectionChanged += ScanSlaveID_CollectionChanged;
 
             var _ = this.Handle;
         }
@@ -228,8 +267,62 @@ namespace FZ4P.UI
                     lbl_Y_42.Text = PropertiesHelper.GetValue<string>(e);
                 });
             }
+            else if (e.PropertyName == nameof(FW_Version))
+            {
+                this.InvokeOnUIThread(() => {
+                    lbl_Version.Text = PropertiesHelper.GetValue<string>(e);
+                });
+            }
+            else if (e.PropertyName == nameof(SlaveId))
+            {
+                this.InvokeOnUIThread(() => {
+                    var rowid = PropertiesHelper.GetValue<SlaveId>(e);
+                    var tab = tbcntl.TabPages.Cast<TabPage>().FirstOrDefault(x => (int)x.Tag == rowid.IndexKey);
+                    var bindList = new ListBox() { Dock = DockStyle.Fill };
+                    bindList.Items.AddRange(rowid.Values);
+                    tab.Controls.Add(bindList);
+                });
+            }
+        }
 
-            
+        private void ScanSlaveID_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    foreach (SlaveId item in e.NewItems)
+                    {
+                        var text = "DLN_Series_" + item.IndexKey;
+                        tbcntl.TabPages.Add(new TabPage() 
+                        {
+                            Text = text,
+                            Tag = item.IndexKey,
+                        });
+                        item.PropertyChanged += F_Manual_PropertyChanged;
+                    }
+                    break;
+
+                case NotifyCollectionChangedAction.Remove:
+                    foreach (SlaveId item in e.OldItems)
+                    {
+                        item.PropertyChanged -= F_Manual_PropertyChanged;
+                        var tabpage= tbcntl.TabPages.Cast<TabPage>().FirstOrDefault(x => (int)x.Tag == item.IndexKey);
+                        if(tabpage != null)
+                            tbcntl.TabPages.Remove(tabpage);
+                    }
+                    break;
+
+                case NotifyCollectionChangedAction.Replace:
+                    break;
+
+                case NotifyCollectionChangedAction.Reset:
+                    break;
+            }
+        }
+
+        private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void F_Manual_FormClosing(object sender, FormClosingEventArgs e)
@@ -297,8 +390,8 @@ namespace FZ4P.UI
                     Thread.Sleep(5);
                     ReadHall2 = _oISFunction.ReadOISHall(0, 1, 0).ToString();
                     Thread.Sleep(5);
-                    //ReadHall3 = _afFunction.ReadAFHall(iCh).ToString();
-                    //Thread.Sleep(5);
+                    ReadHall3 = _afFunction.ReadAFHall(iCh).ToString();
+                    Thread.Sleep(5);
 
                     PeakCurrent = _oISFunction.GetCurrent((int)AxisTypeDW.AxisX).ToString("00.00");
                     Thread.Sleep(5);
@@ -432,19 +525,102 @@ namespace FZ4P.UI
             {
                 try
                 {
-                    CheckBuffer_I3C_X = _i2CToI3C.GetI3CCheckBuffer(AxisTypeDW.AxisX,0).ToString();
+                    CheckBuffer_I3C_X = ((ushort)_i2CToI3C.GetI3CCheckBuffer(AxisTypeDW.AxisX,0)).ToString();
                     Thread.Sleep(5);
-                    CheckBuffer_I3C_X_2 = _i2CToI3C.GetI3CCheckBuffer(AxisTypeDW.AxisX, 1).ToString();
+                    CheckBuffer_I3C_X_2 = ((ushort)_i2CToI3C.GetI3CCheckBuffer(AxisTypeDW.AxisX, 1)).ToString();
                     Thread.Sleep(5);
-                    CheckBuffer_I3C_Y = _i2CToI3C.GetI3CCheckBuffer(AxisTypeDW.AxisY, 0).ToString();
+                    CheckBuffer_I3C_Y = ((ushort)_i2CToI3C.GetI3CCheckBuffer(AxisTypeDW.AxisY, 0)).ToString();
                     Thread.Sleep(5);
-                    CheckBuffer_I3C_Y_2 = _i2CToI3C.GetI3CCheckBuffer(AxisTypeDW.AxisY, 1).ToString();
+                    CheckBuffer_I3C_Y_2 = ((ushort)_i2CToI3C.GetI3CCheckBuffer(AxisTypeDW.AxisY, 1)).ToString();
                     Thread.Sleep(5);
                 }
                 catch (Exception ex)
                 {
                     _actionLog(iCh, ex.Message);
                 }
+            }
+        }
+
+        private void btn_VerserChecked_Click(object sender, EventArgs e)
+        {
+            FW_Version = "0x" + _i2CToI3C.GetVersionChecked(AxisTypeDW.AxisX).ToString("X4");
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            int[] slaveIDCollection = null;
+            removeClear();
+
+            for (int i = 0; i < STATIC.Dln.DLNi2c.Length; i++)
+            {
+                if (STATIC.Dln.DLNi2c[i] == null) continue;
+
+                ScanSlaveID.Add(new SlaveId() { IndexKey = i });
+                var lastElement= ScanSlaveID.Last();
+                try
+                {
+                    slaveIDCollection = STATIC.Dln.DLNi2c[i].ScanDevices();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"error{ex.Message}");
+                    slaveIDCollection = new int[1] { -1, };
+                }
+                var v = slaveIDCollection.Select(x=>"0x" + x.ToString("X2")).ToArray();
+                lastElement.Values = v;
+            }
+        }
+
+        private void removeClear()
+        {
+            if (ScanSlaveID.Count == 0) return;
+
+            var count = ScanSlaveID.Count;
+            for (int i = 0; i < count; i++)
+                ScanSlaveID.RemoveAt(0);
+        }
+
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            ScanSlaveID.Add(new SlaveId());
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            ScanSlaveID.RemoveAt(0);
+        }
+
+        private void checkBox8_CheckStateChanged(object sender, EventArgs e)
+        {
+            bool State = ((CheckBox)sender).Checked;
+            if(State)
+                ScanSlaveID[0].Values = new string[1] { "Test1" }; 
+            else
+                ScanSlaveID[0].Values = new string[1] { "Test2" };
+        }
+    }
+
+    public class SlaveId : ModelChangedBase
+    {
+        private int _IndexKey = 0;
+        private string[] _values;
+
+        public int IndexKey { get => _IndexKey; set => _IndexKey = value; }
+        public string[] Values
+        {
+            get => _values;
+            set
+            {
+                if (_values == value)
+                    return;
+
+                _values = value;
+                OnPropertyChanged(nameof(SlaveId),this);
             }
         }
     }

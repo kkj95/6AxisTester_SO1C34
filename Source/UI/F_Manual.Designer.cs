@@ -81,6 +81,9 @@
             this.button2 = new System.Windows.Forms.Button();
             this.checkBox5 = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btn_VerserChecked = new System.Windows.Forms.Button();
+            this.panel15 = new System.Windows.Forms.Panel();
+            this.lbl_Version = new System.Windows.Forms.Label();
             this.panel11 = new System.Windows.Forms.Panel();
             this.label13 = new System.Windows.Forms.Label();
             this.lbl_Y_42 = new System.Windows.Forms.Label();
@@ -94,6 +97,9 @@
             this.lbl_X_40 = new System.Windows.Forms.Label();
             this.panel12 = new System.Windows.Forms.Panel();
             this.label15 = new System.Windows.Forms.Label();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.tbcntl = new System.Windows.Forms.TabControl();
+            this.button3 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -108,10 +114,12 @@
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.panel15.SuspendLayout();
             this.panel11.SuspendLayout();
             this.panel14.SuspendLayout();
             this.panel13.SuspendLayout();
             this.panel12.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -126,7 +134,7 @@
             this.groupBox1.Controls.Add(this.cbb_ADC_Select);
             this.groupBox1.Controls.Add(this.checkBox2);
             this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Location = new System.Drawing.Point(410, 352);
+            this.groupBox1.Location = new System.Drawing.Point(821, 14);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(392, 134);
             this.groupBox1.TabIndex = 0;
@@ -721,6 +729,8 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.btn_VerserChecked);
+            this.groupBox3.Controls.Add(this.panel15);
             this.groupBox3.Controls.Add(this.panel11);
             this.groupBox3.Controls.Add(this.lbl_Y_42);
             this.groupBox3.Controls.Add(this.lbl_Y_40);
@@ -738,6 +748,36 @@
             this.groupBox3.TabIndex = 514;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "I2C To I3C Checked";
+            // 
+            // btn_VerserChecked
+            // 
+            this.btn_VerserChecked.Location = new System.Drawing.Point(268, 181);
+            this.btn_VerserChecked.Name = "btn_VerserChecked";
+            this.btn_VerserChecked.Size = new System.Drawing.Size(112, 28);
+            this.btn_VerserChecked.TabIndex = 534;
+            this.btn_VerserChecked.Text = "Version Checked";
+            this.btn_VerserChecked.UseVisualStyleBackColor = true;
+            this.btn_VerserChecked.Click += new System.EventHandler(this.btn_VerserChecked_Click);
+            // 
+            // panel15
+            // 
+            this.panel15.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.panel15.Controls.Add(this.lbl_Version);
+            this.panel15.Location = new System.Drawing.Point(268, 141);
+            this.panel15.Name = "panel15";
+            this.panel15.Size = new System.Drawing.Size(112, 30);
+            this.panel15.TabIndex = 533;
+            // 
+            // lbl_Version
+            // 
+            this.lbl_Version.AutoSize = true;
+            this.lbl_Version.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lbl_Version.ForeColor = System.Drawing.Color.White;
+            this.lbl_Version.Location = new System.Drawing.Point(27, 9);
+            this.lbl_Version.Name = "lbl_Version";
+            this.lbl_Version.Size = new System.Drawing.Size(60, 12);
+            this.lbl_Version.TabIndex = 278;
+            this.lbl_Version.Text = "Y - 0x40";
             // 
             // panel11
             // 
@@ -885,11 +925,41 @@
             this.label15.TabIndex = 278;
             this.label15.Text = "X - 0x40";
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.tbcntl);
+            this.groupBox4.Controls.Add(this.button3);
+            this.groupBox4.Location = new System.Drawing.Point(410, 269);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(392, 245);
+            this.groupBox4.TabIndex = 536;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Slave ID Checked";
+            // 
+            // tbcntl
+            // 
+            this.tbcntl.Location = new System.Drawing.Point(18, 34);
+            this.tbcntl.Name = "tbcntl";
+            this.tbcntl.SelectedIndex = 0;
+            this.tbcntl.Size = new System.Drawing.Size(368, 183);
+            this.tbcntl.TabIndex = 537;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(274, 0);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(112, 28);
+            this.button3.TabIndex = 536;
+            this.button3.Text = "Slave ID Scan";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // F_Manual
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(851, 522);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox5);
@@ -925,6 +995,8 @@
             this.panel1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.panel15.ResumeLayout(false);
+            this.panel15.PerformLayout();
             this.panel11.ResumeLayout(false);
             this.panel11.PerformLayout();
             this.panel14.ResumeLayout(false);
@@ -933,6 +1005,7 @@
             this.panel13.PerformLayout();
             this.panel12.ResumeLayout(false);
             this.panel12.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1005,5 +1078,11 @@
         private System.Windows.Forms.Label lbl_Y_40;
         private System.Windows.Forms.Panel panel14;
         private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Button btn_VerserChecked;
+        private System.Windows.Forms.Panel panel15;
+        private System.Windows.Forms.Label lbl_Version;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.TabControl tbcntl;
     }
 }

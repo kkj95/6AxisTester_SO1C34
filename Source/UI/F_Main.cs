@@ -1,5 +1,6 @@
 ﻿
 using FZ4P.Commons.Helper;
+using FZ4P.DriverIc.OISIC;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -1926,6 +1927,23 @@ namespace FZ4P
         {
             if (SettleDataGrid.IsCurrentCellDirty)
                 SettleDataGrid.CommitEdit(DataGridViewDataErrorContexts.Commit);
+        }
+
+        private void F_Main_Shown(object sender, EventArgs e)
+        {
+            H503WakeUp();
+
+        }
+
+        private void H503WakeUp()
+        {
+            STATIC.Dln.PowerOnOff(0, true);
+            STATIC.Dln.PowerOnOff(1, true);
+            Thread.Sleep(100);
+            STATIC.MCUH503.SetH503WakeUp();
+            Thread.Sleep(100);
+            STATIC.Dln.PowerOnOff(0, false);
+            STATIC.Dln.PowerOnOff(1, false);
         }
     }
 }

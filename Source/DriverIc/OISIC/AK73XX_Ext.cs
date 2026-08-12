@@ -227,6 +227,16 @@ namespace FZ4P.DriverIc.OISIC
             throw new NotImplementedException();
         }
 
+        public void Set_FRA_I2C_Speed()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Set_Control_Freq(ControlFreqMode controlFreqMode)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

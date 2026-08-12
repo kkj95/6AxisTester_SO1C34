@@ -44,7 +44,7 @@ namespace FZ4P.DriverIc.OISIC
             else
                 readWord = _controls.Read2Byte(slaveId, 0x42, 1);
 
-            var ReadData = (short)(readWord >> 2);
+            var ReadData = (short)(readWord);
 
             return (short)ReadData;
         }
@@ -67,6 +67,13 @@ namespace FZ4P.DriverIc.OISIC
             }
 
             return SlaveID;
+        }
+
+        public ushort GetVersionChecked(AxisTypeDW axisTypeDW)
+        {
+            int slaveId = GetAxisTypeID(axisTypeDW);
+            var readWord = _controls.Read2Byte(slaveId, 0x22, 1);
+            return readWord;
         }
         #endregion
     }

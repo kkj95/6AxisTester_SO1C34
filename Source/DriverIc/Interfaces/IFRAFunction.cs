@@ -11,5 +11,7 @@ namespace FZ4P.DriverIc.Interfaces
         bool Echo_Board_WhoAmI(int ch);
         void Echo_Board_SetParameter(Echo_ParamBase param);
         void Echo_Board_Select_Ch(int ch);
+        void Set_FRA_I2C_Speed();
+        void Set_Control_Freq(ControlFreqMode controlFreqMode);
     }
 }

@@ -1394,7 +1394,6 @@ namespace FZ4P
                         PassFails[k].FirstFailIndex = 0;
                     }
 
-
                     if (Dln.ReadByteNull(ch, DrvIC.AF_Addr, 0x03, 1) == null) m_ChannelOn[ch] = false;
                     //if (Dln.ReadByteNull(ch, DrvIC.OIS_Addr, 0x6024, 2) == null) m_ChannelOn[ch] = false;
 
@@ -1552,12 +1551,14 @@ namespace FZ4P
                                     if (errMsg[0] == "" && PassFails[0].FirstFailIndex == 0)
                                     {
                                         WriteUserMem(ch, 0x02);
-                                        WriteOISUserMem(ch, 0x02);
+                                        //TODO : H503시 할당 설정이 안되어있어서 임시 주석 
+                                        //WriteOISUserMem(ch, 0x02);
                                     }
                                     else
                                     {
                                         WriteUserMem(ch, 0x09);
-                                        WriteOISUserMem(ch, 0x02);
+                                        //TODO : H503시 할당 설정이 안되어있어서 임시 주석 
+                                        //WriteOISUserMem(ch, 0x02);
                                     }
                                 }
                                 else
@@ -1583,12 +1584,14 @@ namespace FZ4P
                                         if (errMsg[0] == "" && PassFails[0].FirstFailIndex == 0)
                                         {
                                             WriteUserMem(ch, 0x02);
-                                            WriteOISUserMem(ch, 0x02);
+                                            //TODO : H503시 할당 설정이 안되어있어서 임시 주석 
+                                            //WriteOISUserMem(ch, 0x02);
                                         }
                                         else
                                         {
                                             WriteUserMem(ch, 0x09);
-                                            WriteOISUserMem(ch, 0x02);
+                                            //TODO : H503시 할당 설정이 안되어있어서 임시 주석 
+                                            //WriteOISUserMem(ch, 0x02);
                                         }
                                     }
                                     else
@@ -1620,12 +1623,14 @@ namespace FZ4P
                                 if (errMsg[0] == "" && PassFails[0].FirstFailIndex == 0)
                                 {
                                     WriteUserMem(ch, 0x02);
-                                    WriteOISUserMem(ch, 0x02);
+                                    //TODO : H503시 할당 설정이 안되어있어서 임시 주석 
+                                    //WriteOISUserMem(ch, 0x02);
                                 }
                                 else
                                 {
                                     WriteUserMem(ch, 0x09);
-                                    WriteOISUserMem(ch, 0x02);
+                                    //TODO : H503시 할당 설정이 안되어있어서 임시 주석 
+                                    //WriteOISUserMem(ch, 0x02);
                                 }
                             }
                             else

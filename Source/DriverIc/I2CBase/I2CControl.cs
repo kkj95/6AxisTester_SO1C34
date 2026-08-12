@@ -39,6 +39,7 @@ namespace FZ4P.DriverIc.I2CBase
             catch
             {
                 STATIC.I2CFailcnt++;
+
                 if (STATIC.I2CFailcnt > 20)
                 {
                     SetError("Dln WriteFail");
