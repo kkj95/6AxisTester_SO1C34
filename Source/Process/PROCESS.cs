@@ -159,6 +159,7 @@ namespace FZ4P
                 InfoBtn.Add(new InfoButton()); //test
                 InfoBtn.Add(new InfoButton());
                 InfoBtn.Add(new InfoButton());  // TODO :임시 테스트 진입하기위해 버튼을 만듬...
+                InfoBtn[2].btn.Text = "리셋 버튼 클릭";
                 ViewLog.Add(new LogText());
             }
             ItemList.Add(new ActItems() { Name = "AF Scan", Func = Act_ScanCode });
@@ -1280,8 +1281,6 @@ namespace FZ4P
                 Task ResetWait = new Task(() =>
                 {
                     bool waitFlg = false;
-
-                    STATIC.Process.InfoBtn[2].btn.Text = "리셋 버튼 클릭";
                     STATIC.fManage.SafeControlView(STATIC.Process.InfoBtn[2].btn, true);
                     STATIC.Process.InfoBtn[2].hideEvent += (state)=> { waitFlg = state; };
                     
@@ -1289,6 +1288,8 @@ namespace FZ4P
                     {
                         Thread.Sleep(10);
                     }
+
+                    STATIC.MCUH503.SetH503WakeUp();
                 });
                 ResetWait.Start();
                 ResetWait.Wait();

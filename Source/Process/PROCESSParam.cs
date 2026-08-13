@@ -157,6 +157,11 @@ namespace FZ4P
             btn.VisibleChanged += Btn_VisibleChanged;
         }
 
+        public void SetText(string text)
+        {
+            btn.Text = text;    
+        }
+
         private void Btn_VisibleChanged(object sender, EventArgs e)
         {
             if (!btn.Visible)

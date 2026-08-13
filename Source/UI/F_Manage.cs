@@ -389,7 +389,9 @@ namespace FZ4P
                 Process.tiltChart[i].Location = new Point(3 + 478 * (i + 1), 117);
                 Controls.Add(Process.tiltChart[i]);
             }
-            for (int i = 0; i < infoCnt; i++)
+            //TODO : 임시 검사전 로드를 위해서 제거한다.
+            //for (int i = 0; i < infoCnt; i++)
+            for (int i = 0; i < 3; i++)
             {
                 Process.InfoBtn[i].btn.Location = new Point(3 + 478 * i, 291);
                 Controls.Add(Process.InfoBtn[i].btn);
