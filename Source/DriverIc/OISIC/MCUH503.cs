@@ -31,8 +31,10 @@ namespace FZ4P.DriverIc.OISIC
         }
         public void SetH503WakeUp()
         {
-            int slaveId = GetAxisTypeID(AxisTypeDW.AxisY);
-            _controls.WriteByte(slaveId, 0x00, 1, 0x00);
+            //int slaveId = GetAxisTypeID(AxisTypeDW.AxisY);
+            //_controls.ReadByte(slaveId, 0x00, 1);
+
+            OIS.ReadOISHall(0, 0, 0).ToString();
         }
         public short GetI3CCheckBuffer(AxisTypeDW axisTypeDW,int bufferCheckType)
         {
