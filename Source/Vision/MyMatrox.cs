@@ -1008,10 +1008,10 @@ namespace S2System.Vision
                 {
                     case 0:
                     case 1:
-                        res[i].Y -= CropABgap / 2 - 4; //-3;    // CropABgap / 2;
+                        res[i].Y -= CropABgap / 2;// - 4; //-3;    // CropABgap / 2;
                         break;
                     case 2:
-                        res[i].Y += CropABgap / 2 - 26; //-27;  // CropABgap / 2 - 23;
+                        res[i].Y += CropABgap / 2;// - 26; //-27;  // CropABgap / 2 - 23;
                         break;
                     case 3:
                         res[i].X += (520 - CropCgap) / 2;

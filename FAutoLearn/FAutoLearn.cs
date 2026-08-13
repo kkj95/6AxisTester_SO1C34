@@ -22,7 +22,6 @@ namespace FAutoLearn
 {
     public partial class FAutoLearn : Form
     {
-
         public string mOrgFile = "";
         string RootPath = "C:\\6AxisTester\\DoNotTouch\\";
 
@@ -464,7 +463,7 @@ namespace FAutoLearn
 
             //var folder = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\\RawData"));
             //string sFilePath = folder;
-            string sFilePath = Path.GetFullPath("C:\\CSHTest\\Result\\RawData");
+            string sFilePath = Path.GetFullPath("C:\\6AxisTester\\Result\\RawData");
             if (!Directory.Exists(sFilePath))
                 Directory.CreateDirectory(sFilePath);
 
@@ -647,15 +646,22 @@ namespace FAutoLearn
 
                 sideAzimuthUpper[mFidMarkSide[i].Azimuth] = yUpper;
                 sideAzimuthLeft[mFidMarkSide[i].Azimuth] = IsLeft;
+
+                //  fidInfo.X, fidInfo.Y 가 얼마가 되었든 무조건 각각의 Crop 의 상하방향 중심에 마크가 와야 한다.
+                //  따라서 아래 함수는 대폭 수정되어야한다. 단순히 mm 를 pixel 로 바꿔주는 역할을 한다.
+                //  Crop Box 각각에 대한 정보가 있어야 한다.
+                //  Side E, Top N. Top S 는 무조건 각 Crop 의 중심좌표
+                //  Side N, Side S 는 해당 Crop 의 중심에 (Side N + Side S)/2 가 위치해야 한다.
+                //  m__G.oCam[0].mSrcCropRect[] 이 바뀌면 markPos[] 도 동시에 같이 바뀌어야 한다.
                 TransferAbsToPicturePos(mFidMarkSide[i].fidInfo.X, mFidMarkSide[i].fidInfo.Y, ref rx, ref ry, yUpper, true, IsLeft);
 
                 markPos[markCount].X = (int)(rx + 0.4999);
                 markPos[markCount].Y = (int)(ry + 0.4999);
 
                 if (i < 2)
-                    markPos[markCount].Y -= 27;// 28;
+                    markPos[markCount].Y -= 20;// 28;
                 else
-                    markPos[markCount].Y += 28;// 27;
+                    markPos[markCount].Y += 0;// 27;
                 markCount++;
             }
 
@@ -677,10 +683,14 @@ namespace FAutoLearn
                     IsLeft = sideAzimuthLeft[mFidMarkTop[i].Azimuth + 2];
                 }
 
+                //  fidInfo.X, fidInfo.Y 가 얼마가 되었든 무조건 각각의 Crop 의 상하방향 중심에 마크가 와야 한다.
+                //  따라서 아래 함수는 대폭 수정되어야한다. 단순히 mm 를 pixel 로 바꿔주는 역할을 한다.
+                //  Crop Box 각각에 대한 정보가 있어야 한다.
+                //  Side N, Side S 는 해당 Crop 의 중심에 (Side N + Side S)/2 가 위치해야 한다.
                 TransferAbsToPicturePos(mFidMarkTop[i].fidInfo.X, mFidMarkTop[i].fidInfo.Y, ref rx, ref ry, yUpper, false, IsLeft);
 
                 markPos[markCount].X = (int)(rx + 0.4999);
-                markPos[markCount].Y = (int)(ry + 0.4999) + 34;
+                markPos[markCount].Y = (int)(ry + 0.4999) + 30;// 34;
                 markCount++;
 
             }
@@ -880,12 +890,12 @@ namespace FAutoLearn
                 if (yUpper)
                 {
                     //ry = (  (-mOpticsTgtOffset - y) * vSin40 - motSimDlg.FOV_YSHIFT * vSin40);
-                    ry = (-motSimDlg.FOV_YSHIFT - (y - 0.16 + S) * vSin40);
+                    ry = (-motSimDlg.FOV_YSHIFT - (y - 0.17 + S) * vSin40);
                 }
                 else
                 {
                     //ry = ((-mOpticsTgtOffset + y) * vSin40 - motSimDlg.FOV_YSHIFT * vSin40);
-                    ry = (-motSimDlg.FOV_YSHIFT + (y - 0.16 - S) * vSin40);
+                    ry = (-motSimDlg.FOV_YSHIFT + (y - 0.17 - S) * vSin40);
                 }
 
                 ry = ry / (0.0055 / LensMag);
@@ -903,7 +913,7 @@ namespace FAutoLearn
                     ry = -motSimDlg.FOV_YSHIFT + motSimDlg.M + Oh + y - S;
                 }
 
-                ry = ry / (0.0055 / LensMag);
+                ry = ry / (0.0055 / LensMag) + 0.15;
             }
         }
 
@@ -5913,7 +5923,7 @@ namespace FAutoLearn
                                 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                 //  Skip Logic 은 exArea 적용할 때는 사용 불가. exArea 적용할 때는 conv 값이 값자기 크게 변함.
                                 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                if ( i>=203 && j >= 112)	// ( i==156 && j == 100)
+                                if ( i==121 && j == 94)	// ( i==156 && j == 100)
                                     threshT = lfMark.conv;
 
                                 //lconv = CalcConv(mWidth, mHeight, modelScaleFactor, ref lfMark.img, i, j, iBuf, ref subconv, ref lfMark.exArea);
@@ -6839,7 +6849,7 @@ namespace FAutoLearn
                     //        mFidMarkTop[modelIndex - mFidMarkSide.Count] = lfMark;
                     //}
                 }
-                smr[si].mMTF = convFoundS[si];
+                //smr[si].mMTF = convFoundS[si];
                 //  각 마크의 COG 를 구한다.
                 if (posFoundS[si].X == 0 && posFoundS[si].Y == 0)
                 {
@@ -7105,10 +7115,13 @@ namespace FAutoLearn
                             {
                                 int curSign = x < tWidthOver2 ? 1 : -1;
 
-                                xDiffimg[x + y_tWidth_1] = 2 * curSign * ((int)tgtBuf[x + 1 + y_tWidth] - tgtBuf[x - 1 + y_tWidth]);// - LUTBgNoise[subLeft + x + 1] + LUTBgNoise[subLeft + x - 1]);
+                                xDiffimg[x + y_tWidth_1] = 5 * curSign * ((int)tgtBuf[x + 1 + y_tWidth] - tgtBuf[x - 1 + y_tWidth]);// - LUTBgNoise[subLeft + x + 1] + LUTBgNoise[subLeft + x - 1]);
 
                                 if (x > 1 && x < tWidth_2)
-                                    xDiffimg[x + y_tWidth_1] += curSign * ((int)tgtBuf[x + 2 + y_tWidth] - tgtBuf[x - 2 + y_tWidth]);// - LUTBgNoise[subLeft + x + 2] + LUTBgNoise[subLeft + x - 2])/2;
+                                    xDiffimg[x + y_tWidth_1] += 4 * curSign * ((int)tgtBuf[x + 2 + y_tWidth] - tgtBuf[x - 2 + y_tWidth]);// - LUTBgNoise[subLeft + x + 2] + LUTBgNoise[subLeft + x - 2])/2;
+
+                                if (x > 2 && x < tWidth_2 - 1)
+                                    xDiffimg[x + y_tWidth_1] += 3 * curSign * ((int)tgtBuf[x + 2 + y_tWidth] - tgtBuf[x - 3 + y_tWidth]);// - LUTBgNoise[subLeft + x + 2] + LUTBgNoise[subLeft + x - 2])/2;
                             }
                         }
                         int x_tHeight_1 = 0;
@@ -7119,10 +7132,12 @@ namespace FAutoLearn
                             {
                                 int curSign = y < tHeightOver2 ? 1 : -1;    //  경계를 무조건 밝게 표시하게 해준다.
 
-                                yDiffimg[y + x_tHeight_1] = 2 * curSign * ((int)tgtBuf[x + (y + 1) * tWidth] - tgtBuf[x + (y - 1) * tWidth]);// - LUTBgNoiseY[subTop + y + 1] + LUTBgNoiseY[subTop + y - 1];
+                                yDiffimg[y + x_tHeight_1] = 5 * curSign * ((int)tgtBuf[x + (y + 1) * tWidth] - tgtBuf[x + (y - 1) * tWidth]);// - LUTBgNoiseY[subTop + y + 1] + LUTBgNoiseY[subTop + y - 1];
 
                                 if (y > 1 && y < tHeight_2)
-                                    yDiffimg[y + x_tHeight_1] += curSign * ((int)tgtBuf[x + (y + 2) * tWidth] - tgtBuf[x + (y - 2) * tWidth]);// - LUTBgNoiseY[subTop + y + 2] + LUTBgNoiseY[subTop + y - 2])/2;
+                                    yDiffimg[y + x_tHeight_1] += 4 * curSign * ((int)tgtBuf[x + (y + 2) * tWidth] - tgtBuf[x + (y - 2) * tWidth]);// - LUTBgNoiseY[subTop + y + 2] + LUTBgNoiseY[subTop + y - 2])/2;
+                                if (y > 2 && y < tHeight_2 - 1)
+                                    yDiffimg[y + x_tHeight_1] += 3 * curSign * ((int)tgtBuf[x + (y + 2) * tWidth] - tgtBuf[x + (y - 3) * tWidth]);// - LUTBgNoiseY[subTop + y + 2] + LUTBgNoiseY[subTop + y - 2])/2;
                             }
                         }
 

@@ -141,6 +141,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.btnPowerOn = new System.Windows.Forms.Button();
             this.btnPowerOff = new System.Windows.Forms.Button();
+            this.btn_ActManual = new System.Windows.Forms.Button();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -1693,6 +1694,7 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.btn_ActManual);
             this.groupBox5.Controls.Add(this.button9);
             this.groupBox5.Controls.Add(this.button2);
             this.groupBox5.Font = new System.Drawing.Font("맑은 고딕", 10F, System.Drawing.FontStyle.Bold);
@@ -1707,10 +1709,11 @@
             // 
             this.button9.Location = new System.Drawing.Point(22, 24);
             this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(164, 59);
+            this.button9.Size = new System.Drawing.Size(72, 59);
             this.button9.TabIndex = 0;
             this.button9.Text = "OIS FW_Cal";
             this.button9.UseVisualStyleBackColor = true;
+            this.button9.Visible = false;
             this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
             // button2
@@ -1752,6 +1755,16 @@
             this.btnPowerOff.Text = "Power off";
             this.btnPowerOff.UseVisualStyleBackColor = false;
             this.btnPowerOff.Click += new System.EventHandler(this.btnPowerOff_Click);
+            // 
+            // btn_ActManual
+            // 
+            this.btn_ActManual.Location = new System.Drawing.Point(22, 24);
+            this.btn_ActManual.Name = "btn_ActManual";
+            this.btn_ActManual.Size = new System.Drawing.Size(351, 59);
+            this.btn_ActManual.TabIndex = 1;
+            this.btn_ActManual.Text = "Act Manual Open";
+            this.btn_ActManual.UseVisualStyleBackColor = true;
+            this.btn_ActManual.Click += new System.EventHandler(this.btn_ActManual_Click);
             // 
             // FVision
             // 
@@ -1975,5 +1988,6 @@
         private System.Windows.Forms.Button btnPowerOn;
         private System.Windows.Forms.Button btnPowerOff;
         private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Button btn_ActManual;
     }
 }
