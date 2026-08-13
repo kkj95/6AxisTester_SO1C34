@@ -1,5 +1,6 @@
 ﻿using Basler.Pylon;
 using FAutoLearn;
+using FZ4P.DriverIc.Interfaces;
 using MathNet.Numerics.LinearAlgebra;
 using Matrox.MatroxImagingLibrary;
 
@@ -11404,8 +11405,14 @@ namespace FZ4P
         private void button9_Click(object sender, EventArgs e)
         {
             Dln.PowerSequence(0);
-            OIS_FWDownload(0);
-            OIS_HallCalibration(0);
+
+            //ServoOn
+            STATIC.DW9836.OISOnOff(0, true);
+            STATIC.DrvIC.AFOnOff(0, true);
+
+            STATIC.DrvIC.AFMove(0, STATIC.DrvIC.AF_MID_CODE);
+            STATIC.DW9836.OISMove(0, STATIC.DW9836.OIS_MID_CODE, STATIC.DW9836.OIS_MID_CODE);
+
             tbInfo.Text = "OIS FW_Cal Finished";
         }
 
