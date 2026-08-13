@@ -506,38 +506,22 @@ namespace FZ4P.UI
             _i2CToI3C.SetH503WakeUp();
         }
 
-        private void checkBox6_CheckStateChanged(object sender, EventArgs e)
+        private void ReadI2CBuffer(int iCh)
         {
-            bool State = ((CheckBox)sender).Checked;
-            int ch = Convert.ToInt32(cbb_Channel.Text);
-            if (State)
+            try
             {
-                cts[1] = new CancellationTokenSource();
-                Task.Run(() => ReadI2CBuffer(cts[1].Token, ch));
+                CheckBuffer_I3C_X = ((ushort)_i2CToI3C.GetI3CCheckBuffer(AxisTypeDW.AxisX,0)).ToString();
+                Thread.Sleep(5);
+                CheckBuffer_I3C_X_2 = ((ushort)_i2CToI3C.GetI3CCheckBuffer(AxisTypeDW.AxisX, 1)).ToString();
+                Thread.Sleep(5);
+                CheckBuffer_I3C_Y = ((ushort)_i2CToI3C.GetI3CCheckBuffer(AxisTypeDW.AxisY, 0)).ToString();
+                Thread.Sleep(5);
+                CheckBuffer_I3C_Y_2 = ((ushort)_i2CToI3C.GetI3CCheckBuffer(AxisTypeDW.AxisY, 1)).ToString();
+                Thread.Sleep(5);
             }
-            else
-                cts[1]?.Cancel();
-        }
-
-        private void ReadI2CBuffer(CancellationToken token, int iCh)
-        {
-            while (!token.IsCancellationRequested)
+            catch (Exception ex)
             {
-                try
-                {
-                    CheckBuffer_I3C_X = ((ushort)_i2CToI3C.GetI3CCheckBuffer(AxisTypeDW.AxisX,0)).ToString();
-                    Thread.Sleep(5);
-                    CheckBuffer_I3C_X_2 = ((ushort)_i2CToI3C.GetI3CCheckBuffer(AxisTypeDW.AxisX, 1)).ToString();
-                    Thread.Sleep(5);
-                    CheckBuffer_I3C_Y = ((ushort)_i2CToI3C.GetI3CCheckBuffer(AxisTypeDW.AxisY, 0)).ToString();
-                    Thread.Sleep(5);
-                    CheckBuffer_I3C_Y_2 = ((ushort)_i2CToI3C.GetI3CCheckBuffer(AxisTypeDW.AxisY, 1)).ToString();
-                    Thread.Sleep(5);
-                }
-                catch (Exception ex)
-                {
-                    _actionLog(iCh, ex.Message);
-                }
+                _actionLog(iCh, ex.Message);
             }
         }
 
@@ -580,28 +564,9 @@ namespace FZ4P.UI
                 ScanSlaveID.RemoveAt(0);
         }
 
-        private void button3_Click_1(object sender, EventArgs e)
+        private void button4_Click_1(object sender, EventArgs e)
         {
-
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            ScanSlaveID.Add(new SlaveId());
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            ScanSlaveID.RemoveAt(0);
-        }
-
-        private void checkBox8_CheckStateChanged(object sender, EventArgs e)
-        {
-            bool State = ((CheckBox)sender).Checked;
-            if(State)
-                ScanSlaveID[0].Values = new string[1] { "Test1" }; 
-            else
-                ScanSlaveID[0].Values = new string[1] { "Test2" };
+            ReadI2CBuffer(0);
         }
     }
 

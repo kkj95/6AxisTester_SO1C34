@@ -65,7 +65,6 @@ namespace FZ4P.DriverIc.I2CBase
                 if (STATIC.I2CFailcnt > 20)
                 {
                     SetError("Dln ReadFail");
-
                 }
                 return false;
             }

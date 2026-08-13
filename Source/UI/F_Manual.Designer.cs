@@ -81,6 +81,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.checkBox5 = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.button4 = new System.Windows.Forms.Button();
             this.btn_VerserChecked = new System.Windows.Forms.Button();
             this.panel15 = new System.Windows.Forms.Panel();
             this.lbl_Version = new System.Windows.Forms.Label();
@@ -90,7 +91,6 @@
             this.lbl_Y_40 = new System.Windows.Forms.Label();
             this.panel14 = new System.Windows.Forms.Panel();
             this.label19 = new System.Windows.Forms.Label();
-            this.checkBox6 = new System.Windows.Forms.CheckBox();
             this.panel13 = new System.Windows.Forms.Panel();
             this.label16 = new System.Windows.Forms.Label();
             this.lbl_X_42 = new System.Windows.Forms.Label();
@@ -705,7 +705,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(292, 57);
+            this.button2.Location = new System.Drawing.Point(292, 98);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(88, 28);
             this.button2.TabIndex = 521;
@@ -719,7 +719,7 @@
             this.checkBox5.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.checkBox5.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBox5.ForeColor = System.Drawing.Color.White;
-            this.checkBox5.Location = new System.Drawing.Point(292, 31);
+            this.checkBox5.Location = new System.Drawing.Point(292, 72);
             this.checkBox5.Name = "checkBox5";
             this.checkBox5.Size = new System.Drawing.Size(94, 19);
             this.checkBox5.TabIndex = 519;
@@ -729,13 +729,13 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.button4);
             this.groupBox3.Controls.Add(this.btn_VerserChecked);
             this.groupBox3.Controls.Add(this.panel15);
             this.groupBox3.Controls.Add(this.panel11);
             this.groupBox3.Controls.Add(this.lbl_Y_42);
             this.groupBox3.Controls.Add(this.lbl_Y_40);
             this.groupBox3.Controls.Add(this.panel14);
-            this.groupBox3.Controls.Add(this.checkBox6);
             this.groupBox3.Controls.Add(this.panel13);
             this.groupBox3.Controls.Add(this.lbl_X_42);
             this.groupBox3.Controls.Add(this.lbl_X_40);
@@ -748,6 +748,16 @@
             this.groupBox3.TabIndex = 514;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "I2C To I3C Checked";
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(292, 0);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(88, 28);
+            this.button4.TabIndex = 535;
+            this.button4.Text = "I3C Read";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click_1);
             // 
             // btn_VerserChecked
             // 
@@ -770,14 +780,15 @@
             // 
             // lbl_Version
             // 
-            this.lbl_Version.AutoSize = true;
+            this.lbl_Version.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbl_Version.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.lbl_Version.ForeColor = System.Drawing.Color.White;
-            this.lbl_Version.Location = new System.Drawing.Point(27, 9);
+            this.lbl_Version.Location = new System.Drawing.Point(0, 0);
             this.lbl_Version.Name = "lbl_Version";
-            this.lbl_Version.Size = new System.Drawing.Size(60, 12);
+            this.lbl_Version.Size = new System.Drawing.Size(112, 30);
             this.lbl_Version.TabIndex = 278;
-            this.lbl_Version.Text = "Y - 0x40";
+            this.lbl_Version.Text = "FW Version";
+            this.lbl_Version.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel11
             // 
@@ -844,20 +855,6 @@
             this.label19.Size = new System.Drawing.Size(60, 12);
             this.label19.TabIndex = 278;
             this.label19.Text = "Y - 0x40";
-            // 
-            // checkBox6
-            // 
-            this.checkBox6.AutoSize = true;
-            this.checkBox6.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.checkBox6.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox6.ForeColor = System.Drawing.Color.White;
-            this.checkBox6.Location = new System.Drawing.Point(328, 0);
-            this.checkBox6.Name = "checkBox6";
-            this.checkBox6.Size = new System.Drawing.Size(58, 19);
-            this.checkBox6.TabIndex = 528;
-            this.checkBox6.Text = "START";
-            this.checkBox6.UseVisualStyleBackColor = false;
-            this.checkBox6.CheckStateChanged += new System.EventHandler(this.checkBox6_CheckStateChanged);
             // 
             // panel13
             // 
@@ -996,7 +993,6 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.panel15.ResumeLayout(false);
-            this.panel15.PerformLayout();
             this.panel11.ResumeLayout(false);
             this.panel11.PerformLayout();
             this.panel14.ResumeLayout(false);
@@ -1065,7 +1061,6 @@
         private System.Windows.Forms.CheckBox checkBox5;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.CheckBox checkBox6;
         private System.Windows.Forms.Panel panel13;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label lbl_X_42;
@@ -1084,5 +1079,6 @@
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TabControl tbcntl;
+        private System.Windows.Forms.Button button4;
     }
 }
