@@ -158,6 +158,7 @@ namespace FZ4P
 
                 InfoBtn.Add(new InfoButton()); //test
                 InfoBtn.Add(new InfoButton());
+                InfoBtn.Add(new InfoButton());  // TODO :임시 테스트 진입하기위해 버튼을 만듬...
                 ViewLog.Add(new LogText());
             }
             ItemList.Add(new ActItems() { Name = "AF Scan", Func = Act_ScanCode });
@@ -1274,10 +1275,26 @@ namespace FZ4P
                 if (Model.MCType != "Posture_S")
                     LoadSeq();
                 Process.Wait(100);
-                
-               
 
-                if(Model.MCType == "Posture_M" && InspType == 1)
+                //TODO : 임시 기다리는 로직 추가
+                Task ResetWait = new Task(() =>
+                {
+                    bool waitFlg = false;
+
+                    STATIC.Process.InfoBtn[2].btn.Text = "리셋 버튼 클릭";
+                    STATIC.fManage.SafeControlView(STATIC.Process.InfoBtn[2].btn, true);
+                    STATIC.Process.InfoBtn[2].hideEvent += (state)=> { waitFlg = state; };
+                    
+                    while (!waitFlg)
+                    {
+                        Thread.Sleep(10);
+                    }
+                });
+                ResetWait.Start();
+                ResetWait.Wait();
+
+
+                if (Model.MCType == "Posture_M" && InspType == 1)
                 {
                     Task t = Task.Factory.StartNew(() =>
                     {
@@ -1314,6 +1331,7 @@ namespace FZ4P
                 Dln.IsRun = false;
             }
         }
+
         void SaveLogData()
         {
             string dateDir = STATIC.CreateDateDir();

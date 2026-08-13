@@ -144,6 +144,7 @@ namespace FZ4P
     public class InfoButton
     {
         public Button btn = new Button();
+        public event Action<bool> hideEvent;
         public InfoButton()
         {
             btn.BackColor = Color.Black;
@@ -153,7 +154,15 @@ namespace FZ4P
             btn.Text = "Start Test";
             btn.UseVisualStyleBackColor = false;
             btn.Click += new EventHandler(this.Info_Click);
+            btn.VisibleChanged += Btn_VisibleChanged;
         }
+
+        private void Btn_VisibleChanged(object sender, EventArgs e)
+        {
+            if (!btn.Visible)
+                hideEvent?.Invoke(true);
+        }
+
         private void Info_Click(object sender, EventArgs e)
         {
             btn.Hide();
