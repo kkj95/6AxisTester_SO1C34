@@ -614,7 +614,7 @@ namespace FZ4P
             }
         }
 
-        private void SafeControlView(Control con, bool bShow)
+        public void SafeControlView(Control con, bool bShow)
         {
             if (InvokeRequired)
             {
