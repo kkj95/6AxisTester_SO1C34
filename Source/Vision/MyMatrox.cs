@@ -993,6 +993,55 @@ namespace S2System.Vision
             mFAL.mMarkPosOnPanel = new System.Drawing.Point[p.Length];
             mFAL.mMarkConvOnPanel = new long[p.Length];
 
+            //int cx = nSizeX / 2;
+            //int cy = nSizeY / 2;
+            //if (w > 0 && h > 0)
+            //{
+            //    cx = w / 2;
+            //    cy = h / 2;
+            //}
+            //for (int i = 0; i < p.Length; i++)
+            //{
+            //    res[i].X = cx + p[i].X;
+            //    res[i].Y = cy + p[i].Y;
+            //    switch (i)
+            //    {
+            //        case 0:
+            //        case 1:
+            //            res[i].Y -= CropABgap / 2;// - 4; //-3;    // CropABgap / 2;
+            //            break;
+            //        case 2:
+            //            res[i].Y += CropABgap / 2;// - 26; //-27;  // CropABgap / 2 - 23;
+            //            break;
+            //        case 3:
+            //            res[i].X += (520 - CropCgap) / 2;
+            //            //res[i].Y += 26;
+            //            break;
+            //        case 4:
+            //            res[i].X -= (520 - CropCgap) / 2;
+            //            //res[i].Y += 26;
+            //            break;
+            //    }
+            //    mFAL.mMarkPosOnPanel[i].X = res[i].X;
+            //    mFAL.mMarkPosOnPanel[i].Y = res[i].Y;
+            //}
+
+            double NSgap = (4300 / 18.3333);// default mark gap
+            if (mFAL.mFidMarkSide[0] != null)
+            {
+                NSgap = (mFAL.mFidMarkSide[0].fidInfo.X + mFAL.mFidMarkSide[0].fidInfo.X) * 1000 / 18.3333;
+            }
+            res[0].X = (int)(w / 2.0 + NSgap / 2.0);
+            res[0].Y = 95;
+            res[1].X = (int)(w / 2.0 - NSgap / 2.0);
+            res[1].Y = 95;
+            res[2].X = 390;
+            res[2].Y = 285;
+            res[3].X = 520 + 130;
+            res[3].Y = 190 + (h - 190) / 2;
+            res[4].X = 130;
+            res[4].Y = 190 + (h - 190) / 2;
+
             int cx = nSizeX / 2;
             int cy = nSizeY / 2;
             if (w > 0 && h > 0)
@@ -1000,28 +1049,8 @@ namespace S2System.Vision
                 cx = w / 2;
                 cy = h / 2;
             }
-            for (int i = 0; i < p.Length; i++)
+            for (int i = 0; i < 5; i++)
             {
-                res[i].X = cx + p[i].X;
-                res[i].Y = cy + p[i].Y;
-                switch (i)
-                {
-                    case 0:
-                    case 1:
-                        res[i].Y -= CropABgap / 2;// - 4; //-3;    // CropABgap / 2;
-                        break;
-                    case 2:
-                        res[i].Y += CropABgap / 2;// - 26; //-27;  // CropABgap / 2 - 23;
-                        break;
-                    case 3:
-                        res[i].X += (520 - CropCgap) / 2;
-                        //res[i].Y += 26;
-                        break;
-                    case 4:
-                        res[i].X -= (520 - CropCgap) / 2;
-                        //res[i].Y += 26;
-                        break;
-                }
                 mFAL.mMarkPosOnPanel[i].X = res[i].X;
                 mFAL.mMarkPosOnPanel[i].Y = res[i].Y;
             }
