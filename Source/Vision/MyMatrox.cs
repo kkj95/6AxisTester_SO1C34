@@ -2676,6 +2676,21 @@ namespace S2System.Vision
                 mC_pY[index] = lTranslation.Y;// - mFAL.mFZM.mZtoYbyView[1] * mC_pZ[index] - mFAL.mFZM.mXtoYbyView[1] * mC_pX[index] + mC_pTX[index] * 1.875134602 ; //  영상에서 위쪽으로 이동이 + 방향 되도록 조정함.
 
             }
+            else 
+            {
+                // if the detected marks are less than 5, all the values set as zero
+                mC_pX[index] = 0;
+                mC_pX[index] = 0;
+                mC_pY[index] = 0;
+                mC_pZ[index] = 0;
+                mC_pTX[index] = 0;
+                mC_pTY[index] = 0;
+                mC_pTZ[index] = 0;
+
+                DateTime dtNow = DateTime.Now;
+                string filename = STATIC.LogErrorImageDir + "Marker" + index.ToString() + "_" + dtNow.ToString("ddHHmmss.fff") + ".bmp";
+                mFAL.mSourceImg[iBuf].SaveImage(filename);
+            }
             if ((lTranslation.X == 0 && bSaveLostMarkFrame))
             {
                 DateTime dtNow = DateTime.Now;

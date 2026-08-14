@@ -52,6 +52,8 @@ namespace FZ4P
             if (!Directory.Exists(STATIC.OISYPIDDir)) Directory.CreateDirectory(STATIC.OISYPIDDir);
             if (!Directory.Exists(STATIC.OISFWDir)) Directory.CreateDirectory(STATIC.OISFWDir);
             if (!Directory.Exists(STATIC.OISBaseCalDir)) Directory.CreateDirectory(STATIC.OISBaseCalDir);
+            if (!Directory.Exists(STATIC.LogResultDir)) Directory.CreateDirectory(STATIC.LogResultDir);
+            if (!Directory.Exists(STATIC.LogErrorImageDir)) Directory.CreateDirectory(STATIC.LogErrorImageDir);
 
             string res = string.Empty;
             res = STATIC.PKGRelease(STATIC.PackageDir, "*.rcp", STATIC.RecipeDir);

@@ -67,6 +67,8 @@ namespace FZ4P
         public static string RetryCountDir = RootDir + "RetryCount.txt";
         public static string PasswordDir = RootDir + "PW.txt";
         public static string MotionDir = RootDir + "MotionData.mot";
+        public static string LogResultDir = BaseDir + "Result\\";
+        public static string LogErrorImageDir = LogResultDir + "Log\\";
 
         public static DateTime LogDate = new DateTime();
         public static string FailNumber = string.Empty;
