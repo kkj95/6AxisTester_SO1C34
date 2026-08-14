@@ -24,7 +24,6 @@ namespace FZ4P
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 LogHelper.Create();
-
                 Application.Run(new F_Main());
 
                 mutex.ReleaseMutex();

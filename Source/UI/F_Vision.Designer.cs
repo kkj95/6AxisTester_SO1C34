@@ -126,6 +126,8 @@
             this.OISYRadio = new System.Windows.Forms.RadioButton();
             this.OISXRadio = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lbCorver = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.lbSocketState = new System.Windows.Forms.Label();
@@ -142,6 +144,10 @@
             this.button2 = new System.Windows.Forms.Button();
             this.btnPowerOn = new System.Windows.Forms.Button();
             this.btnPowerOff = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.lb_SocketIn = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.lb_SocketOut = new System.Windows.Forms.Label();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -1533,6 +1539,12 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label8);
+            this.groupBox1.Controls.Add(this.lb_SocketOut);
+            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Controls.Add(this.lb_SocketIn);
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.lbCorver);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.lbSocketState);
@@ -1551,15 +1563,39 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Socket / Cover";
             // 
+            // label3
+            // 
+            this.label3.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label3.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.Yellow;
+            this.label3.Location = new System.Drawing.Point(44, 240);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(88, 23);
+            this.label3.TabIndex = 450;
+            this.label3.Text = "CORVER";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbCorver
+            // 
+            this.lbCorver.BackColor = System.Drawing.Color.White;
+            this.lbCorver.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.lbCorver.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbCorver.Location = new System.Drawing.Point(44, 263);
+            this.lbCorver.Name = "lbCorver";
+            this.lbCorver.Size = new System.Drawing.Size(88, 29);
+            this.lbCorver.TabIndex = 449;
+            this.lbCorver.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // label2
             // 
             this.label2.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label2.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.Yellow;
-            this.label2.Location = new System.Drawing.Point(192, 259);
+            this.label2.Location = new System.Drawing.Point(243, 240);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(142, 23);
+            this.label2.Size = new System.Drawing.Size(91, 23);
             this.label2.TabIndex = 448;
             this.label2.Text = "Contact";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1570,9 +1606,9 @@
             this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label1.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Yellow;
-            this.label1.Location = new System.Drawing.Point(44, 259);
+            this.label1.Location = new System.Drawing.Point(144, 240);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(142, 23);
+            this.label1.Size = new System.Drawing.Size(88, 23);
             this.label1.TabIndex = 448;
             this.label1.Text = "Socket Sensor";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1582,9 +1618,9 @@
             this.lbSocketState.BackColor = System.Drawing.Color.White;
             this.lbSocketState.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lbSocketState.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSocketState.Location = new System.Drawing.Point(44, 284);
+            this.lbSocketState.Location = new System.Drawing.Point(144, 263);
             this.lbSocketState.Name = "lbSocketState";
-            this.lbSocketState.Size = new System.Drawing.Size(142, 63);
+            this.lbSocketState.Size = new System.Drawing.Size(88, 29);
             this.lbSocketState.TabIndex = 447;
             this.lbSocketState.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -1593,9 +1629,9 @@
             this.lbConState.BackColor = System.Drawing.Color.White;
             this.lbConState.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lbConState.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbConState.Location = new System.Drawing.Point(192, 284);
+            this.lbConState.Location = new System.Drawing.Point(243, 263);
             this.lbConState.Name = "lbConState";
-            this.lbConState.Size = new System.Drawing.Size(142, 63);
+            this.lbConState.Size = new System.Drawing.Size(91, 29);
             this.lbConState.TabIndex = 446;
             this.lbConState.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -1607,7 +1643,7 @@
             this.btnSPLUD.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSPLUD.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSPLUD.ForeColor = System.Drawing.Color.White;
-            this.btnSPLUD.Location = new System.Drawing.Point(192, 186);
+            this.btnSPLUD.Location = new System.Drawing.Point(192, 168);
             this.btnSPLUD.Name = "btnSPLUD";
             this.btnSPLUD.Size = new System.Drawing.Size(142, 63);
             this.btnSPLUD.TabIndex = 443;
@@ -1623,7 +1659,7 @@
             this.btnSocketUd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSocketUd.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSocketUd.ForeColor = System.Drawing.Color.White;
-            this.btnSocketUd.Location = new System.Drawing.Point(192, 108);
+            this.btnSocketUd.Location = new System.Drawing.Point(192, 99);
             this.btnSocketUd.Name = "btnSocketUd";
             this.btnSocketUd.Size = new System.Drawing.Size(142, 63);
             this.btnSocketUd.TabIndex = 444;
@@ -1654,7 +1690,7 @@
             this.btnSPLLD.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btnSPLLD.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSPLLD.ForeColor = System.Drawing.Color.White;
-            this.btnSPLLD.Location = new System.Drawing.Point(44, 186);
+            this.btnSPLLD.Location = new System.Drawing.Point(44, 168);
             this.btnSPLLD.Name = "btnSPLLD";
             this.btnSPLLD.Size = new System.Drawing.Size(142, 66);
             this.btnSPLLD.TabIndex = 440;
@@ -1669,7 +1705,7 @@
             this.btnSocketLd.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btnSocketLd.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSocketLd.ForeColor = System.Drawing.Color.White;
-            this.btnSocketLd.Location = new System.Drawing.Point(44, 107);
+            this.btnSocketLd.Location = new System.Drawing.Point(44, 98);
             this.btnSocketLd.Name = "btnSocketLd";
             this.btnSocketLd.Size = new System.Drawing.Size(142, 66);
             this.btnSocketLd.TabIndex = 441;
@@ -1764,6 +1800,54 @@
             this.btnPowerOff.Text = "Power off";
             this.btnPowerOff.UseVisualStyleBackColor = false;
             this.btnPowerOff.Click += new System.EventHandler(this.btnPowerOff_Click);
+            // 
+            // label4
+            // 
+            this.label4.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label4.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.Color.Yellow;
+            this.label4.Location = new System.Drawing.Point(44, 298);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(142, 23);
+            this.label4.TabIndex = 452;
+            this.label4.Text = "Socket In";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lb_SocketIn
+            // 
+            this.lb_SocketIn.BackColor = System.Drawing.Color.White;
+            this.lb_SocketIn.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.lb_SocketIn.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb_SocketIn.Location = new System.Drawing.Point(44, 321);
+            this.lb_SocketIn.Name = "lb_SocketIn";
+            this.lb_SocketIn.Size = new System.Drawing.Size(142, 29);
+            this.lb_SocketIn.TabIndex = 451;
+            this.lb_SocketIn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label8
+            // 
+            this.label8.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label8.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.ForeColor = System.Drawing.Color.Yellow;
+            this.label8.Location = new System.Drawing.Point(192, 298);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(142, 23);
+            this.label8.TabIndex = 454;
+            this.label8.Text = "Socket Out";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lb_SocketOut
+            // 
+            this.lb_SocketOut.BackColor = System.Drawing.Color.White;
+            this.lb_SocketOut.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.lb_SocketOut.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb_SocketOut.Location = new System.Drawing.Point(192, 321);
+            this.lb_SocketOut.Name = "lb_SocketOut";
+            this.lb_SocketOut.Size = new System.Drawing.Size(142, 29);
+            this.lb_SocketOut.TabIndex = 453;
+            this.lb_SocketOut.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // FVision
             // 
@@ -1988,5 +2072,11 @@
         private System.Windows.Forms.Button btnPowerOff;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Button btn_ActManual;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lbCorver;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label lb_SocketOut;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lb_SocketIn;
     }
 }

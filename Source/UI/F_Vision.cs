@@ -1,5 +1,8 @@
-﻿using Basler.Pylon;
+﻿using App.CoreModules.Logs.Serilog;
+using Basler.Pylon;
 using FAutoLearn;
+using FZ4P.Commons;
+using FZ4P.Commons.Helper;
 using FZ4P.DriverIc.Interfaces;
 using MathNet.Numerics.LinearAlgebra;
 using Matrox.MatroxImagingLibrary;
@@ -42,7 +45,7 @@ using TextBox = System.Windows.Forms.TextBox;
 
 namespace FZ4P
 {
-    public partial class FVision : Form
+    public partial class FVision : ModelChangedBase
     {
         public DLN Dln { get { return STATIC.Dln; } }
         public Process Process { get { return STATIC.Process; } }
@@ -160,11 +163,51 @@ namespace FZ4P
 
         List<Button> CalBtnGroup;
 
+        private CancellationTokenSource[] cts = new CancellationTokenSource[1];
 
         public FVision()
         {
             InitializeComponent();
             //ReadVisionParam();
+            PropertyChanged += FVision_PropertyChanged;
+        }
+
+        private void FVision_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(CorverFlg))
+            {
+                var _ = PropertiesHelper.GetValue<bool>(e);
+                this.InvokeOnUIThread(() => {
+                    if (_)
+                        lbCorver.BackColor = Color.Lime;
+                    else 
+                        lbCorver.BackColor = Color.White;
+                });
+            }
+
+            else if (e.PropertyName == nameof(SocketIn))
+            {
+                var _ = PropertiesHelper.GetValue<bool>(e);
+
+                this.InvokeOnUIThread(() => {
+                    if (_)
+                        lb_SocketIn.BackColor = Color.Lime;
+                    else
+                        lb_SocketIn.BackColor = Color.White;
+                });
+            }
+
+            else if (e.PropertyName == nameof(SocketOut))
+            {
+                var _ = PropertiesHelper.GetValue<bool>(e);
+
+                this.InvokeOnUIThread(() => {
+                    if (_)
+                        lb_SocketOut.BackColor = Color.Lime;
+                    else
+                        lb_SocketOut.BackColor = Color.White;
+                });
+            }
         }
 
         public int GetTriggerGrabbedFrame()
@@ -11141,11 +11184,74 @@ namespace FZ4P
             }
         }
 
+        private async Task<bool> CorverSensing(bool targetState)
+        {
+            Stopwatch sw = new Stopwatch();
+
+            sw.Restart();
+            if (targetState)
+            {
+                while (true)
+                {
+                    if (Dln.GetGpioStatus((int)PostureIO.CORVER))
+                        return true;
+                    else if (sw.ElapsedMilliseconds > 10000)
+                        return false;
+                    else
+                        await Task.Delay(10);
+                }
+            }
+            else
+            {
+                while (true)
+                {
+                    if (!Dln.GetGpioStatus((int)PostureIO.CORVER))
+                        return true;
+                    else if (sw.ElapsedMilliseconds > 10000)
+                        return false;
+                    else
+                        await Task.Delay(10);
+                }
+            }
+        }
+
+        private bool CorverSensingChecked()
+        {
+            return Dln.GetGpioStatus((int)PostureIO.CORVER);
+        }
+
         private void btnCoverDn_Click(object sender, EventArgs e)
         {
             if (Dln.isMoving || Dln.IsRun) return;
             Dln.isMoving = true;
             Dln.CoverDn();
+            Task t1 = new Task(() => 
+            {
+                bool flg = CorverSensing(true).Result;
+
+                if (flg)
+                {
+                    if (lbSocketState.InvokeRequired)
+                    {
+                        lbSocketState.BeginInvoke((MethodInvoker)delegate
+                        {
+                            lbCorver.BackColor = Color.White;
+                        });
+                    }
+                    else
+                    {
+                        lbCorver.BackColor = Color.White;
+                    }
+                }
+                else
+                {
+                    LogHelper.LogWrite("Corver Time Out Error");
+                }
+
+            });
+            t1.Start();
+
+
             Dln.isMoving = false;
         }
 
@@ -11154,6 +11260,31 @@ namespace FZ4P
             if (Dln.isMoving || Dln.IsRun) return;
             Dln.isMoving = true;
             Dln.CoverUp();
+            Task t1 = new Task(() =>
+            {
+                bool flg = CorverSensing(false).Result;
+
+                if (flg)
+                {
+                    if (lbSocketState.InvokeRequired)
+                    {
+                        lbSocketState.BeginInvoke((MethodInvoker)delegate
+                        {
+                            lbCorver.BackColor = Color.LightGreen;
+                        });
+                    }
+                    else
+                    {
+                        lbCorver.BackColor = Color.LightGreen;
+                    }
+                }
+                else
+                {
+                    LogHelper.LogWrite("Corver Time Out Error");
+                }
+
+            });
+            t1.Start();
             Dln.isMoving = false;
         }
 
@@ -11307,6 +11438,18 @@ namespace FZ4P
                     }
                     else
                         lbSocketState.BackColor = Color.White;
+                }
+                else if (!Dln.GetGpioStatus((int)PostureIO.CORVER))
+                {
+                    if (lbSocketState.InvokeRequired)
+                    {
+                        lbSocketState.BeginInvoke((MethodInvoker)delegate
+                        {
+                            lbCorver.BackColor = Color.White;
+                        });
+                    }
+                    else
+                        lbCorver.BackColor = Color.White;
                 }
                 else
                 {
@@ -11537,6 +11680,77 @@ namespace FZ4P
                 STATIC.fManual.Hide();
             else
                 STATIC.fManual.Show();
+        }
+
+        private bool _corverState = false;
+        public bool CorverFlg
+        {
+            get => _corverState;
+            set
+            {
+                if (_corverState != value)
+                {
+                    _corverState = value;
+                    OnPropertyChanged(nameof(CorverFlg), value);
+                }
+            }
+        }
+
+        private bool _socketIn = false;
+        public bool SocketIn 
+        { 
+            get => _socketIn; 
+            set
+            {
+                if (_socketIn != value)
+                {
+                    _socketIn = value;
+                    OnPropertyChanged(nameof(SocketIn), value);
+                }
+            }
+        }
+        
+        private bool _socketOut = false;
+        public bool SocketOut 
+        {
+            get => _socketOut;
+            set
+            {
+                if (_socketOut != value)
+                {
+                    _socketOut = value;
+                    OnPropertyChanged(nameof(SocketOut), value);
+                }
+            }
+        }
+
+
+        public void IOMonitorSTart(bool Onoff)
+        {
+            if (Onoff)
+            {
+                cts[0] = new CancellationTokenSource();
+                Task.Run(() => IOChecked(cts[0].Token));
+            }
+            else
+                cts[0]?.Cancel();
+        }
+
+        private void IOChecked(CancellationToken token)
+        {
+            while (!token.IsCancellationRequested)
+            {
+                try
+                {
+                    CorverFlg = !Dln.GetGpioStatus((int)PostureIO.CORVER);
+                    SocketIn = Dln.GetGpioStatus((int)PostureIO.SocketIn);
+                    SocketOut = Dln.GetGpioStatus((int)PostureIO.SocketOut);
+                }
+                catch (Exception ex)
+                {
+                    Process.AddLog(0, ex.Message);
+                }
+            }
         }
     }
 }

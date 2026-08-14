@@ -203,6 +203,7 @@
     <Compile Include="Process\TCPComm.cs" />
     <Compile Include="Process\TiltGraph.cs" />
     <Compile Include="Process\UserPROCESS.cs" />
+    <Compile Include="TestHelper.cs" />
     <Compile Include="UI\F_Manual.cs">
       <SubType>Form</SubType>
     </Compile>

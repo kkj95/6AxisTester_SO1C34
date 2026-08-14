@@ -47,6 +47,8 @@ namespace FZ4P
                 STATIC.StateChange += Form_StateChange;
 
                 m__G = Global.GetInstance();
+
+                //TestHelper.Test();
             }
             catch (Exception ex)
             {
@@ -112,6 +114,8 @@ namespace FZ4P
 
             P_Manager.Controls.Add(STATIC.fManage);
             P_Vision.Controls.Add(STATIC.fVision);
+
+            P_Vision.VisibleChanged += P_Vision_VisibleChanged;
 
             STATIC.fStart.Log("Vision Initial Prossess..");
             if (!Process.IsVirtual)
@@ -205,6 +209,12 @@ namespace FZ4P
                 Process.Dln.IOOnOff(PostureIO.BUZZER, false);
                
             }
+        }
+
+        private void P_Vision_VisibleChanged(object sender, EventArgs e)
+        {
+            var P_VIsion = ((Panel)sender);
+            STATIC.fVision.IOMonitorSTart(P_VIsion.Visible);
         }
 
         private void BarcodeConn_OnStatus(bool isCon)

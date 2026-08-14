@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static alglib;
 using static S2System.Vision.MILlib;
 
 namespace FZ4P
@@ -23,6 +24,9 @@ namespace FZ4P
         ORANGE_L = 29,
         GREEN_L = 30,
         BUZZER = 31,
+        CORVER = 17,
+        SocketIn = 12,
+        SocketOut = 13,
     }
 
 
@@ -1025,6 +1029,9 @@ namespace FZ4P
                         DLNgpio[1].Pins[13].Direction = 0;   //  0 ~ 15 : 0(in), 24 ~ 31 : 1(out)
                         DLNgpio[1].Pins[13].PulldownEnabled = true;
 
+                        DLNgpio[1].Pins[(int)PostureIO.CORVER].Enabled = true;
+                        DLNgpio[1].Pins[(int)PostureIO.CORVER].Direction = 0;   //  0 ~ 15 : 0(in), 24 ~ 31 : 1(out)
+                        DLNgpio[1].Pins[(int)PostureIO.CORVER].PulldownEnabled = true;
                     }
 
                 }
@@ -1055,11 +1062,5 @@ namespace FZ4P
             }
 
         }
-
-
-
-
-
-
     }
 }
