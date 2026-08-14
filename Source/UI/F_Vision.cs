@@ -4,6 +4,7 @@ using FAutoLearn;
 using FZ4P.Commons;
 using FZ4P.Commons.Helper;
 using FZ4P.DriverIc.Interfaces;
+using FZ4P.DriverIc.OISIC;
 using MathNet.Numerics.LinearAlgebra;
 using Matrox.MatroxImagingLibrary;
 
@@ -11361,6 +11362,12 @@ namespace FZ4P
                 Dln.CoverDn();
                 Thread.Sleep(500);
                 Dln.PowerOnOff(0, true);
+                
+                Thread.Sleep(100);
+                STATIC.MCUH503.SetH503WakeUp();
+
+
+
                 Thread.Sleep(200);
                 UpdateConState();
 
@@ -11479,11 +11486,12 @@ namespace FZ4P
         }
         void UpdateConState()
         {
-
             bool Constate = true;
 
+            var SlaveID = STATIC.Dln.DLNi2c[3]?.ScanDevices();
+
             if (Dln.ReadByteNull(0, Process.DrvIC.AF_Addr, 0x03, 1) == null) Constate = false;
-            if (Dln.ReadByteNull(0, Process.DrvIC.OIS_Addr, 0x6024, 2) == null) Constate = false;
+            //if (SlaveID == 0xFFFF) Constate = false;
           
             if (Constate)
             {
