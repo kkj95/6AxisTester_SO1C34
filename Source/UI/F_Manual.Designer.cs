@@ -259,7 +259,6 @@
             this.EditCondition.TabIndex = 269;
             this.EditCondition.Text = "START";
             this.EditCondition.UseVisualStyleBackColor = false;
-            this.EditCondition.CheckedChanged += new System.EventHandler(this.EditCondition_CheckedChanged);
             this.EditCondition.CheckStateChanged += new System.EventHandler(this.EditCondition_CheckStateChanged);
             // 
             // groupBox5

@@ -436,11 +436,6 @@ namespace FZ4P.UI
             
         }
 
-        private void EditCondition_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void btn_ServoOn_Click(object sender, EventArgs e)
         {
             _oISFunction.OISOnOff(0, true);
