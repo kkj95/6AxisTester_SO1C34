@@ -5,6 +5,7 @@ using FZ4P.Commons;
 using FZ4P.Commons.Helper;
 using FZ4P.DriverIc.Interfaces;
 using FZ4P.DriverIc.OISIC;
+using FZ4P.Extensions;
 using MathNet.Numerics.LinearAlgebra;
 using Matrox.MatroxImagingLibrary;
 
@@ -316,8 +317,6 @@ namespace FZ4P
                 btnFOVRight.SetBounds(
                     btnFOVRight.Location.X,
                     btnFOVRight.Location.Y, ptsR[2].X + 4, ptsR[5].Y + 4);
-
-
             }
             catch (Exception ex)
             {
@@ -364,7 +363,28 @@ namespace FZ4P
 
           
             ScanName = "AF Scan";
-          
+
+            //디렉션으로 제어 되어있더라...
+            var GpioOutputstate = STATIC.Dln.DLNgpio[0].Pins[9].Direction;
+            PowerUpState(GpioOutputstate);
+        }
+
+        private void PowerUpState(int State)
+        {
+            if (State == 0)
+            {
+                btnCoverDn.Enabled = false;
+                btnCoverUp.Enabled = false;
+                btnSPLLD.Enabled = false;
+                btnSPLUD.Enabled = false;
+            }
+            if (State == 1)
+            {
+                btnCoverDn.Enabled = true;
+                btnCoverUp.Enabled = true;
+                btnSPLLD.Enabled = true;
+                btnSPLUD.Enabled = true;
+            }
         }
         public void BufferInit()
         {
@@ -11225,33 +11245,39 @@ namespace FZ4P
         {
             if (Dln.isMoving || Dln.IsRun) return;
             Dln.isMoving = true;
-            Dln.CoverDn();
-            Task t1 = new Task(() => 
-            {
-                bool flg = CorverSensing(true).Result;
 
-                if (flg)
-                {
-                    if (lbSocketState.InvokeRequired)
-                    {
-                        lbSocketState.BeginInvoke((MethodInvoker)delegate
-                        {
-                            lbCorver.BackColor = Color.White;
-                        });
-                    }
-                    else
-                    {
-                        lbCorver.BackColor = Color.White;
-                    }
-                }
-                else
-                {
-                    LogHelper.LogWrite("Corver Time Out Error");
-                }
+            Dln.I3CStop(STATIC.MCUH503).CoverDn();
+            CorverUpSensorChecked(false, 400);
+            //Thread.Sleep(500);
 
-            });
-            t1.Start();
 
+            //Dln.DLNgpio.
+
+            //Task t1 = new Task(() => 
+            //{
+            //bool flg = CorverSensing(true).Result;
+            //CorverFlg
+            //if (flg)
+            //{
+            //    if (lbSocketState.InvokeRequired)
+            //    {
+            //        lbSocketState.BeginInvoke((MethodInvoker)delegate
+            //        {
+            //            lbCorver.BackColor = Color.White;
+            //        });
+            //    }
+            //    else
+            //    {
+            //        lbCorver.BackColor = Color.White;
+            //    }
+            //}
+            //else
+            //{
+            //    LogHelper.LogWrite("Corver Time Out Error");
+            //}
+
+            //});
+            //t1.Start();
 
             Dln.isMoving = false;
         }
@@ -11259,33 +11285,38 @@ namespace FZ4P
         private void btnCoverUp_Click(object sender, EventArgs e)
         {
             if (Dln.isMoving || Dln.IsRun) return;
+
             Dln.isMoving = true;
-            Dln.CoverUp();
-            Task t1 = new Task(() =>
-            {
-                bool flg = CorverSensing(false).Result;
+            Dln.I3CStop(STATIC.MCUH503).CoverUp();
+            CorverUpSensorChecked(true, 200);
+            //Thread.Sleep(200);
 
-                if (flg)
-                {
-                    if (lbSocketState.InvokeRequired)
-                    {
-                        lbSocketState.BeginInvoke((MethodInvoker)delegate
-                        {
-                            lbCorver.BackColor = Color.LightGreen;
-                        });
-                    }
-                    else
-                    {
-                        lbCorver.BackColor = Color.LightGreen;
-                    }
-                }
-                else
-                {
-                    LogHelper.LogWrite("Corver Time Out Error");
-                }
+            //Task t1 = new Task(() =>
+            //{
+            //bool flg = CorverSensing(false).Result;
 
-            });
-            t1.Start();
+            //if (flg)
+            //{
+            //    if (lbSocketState.InvokeRequired)
+            //    {
+            //        lbSocketState.BeginInvoke((MethodInvoker)delegate
+            //        {
+            //            lbCorver.BackColor = Color.Green;
+            //        });
+            //    }
+            //    else
+            //    {
+            //        lbCorver.BackColor = Color.Green;
+            //    }
+            //}
+            //else
+            //{
+            //    LogHelper.LogWrite("Corver Time Out Error");
+            //}
+            //});
+            //t1.Start();
+
+
             Dln.isMoving = false;
         }
 
@@ -11294,8 +11325,10 @@ namespace FZ4P
             Stopwatch st = new Stopwatch();
             if (Dln.isMoving || Dln.IsRun) return;
             Dln.isMoving = true;
-            Dln.CoverUp();
-            Thread.Sleep(700);
+            Dln.I3CStop(STATIC.MCUH503).CoverUp();
+            CorverUpSensorChecked(true, 200);
+            Dln.HWReset(STATIC.MCUH503).Connected(STATIC.MCUH503);
+
             Dln.LoadSocket();
             if (Option.SocketSensorUse)
             {
@@ -11317,8 +11350,10 @@ namespace FZ4P
             Stopwatch st = new Stopwatch();
             if (Dln.isMoving || Dln.IsRun) return;
             Dln.isMoving = true;
-            Dln.CoverUp();
-            Thread.Sleep(700);
+            Dln.I3CStop(STATIC.MCUH503).CoverUp();
+            CorverUpSensorChecked(true, 200);
+            Dln.HWReset(STATIC.MCUH503).Connected(STATIC.MCUH503);
+
             Dln.UnloadSocket();
             if (Option.SocketSensorUse)
             {
@@ -11342,9 +11377,10 @@ namespace FZ4P
             {
                 Stopwatch st = new Stopwatch();
 
-                
-                Dln.CoverUp();
-                Thread.Sleep(700);
+                Dln.I3CStop(STATIC.MCUH503).CoverUp();
+                CorverUpSensorChecked(true, 200);
+                Dln.HWReset(STATIC.MCUH503).Connected(STATIC.MCUH503);
+
                 Dln.LoadSocket();
                 if (Option.SocketSensorUse)
                 {
@@ -11359,17 +11395,20 @@ namespace FZ4P
                 }
                 else Thread.Sleep(2000);
                 UpdateSensorState();
-                Dln.CoverDn();
-                Thread.Sleep(500);
-                Dln.PowerOnOff(0, true);
                 
+                Dln.PowerOnOff(0, true);
+                Dln.I3CStop(STATIC.MCUH503).CoverDn();
+                CorverUpSensorChecked(false,400);
+                Dln.PowerOnOff(0, true);
+                Dln.HWReset(STATIC.MCUH503).Connected(STATIC.MCUH503);
+
                 Thread.Sleep(100);
                 STATIC.MCUH503.SetH503WakeUp();
 
-
-
                 Thread.Sleep(200);
                 UpdateConState();
+
+                Dln.HWReset(STATIC.MCUH503);
 
                 Dln.isMoving = false;
             }
@@ -11380,14 +11419,15 @@ namespace FZ4P
             try
             {
                 Stopwatch st = new Stopwatch();
-                Dln.PowerOnOff(0, false);
                 Thread.Sleep(200);
-                Dln.CoverUp();
-                Thread.Sleep(700);
+                Dln.I3CStop(STATIC.MCUH503).CoverUp();
+                Dln.PowerOnOff(0, false);
+                CorverUpSensorChecked(true);
+
                 Dln.UnloadSocket();
                 if (Option.SocketSensorUse)
                 {
-                    st.Start();
+                    st.Restart();
                     while (Dln.GetGpioStatus(12) || !Dln.GetGpioStatus(13))
                     {
                         if (st.ElapsedMilliseconds > 3000) { MessageBox.Show("Check Socket Sensor Status"); Dln.isMoving = false; return; }
@@ -11402,6 +11442,25 @@ namespace FZ4P
                 Dln.isMoving = false;
             }
             catch { Dln.isMoving = false; }
+        }
+
+        private void CorverUpSensorChecked(bool upState,int sleepDelay = 100)
+        {
+            Stopwatch st = new Stopwatch();
+            if (Option.SocketSensorUse)
+            {
+                st.Restart();
+                while (upState != CorverFlg)
+                {
+                    if (st.ElapsedMilliseconds > 3000) { MessageBox.Show("Check Socket Sensor Status"); Dln.isMoving = false; return; }
+                }
+                st.Stop();
+                Thread.Sleep(sleepDelay);
+            }
+            else
+            {
+                Thread.Sleep(700);
+            }
         }
 
         private void btnSPLLD_Click(object sender, EventArgs e)
@@ -11546,11 +11605,17 @@ namespace FZ4P
         private void btnPowerOn_Click(object sender, EventArgs e)
         {
             STATIC.Dln.PowerOnOff(0, true);
+
+            var GpioOutputstate = STATIC.Dln.DLNgpio[0].Pins[9].Direction;
+            PowerUpState(GpioOutputstate);
         }
 
         private void btnPowerOff_Click(object sender, EventArgs e)
         {
             STATIC.Dln.PowerOnOff(0, false);
+
+            var GpioOutputstate = STATIC.Dln.DLNgpio[0].Pins[9].Direction;
+            PowerUpState(GpioOutputstate);
         }
 
         private void button9_Click(object sender, EventArgs e)
@@ -11687,7 +11752,11 @@ namespace FZ4P
             if (STATIC.fManual.Visible)
                 STATIC.fManual.Hide();
             else
+            {
                 STATIC.fManual.Show();
+                STATIC.fManual.PowerEnable = false;
+            }
+                
         }
 
         private bool _corverState = false;

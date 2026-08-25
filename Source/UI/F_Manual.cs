@@ -1,5 +1,6 @@
 ﻿using FZ4P.Commons;
 using FZ4P.Commons.Helper;
+using FZ4P.DriverIc.I2CBase;
 using FZ4P.DriverIc.I2CBase.Interfaces;
 using FZ4P.DriverIc.Interfaces;
 using FZ4P.DriverIc.OISIC;
@@ -9,6 +10,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Net.Security;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -171,6 +173,21 @@ namespace FZ4P.UI
             }
         }
 
+
+        private string _connectString;
+        public string ConnectString
+        {
+            get => _connectString;
+            set
+            {
+                if (_connectString != value)
+                {
+                    _connectString = value;
+                    OnPropertyChanged(nameof(ConnectString), value);
+                }
+            }
+        }
+
         private ObservableCollection<SlaveId> _scanSlaveID = new ObservableCollection<SlaveId>();
         public ObservableCollection<SlaveId> ScanSlaveID { 
             get => _scanSlaveID;
@@ -190,6 +207,9 @@ namespace FZ4P.UI
                 OnPropertyChanged(nameof(ScanSlaveID));
             }
         }
+
+
+        public bool PowerEnable { get => this.cbx_PowerOnOff.Enabled; set => this.cbx_PowerOnOff.Enabled = value; }
 
         public F_Manual(IOISFunction oISFunction, IAFunction afFunction,Action<int, string> actionLog, I2CTOI3C_Function i2cFunction = null)
         {
@@ -283,6 +303,12 @@ namespace FZ4P.UI
                     tab.Controls.Add(bindList);
                 });
             }
+            else if (e.PropertyName == nameof(ConnectString))
+            {
+                this.InvokeOnUIThread(() => {
+                    lbl_Connect.Text = PropertiesHelper.GetValue<string>(e);
+                });
+            }
         }
 
         private void ScanSlaveID_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -333,7 +359,7 @@ namespace FZ4P.UI
 
         private void checkBox1_CheckStateChanged(object sender, EventArgs e)
         {
-            bool State= ((CheckBox)sender).Checked;
+            bool State = ((CheckBox)sender).Checked;
 
             if (State)
             {
@@ -493,7 +519,11 @@ namespace FZ4P.UI
         private void checkBox5_CheckStateChanged(object sender, EventArgs e)
         {
             bool State = ((CheckBox)sender).Checked;
-            _i2CToI3C.SetI3CByPaaMode(State);
+            int iTag = int.Parse(((CheckBox)sender).Tag.ToString());
+            if(iTag == 0)
+                _i2CToI3C.SetI3CByPaaMode(State);
+            if (iTag == 1)
+                _i2CToI3C.SetSWReset(State);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -562,6 +592,28 @@ namespace FZ4P.UI
         private void button4_Click_1(object sender, EventArgs e)
         {
             ReadI2CBuffer(0);
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            _i2CToI3C.SetSWReset(false);
+        }
+
+        private void cbb__CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            var data = _i2CToI3C.DriveICConnctChecked();
+
+            ConnectString = "0x" + data.ToString("X2");
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            _i2CToI3C.I3CStop();
         }
     }
 

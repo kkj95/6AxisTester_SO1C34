@@ -16,8 +16,13 @@ namespace FZ4P.DriverIc.Interfaces
         IOISFunction OIS { get; }
         void SetI3CByPaaMode(bool Onoff);
         void SetH503WakeUp();
+        void SetSWReset(bool OnOff);
+
         short GetI3CCheckBuffer(AxisTypeDW axisTypeDW, int bufferCheckType);
 
         ushort GetVersionChecked(AxisTypeDW axisTypeDW);
+        byte DriveICConnctChecked();
+
+        void I3CStop();
     }
 }

@@ -696,6 +696,7 @@ namespace FZ4P
             AddLog(ch, $"Move AF Position :  {Condition.OISCalAFPos}");
 
             #region OIS Hall Calibration
+            /*
             AddLog(ch, "OIS X PID Write Start");
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x39);
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x39, 1, 0xA0);
@@ -713,11 +714,27 @@ namespace FZ4P
             {
                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, IC_DATA_OIS_X_REG[i], 1, IC_DATA_OIS_X[i]);
             }
+            */
 
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x04);
-            Wait(800);
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
+            //DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x04);         // 기존 I2C 보드
+
+            //커넥트 체크
+            var checkedByte = STATIC.MCUH503.DriveICConnctChecked();
+            if (checkedByte == 0x01)
+            {
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x11);
+                Wait(800);
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
+            }
+
+            ushort us1 = (ushort)STATIC.MCUH503.GetI3CCheckBuffer(AxisTypeDW.AxisX, 0);
+            ushort us2 = (ushort)STATIC.MCUH503.GetI3CCheckBuffer(AxisTypeDW.AxisX, 1);
+
+            var s1 = us1.ToString("X2");
+            var s2 = us2.ToString("X2");
+            AddLog(ch, $"HallCal Value 0x40 : 0x{s1}");
+            AddLog(ch, $"HallCal Value 0x42 : 0x{s2}");
 
             byte data = DWDrvIC.Controls.ReadByte(DWDrvIC.OISX_Addr, 0x44, 1);
             if (data == 0x01)
@@ -732,50 +749,77 @@ namespace FZ4P
             }
             else
             {
-                
                 AddLog(ch, $"OIS X Hall Calibration Fail");
                 PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 1;
                 ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
                 return;
             }
 
-
-            SetEPA((int)AxisTypeDW.AxisX);
+            //TOOD : OIS - EPA 삭제 기능 필요없음?? 이인경수석 통화.
+            //SetEPA((int)AxisTypeDW.AxisX);
             #endregion
 
             #region OIS Y Hall Calibration
+            /*H503은 PID Write를 진행하면 안됨.
             AddLog(ch, "OIS Y PID Parameter Setting");
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0x39);
+            AddLog(ch, $"Register : 0x28 , Data : 0x39");
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x39, 1, 0xA0);
+            AddLog(ch, $"Register : 0x39 , Data : 0xA0");
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x7D, 1, 0x00);
+            AddLog(ch, $"Register : 0x7D , Data : 0x00");
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x03, 1, 0x01);
+            AddLog(ch, $"Register : 0x03 , Data : 0x01");
             Wait(55);
 
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x40);
+            AddLog(ch, $"Register : 0x02 , Data : 0x40");
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0x39);
+            AddLog(ch, $"Register : 0x28 , Data : 0x39");
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0xA0);
+            AddLog(ch, $"Register : 0x28 , Data : 0xA0");
+            AddLog(ch, "OIS Y PID Parameter Setting END");
 
+            AddLog(ch, "OIS Y PID START");
             for (int i = 0; i < IC_DATA_OIS_Y.Length; i++)
             {
                 DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, IC_DATA_OIS_Y_REG[i], 1, IC_DATA_OIS_Y[i]);
+                AddLog(ch, $"Register : 0x{IC_DATA_OIS_Y_REG[i].ToString("X2")} , Data : 0x{IC_DATA_OIS_Y[i].ToString("X2")} ");
+            }
+            AddLog(ch, "OIS Y PID END");
+            */
+
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x40);
+            //DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x04);         // 기존 I2C 보드
+
+            //커넥트 체크
+            checkedByte = STATIC.MCUH503.DriveICConnctChecked();
+            if (checkedByte == 0x01)
+            {
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x12);
+                AddLog(ch, $"Register : 0x02 , Data : 0x12");
+                Wait(800);
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x40);
+                AddLog(ch, $"Register : 0x02 , Data : 0x40");
             }
 
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x40);
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x04);
-            Wait(800);
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x40);
-
+            Thread.Sleep(5);
 
             data = DWDrvIC.Controls.ReadByte(DWDrvIC.OISY_Addr, 0x44, 1);
             if (data == 0x01)
             {
                 AddLog(ch, $"OIS Y Hall Calibration Success");
                 DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0x39);
+                AddLog(ch, $"Register : 0x28 , Data : 0x39");
                 DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0xA0);
+                AddLog(ch, $"Register : 0x28 , Data : 0xA0");
                 DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x40);
+                AddLog(ch, $"Register : 0x02 , Data : 0x40");
                 DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x03, 1, 0x01);
+                AddLog(ch, $"Register : 0x03 , Data : 0x01");
                 Wait(20);
                 DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0x14);
+                AddLog(ch, $"Register : 0x28 , Data : 0x14");
                 PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 0;
                 ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
             }
@@ -787,6 +831,7 @@ namespace FZ4P
                 return;
             }
 
+            //TOOD : OIS - EPA 삭제 기능 필요없음?? 이인경수석 통화.
             //SetEPA((int)AxisTypeDW.AxisY);
             #endregion
         }

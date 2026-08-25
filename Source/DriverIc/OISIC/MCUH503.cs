@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace FZ4P.DriverIc.OISIC
 {
@@ -76,6 +77,28 @@ namespace FZ4P.DriverIc.OISIC
             int slaveId = GetAxisTypeID(axisTypeDW);
             var readWord = _controls.Read2Byte(slaveId, 0x22, 1);
             return readWord;
+        }
+
+        public void SetSWReset(bool OnOff)
+        {
+            //H503은 X축 및 Y축 아이디...
+            int slaveId = GetAxisTypeID(AxisTypeDW.AxisX);
+            if (OnOff)
+                _controls.WriteByte(slaveId, 0x04, 1, 0x01);
+            else
+                _controls.WriteByte(slaveId, 0x04, 1, 0x03);
+        }
+
+        public byte DriveICConnctChecked()
+        {
+            int slaveId = GetAxisTypeID(AxisTypeDW.AxisX);
+            return _controls.ReadByte(slaveId, 0x1F, 1);
+        }
+
+        public void I3CStop()
+        {
+            int slaveId = GetAxisTypeID(AxisTypeDW.AxisX);
+            _controls.WriteByte(slaveId, 0x02, 1, 0x60);
         }
         #endregion
     }

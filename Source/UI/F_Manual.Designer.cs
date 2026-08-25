@@ -42,7 +42,7 @@
             this.EditCondition = new System.Windows.Forms.CheckBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.cbx_PowerOnOff = new System.Windows.Forms.CheckBox();
             this.btn_PositionMove = new System.Windows.Forms.Button();
             this.txt_PositionCode_AxisZ = new System.Windows.Forms.TextBox();
             this.txt_PositionCode_AxisY = new System.Windows.Forms.TextBox();
@@ -81,6 +81,11 @@
             this.button2 = new System.Windows.Forms.Button();
             this.checkBox5 = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
+            this.lbl_Connect = new System.Windows.Forms.Label();
+            this.cbb_ = new System.Windows.Forms.CheckBox();
+            this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.btn_VerserChecked = new System.Windows.Forms.Button();
             this.panel15 = new System.Windows.Forms.Panel();
@@ -264,7 +269,7 @@
             // groupBox5
             // 
             this.groupBox5.Controls.Add(this.checkBox3);
-            this.groupBox5.Controls.Add(this.checkBox1);
+            this.groupBox5.Controls.Add(this.cbx_PowerOnOff);
             this.groupBox5.Controls.Add(this.btn_PositionMove);
             this.groupBox5.Controls.Add(this.txt_PositionCode_AxisZ);
             this.groupBox5.Controls.Add(this.txt_PositionCode_AxisY);
@@ -295,20 +300,20 @@
             this.checkBox3.UseVisualStyleBackColor = false;
             this.checkBox3.CheckStateChanged += new System.EventHandler(this.checkBox3_CheckStateChanged);
             // 
-            // checkBox1
+            // cbx_PowerOnOff
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.checkBox1.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox1.ForeColor = System.Drawing.Color.White;
-            this.checkBox1.Location = new System.Drawing.Point(265, -2);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(104, 19);
-            this.checkBox1.TabIndex = 270;
-            this.checkBox1.Text = "Power On/Off";
-            this.checkBox1.UseVisualStyleBackColor = false;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            this.checkBox1.CheckStateChanged += new System.EventHandler(this.checkBox1_CheckStateChanged);
+            this.cbx_PowerOnOff.AutoSize = true;
+            this.cbx_PowerOnOff.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.cbx_PowerOnOff.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbx_PowerOnOff.ForeColor = System.Drawing.Color.White;
+            this.cbx_PowerOnOff.Location = new System.Drawing.Point(265, -2);
+            this.cbx_PowerOnOff.Name = "cbx_PowerOnOff";
+            this.cbx_PowerOnOff.Size = new System.Drawing.Size(104, 19);
+            this.cbx_PowerOnOff.TabIndex = 270;
+            this.cbx_PowerOnOff.Text = "Power On/Off";
+            this.cbx_PowerOnOff.UseVisualStyleBackColor = false;
+            this.cbx_PowerOnOff.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.cbx_PowerOnOff.CheckStateChanged += new System.EventHandler(this.checkBox1_CheckStateChanged);
             // 
             // btn_PositionMove
             // 
@@ -704,7 +709,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(292, 98);
+            this.button2.Location = new System.Drawing.Point(298, 34);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(88, 28);
             this.button2.TabIndex = 521;
@@ -718,16 +723,22 @@
             this.checkBox5.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.checkBox5.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBox5.ForeColor = System.Drawing.Color.White;
-            this.checkBox5.Location = new System.Drawing.Point(292, 72);
+            this.checkBox5.Location = new System.Drawing.Point(100, 14);
             this.checkBox5.Name = "checkBox5";
             this.checkBox5.Size = new System.Drawing.Size(94, 19);
             this.checkBox5.TabIndex = 519;
+            this.checkBox5.Tag = "0";
             this.checkBox5.Text = "ByPassMode";
             this.checkBox5.UseVisualStyleBackColor = false;
             this.checkBox5.CheckStateChanged += new System.EventHandler(this.checkBox5_CheckStateChanged);
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.button7);
+            this.groupBox3.Controls.Add(this.button6);
+            this.groupBox3.Controls.Add(this.lbl_Connect);
+            this.groupBox3.Controls.Add(this.cbb_);
+            this.groupBox3.Controls.Add(this.button5);
             this.groupBox3.Controls.Add(this.button4);
             this.groupBox3.Controls.Add(this.btn_VerserChecked);
             this.groupBox3.Controls.Add(this.panel15);
@@ -748,9 +759,67 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "I2C To I3C Checked";
             // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(210, -2);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(88, 28);
+            this.button7.TabIndex = 539;
+            this.button7.Text = "I3C Stop";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(298, 96);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(88, 28);
+            this.button6.TabIndex = 538;
+            this.button6.Text = "Connection";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // lbl_Connect
+            // 
+            this.lbl_Connect.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_Connect.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lbl_Connect.ForeColor = System.Drawing.Color.White;
+            this.lbl_Connect.Location = new System.Drawing.Point(266, 212);
+            this.lbl_Connect.Name = "lbl_Connect";
+            this.lbl_Connect.Size = new System.Drawing.Size(112, 30);
+            this.lbl_Connect.TabIndex = 538;
+            this.lbl_Connect.Text = "Connection";
+            this.lbl_Connect.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // cbb_
+            // 
+            this.cbb_.AutoSize = true;
+            this.cbb_.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.cbb_.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbb_.ForeColor = System.Drawing.Color.White;
+            this.cbb_.Location = new System.Drawing.Point(19, 14);
+            this.cbb_.Name = "cbb_";
+            this.cbb_.Size = new System.Drawing.Size(75, 19);
+            this.cbb_.TabIndex = 537;
+            this.cbb_.Tag = "1";
+            this.cbb_.Text = "SWReset";
+            this.cbb_.UseVisualStyleBackColor = false;
+            this.cbb_.CheckedChanged += new System.EventHandler(this.cbb__CheckedChanged);
+            this.cbb_.CheckStateChanged += new System.EventHandler(this.checkBox5_CheckStateChanged);
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(298, 67);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(88, 28);
+            this.button5.TabIndex = 536;
+            this.button5.Text = "S/W Reset";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(292, 0);
+            this.button4.Location = new System.Drawing.Point(304, 0);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(88, 28);
             this.button4.TabIndex = 535;
@@ -1018,7 +1087,7 @@
         private System.Windows.Forms.Button btn_Move_Max;
         private System.Windows.Forms.Button btn_Move_Min;
         private System.Windows.Forms.Button btn_Move_Mid;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox cbx_PowerOnOff;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.ComboBox cbb_ADC_Select;
@@ -1079,5 +1148,10 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TabControl tbcntl;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.CheckBox cbb_;
+        private System.Windows.Forms.Label lbl_Connect;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button7;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Basler.Pylon;
 using FZ4P.DriverIc.OISIC;
+using FZ4P.Extensions;
 using FZ4P.Properties;
 using OpenCvSharp;
 using OpenCvSharp.Dnn;
@@ -1047,10 +1048,12 @@ namespace FZ4P
         {
             try
             {
+                Dln.PowerOnOff(0, true);
                 Stopwatch st = new Stopwatch();
-               
-                Dln.CoverUp();
+                Dln.I3CStop(STATIC.MCUH503).CoverUp();
                 Thread.Sleep(700);
+                Dln.HWReset(STATIC.MCUH503).Connected(STATIC.MCUH503);
+                
                 Dln.LoadSocket();
                 if (Option.SocketSensorUse)
                 {
@@ -1064,9 +1067,9 @@ namespace FZ4P
                     Thread.Sleep(300);
                 }
                 else Thread.Sleep(2000);
-                Dln.CoverDn();
-
+                Dln.I3CStop(STATIC.MCUH503).CoverDn();
                 Thread.Sleep(500);
+                Dln.HWReset(STATIC.MCUH503);
                 Dln.PowerOnOff(0, true);
                 Wait(200);
             }
@@ -1077,11 +1080,12 @@ namespace FZ4P
         {
             try
             {
-                Dln.PowerOnOff(0, false);
-                Wait(200);
                 Stopwatch st = new Stopwatch();             
-                Dln.CoverUp();
+                Dln.I3CStop(STATIC.MCUH503).CoverUp();
                 Thread.Sleep(700);
+                Dln.HWReset(STATIC.MCUH503);
+                Dln.PowerOnOff(0, false);
+
                 Dln.UnloadSocket();
                 if (Option.SocketSensorUse)
                 {
@@ -1242,7 +1246,6 @@ namespace FZ4P
                         {
                             Thread.Sleep(10);
                             if (((int)STATIC.fMotion.AxisCurrrent[0] == deg[0] && (int)STATIC.fMotion.AxisCurrrent[1] == deg[1]))
-
                             {
                                 break;
                             }
@@ -1276,24 +1279,6 @@ namespace FZ4P
                 if (Model.MCType != "Posture_S")
                     LoadSeq();
                 Process.Wait(100);
-
-                //TODO : 임시 기다리는 로직 추가
-                Task ResetWait = new Task(() =>
-                {
-                    bool waitFlg = false;
-                    STATIC.fManage.SafeControlView(STATIC.Process.InfoBtn[2].btn, true);
-                    STATIC.Process.InfoBtn[2].hideEvent += (state)=> { waitFlg = state; };
-                    
-                    while (!waitFlg)
-                    {
-                        Thread.Sleep(10);
-                    }
-
-                    STATIC.MCUH503.SetH503WakeUp();
-                });
-                ResetWait.Start();
-                ResetWait.Wait();
-
 
                 if (Model.MCType == "Posture_M" && InspType == 1)
                 {
@@ -1911,7 +1896,6 @@ namespace FZ4P
             for (int j = ch; j < ch + ChannelCnt; j++)
             {
                 if (!m_ChannelOn[j]) continue;
-              
 
                 switch (name)
                 {
@@ -1922,7 +1906,25 @@ namespace FZ4P
                         DrvIC.AFOnOff(j, true);
                         break;
                     case "OIS X Scan":
+                        ushort us1 = (ushort)STATIC.MCUH503.GetI3CCheckBuffer(AxisTypeDW.AxisX, 0);
+                        ushort us2 = (ushort)STATIC.MCUH503.GetI3CCheckBuffer(AxisTypeDW.AxisX, 1);
+
+                        var s1 = us1.ToString("X2");
+                        var s2 = us2.ToString("X2");
+
+                        AddLog(ch, $"Before HallCal Value 0x40 : 0x{s1}");
+                        AddLog(ch, $"Before HallCal Value 0x42 : 0x{s2}");
+
                         DWDrvIC.OISOnOff(j, true);
+
+                        us1 = (ushort)STATIC.MCUH503.GetI3CCheckBuffer(AxisTypeDW.AxisX, 0);
+                        us2 = (ushort)STATIC.MCUH503.GetI3CCheckBuffer(AxisTypeDW.AxisX, 1);
+
+                        s1 = us1.ToString("X2");
+                        s2 = us2.ToString("X2");
+
+                        AddLog(ch, $"after HallCal Value 0x40 : 0x{s1}");
+                        AddLog(ch, $"after HallCal Value 0x42 : 0x{s2}");
                         DWDrvIC.SetManualDrvModeXY(j, OISXCenter, OISYCenter);
 
                         DrvIC.AFOnOff(j, true);

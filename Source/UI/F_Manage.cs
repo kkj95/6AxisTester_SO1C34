@@ -972,7 +972,10 @@ namespace FZ4P
             if (STATIC.fManual.Visible)
                 STATIC.fManual.Hide();
             else
+            {
                 STATIC.fManual.Show();
+                STATIC.fManual.PowerEnable = true;
+            }
         }
     }
 }
