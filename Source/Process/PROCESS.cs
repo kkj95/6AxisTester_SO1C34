@@ -2069,17 +2069,19 @@ namespace FZ4P
                             //Get Hall
                             if (name.Contains("X"))
                             {
-                                Cal.Current[framCnt[port]] = Math.Abs(DWDrvIC.GetCurrent((int)AxisTypeDW.AxisX));
+                                Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 0);
+                                //Cal.Current[framCnt[port]] = Math.Abs(DWDrvIC.GetCurrent((int)AxisTypeDW.AxisX));
                                 AddLog(j, string.Format("{0} == Code : {1}, Hall : {2}", name, Cal.CodeX[framCnt[port]], Cal.HallX[framCnt[port]]));
                             }
                             else if (name.Contains("Y"))
                             {
-                                Cal.Current[framCnt[port]] = Math.Abs(DWDrvIC.GetCurrent((int)AxisTypeDW.AxisY));
+                                Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 0);
+                                //Cal.Current[framCnt[port]] = Math.Abs(DWDrvIC.GetCurrent((int)AxisTypeDW.AxisY));
                                 AddLog(j, string.Format("{0} == Code : {1}, Hall : {2}", name, Cal.CodeY[framCnt[port]], Cal.HallY[framCnt[port]]));
                             }
                             else if (name.Contains("AF"))
                             {
-                                Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 0) + Condition.AFCurrentOffset;
+                                Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 1) + Condition.AFCurrentOffset;
                                 AddLog(j, string.Format("{0} == Code : {1}, Hall : {2}", name, Cal.CodeZ[framCnt[port]], Cal.HallZ[framCnt[port]]));
                             }
                         }

@@ -6,6 +6,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -111,7 +112,7 @@ namespace FZ4P
             
             OISGM(ch, (int)AxisTypeDW.AxisX, fra_setting,ref fra_result);
 
-            PassFails[0].Results[(int)SpecItem.FRAX_GainMargin].Val = fra_result.gain_margin_freq;
+            PassFails[0].Results[(int)SpecItem.FRAX_GainMargin].Val = Math.Abs(fra_result.gain_margin);
             ShowDataResults(ch, (int)SpecItem.FRAX_GainMargin, (int)SpecItem.FRAX_GainMargin, InspType.Normal, new double[] { });
 
             fra_result = new sFRA_Margin();
@@ -128,7 +129,7 @@ namespace FZ4P
             
             OISGM(ch, (int)AxisTypeDW.AxisY, fra_setting, ref fra_result);
 
-            PassFails[0].Results[(int)SpecItem.FRAY_GainMargin].Val = fra_result.gain_margin_freq;
+            PassFails[0].Results[(int)SpecItem.FRAY_GainMargin].Val = Math.Abs(fra_result.gain_margin);
             ShowDataResults(ch, (int)SpecItem.FRAY_GainMargin, (int)SpecItem.FRAY_GainMargin, InspType.Normal, new double[] { });
         }
 
