@@ -1136,6 +1136,8 @@ namespace FZ4P
             }
             fwdIndex = fwdIndex.OrderBy(a => a.code).ToList();
             bwdIndex = bwdIndex.OrderBy(a => a.code).ToList();
+
+            //기준 점 잡기
             for (int i = 0; i < fwdIndex.Count - 1; i++)
             {
                 if(RefCode >= fwdIndex[i].code && RefCode <= fwdIndex[i + 1].code)

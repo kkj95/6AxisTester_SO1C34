@@ -715,7 +715,7 @@ namespace FZ4P
             {
                 lock(I2cLock)
                 {
-                    if (mode == 0) { DLNi2c[ch + 1].Read(0x40, 1, RegAddr, buffer2); } // AF
+                    if (mode == 0) { DLNi2c[ch + 1].Read(0x40, 1, RegAddr, buffer2); } 
                     else DLNi2c[ch + 1].Read(0x41, 1, RegAddr, buffer2);
                 }
                 res = (buffer2[0] * 256 + buffer2[1]) / 10.0 + 10;

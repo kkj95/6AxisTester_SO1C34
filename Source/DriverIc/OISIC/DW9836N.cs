@@ -262,6 +262,22 @@ namespace FZ4P.DriverIc.OISIC
             }
         }
 
+        public List<int> LiearCompRead(int axis)
+        {
+            List<int> reulst = new List<int>();
+            var slaveID = GetAxisTypeID((AxisTypeDW)axis);
+            Set_PT(axis, false);
+
+            int startAddress = 0x55;
+
+            for (int i = 0; i < 16; i++)
+            {
+                reulst.Add(_controls.ReadByte(slaveID, startAddress++, 1));
+            }        
+
+            return reulst;
+        }
+
         public void LiearCompWrite(int axis, List<int> CompValue)
         {
             var slaveID = GetAxisTypeID((AxisTypeDW)axis);
@@ -282,9 +298,19 @@ namespace FZ4P.DriverIc.OISIC
             Set_PT(axis, false);
 
             int startAddress = 0x55;
-            _controls.WriteByte(slaveID, startAddress++, 1, 0x00);        // Linearity Enabled
+            _controls.WriteByte(slaveID, startAddress, 1, 0x00);        // Linearity Enabled
         }
 
+        public void LiearCompEnable(int axis,bool onOff)
+        {
+            var slaveID = GetAxisTypeID((AxisTypeDW)axis);
+
+            int startAddress = 0x55;
+            if (onOff)
+                _controls.WriteByte(slaveID, startAddress, 1, 0x01);        // Linearity Enabled
+            else
+                _controls.WriteByte(slaveID, startAddress, 1, 0x00);        // Linearity Disabled
+        }
 
         public void SetPCAL(int axis,int code)
         {

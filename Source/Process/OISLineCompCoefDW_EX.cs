@@ -165,5 +165,25 @@ namespace FZ4P
                 }
             }
         }
+
+        //TODO : 임시 테스트용
+        public void DefaultCoeffValue(int[] coeff)
+        {
+            coeff[0] = 16;
+            coeff[1] = 32;
+            coeff[2] = 48;
+            coeff[3] = 64;
+            coeff[4] = 80;
+            coeff[5] = 96;
+            coeff[6] = 112;
+            coeff[7] = 128;
+            coeff[8] = 144;
+            coeff[9] = 160;
+            coeff[10] = 176;
+            coeff[11] = 192;
+            coeff[12] = 208;
+            coeff[13] = 224;
+            coeff[14] = 240;
+        }
     }
 }

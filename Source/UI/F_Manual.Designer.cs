@@ -47,17 +47,31 @@
             this.txt_PositionCode_AxisZ = new System.Windows.Forms.TextBox();
             this.txt_PositionCode_AxisY = new System.Windows.Forms.TextBox();
             this.txt_PositionCode_AxisX = new System.Windows.Forms.TextBox();
+            this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.btn_ServoOn = new System.Windows.Forms.Button();
             this.btn_Move_Max = new System.Windows.Forms.Button();
             this.btn_Move_Min = new System.Windows.Forms.Button();
             this.btn_Move_Mid = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.button11 = new System.Windows.Forms.Button();
+            this.button10 = new System.Windows.Forms.Button();
+            this.button9 = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
+            this.panel18 = new System.Windows.Forms.Panel();
+            this.label20 = new System.Windows.Forms.Label();
+            this.panel19 = new System.Windows.Forms.Panel();
+            this.label21 = new System.Windows.Forms.Label();
+            this.lbl_Current_2 = new System.Windows.Forms.Label();
+            this.panel16 = new System.Windows.Forms.Panel();
+            this.label14 = new System.Windows.Forms.Label();
+            this.panel17 = new System.Windows.Forms.Panel();
+            this.label17 = new System.Windows.Forms.Label();
+            this.lbl_Current_1 = new System.Windows.Forms.Label();
             this.panel9 = new System.Windows.Forms.Panel();
             this.label11 = new System.Windows.Forms.Label();
             this.panel10 = new System.Windows.Forms.Panel();
             this.label12 = new System.Windows.Forms.Label();
             this.lbl_ADC_2 = new System.Windows.Forms.Label();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.panel7 = new System.Windows.Forms.Panel();
             this.label9 = new System.Windows.Forms.Label();
             this.panel8 = new System.Windows.Forms.Panel();
@@ -105,9 +119,14 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.tbcntl = new System.Windows.Forms.TabControl();
             this.button3 = new System.Windows.Forms.Button();
+            this.button12 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.panel18.SuspendLayout();
+            this.panel19.SuspendLayout();
+            this.panel16.SuspendLayout();
+            this.panel17.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel10.SuspendLayout();
             this.panel7.SuspendLayout();
@@ -139,7 +158,7 @@
             this.groupBox1.Controls.Add(this.cbb_ADC_Select);
             this.groupBox1.Controls.Add(this.checkBox2);
             this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Location = new System.Drawing.Point(821, 14);
+            this.groupBox1.Location = new System.Drawing.Point(911, 14);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(392, 134);
             this.groupBox1.TabIndex = 0;
@@ -258,7 +277,7 @@
             this.EditCondition.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.EditCondition.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.EditCondition.ForeColor = System.Drawing.Color.White;
-            this.EditCondition.Location = new System.Drawing.Point(311, 0);
+            this.EditCondition.Location = new System.Drawing.Point(509, 0);
             this.EditCondition.Name = "EditCondition";
             this.EditCondition.Size = new System.Drawing.Size(58, 19);
             this.EditCondition.TabIndex = 269;
@@ -274,6 +293,7 @@
             this.groupBox5.Controls.Add(this.txt_PositionCode_AxisZ);
             this.groupBox5.Controls.Add(this.txt_PositionCode_AxisY);
             this.groupBox5.Controls.Add(this.txt_PositionCode_AxisX);
+            this.groupBox5.Controls.Add(this.checkBox4);
             this.groupBox5.Controls.Add(this.btn_ServoOn);
             this.groupBox5.Controls.Add(this.btn_Move_Max);
             this.groupBox5.Controls.Add(this.btn_Move_Min);
@@ -281,7 +301,7 @@
             this.groupBox5.Font = new System.Drawing.Font("맑은 고딕", 10F, System.Drawing.FontStyle.Bold);
             this.groupBox5.Location = new System.Drawing.Point(12, 319);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(392, 167);
+            this.groupBox5.Size = new System.Drawing.Size(517, 167);
             this.groupBox5.TabIndex = 512;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Center Move";
@@ -347,6 +367,20 @@
             this.txt_PositionCode_AxisX.Size = new System.Drawing.Size(108, 25);
             this.txt_PositionCode_AxisX.TabIndex = 5;
             // 
+            // checkBox4
+            // 
+            this.checkBox4.AutoSize = true;
+            this.checkBox4.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.checkBox4.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox4.ForeColor = System.Drawing.Color.White;
+            this.checkBox4.Location = new System.Drawing.Point(375, 0);
+            this.checkBox4.Name = "checkBox4";
+            this.checkBox4.Size = new System.Drawing.Size(89, 19);
+            this.checkBox4.TabIndex = 515;
+            this.checkBox4.Text = "ex Selected";
+            this.checkBox4.UseVisualStyleBackColor = false;
+            this.checkBox4.CheckStateChanged += new System.EventHandler(this.checkBox4_CheckStateChanged);
+            // 
             // btn_ServoOn
             // 
             this.btn_ServoOn.Location = new System.Drawing.Point(26, 18);
@@ -389,10 +423,20 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.button12);
+            this.groupBox2.Controls.Add(this.button11);
+            this.groupBox2.Controls.Add(this.button10);
+            this.groupBox2.Controls.Add(this.button9);
+            this.groupBox2.Controls.Add(this.button8);
+            this.groupBox2.Controls.Add(this.panel18);
+            this.groupBox2.Controls.Add(this.panel19);
+            this.groupBox2.Controls.Add(this.lbl_Current_2);
+            this.groupBox2.Controls.Add(this.panel16);
+            this.groupBox2.Controls.Add(this.panel17);
+            this.groupBox2.Controls.Add(this.lbl_Current_1);
             this.groupBox2.Controls.Add(this.panel9);
             this.groupBox2.Controls.Add(this.panel10);
             this.groupBox2.Controls.Add(this.lbl_ADC_2);
-            this.groupBox2.Controls.Add(this.checkBox4);
             this.groupBox2.Controls.Add(this.panel7);
             this.groupBox2.Controls.Add(this.panel8);
             this.groupBox2.Controls.Add(this.lbl_ReadHall3);
@@ -408,10 +452,162 @@
             this.groupBox2.Controls.Add(this.lbl_ReadHall);
             this.groupBox2.Location = new System.Drawing.Point(12, 12);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(392, 299);
+            this.groupBox2.Size = new System.Drawing.Size(573, 299);
             this.groupBox2.TabIndex = 513;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Real Data";
+            // 
+            // button11
+            // 
+            this.button11.Location = new System.Drawing.Point(375, 59);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(80, 28);
+            this.button11.TabIndex = 538;
+            this.button11.Text = "Version Checked";
+            this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.button11_Click);
+            // 
+            // button10
+            // 
+            this.button10.Location = new System.Drawing.Point(461, 94);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(112, 28);
+            this.button10.TabIndex = 537;
+            this.button10.Text = "Version Checked";
+            this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
+            // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(461, 59);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(112, 28);
+            this.button9.TabIndex = 536;
+            this.button9.Text = "Version Checked";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(455, 25);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(112, 28);
+            this.button8.TabIndex = 535;
+            this.button8.Text = "Version Checked";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
+            // panel18
+            // 
+            this.panel18.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.panel18.Controls.Add(this.label20);
+            this.panel18.Location = new System.Drawing.Point(439, 248);
+            this.panel18.Name = "panel18";
+            this.panel18.Size = new System.Drawing.Size(134, 30);
+            this.panel18.TabIndex = 524;
+            // 
+            // label20
+            // 
+            this.label20.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label20.ForeColor = System.Drawing.Color.White;
+            this.label20.Location = new System.Drawing.Point(48, 9);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(12, 12);
+            this.label20.TabIndex = 279;
+            this.label20.Text = "-";
+            // 
+            // panel19
+            // 
+            this.panel19.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.panel19.Controls.Add(this.label21);
+            this.panel19.Location = new System.Drawing.Point(439, 152);
+            this.panel19.Name = "panel19";
+            this.panel19.Size = new System.Drawing.Size(134, 30);
+            this.panel19.TabIndex = 523;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label21.ForeColor = System.Drawing.Color.White;
+            this.label21.Location = new System.Drawing.Point(35, 9);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(79, 12);
+            this.label21.TabIndex = 278;
+            this.label21.Text = "Current(41)";
+            // 
+            // lbl_Current_2
+            // 
+            this.lbl_Current_2.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.lbl_Current_2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbl_Current_2.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_Current_2.ForeColor = System.Drawing.Color.Yellow;
+            this.lbl_Current_2.Location = new System.Drawing.Point(438, 183);
+            this.lbl_Current_2.Name = "lbl_Current_2";
+            this.lbl_Current_2.Size = new System.Drawing.Size(135, 64);
+            this.lbl_Current_2.TabIndex = 522;
+            this.lbl_Current_2.Text = "-";
+            this.lbl_Current_2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panel16
+            // 
+            this.panel16.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.panel16.Controls.Add(this.label14);
+            this.panel16.Location = new System.Drawing.Point(298, 248);
+            this.panel16.Name = "panel16";
+            this.panel16.Size = new System.Drawing.Size(134, 30);
+            this.panel16.TabIndex = 521;
+            // 
+            // label14
+            // 
+            this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label14.ForeColor = System.Drawing.Color.White;
+            this.label14.Location = new System.Drawing.Point(48, 9);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(12, 12);
+            this.label14.TabIndex = 279;
+            this.label14.Text = "-";
+            // 
+            // panel17
+            // 
+            this.panel17.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.panel17.Controls.Add(this.label17);
+            this.panel17.Location = new System.Drawing.Point(298, 152);
+            this.panel17.Name = "panel17";
+            this.panel17.Size = new System.Drawing.Size(134, 30);
+            this.panel17.TabIndex = 520;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label17.ForeColor = System.Drawing.Color.White;
+            this.label17.Location = new System.Drawing.Point(38, 9);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(79, 12);
+            this.label17.TabIndex = 278;
+            this.label17.Text = "Current(40)";
+            // 
+            // lbl_Current_1
+            // 
+            this.lbl_Current_1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.lbl_Current_1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbl_Current_1.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_Current_1.ForeColor = System.Drawing.Color.Yellow;
+            this.lbl_Current_1.Location = new System.Drawing.Point(297, 183);
+            this.lbl_Current_1.Name = "lbl_Current_1";
+            this.lbl_Current_1.Size = new System.Drawing.Size(135, 64);
+            this.lbl_Current_1.TabIndex = 519;
+            this.lbl_Current_1.Text = "-";
+            this.lbl_Current_1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel9
             // 
@@ -468,20 +664,6 @@
             this.lbl_ADC_2.TabIndex = 516;
             this.lbl_ADC_2.Text = "-";
             this.lbl_ADC_2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // checkBox4
-            // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.checkBox4.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox4.ForeColor = System.Drawing.Color.White;
-            this.checkBox4.Location = new System.Drawing.Point(297, 280);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(89, 19);
-            this.checkBox4.TabIndex = 515;
-            this.checkBox4.Text = "ex Selected";
-            this.checkBox4.UseVisualStyleBackColor = false;
-            this.checkBox4.CheckStateChanged += new System.EventHandler(this.checkBox4_CheckStateChanged);
             // 
             // panel7
             // 
@@ -752,7 +934,7 @@
             this.groupBox3.Controls.Add(this.panel12);
             this.groupBox3.Controls.Add(this.checkBox5);
             this.groupBox3.Controls.Add(this.button2);
-            this.groupBox3.Location = new System.Drawing.Point(410, 14);
+            this.groupBox3.Location = new System.Drawing.Point(591, 14);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(392, 245);
             this.groupBox3.TabIndex = 514;
@@ -994,7 +1176,7 @@
             // 
             this.groupBox4.Controls.Add(this.tbcntl);
             this.groupBox4.Controls.Add(this.button3);
-            this.groupBox4.Location = new System.Drawing.Point(410, 269);
+            this.groupBox4.Location = new System.Drawing.Point(591, 269);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(392, 245);
             this.groupBox4.TabIndex = 536;
@@ -1019,11 +1201,21 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
+            // button12
+            // 
+            this.button12.Location = new System.Drawing.Point(411, -3);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(88, 28);
+            this.button12.TabIndex = 539;
+            this.button12.Text = "I3C Read";
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
+            // 
             // F_Manual
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(851, 522);
+            this.ClientSize = new System.Drawing.Size(993, 522);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -1038,6 +1230,14 @@
             this.groupBox5.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.panel18.ResumeLayout(false);
+            this.panel18.PerformLayout();
+            this.panel19.ResumeLayout(false);
+            this.panel19.PerformLayout();
+            this.panel16.ResumeLayout(false);
+            this.panel16.PerformLayout();
+            this.panel17.ResumeLayout(false);
+            this.panel17.PerformLayout();
             this.panel9.ResumeLayout(false);
             this.panel9.PerformLayout();
             this.panel10.ResumeLayout(false);
@@ -1153,5 +1353,20 @@
         private System.Windows.Forms.Label lbl_Connect;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Panel panel16;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Panel panel17;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label lbl_Current_1;
+        private System.Windows.Forms.Panel panel18;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Panel panel19;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label lbl_Current_2;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Button button11;
+        private System.Windows.Forms.Button button12;
     }
 }

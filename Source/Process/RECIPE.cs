@@ -239,7 +239,7 @@ namespace FZ4P
         private const bool OIS_PMGM = true;
         private const bool OIS_PMGMLOW = true;
         private const bool OIS_LoopGain = false;
-        private const bool AF_Tilt = false;
+        private const bool AF_Tilt = true;
         private const bool AF_Dynamic_Tilt = false;
         private const bool XYServoDecenter = false;
         private const bool AFHit = false;

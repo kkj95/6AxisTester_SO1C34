@@ -725,31 +725,45 @@ namespace FZ4P
                                         if (tmpRes.CodeY[i] >= OISYCenter - CodeRange && tmpRes.CodeY[i] <= OISYCenter + CodeRange)
                                         {
                                             ChartTop[ch].C.Series[1].Points.AddXY((tmpRes.CodeY[i] * 0.25), tmpRes.StrokeY[i]); //  stroke
-                                                                                                                  //   ChartTop[ch].C.Series[9].Points.AddXY(Cal.CodeY1[i], Cal.StrokeY1[i]); //  stroke 1
-                                                                                                                  // ChartTop[ch].C.Series[10].Points.AddXY(Cal.CodeY2[i], Cal.StrokeY2[i]); //  stroke 2
-                                            ChartTop[ch].C.Series[4].Points.AddXY((tmpRes.CodeY[i] * 0.25 ), tmpRes.Current[i]); //  current
-                                            ChartTop[ch].C.Series[7].Points.AddXY((tmpRes.CodeY[i] * 0.25 ), (tmpRes.HallY[i] * 0.25) / 10); //  hall
+                                                                                                                                //   ChartTop[ch].C.Series[9].Points.AddXY(Cal.CodeY1[i], Cal.StrokeY1[i]); //  stroke 1
+                                                                                                                                // ChartTop[ch].C.Series[10].Points.AddXY(Cal.CodeY2[i], Cal.StrokeY2[i]); //  stroke 2
+                                            ChartTop[ch].C.Series[4].Points.AddXY((tmpRes.CodeY[i] * 0.25), tmpRes.Current[i]); //  current
+                                            ChartTop[ch].C.Series[7].Points.AddXY((tmpRes.CodeY[i] * 0.25), (tmpRes.HallY[i] * 0.25) / 10); //  hall
                                         }
                                     }
                                 });
                             }
-                            //Tilt
-                            //if (ChartBtm[ch].C.InvokeRequired)
-                            //{
-                            //    ChartBtm[ch].C.BeginInvoke((MethodInvoker)delegate
-                            //    {
-                            //        for (int i = 2; i < Cal.CodeY.Count; i++)
-                            //        {
-                            //            if (Cal.CodeY[i] >= OISCenter - CodeRange && Cal.CodeY[i] <= OISCenter + CodeRange)
-                            //            {
-                            //                //ChartBtm[ch].C.Series[3].Points.AddXY(Cal.CodeY1[i], Cal.TiltX[i]); //  Tilt 
-                            //                //ChartBtm[ch].C.Series[4].Points.AddXY(Cal.CodeY1[i], Cal.TiltY[i]); //  Tilt 
-                            //                //ChartBtm[ch].C.Series[5].Points.AddXY(Cal.CodeY1[i], Cal.TiltZ[i]); //  Tilt 
-                            //            }
-                            //        }
-                            //    });
-                            //}
-                            break;
+                            else
+                            {
+                                for (int i = 0; i < tmpRes.CodeY.Count; i++)
+                                {
+                                    if (tmpRes.CodeY[i] >= OISYCenter - CodeRange && tmpRes.CodeY[i] <= OISYCenter + CodeRange)
+                                    {
+                                        ChartTop[ch].C.Series[1].Points.AddXY((tmpRes.CodeY[i] * 0.25), tmpRes.StrokeY[i]); //  stroke
+                                                                                                                            //   ChartTop[ch].C.Series[9].Points.AddXY(Cal.CodeY1[i], Cal.StrokeY1[i]); //  stroke 1
+                                                                                                                            // ChartTop[ch].C.Series[10].Points.AddXY(Cal.CodeY2[i], Cal.StrokeY2[i]); //  stroke 2
+                                        ChartTop[ch].C.Series[4].Points.AddXY((tmpRes.CodeY[i] * 0.25), tmpRes.Current[i]); //  current
+                                        ChartTop[ch].C.Series[7].Points.AddXY((tmpRes.CodeY[i] * 0.25), (tmpRes.HallY[i] * 0.25) / 10); //  hall
+                                    }
+                                }
+                            }
+                                //Tilt
+                                //if (ChartBtm[ch].C.InvokeRequired)
+                                //{
+                                //    ChartBtm[ch].C.BeginInvoke((MethodInvoker)delegate
+                                //    {
+                                //        for (int i = 2; i < Cal.CodeY.Count; i++)
+                                //        {
+                                //            if (Cal.CodeY[i] >= OISCenter - CodeRange && Cal.CodeY[i] <= OISCenter + CodeRange)
+                                //            {
+                                //                //ChartBtm[ch].C.Series[3].Points.AddXY(Cal.CodeY1[i], Cal.TiltX[i]); //  Tilt 
+                                //                //ChartBtm[ch].C.Series[4].Points.AddXY(Cal.CodeY1[i], Cal.TiltY[i]); //  Tilt 
+                                //                //ChartBtm[ch].C.Series[5].Points.AddXY(Cal.CodeY1[i], Cal.TiltZ[i]); //  Tilt 
+                                //            }
+                                //        }
+                                //    });
+                                //}
+                                break;
                         case "AF Scan":
 
 
@@ -2298,8 +2312,8 @@ namespace FZ4P
             {
                 result.Add(new FindResult());
 
-                result[i] = STATIC.fVision.MeasureTxTyTz(i, name, true, false);
-
+                //result[i] = STATIC.fVision.MeasureTxTyTz(i, name, true, false);
+                result[i] = new FindResult();
             }
 
             //////////////////////////////////////////////////////////////////////////////
@@ -3123,8 +3137,12 @@ namespace FZ4P
                 errMsg[0] = "Check the Result File Open!!!";
             }
         }
-        private void Act_ScanCode(int port, string testItem, int InspCnt)
+        public void Act_ScanCode(int port, string testItem, int InspCnt)
         {
+
+            STATIC.Process.DWDrvIC.LiearCompEnable((int)AxisTypeDW.AxisX, true);
+            STATIC.Process.DWDrvIC.LiearCompEnable((int)AxisTypeDW.AxisY, true);
+
             MakeWaveform(testItem);
             LEDs_All_On(port, true);
             Process_ScanCodeTest(port, testItem, InspCnt);

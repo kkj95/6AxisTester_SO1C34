@@ -173,6 +173,34 @@ namespace FZ4P.UI
             }
         }
 
+        private string current_1;
+        public string Current_1
+        {
+            get => current_1;
+            set
+            {
+                if (current_1 != value)
+                {
+                    current_1 = value;
+                    OnPropertyChanged(nameof(Current_1), value);
+                }
+            }
+        }
+
+        private string current_2;
+        public string Current_2
+        {
+            get => current_2;
+            set
+            {
+                if (current_2 != value)
+                {
+                    current_2 = value;
+                    OnPropertyChanged(nameof(Current_2), value);
+                }
+            }
+        }
+
 
         private string _connectString;
         public string ConnectString
@@ -291,6 +319,18 @@ namespace FZ4P.UI
             {
                 this.InvokeOnUIThread(() => {
                     lbl_Version.Text = PropertiesHelper.GetValue<string>(e);
+                });
+            }
+            else if (e.PropertyName == nameof(Current_1))
+            {
+                this.InvokeOnUIThread(() => {
+                    lbl_Current_1.Text = PropertiesHelper.GetValue<string>(e);
+                });
+            }
+            else if (e.PropertyName == nameof(Current_2))
+            {
+                this.InvokeOnUIThread(() => {
+                    lbl_Current_2.Text = PropertiesHelper.GetValue<string>(e);
                 });
             }
             else if (e.PropertyName == nameof(SlaveId))
@@ -416,13 +456,16 @@ namespace FZ4P.UI
                     Thread.Sleep(5);
                     ReadHall2 = _oISFunction.ReadOISHall(0, 1, 0).ToString();
                     Thread.Sleep(5);
-                    ReadHall3 = _afFunction.ReadAFHall(iCh).ToString();
+                    //ReadHall3 = _afFunction.ReadAFHall(iCh).ToString();
                     Thread.Sleep(5);
 
                     PeakCurrent = _oISFunction.GetCurrent((int)AxisTypeDW.AxisX).ToString("00.00");
                     Thread.Sleep(5);
                     Current2 = _oISFunction.GetCurrent((int)AxisTypeDW.AxisY).ToString("00.00");
                     Thread.Sleep(5);
+
+                    Current_1 = STATIC.Dln.GetCurrent(0, 0).ToString("00.00");
+                    Current_2 = STATIC.Dln.GetCurrent(0, 1).ToString("00.00");
                 }
                 catch(Exception ex)
                 {
@@ -614,6 +657,40 @@ namespace FZ4P.UI
         private void button7_Click(object sender, EventArgs e)
         {
             _i2CToI3C.I3CStop();
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            STATIC.Process.m_ChannelOn[0] = true;
+            STATIC.Process.Act_ScanCode(0, "AF Scan", 0);
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            STATIC.Process.m_ChannelOn[0] = true;
+            STATIC.Process.Act_ScanCode(0, "OIS X Scan", 0);
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            STATIC.Process.m_ChannelOn[0] = true;
+            STATIC.Process.Act_ScanCode(0, "OIS Y Scan", 0);
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            STATIC.Process.DWDrvIC.LiearCompClearWrite((int)AxisTypeDW.AxisX);
+            STATIC.Process.DWDrvIC.LiearCompClearWrite((int)AxisTypeDW.AxisY);
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            PeakCurrent = _oISFunction.GetCurrent((int)AxisTypeDW.AxisX).ToString("00.00");
+            Thread.Sleep(5);
+            Current2 = _oISFunction.GetCurrent((int)AxisTypeDW.AxisY).ToString("00.00");
+            Thread.Sleep(5);
+            Current_1 = STATIC.Dln.GetCurrent(0, 0).ToString("00.00");
+            Current_2 = STATIC.Dln.GetCurrent(0, 1).ToString("00.00");
         }
     }
 

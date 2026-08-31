@@ -418,7 +418,7 @@ namespace FZ4P
             DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0x3D, 1, new byte[] { 0x00 });
             AddLog(ch, "Function Register Setting");
 
-
+            ///////
             DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0xC9, 1, new byte[] { 0x00 });
             DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0x02, 1, new byte[] { 0x80 });
             Wait(10);
@@ -2227,6 +2227,9 @@ namespace FZ4P
             DWDrvIC.OISOnOff(ch, true);
             Wait(100);
 
+            STATIC.MCUH503.SetSWReset(false);
+            Wait(100);
+
             DWDrvIC.LiearCompClearWrite((int)AxisTypeDW.AxisX);
             DWDrvIC.LiearCompClearWrite((int)AxisTypeDW.AxisY);
 
@@ -2272,10 +2275,23 @@ namespace FZ4P
             List<int> RealValueCollectionX = new List<int>();
             List<int> RealValueCollectionY = new List<int>();
 
-            oISLinCompCoef.OutputCoeff(LinCompValueX);
-            oISLinCompCoefY.OutputCoeff(LinCompValueY);
+            //oISLinCompCoef.OutputCoeff(LinCompValueX);
+            //oISLinCompCoefY.OutputCoeff(LinCompValueY);
+
+            //디폴트 값
+            oISLinCompCoef.DefaultCoeffValue(LinCompValueX);
+            oISLinCompCoefY.DefaultCoeffValue(LinCompValueY);
+
             RealValueCollectionX.AddRange(LinCompValueX);
             RealValueCollectionY.AddRange(LinCompValueY);
+
+            AddLog(ch, $"RealValue X \t RealValue X");
+
+            for (int i = 0; i < RealValueCollectionX.Count; i++)
+            {
+                AddLog(ch, $"{RealValueCollectionX[i].ToString("F2")}\t{RealValueCollectionY[i].ToString("F2")}");
+            }
+            AddLog(ch, $"RealValue End");
 
             DWDrvIC.LiearCompWrite(AxisX, RealValueCollectionX);
             DWDrvIC.LiearCompWrite(AxisY, RealValueCollectionY);
@@ -2289,16 +2305,32 @@ namespace FZ4P
             //DWDrvIC.SetStore(AxisY);
             Wait(500);
 
-            Dln.PowerOnOff(0, false);
-            Wait(500);
-            Dln.PowerOnOff(0, true);
-            Wait(500);
+            var realX = DWDrvIC.LiearCompRead(AxisX);
+            var realY = DWDrvIC.LiearCompRead(AxisY);
 
-            DWDrvIC.OISOnOff(0, true);
-            Wait(500);
-            //DWDrvIC.OISICReset(0);
+            AddLog(ch, $"RealValueChecked X \t RealValueCehcked X");
+            for (int i = 0; i < realX.Count; i++)
+            {
+                AddLog(ch, $"{realX[i].ToString("F2")}\t{realY[i].ToString("F2")}");
+            }
+            AddLog(ch, $"END");
+
+            //TODO : 임시
+            //Dln.PowerOnOff(0, false);
             //Wait(500);
-            LEDs_All_On(0,true);
+            //Dln.PowerOnOff(0, true);
+            //Wait(500);
+
+            //DWDrvIC.OISOnOff(0, true);
+            //Wait(500);
+            ////DWDrvIC.OISICReset(0);
+            ////Wait(500);
+            //LEDs_All_On(0,true);
+
+            DWDrvIC.OISOnOff(ch, true);
+            Wait(100);
+            STATIC.MCUH503.SetSWReset(false);
+            Wait(100);
             for (int i = 0; i < TargetCode.Count; i++)
             {
                 DWDrvIC.OISMove(ch, TargetCode[i], TargetCode[i]);
