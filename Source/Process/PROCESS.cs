@@ -2312,8 +2312,8 @@ namespace FZ4P
             {
                 result.Add(new FindResult());
 
-                //result[i] = STATIC.fVision.MeasureTxTyTz(i, name, true, false);
-                result[i] = new FindResult();
+                result[i] = STATIC.fVision.MeasureTxTyTz(i, name, true, false);
+                //result[i] = new FindResult();
             }
 
             //////////////////////////////////////////////////////////////////////////////

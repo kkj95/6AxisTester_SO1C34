@@ -341,9 +341,10 @@ namespace FZ4P
 
         void AF_HallCalibration(int ch, string testItem, int InspCnt)
         {
-           
+            Dln.I3CStop(STATIC.MCUH503);
             Dln.PowerSequence(0);
             Wait(100);
+            Dln.HWReset(STATIC.MCUH503).Connected(STATIC.MCUH503);
 
             int BTM_POS = 10;
             int TOP_POS = 820;
@@ -2275,12 +2276,12 @@ namespace FZ4P
             List<int> RealValueCollectionX = new List<int>();
             List<int> RealValueCollectionY = new List<int>();
 
-            //oISLinCompCoef.OutputCoeff(LinCompValueX);
-            //oISLinCompCoefY.OutputCoeff(LinCompValueY);
+            oISLinCompCoef.OutputCoeff(LinCompValueX);
+            oISLinCompCoefY.OutputCoeff(LinCompValueY);
 
             //디폴트 값
-            oISLinCompCoef.DefaultCoeffValue(LinCompValueX);
-            oISLinCompCoefY.DefaultCoeffValue(LinCompValueY);
+            //oISLinCompCoef.DefaultCoeffValue(LinCompValueX);
+            //oISLinCompCoefY.DefaultCoeffValue(LinCompValueY);
 
             RealValueCollectionX.AddRange(LinCompValueX);
             RealValueCollectionY.AddRange(LinCompValueY);
