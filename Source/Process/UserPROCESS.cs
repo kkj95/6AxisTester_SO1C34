@@ -96,14 +96,14 @@ namespace FZ4P
         private void ChagnedOISAKM()
         {
             //TODO : 여기 AKM 로직 넣어야됨.
-            CollectionHelper.FindCollection(ItemList, "OIS HallCalibration", OIS_HallCalibration);
-            CollectionHelper.FindCollection(ItemList, "OIS LinearityCompensation", OISLCCComp);
-            CollectionHelper.FindCollection(ItemList, "OIS Gain Margin", OISGM);
-            CollectionHelper.FindCollection(ItemList, "OIS Phase Margin", OISPM);
-            CollectionHelper.FindCollection(ItemList, "OIS Gain Margin Low", OISGM_LOW);
-            CollectionHelper.FindCollection(ItemList, "OIS Phase Margin Low", OISPM_LOW);
-            CollectionHelper.FindCollection(ItemList, "SineWave Test", OISSineWave);
-            CollectionHelper.FindCollection(ItemList, "Ringing Test", OISRinging);
+            CollectionHelper.FindCollection(ItemList, "OIS HallCalibration", Act_OISHallCalubration);
+            //CollectionHelper.FindCollection(ItemList, "OIS LinearityCompensation", Act_OISLinComp);
+            //CollectionHelper.FindCollection(ItemList, "OIS Gain Margin", OISGM);
+            //CollectionHelper.FindCollection(ItemList, "OIS Phase Margin", OISPM);
+            //CollectionHelper.FindCollection(ItemList, "OIS Gain Margin Low", OISGM_LOW);
+            //CollectionHelper.FindCollection(ItemList, "OIS Phase Margin Low", OISPM_LOW);
+            //CollectionHelper.FindCollection(ItemList, "SineWave Test", OISSineWave);
+            //CollectionHelper.FindCollection(ItemList, "Ringing Test", OISRinging);
         }
 
         #region AddSeq
@@ -324,14 +324,14 @@ namespace FZ4P
                     }
                     else if (i == 1)
                     {
-                        //string[] b = t[i].Split(new string[] { ",", " ", "\t", "//", "Reg" }, StringSplitOptions.RemoveEmptyEntries);
-                        //IC_SETTING_OIS_X = new byte[b.Length / 2];
-                        //IC_SETTING_OIS_X_REG = new byte[b.Length / 2];
-                        //for (int j = 0; j < b.Length; j++)
-                        //{
-                        //    if (j < b.Length / 2) IC_SETTING_OIS_X[j] = Convert.ToByte(b[j], 16);
-                        //    else IC_SETTING_OIS_X_REG[j - b.Length / 2] = Convert.ToByte(b[j], 16);
-                        //}
+                        string[] b = t[i].Split(new string[] { ",", " ", "\t", "//", "Reg" }, StringSplitOptions.RemoveEmptyEntries);
+                        IC_SETTING_OIS_X = new byte[b.Length / 2];
+                        IC_SETTING_OIS_X_REG = new byte[b.Length / 2];
+                        for (int j = 0; j < b.Length; j++)
+                        {
+                            if (j < b.Length / 2) IC_SETTING_OIS_X[j] = Convert.ToByte(b[j], 16);
+                            else IC_SETTING_OIS_X_REG[j - b.Length / 2] = Convert.ToByte(b[j], 16);
+                        }
                     }
                     else
                     {
@@ -2619,5 +2619,462 @@ namespace FZ4P
             DWDrvIC.SetRegisterI3CMode(axisTypeDW);
         }
         #endregion
+        #region AKM 
+        private void Act_OISHallCalubration(int ch, string testItem, int InspCnt)
+        {
+            byte[] rbuf = new byte[1];
+            AddLog(ch, "");
+            AddLog(ch, "<<<  OIS Hall Calibration Start  >>>");
+            DrvIC.AK7326_IC_Data(ch);
+            DrvIC.AK7314_Mode(ch, 1);
+            DrvIC.Move(ch, "AF", DrvIC.AF_MIN_CODE);
+            AddLog(ch, $"Move AF Best Position : {DrvIC.AF_MIN_CODE}");
+
+            AddLog(ch, $"Auto calibration");
+            for (int i = 0; i < 2; i++)
+            {
+                int slaveAddr = i == 0 ? DrvIC.XSlaveAddr : DrvIC.Y1SlaveAddr;
+                int index = i == 0 ? 1 : 2;
+                Dln.WriteArray(ch, slaveAddr, 0x02, 1, new byte[] { 0x40 });
+                Dln.WriteArray(ch, slaveAddr, 0xAE, 1, new byte[] { 0x3B });
+
+
+                //TODO : 임시 주석 
+                //for (int j = 0; j < OIS_Set.Count; j++)
+                //    Dln.WriteArray(ch, slaveAddr, OIS_Set[j][0], new byte[] { OIS_Set[j][index] });
+
+                //for (int j = 0; j < OIS_reg.Count; j++)
+                //    Dln.WriteArray(ch, slaveAddr, OIS_reg[j][0], new byte[] { OIS_reg[j][index] });
+
+                //for (int j = 0; j < OISPID.Count; j++)
+                //    Dln.WriteArray(ch, slaveAddr, OISPID[j][0], new byte[] { OISPID[j][index] });
+
+
+                DrvIC.AK7326_IC_Mode(ch, 0, 0);
+                DrvIC.AK7326_IC_Mode(ch, 1, 0);
+                Wait(50);
+                for (int j = 0; j < 3; j++)
+                {
+                    Dln.WriteArray(ch, slaveAddr, 0x02, 1, new byte[] { 0x09 });
+                    Wait(220);
+                }
+                Dln.WriteArray(ch, slaveAddr, 0x19, 1, new byte[] { 0x88 });
+                Dln.WriteArray(ch, slaveAddr, 0x5D, 1, new byte[] { 0x68 });
+                byte[] calData = new byte[2];
+                Dln.ReadArray(ch, slaveAddr, 0x04, 1, rbuf);
+                calData[0] = rbuf[0];
+                Dln.ReadArray(ch, slaveAddr, 0x06, 1, rbuf);
+                calData[1] = rbuf[0];
+                if (((calData[0] < 0x7F) && (calData[1] > 0x7F)) || ((calData[0] > 0x7F) && (calData[1] < 0x7F)))
+                {
+                    if (i == 0) AddLog(ch, $"OIS Cal X -> {calData[0].ToString("X2")}, {calData[1].ToString("X2")} OK");
+                    else AddLog(ch, $"OIS Cal Y -> {calData[0].ToString("X2")}, {calData[1].ToString("X2")} OK");
+
+                }
+                else
+                {
+                    if (i == 0) AddLog(ch, $"OIS Cal X -> {calData[0].ToString("X2")}, {calData[1].ToString("X2")} NG");
+                    else AddLog(ch, $"OIS Cal Y -> {calData[0].ToString("X2")}, {calData[1].ToString("X2")} NG");
+                }
+
+                Dln.WriteArray(ch, slaveAddr, 0x03, 1, new byte[] { 0x01 }); Wait(170);
+                Dln.WriteArray(ch, slaveAddr, 0x03, 1, new byte[] { 0x02 }); Wait(270);
+                Dln.WriteArray(ch, slaveAddr, 0x03, 1, new byte[] { 0x04 }); Wait(170);
+                Dln.WriteArray(ch, slaveAddr, 0x03, 1, new byte[] { 0x08 }); Wait(120);
+                Dln.WriteArray(ch, slaveAddr, 0x03, 1, new byte[] { 0x10 }); Wait(70);
+                Dln.WriteArray(ch, slaveAddr, 0xAE, 1, new byte[] { 0x00 });
+                DrvIC.AK7326_IC_Mode(ch, 0, 1);
+                DrvIC.AK7326_IC_Mode(ch, 1, 1);
+            }
+
+            Dln.ReadArray(ch, DrvIC.XSlaveAddr, 0x03, 1, rbuf);
+            byte check_3f_x = rbuf[0];
+            Dln.ReadArray(ch, DrvIC.Y1SlaveAddr, 0x03, 1, rbuf);
+            byte check_3f_y = rbuf[0];
+            AddLog(ch, $"Need to check 0x3F : {check_3f_x.ToString("X2")}, {check_3f_y.ToString("X2")}");
+            if (check_3f_x != 0x85 || check_3f_y != 0x85)
+            {
+                PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 10;
+                ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });    
+                return;
+            }
+            else
+            {
+                PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 0;
+                ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
+            }
+            DrvIC.Move(ch, "X", 2048);
+            DrvIC.Move(ch, "Y", 2048);
+            DrvIC.OISOn(ch, "X", true);
+            DrvIC.OISOn(ch, "Y", true);
+            AddLog(ch, "<<<  OIS Hall Calibration End  >>>");
+        }
+        //private void Act_OISLinComp(int ch, string testItem, int InspCnt)
+        //{
+        //    bool resX = false;
+        //    bool resY = false;
+        //    if (m_ChannelOn[ch]) resX = OISLinComp(ch, 0);
+        //    if (m_ChannelOn[ch]) resY = OISLinComp(ch, 1);
+        //    if (!resX || !resY)
+        //    {
+        //        PassFails[0].Results[(int)SpecItem.XYLinearComp].Val = 10;
+        //        ShowDataResults(ch, (int)SpecItem.XYLinearComp, (int)SpecItem.XYLinearComp, InspType.Normal, new double[] { });
+        //    }
+        //    else
+        //    {
+        //        PassFails[0].Results[(int)SpecItem.XYLinearComp].Val = 0;
+        //        ShowDataResults(ch, (int)SpecItem.XYLinearComp, (int)SpecItem.XYLinearComp, InspType.Normal, new double[] { });
+        //    }
+
+        //}
+        //private void OISPhasemargin(int ch, string testItem, int InspCnt)
+        //{
+        //    double freq = 0, pm = 0;
+        //    (freq, pm) = OISPMAKM(ch, 0);
+        //    /* PassFails[ch].Results[(int)SpecItem.FRAX_PMFreq].Val = freq;*/
+        //    PassFails[ch].Results[(int)SpecItem.FRAX_PhaseMargin].Val = pm;
+        //    ShowDataResults(ch, (int)SpecItem.FRAX_PhaseMargin, (int)SpecItem.FRAX_PhaseMargin, InspType.Normal, new double[] { });
+        //    (freq, pm) = OISPMAKM(ch, 1);
+        //    /*PassFails[ch].Results[(int)SpecItem.FRAY1_PMFreq].Val = freq;*/
+        //    PassFails[ch].Results[(int)SpecItem.FRAY1_PhaseMargin].Val = pm;
+        //    ShowDataResults(ch, (int)SpecItem.FRAY1_PhaseMargin, (int)SpecItem.FRAY1_PhaseMargin, InspType.Normal, new double[] { });
+        //}
+
+        //private bool OISLinComp(int ch, int axis)
+        //{
+        //    AddLog(ch, "<<<  OIS Linearity comp. Start  >>>");
+
+
+        //    int addr = axis == 0 ? DrvIC.XSlaveAddr : DrvIC.Y1SlaveAddr;
+        //    string AxisName = axis == 0 ? "X" : "Y";
+        //    float[] dbTargetPosi = new float[Condition.OISLincompStep + 1];
+        //    float[] dbLensPosi = new float[Condition.OISLincompStep + 1];
+        //    int[] dbHalldata = new int[Condition.OISLincompStep + 1];
+        //    float RefData = 0;
+        //    byte[] ucResultCoef = new byte[13];
+        //    int temp_table = Condition.OISLincompCodeMargin, step = 128;
+        //    step = (4096 - 2 * Condition.OISLincompCodeMargin) / Condition.OISLincompStep;
+
+        //    LEDs_All_On(0, true);
+
+        //    OIS_LinearityComp_Reset(ch, axis);
+        //    DrvIC.AK7314_Mode(ch, 1);
+        //    DrvIC.Move(ch, "AF", BestAFPos); Thread.Sleep(50);
+        //    AddLog(ch, $"Best AF for linear_comp : {BestAFPos}");
+
+        //    DrvIC.OISOn(ch, "X", true);
+        //    DrvIC.OISOn(ch, "Y", true);
+        //    DrvIC.Move(ch, "X", OISCenter);
+        //    DrvIC.Move(ch, "Y", OISCenter);
+        //    Wait(50);
+
+        //    FindResult tmpres = new FindResult();
+
+        //    AddLog(ch, $"Target\tDisplacement\tReadHall");
+        //    AddLog(ch, "---------------------------------");
+
+        //    for (int i = 0; i < Condition.OISLincompStep + 1; i++)
+        //    {
+        //        if (temp_table > 4095) temp_table = 4095;
+        //        dbTargetPosi[i] = temp_table;
+
+        //        if (axis == 0) { DrvIC.Move(ch, "X", (int)dbTargetPosi[i]); DrvIC.Move(ch, "Y", 2048); }
+        //        else if (axis == 1) { DrvIC.Move(ch, "X", 2048); DrvIC.Move(ch, "Y", (int)dbTargetPosi[i]); }
+        //        if (i == 0) Wait(100);
+        //        else Wait(30);
+        //        Wait(20);
+        //        dbHalldata[i] = DrvIC.ReadHall(ch, AxisName);
+        //        tmpres = Measure();
+        //        if (axis == 0)
+        //        {
+        //            if (i != 0) dbLensPosi[i] = (float)(tmpres.cx[0] - RefData);
+        //            else { dbLensPosi[i] = 0; RefData = (float)tmpres.cx[0]; }
+        //        }
+        //        else
+        //        {
+        //            if (i != 0) dbLensPosi[i] = (float)(tmpres.cy[0] - RefData);
+        //            else { dbLensPosi[i] = 0; RefData = (float)tmpres.cy[0]; }
+        //        }
+        //        temp_table += step;
+        //        AddLog(ch, $"{dbTargetPosi[i]}\t{dbLensPosi[i].ToString("F2")}\t{dbHalldata[i]}");
+        //        if (i > 1 && dbHalldata[i] <= dbHalldata[i - 1])
+        //        {
+        //            AddLog(ch, "OIS Linearity comp. error.");
+
+        //            return false;
+
+        //        }
+        //    }
+        //    AddLog(ch, "---------------------------------");
+
+
+        //    byte pvt = 0, nvt = 0;
+        //    byte[] rbuf = new byte[1];
+        //    int ignInf = 0;
+        //    int ignMac = 0;
+        //    int numLinCompData;
+        //    int[] linCoef = new int[OISLinCompCoef.NUM_COEF];
+        //    float resError = 0;
+
+        //    if (axis == 0)
+        //    {
+        //        pvt = (byte)Condition.OISLincompXEPAPos;
+        //        nvt = (byte)Condition.OISLincompXEPANeg;
+        //    }
+        //    else
+        //    {
+        //        pvt = (byte)Condition.OISLincompYEPAPos;
+        //        nvt = (byte)Condition.OISLincompYEPANeg;
+        //    }
+
+
+        //    Dln.ReadArray(ch, addr, 0x0E, 1, rbuf);
+        //    pvt = rbuf[0];
+        //    Dln.ReadArray(ch, addr, 0x0F, 1, rbuf);
+        //    nvt = rbuf[0];
+
+        //    AddLog(ch, $"POSVT = {pvt}, NEGVT = {nvt}");
+
+        //    OISLinCompCoef coef = new OISLinCompCoef();
+
+        //    int res = coef.LinCompMain(dbTargetPosi, dbLensPosi, dbTargetPosi.Length, pvt, nvt, ignInf, ignMac, ref linCoef, ref resError);
+        //    if (res != 0)
+        //    {
+        //        AddLog(ch, $"Linearity Comp Fail");
+
+
+        //        return false;
+        //    }
+        //    Dln.WriteArray(ch, addr, 0xAE, 1, new byte[] { 0x3B });
+        //    Dln.WriteArray(ch, addr, 0x2A, 1, new byte[] { (byte)linCoef[0] });
+        //    Dln.WriteArray(ch, addr, 0x2B, 1, new byte[] { (byte)linCoef[1] });
+        //    Dln.WriteArray(ch, addr, 0x2C, 1, new byte[] { (byte)linCoef[2] });
+        //    Dln.WriteArray(ch, addr, 0x2D, 1, new byte[] { (byte)linCoef[3] });
+        //    Dln.WriteArray(ch, addr, 0x2E, 1, new byte[] { (byte)linCoef[4] });
+        //    Dln.WriteArray(ch, addr, 0x2F, 1, new byte[] { (byte)linCoef[5] });
+        //    Dln.WriteArray(ch, addr, 0x30, 1, new byte[] { (byte)linCoef[6] });
+        //    Dln.WriteArray(ch, addr, 0x31, 1, new byte[] { (byte)linCoef[7] });
+        //    Dln.WriteArray(ch, addr, 0x32, 1, new byte[] { (byte)linCoef[8] });
+        //    Dln.WriteArray(ch, addr, 0x33, 1, new byte[] { (byte)linCoef[9] });
+        //    Dln.WriteArray(ch, addr, 0x34, 1, new byte[] { (byte)linCoef[10] });
+        //    Dln.WriteArray(ch, addr, 0x35, 1, new byte[] { (byte)linCoef[11] });
+        //    Dln.WriteArray(ch, addr, 0x36, 1, new byte[] { (byte)linCoef[12] });
+
+        //    bool result = DrvIC.AK7326_memory_update(ch, (byte)axis, 0);
+        //    if (!result)
+        //    {
+        //        AddLog(ch, $"Linearity Comp Fail");
+
+
+        //        return false;
+        //    }
+        //    Dln.WriteArray(ch, addr, 0x03, 1, new byte[] { 0x01 });
+        //    Wait(200);                      
+        //    Dln.WriteArray(ch, addr, 0x03, 1, new byte[] { 0x02 });
+        //    Wait(250);                      
+        //    Dln.WriteArray(ch, addr, 0x03, 1, new byte[] { 0x04 });
+        //    Wait(200);                     
+        //    Dln.WriteArray(ch, addr, 0x03, 1, new byte[] { 0x08 });
+        //    Wait(200);
+        //    string s = $"0x2A : 0x{linCoef[0].ToString("X")}, 0x2B : 0x{linCoef[1].ToString("X")}, 0x2C : 0x{linCoef[2].ToString("X")}, 0x2D : 0x{linCoef[3].ToString("X")}, 0x2E : 0x{linCoef[4].ToString("X")}\r\n" +
+        //     $"0x2F : 0x{linCoef[5].ToString("X")}, 0x30 : 0x{linCoef[6].ToString("X")}, 0x31 : 0x{linCoef[7].ToString("X")}, 0x32 : 0x{linCoef[8].ToString("X")}, 0x33 : 0x{linCoef[9].ToString("X")}\r\n" +
+        //     $"0x34 : 0x{linCoef[10].ToString("X")}, 0x35 : 0x{linCoef[11].ToString("X")}, 0x36 : 0x{linCoef[12].ToString("X")}";
+
+        //    AddLog(ch, s);
+
+        //    Dln.WriteArray(ch, addr, 0xAE, 1, new byte[] { 0x00 });
+        //    LEDs_All_On(0, false);
+        //    AddLog(ch, "<<<  OIS Linearity comp. End  >>>");
+        //    return true;
+        //}
+        //private void OIS_LinearityComp_Reset(int ch, int Axis)
+        //{
+        //    if (Axis == 0)
+        //    {
+        //        AddLog(ch, "X Linearity Comp Reset");
+        //        Dln.WriteArray(ch, DrvIC.XSlaveAddr, 0xAE, 1, new byte[] { 0x3B });
+                                                           
+        //        Dln.WriteArray(ch, DrvIC.XSlaveAddr, 0x2A, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.XSlaveAddr, 0x2B, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.XSlaveAddr, 0x2C, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.XSlaveAddr, 0x2D, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.XSlaveAddr, 0x2E, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.XSlaveAddr, 0x2F, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.XSlaveAddr, 0x30, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.XSlaveAddr, 0x31, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.XSlaveAddr, 0x32, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.XSlaveAddr, 0x33, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.XSlaveAddr, 0x34, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.XSlaveAddr, 0x35, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.XSlaveAddr, 0x36, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.XSlaveAddr, 0x03, 1, new byte[] { 0x08 });
+        //        Wait(100);                                 
+        //        Dln.WriteArray(ch, DrvIC.XSlaveAddr, 0xAE, 1, new byte[] { 0x00 });
+        //    }
+        //    else
+        //    {
+        //        AddLog(ch, "Y Linearity Comp Reset");
+        //        Dln.WriteArray(ch, DrvIC.Y1SlaveAddr, 0xAE, 1, new byte[] { 0x3B });
+        //        Dln.WriteArray(ch, DrvIC.Y1SlaveAddr, 0x2A, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.Y1SlaveAddr, 0x2B, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.Y1SlaveAddr, 0x2C, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.Y1SlaveAddr, 0x2D, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.Y1SlaveAddr, 0x2E, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.Y1SlaveAddr, 0x2F, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.Y1SlaveAddr, 0x30, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.Y1SlaveAddr, 0x31, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.Y1SlaveAddr, 0x32, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.Y1SlaveAddr, 0x33, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.Y1SlaveAddr, 0x34, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.Y1SlaveAddr, 0x35, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.Y1SlaveAddr, 0x36, 1, new byte[] { 0x00 });
+        //        Dln.WriteArray(ch, DrvIC.Y1SlaveAddr, 0x03, 1, new byte[] { 0x08 });
+        //        Wait(100);                                  
+        //        Dln.WriteArray(ch, DrvIC.Y1SlaveAddr, 0xAE, 1, new byte[] { 0x00 });
+        //    }
+        //}
+
+        //private MarginTestResult OISPMAKM(int ch, int axis)
+        //{
+        //    MarginTestResult result = new MarginTestResult();
+        //    int addr = axis == 0 ? DrvIC.XSlaveAddr : DrvIC.Y1SlaveAddr;
+        //    int FRAaddr = axis == 0 ? DrvIC.FRA_XSlaveAddr : DrvIC.FRA_Y1SlaveAddr;
+        //    string axisName = axis == 0 ? "X" : "Y";
+
+        //    int startFreq = axis == 0 ? Condition.iXChirpFrom : Condition.iYChirpFrom;
+        //    int finalFreq = axis == 0 ? Condition.iYChirpTo : Condition.iYChirpTo;
+        //    int minphase = axis == 0 ? Condition.PMXMinPhase : Condition.PMYMinPhase;
+        //    int gainTH = axis == 0 ? Condition.PMXGainTH : Condition.PMYGainTH;
+        //    int amp = axis == 0 ? Condition.iXAmplitude : Condition.iYAmplitude;
+
+        //    Dln.WriteArray(ch, DrvIC.XSlaveAddr, 0x02,  1, new byte[] { 0x00 });
+        //    Dln.WriteArray(ch, DrvIC.Y1SlaveAddr, 0x02, 1, new byte[] { 0x00 });
+
+        //    DrvIC.Move(ch, "X", 2048);
+        //    DrvIC.Move(ch, "Y", 2048);
+        //    Wait(100);
+
+
+        //    DrvIC.SetSlaveAddr(ch, FRAaddr);
+
+        //    int freqVal, freqTemp = 0, gainTemp, freqPM = 0, freq_index = 0;
+        //    int oldFreq;
+        //    int[] before_after_zero_freq = new int[2] { startFreq, finalFreq };
+        //    double gainVal = 0, pm_val = 0, phaseTemp, prepm = 0, pmindex = 180;
+        //    double[] before_after_zero_gain = new double[2] { 0, 0 };
+
+        //    AddLog(ch, $"{axisName} PM Test start");
+
+        //    Dln.WriteArray(ch, addr, 0x02, 1, new byte[] { 0x40 });
+
+        //    Wait(30);
+        //    Dln.WriteArray(ch, addr, 0xAE, 1, new byte[] { 0x3B });
+        //    DrvIC.FRAModeEnable(ch);
+        //    DrvIC.Set_Amp(ch, amp);
+        //    AddLog(ch, $"Amp\tFreq\tGain\tP/M");
+        //    for (oldFreq = freqVal = startFreq; freqVal >= finalFreq; freqVal -= freqTemp)
+        //    {
+        //        DrvIC.Set_Freq(ch, freqVal);
+        //        Wait(1000 / oldFreq + 5000 / freqVal + 10);
+        //        oldFreq = freqVal;
+
+        //        gainVal = DrvIC.Get_Gain(ch);
+        //        pm_val = DrvIC.Get_Phase(ch, 0);
+
+        //        AddLog(ch, $"{amp}\t{freqVal}\t{gainVal.ToString("F2")}\t{pm_val.ToString("F0")}");
+        //        if (gainVal > 0)
+        //        {
+        //            if ((freqVal != startFreq) && (before_after_zero_gain[0] < 0))
+        //            {
+        //                pm_val = ((gainVal * prepm) - (before_after_zero_gain[0] * pm_val)) / (gainVal - before_after_zero_gain[0]);
+        //                freqPM = (int)(((gainVal * before_after_zero_freq[0]) - (before_after_zero_gain[0] * freqVal)) / (gainVal - before_after_zero_gain[0]));
+
+        //                before_after_zero_freq[1] = freqVal;
+        //                before_after_zero_gain[1] = gainVal;
+        //                freq_index++;
+        //                break;
+        //            }
+        //            else
+        //            {
+        //                before_after_zero_freq[0] = freqVal;
+        //                before_after_zero_gain[0] = gainVal;
+        //                if ((gainVal < 4) && (pm_val < pmindex))
+        //                {
+        //                    pmindex = pm_val;
+        //                    freq_index = freqVal;
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            before_after_zero_freq[0] = freqVal;
+        //            before_after_zero_gain[0] = gainVal;
+        //        }
+        //        if ((pm_val < minphase) && Math.Abs(gainVal) < 3)
+        //        {
+        //            AddLog(ch, $"Error type 3 : Min Phase NG over period {minphase}");
+        //            AddLog(ch, $"Freq : {freqVal}, Phase : {pm_val}");
+        //            DrvIC.FRAModeDisable(ch);
+        //            return (freqVal, minphase);
+        //        }
+        //        prepm = pm_val;
+        //        freqTemp = freqVal * Condition.iOISFRAstep / 100;
+        //        if (freqTemp < 1) freqTemp = 1;
+
+        //    }
+        //    AddLog(ch, $"Zero Freq before = {before_after_zero_freq[0]}Hz,{before_after_zero_gain[0].ToString("F2")}dB");
+        //    AddLog(ch, $"Zero Freq after = {before_after_zero_freq[1]}Hz,{before_after_zero_gain[1].ToString("F2")}dB");
+
+        //    if (freq_index != 0 && freqVal < finalFreq)
+        //    {
+        //        AddLog(ch, $"Minimum phase under 4 db");
+        //        AddLog(ch, $"freq : {freq_index}, Phase : {pmindex}");
+        //        DrvIC.FRAModeDisable(ch);
+        //        return (freq_index, pmindex);
+
+        //    }
+        //    if (freq_index == 0)
+        //    {
+        //        AddLog(ch, "Couldn`t find zero cross point");
+        //        DrvIC.FRAModeDisable(ch);
+        //        return (freq_index, 1);
+        //    }
+
+        //    if (Math.Abs(gainVal - before_after_zero_gain[1]) > gainTH)
+        //    {
+        //        AddLog(ch, $"Error type 2 : gain is changed drastically over {gainTH}");
+        //        DrvIC.FRAModeDisable(ch);
+        //        return (0, 2);
+        //    }
+        //    AddLog(ch, "Use Linear Interpolation");
+        //    AddLog(ch, $"{amp}, {freqPM}Hz, {gainVal.ToString("F2")}dB, {pm_val.ToString("F0")}deg");
+
+        //    DrvIC.FRAModeDisable(ch);
+        //    Dln.WriteArray(ch, DrvIC.XSlaveAddr, 0x02,  1, new byte[] { 0x00 });
+        //    Dln.WriteArray(ch, DrvIC.Y1SlaveAddr, 0x02, 1, new byte[] { 0x00 });
+
+        //    Dln.WriteArray(ch, DrvIC.FRA_Addr, 0x00, 1, new byte[] { 0x01 });
+        //    Dln.WriteArray(ch, DrvIC.FRA_Addr, 0x00, 1, new byte[] { 0x00 });
+        //    Wait(10);
+
+        //    result.Freq = freqPM;
+        //    result.ResultValue = pm_val;
+        //    return result;
+        //}
+
+        #endregion
+    }
+
+    public class MarginTestResult
+    {
+        public double Freq { get; set; } = 0;
+        public double ResultValue { get; set; } = 0;
+
+        public MarginTestResult SetReturnValue(double Freq, double returnValue)
+        {
+            this.Freq = Freq;
+            this.ResultValue = returnValue;
+            return this;
+        }
     }
 }
