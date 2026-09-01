@@ -1,4 +1,5 @@
-﻿using FZ4P.DriverIc.OISIC;
+﻿using FZ4P.Commons.Helper;
+using FZ4P.DriverIc.OISIC;
 using FZ4P.Extensions;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +16,14 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 namespace FZ4P
 {
+    public enum ChangedActionType
+    {
+        Default = 0,
+        H503ToDW = 1,
+        H503ToDWDirect = 2,
+        H503ToAKM = 3,
+        H503ToAKMDirect = 4,
+    }
     public partial class Process
     {
         int[] g_IME = new int[2];
@@ -36,8 +46,11 @@ namespace FZ4P
         byte AFPIDVersion = 0xFF;
         byte OISPIDVersion = 0xFF;
 
+        private int ModeChanged = -1;
+
         void AddSequence()
         {
+            //동운 H503->DW9836N 로직(I3C)
             ItemList.Add(new ActItems() { Name = "AF HallCalibration", Func = AF_HallCalibration, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "OIS HallCalibration", Func = OIS_HallCalibration, IsMulti = true });      
             ItemList.Add(new ActItems() { Name = "AF Gain Margin", Func = AFGM, IsMulti = true });
@@ -52,6 +65,45 @@ namespace FZ4P
 
             ItemList.Add(new ActItems() { Name = "Changed I3C Mode", Func = OIS_ChangedI3C, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "Changed I2C Mode", Func = OIS_ChangedI2C, IsMulti = true });
+        }
+
+        //TODO : Action Item Method 변경 방식
+        public void ChangedActionItemFunction(ChangedActionType ModeType)
+        {
+            switch (ModeType)
+            {
+                case ChangedActionType.H503ToDW:
+                    ChagnedOISDW();
+                    break;
+                case ChangedActionType.H503ToAKM:
+                    ChagnedOISAKM();
+                    break;
+            }
+        }
+
+        private void ChagnedOISDW()
+        {
+            CollectionHelper.FindCollection(ItemList, "OIS HallCalibration", OIS_HallCalibration);
+            CollectionHelper.FindCollection(ItemList, "OIS LinearityCompensation", OISLCCComp);
+            CollectionHelper.FindCollection(ItemList, "OIS Gain Margin", OISGM);
+            CollectionHelper.FindCollection(ItemList, "OIS Phase Margin", OISPM);
+            CollectionHelper.FindCollection(ItemList, "OIS Gain Margin Low", OISGM_LOW);
+            CollectionHelper.FindCollection(ItemList, "OIS Phase Margin Low", OISPM_LOW);
+            CollectionHelper.FindCollection(ItemList, "SineWave Test", OISSineWave);
+            CollectionHelper.FindCollection(ItemList, "Ringing Test", OISRinging);
+        }
+
+        private void ChagnedOISAKM()
+        {
+            //TODO : 여기 AKM 로직 넣어야됨.
+            CollectionHelper.FindCollection(ItemList, "OIS HallCalibration", OIS_HallCalibration);
+            CollectionHelper.FindCollection(ItemList, "OIS LinearityCompensation", OISLCCComp);
+            CollectionHelper.FindCollection(ItemList, "OIS Gain Margin", OISGM);
+            CollectionHelper.FindCollection(ItemList, "OIS Phase Margin", OISPM);
+            CollectionHelper.FindCollection(ItemList, "OIS Gain Margin Low", OISGM_LOW);
+            CollectionHelper.FindCollection(ItemList, "OIS Phase Margin Low", OISPM_LOW);
+            CollectionHelper.FindCollection(ItemList, "SineWave Test", OISSineWave);
+            CollectionHelper.FindCollection(ItemList, "Ringing Test", OISRinging);
         }
 
         #region AddSeq
