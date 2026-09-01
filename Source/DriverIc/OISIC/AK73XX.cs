@@ -669,6 +669,9 @@ namespace FZ4P.DriverIc.OISIC
 
             return true;
         }
+
+        //TODO : SetSettingMode 메서드 삭제 Operating Mode 같음
+
         public bool FRAModeEnable(int ch)
         {
             Process.AddLog(ch, string.Format("FRA Mode Enable"));
