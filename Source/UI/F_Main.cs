@@ -200,14 +200,12 @@ namespace FZ4P
             Process.AddLog(0, $"{Current.OISYPidPath}");
             Process.Load_OISYPID(Current.OISYPidPath);
 
-
             if (Model.MCType == "Posture_M")
             {
                 Process.Dln.IOOnOff(PostureIO.RED_L, false);
                 Process.Dln.IOOnOff(PostureIO.ORANGE_L , true);
                 Process.Dln.IOOnOff(PostureIO.GREEN_L, false);
                 Process.Dln.IOOnOff(PostureIO.BUZZER, false);
-               
             }
         }
 

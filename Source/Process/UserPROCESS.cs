@@ -273,16 +273,16 @@ namespace FZ4P
                 IC_DATA_AF = new byte[(t.Length - 2)];
                 IC_DATA_AF_REG = new byte[(t.Length - 2)];
                 AFPIDVersion = 0xFF;
-                for (int i = 0; i < t.Length; i++)
+                for (int rowCount = 0; rowCount < t.Length; rowCount++)
                 {
-                    if(i == 0)
+                    if(rowCount == 0)
                     {
-                        string[] b = t[i].Split(new string[] { ",", " ", "\t", "//", "Reg", "AF", "PID", "Version" }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] b = t[rowCount].Split(new string[] { ",", " ", "\t", "//", "Reg", "AF", "PID", "Version" }, StringSplitOptions.RemoveEmptyEntries);
                         AFPIDVersion = Convert.ToByte(b[0], 16);
                     }
-                    else if (i == 1)
+                    else if (rowCount == 1)
                     {
-                        string[] b = t[i].Split(new string[] { ",", " ", "\t", "//", "Reg" }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] b = t[rowCount].Split(new string[] { ",", " ", "\t", "//", "Reg" }, StringSplitOptions.RemoveEmptyEntries);
                         IC_SETTING_AF = new byte[b.Length / 2];
                         IC_SETTING_AF_REG = new byte[b.Length / 2];
                         for (int j = 0; j < b.Length; j++)
@@ -293,10 +293,10 @@ namespace FZ4P
                     }
                     else
                     {
-                        string[] b = t[i].Split(new string[] { ",", " ", "\t"}, StringSplitOptions.RemoveEmptyEntries);
+                        string[] b = t[rowCount].Split(new string[] { ",", " ", "\t"}, StringSplitOptions.RemoveEmptyEntries);
 
-                        IC_DATA_AF_REG[(i - 2)] = Convert.ToByte(b[0], 16);
-                        IC_DATA_AF[(i - 2)] = Convert.ToByte(b[1], 16);
+                        IC_DATA_AF_REG[(rowCount - 2)] = Convert.ToByte(b[0], 16);
+                        IC_DATA_AF[(rowCount - 2)] = Convert.ToByte(b[1], 16);
                      
                     }
 
@@ -315,16 +315,16 @@ namespace FZ4P
                 IC_DATA_OIS_X = new byte[(t.Length - 2)];
                 IC_DATA_OIS_X_REG = new byte[(t.Length - 2)];
                 OISPIDVersion = 0xFF;
-                for (int i = 0; i < t.Length; i++)
+                for (int rowCount = 0; rowCount < t.Length; rowCount++)
                 {
-                    if (i == 0)
+                    if (rowCount == 0)
                     {
-                        string[] b = t[i].Split(new string[] { ",", " ", "\t", "//", "Reg", "AF", "PID", "Version" }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] b = t[rowCount].Split(new string[] { ",", " ", "\t", "//", "Reg", "AF", "PID", "Version" }, StringSplitOptions.RemoveEmptyEntries);
                         OISPIDVersion = Convert.ToByte(b[0], 16);
                     }
-                    else if (i == 1)
+                    else if (rowCount == 1)
                     {
-                        string[] b = t[i].Split(new string[] { ",", " ", "\t", "//", "Reg" }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] b = t[rowCount].Split(new string[] { ",", " ", "\t", "//", "Reg" }, StringSplitOptions.RemoveEmptyEntries);
                         IC_SETTING_OIS_X = new byte[b.Length / 2];
                         IC_SETTING_OIS_X_REG = new byte[b.Length / 2];
                         for (int j = 0; j < b.Length; j++)
@@ -335,13 +335,11 @@ namespace FZ4P
                     }
                     else
                     {
-                        string[] b = t[i].Split(new string[] { ",", " ", "\t" }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] b = t[rowCount].Split(new string[] { ",", " ", "\t" }, StringSplitOptions.RemoveEmptyEntries);
 
-                        IC_DATA_OIS_X_REG[(i - 2)] = Convert.ToByte(b[0], 16);
-                        IC_DATA_OIS_X[(i - 2)] = Convert.ToByte(b[1], 16);
-
+                        IC_DATA_OIS_X_REG[(rowCount - 2)] = Convert.ToByte(b[0], 16);
+                        IC_DATA_OIS_X[(rowCount - 2)] = Convert.ToByte(b[1], 16);
                     }
-
                 }
                 return true;
             }
@@ -357,31 +355,30 @@ namespace FZ4P
                 IC_DATA_OIS_Y = new byte[(t.Length - 2)];
                 IC_DATA_OIS_Y_REG = new byte[(t.Length - 2)];
                 OISPIDVersion = 0xFF;
-                for (int i = 0; i < t.Length; i++)
+                for (int rowCount = 0; rowCount < t.Length; rowCount++)
                 {
-                    if (i == 0)
+                    if (rowCount == 0)
                     {
-                        string[] b = t[i].Split(new string[] { ",", " ", "\t", "//", "Reg", "AF", "PID", "Version" }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] b = t[rowCount].Split(new string[] { ",", " ", "\t", "//", "Reg", "AF", "PID", "Version" }, StringSplitOptions.RemoveEmptyEntries);
                         OISPIDVersion = Convert.ToByte(b[0], 16);
                     }
-                    else if (i == 1)
+                    else if (rowCount == 1)
                     {
-                        //string[] b = t[i].Split(new string[] { ",", " ", "\t", "//", "Reg" }, StringSplitOptions.RemoveEmptyEntries);
-                        //IC_SETTING_OIS_Y = new byte[b.Length / 2];
-                        //IC_SETTING_OIS_Y_REG = new byte[b.Length / 2];
-                        //for (int j = 0; j < b.Length; j++)
-                        //{
-                        //    if (j < b.Length / 2) IC_SETTING_OIS_Y[j] = Convert.ToByte(b[j], 16);
-                        //    else IC_SETTING_OIS_Y_REG[j - b.Length / 2] = Convert.ToByte(b[j], 16);
-                        //}
+                        string[] b = t[rowCount].Split(new string[] { ",", " ", "\t", "//", "Reg" }, StringSplitOptions.RemoveEmptyEntries);
+                        IC_SETTING_OIS_Y = new byte[b.Length / 2];
+                        IC_SETTING_OIS_Y_REG = new byte[b.Length / 2];
+                        for (int j = 0; j < b.Length; j++)
+                        {
+                            if (j < b.Length / 2) IC_SETTING_OIS_Y[j] = Convert.ToByte(b[j], 16);
+                            else IC_SETTING_OIS_Y_REG[j - b.Length / 2] = Convert.ToByte(b[j], 16);
+                        }
                     }
                     else
                     {
-                        string[] b = t[i].Split(new string[] { ",", " ", "\t" }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] b = t[rowCount].Split(new string[] { ",", " ", "\t" }, StringSplitOptions.RemoveEmptyEntries);
 
-                        IC_DATA_OIS_Y_REG[(i - 2)] = Convert.ToByte(b[0], 16);
-                        IC_DATA_OIS_Y[(i - 2)] = Convert.ToByte(b[1], 16);
-
+                        IC_DATA_OIS_Y_REG[(rowCount - 2)] = Convert.ToByte(b[0], 16);
+                        IC_DATA_OIS_Y[(rowCount - 2)] = Convert.ToByte(b[1], 16);
                     }
 
                 }
@@ -2638,6 +2635,22 @@ namespace FZ4P
                 Dln.WriteArray(ch, slaveAddr, 0x02, 1, new byte[] { 0x40 });
                 Dln.WriteArray(ch, slaveAddr, 0xAE, 1, new byte[] { 0x3B });
 
+                if (i == 1)
+                {
+                    for (int j = 0; j < IC_SETTING_OIS_X.Length; j++)
+                        Dln.WriteByte(ch, DrvIC.OISX_Addr, IC_SETTING_OIS_X_REG[i], 1, IC_SETTING_OIS_X[i]);
+
+                    for (int j = 0; j < IC_DATA_OIS_X.Length; j++)
+                        Dln.WriteByte(ch, DrvIC.OISX_Addr, IC_DATA_OIS_X_REG[i], 1, IC_DATA_OIS_X[i]);
+                }
+                else
+                {
+                    for (int j = 0; j < IC_SETTING_OIS_X.Length; j++)
+                        Dln.WriteByte(ch, DrvIC.OISY_Addr, IC_SETTING_OIS_Y_REG[i], 1, IC_SETTING_OIS_Y[i]);
+
+                    for (int j = 0; j < IC_DATA_OIS_X.Length; j++)
+                        Dln.WriteByte(ch, DrvIC.OISY_Addr, IC_DATA_OIS_Y_REG[i], 1, IC_DATA_OIS_Y[i]);
+                }
 
                 //TODO : 임시 주석 
                 //for (int j = 0; j < OIS_Set.Count; j++)
@@ -2648,7 +2661,6 @@ namespace FZ4P
 
                 //for (int j = 0; j < OISPID.Count; j++)
                 //    Dln.WriteArray(ch, slaveAddr, OISPID[j][0], new byte[] { OISPID[j][index] });
-
 
                 DrvIC.AK7326_IC_Mode(ch, 0, 0);
                 DrvIC.AK7326_IC_Mode(ch, 1, 0);
