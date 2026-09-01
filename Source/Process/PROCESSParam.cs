@@ -30,6 +30,8 @@ namespace FZ4P
 
         public bool IsRetry { get; set; }
         public string Time { get; set; }
+
+        public bool ActionBoxVisible { get; set; }
     }
     public class FindResult
     {
