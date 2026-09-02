@@ -36,16 +36,8 @@ namespace FZ4P
         {
             try
             {
-                Task.Factory.StartNew(() =>
-                {
-                    Application.Run(STATIC.fStart);
-                });
-
                 InitializeComponent();
-
-                STATIC.fStart.Log("Program Start !!");
-                STATIC.StateChange += Form_StateChange;
-
+                
                 m__G = Global.GetInstance();
 
                 //TestHelper.Test();
@@ -104,6 +96,13 @@ namespace FZ4P
         }
         private void F_Main_Load(object sender, EventArgs e)
         {
+            if(!AppHelper.IsDebuggerMode())
+                STATIC.fStart.TopMost = true;
+            STATIC.fStart.Show();
+            
+            STATIC.fStart.Log("Program Start !!");
+            STATIC.StateChange += Form_StateChange;
+
             List<Form> fList = new List<Form>() { STATIC.fManage, STATIC.fVision };
             for (int i = 0; i < fList.Count; i++)
             {

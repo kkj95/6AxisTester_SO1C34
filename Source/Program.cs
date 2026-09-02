@@ -23,7 +23,15 @@ namespace FZ4P
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                LogHelper.Create();
+                
+                try
+                {
+                    LogHelper.Create();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
                 Application.Run(new F_Main());
 
                 mutex.ReleaseMutex();
