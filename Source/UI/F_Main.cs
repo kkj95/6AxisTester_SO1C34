@@ -37,9 +37,6 @@ namespace FZ4P
             try
             {
                 InitializeComponent();
-                
-                m__G = Global.GetInstance();
-
                 //TestHelper.Test();
             }
             catch (Exception ex)
@@ -102,6 +99,8 @@ namespace FZ4P
             
             STATIC.fStart.Log("Program Start !!");
             STATIC.StateChange += Form_StateChange;
+
+            m__G = Global.GetInstance();
 
             List<Form> fList = new List<Form>() { STATIC.fManage, STATIC.fVision };
             for (int i = 0; i < fList.Count; i++)

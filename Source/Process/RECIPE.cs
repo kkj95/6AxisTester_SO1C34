@@ -865,6 +865,7 @@ namespace FZ4P
             MCTypeList.Add("Handler");
             MCTypeList.Add("Posture_M");
             MCTypeList.Add("Posture_S");
+            MCTypeList.Add("Posture_Manual");
 
             Read();
         }

@@ -72,6 +72,7 @@ namespace FZ4P
             else if (Model.MCType == "Handler") { lbMCtype.Text = $"Port {STATIC.GetEthernetIPv4()} (Handler)"; }
             else if (Model.MCType == "Posture_M") { lbMCtype.Text = "Posture P1"; }
             else if (Model.MCType == "Posture_S") { lbMCtype.Text = "Posture P2"; }
+            else if (Model.MCType == "Posture_Manual") { lbMCtype.Text = "Posture Manual"; }
             else lbMCtype.Text = "Normal";
 
             if (STATIC.Rcp.tt.Count == 0) lbST.Text = $"0.0 sec";
@@ -241,8 +242,6 @@ namespace FZ4P
                     NewSampleNumber.Text = (STATIC.Rcp.yield.LastSampleNum + 1).ToString();
 
                     SafeInitYield();
-
-                
                 });
             }
             if(Option.BarcodeUse)
@@ -251,9 +250,7 @@ namespace FZ4P
                 STATIC.ActID_Memory = new byte[5];
                 BeginInvoke((MethodInvoker)delegate
                 {
-
                     lbBarcodeID.Text = ""; 
-
                 });
             }
             if (Model.MCType == "Slave" || Model.MCType == "Posture_S")
@@ -325,7 +322,6 @@ namespace FZ4P
 
         private void Process_RunStart(object sender, int e)
         {
-
             for (int i = 0; i < Process.ItemList.Count; i++)
             {
                 Process.ItemList[i].Time = "";
@@ -353,7 +349,6 @@ namespace FZ4P
             SafeControlView(RunProgress, true);
             if (Model.MCType == "Slave" || Model.MCType == "Posture_S")
                 STATIC.TcpConn.SendMessage("Clear", STATIC.TCPCOnState);
-
         }
 
         private void BindingUI()
@@ -976,6 +971,30 @@ namespace FZ4P
                 STATIC.fManual.Show();
                 STATIC.fManual.PowerEnable = true;
             }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            var control = ((CheckBox)sender);
+            control.Enabled = false;
+            try
+            {
+                if (control.Checked)
+                {
+                    Process.LoadSeq();
+                    control.Text = "UnLoding";
+                }
+                else
+                {
+                    Process.UnloadSeq();
+                    control.Text = "Loding";
+                }
+            }
+            catch (Exception ex) 
+            {
+                control.Enabled = true;
+            }
+            control.Enabled = true;
         }
     }
 }

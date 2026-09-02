@@ -1248,9 +1248,7 @@ namespace FZ4P
                         Dln.IOOnOff(PostureIO.ORANGE_L, false);
                         Dln.IOOnOff(PostureIO.GREEN_L, true);
                         Dln.IOOnOff(PostureIO.BUZZER, false);
-
                     }
-
 
                     (bool b, double[] deg, string s) = STATIC.fMotion.MoveSelectedPosition(-1);
 
@@ -1290,7 +1288,7 @@ namespace FZ4P
                     }
                 }
 
-                if (Model.MCType != "Posture_S")
+                if (Model.MCType != "Posture_S" && InspType != 0)
                     LoadSeq();
                 Process.Wait(100);
 
@@ -1317,7 +1315,7 @@ namespace FZ4P
                 }
                 else
                 {
-                    if (InspType != 2 && Model.MCType != "Posture_S") UnloadSeq();
+                    if (InspType != 2 && Model.MCType != "Posture_S" && Model.MCType != "Posture_Manual") UnloadSeq();
                 }
                 
                 Dln.IsRun = false;

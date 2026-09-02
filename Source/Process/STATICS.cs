@@ -37,6 +37,7 @@ namespace FZ4P
             Vision,
             Motion,
         }
+
         private static int state = 0;
         public static int State
         {
