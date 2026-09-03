@@ -1,5 +1,6 @@
 ﻿using Dln;
 using Dln.I2cMaster;
+using FZ4P.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -666,7 +667,7 @@ namespace FZ4P
             {
                 if (IsOn)
                 {
-
+                    this.I3CStop(STATIC.MCUH503);
                     STATIC.Process.AddLog(0, $"Power On");
                     //   if (DLNgpio.Length > 2) { lock (I2cLock) DLNgpio[2].Pins[9].Direction = 1; }
                     lock (I2cLock)
@@ -674,10 +675,13 @@ namespace FZ4P
                         DLNgpio[0].Pins[9].Direction = 1;
                         DLNgpio[1].Pins[9].Direction = 1;
                         DLNgpio[3].Pins[9].Direction = 1;
-                    } 
+                    }
+                    this.HWReset(STATIC.MCUH503)
+                        .Connected(STATIC.MCUH503);
                 }
                 else
                 {
+                    this.I3CStop(STATIC.MCUH503);
                     STATIC.Process.AddLog(0, $"Power Off");
                     //  if (DLNgpio.Length > 2) { lock (I2cLock) DLNgpio[2].Pins[9].Direction = 0; }
 
@@ -687,8 +691,8 @@ namespace FZ4P
                         DLNgpio[1].Pins[9].Direction = 0;
                         DLNgpio[3].Pins[9].Direction = 0;
                     }
-                        
-
+                    this.HWReset(STATIC.MCUH503)
+                        .Connected(STATIC.MCUH503);
                 }
             }
             catch
