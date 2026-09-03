@@ -1,7 +1,9 @@
 ﻿using App.CoreModules.Logs.Serilog;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,6 +18,9 @@ namespace FZ4P
         [STAThread]
         static void Main()
         {
+            AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly;
+
+
             bool isNew;
             Mutex mutex = new Mutex(true, "FZ_Test", out isNew);
 
@@ -42,6 +47,13 @@ namespace FZ4P
                 MessageBox.Show("Still Running Process .....");
                 Application.Exit();
             }
+        }
+
+        private static Assembly ResolveAssembly(object sender, ResolveEventArgs args)
+        {
+            string shortName = new AssemblyName(args.Name).Name;
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, shortName + ".dll");
+            return File.Exists(path) ? Assembly.LoadFrom(path) : null;
         }
     }
 }
