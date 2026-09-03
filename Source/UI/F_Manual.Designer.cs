@@ -53,10 +53,7 @@
             this.btn_Move_Min = new System.Windows.Forms.Button();
             this.btn_Move_Mid = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.button11 = new System.Windows.Forms.Button();
-            this.button10 = new System.Windows.Forms.Button();
-            this.button9 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
+            this.button12 = new System.Windows.Forms.Button();
             this.panel18 = new System.Windows.Forms.Panel();
             this.label20 = new System.Windows.Forms.Label();
             this.panel19 = new System.Windows.Forms.Panel();
@@ -119,7 +116,6 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.tbcntl = new System.Windows.Forms.TabControl();
             this.button3 = new System.Windows.Forms.Button();
-            this.button12 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -424,10 +420,6 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.button12);
-            this.groupBox2.Controls.Add(this.button11);
-            this.groupBox2.Controls.Add(this.button10);
-            this.groupBox2.Controls.Add(this.button9);
-            this.groupBox2.Controls.Add(this.button8);
             this.groupBox2.Controls.Add(this.panel18);
             this.groupBox2.Controls.Add(this.panel19);
             this.groupBox2.Controls.Add(this.lbl_Current_2);
@@ -457,45 +449,15 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Real Data";
             // 
-            // button11
+            // button12
             // 
-            this.button11.Location = new System.Drawing.Point(375, 59);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(80, 28);
-            this.button11.TabIndex = 538;
-            this.button11.Text = "Version Checked";
-            this.button11.UseVisualStyleBackColor = true;
-            this.button11.Click += new System.EventHandler(this.button11_Click);
-            // 
-            // button10
-            // 
-            this.button10.Location = new System.Drawing.Point(461, 94);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(112, 28);
-            this.button10.TabIndex = 537;
-            this.button10.Text = "Version Checked";
-            this.button10.UseVisualStyleBackColor = true;
-            this.button10.Click += new System.EventHandler(this.button10_Click);
-            // 
-            // button9
-            // 
-            this.button9.Location = new System.Drawing.Point(461, 59);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(112, 28);
-            this.button9.TabIndex = 536;
-            this.button9.Text = "Version Checked";
-            this.button9.UseVisualStyleBackColor = true;
-            this.button9.Click += new System.EventHandler(this.button9_Click);
-            // 
-            // button8
-            // 
-            this.button8.Location = new System.Drawing.Point(455, 25);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(112, 28);
-            this.button8.TabIndex = 535;
-            this.button8.Text = "Version Checked";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
+            this.button12.Location = new System.Drawing.Point(411, -3);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(88, 28);
+            this.button12.TabIndex = 539;
+            this.button12.Text = "I3C Read";
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
             // 
             // panel18
             // 
@@ -1201,16 +1163,6 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
-            // button12
-            // 
-            this.button12.Location = new System.Drawing.Point(411, -3);
-            this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(88, 28);
-            this.button12.TabIndex = 539;
-            this.button12.Text = "I3C Read";
-            this.button12.UseVisualStyleBackColor = true;
-            this.button12.Click += new System.EventHandler(this.button12_Click);
-            // 
             // F_Manual
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -1363,10 +1315,6 @@
         private System.Windows.Forms.Panel panel19;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label lbl_Current_2;
-        private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button10;
-        private System.Windows.Forms.Button button9;
-        private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Button button12;
     }
 }

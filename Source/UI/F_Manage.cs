@@ -1,5 +1,6 @@
 ﻿//using OpenCvSharp;
 using Dln;
+using FZ4P.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -322,6 +323,10 @@ namespace FZ4P
 
         private void Process_RunStart(object sender, int e)
         {
+            STATIC.Dln.I3CStop(STATIC.MCUH503);
+            STATIC.Dln.PowerOnOff(0, true);
+            STATIC.Dln.HWReset(STATIC.MCUH503).Connected(STATIC.MCUH503);
+
             for (int i = 0; i < Process.ItemList.Count; i++)
             {
                 Process.ItemList[i].Time = "";

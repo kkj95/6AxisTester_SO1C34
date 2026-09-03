@@ -661,26 +661,18 @@ namespace FZ4P.UI
 
         private void button8_Click(object sender, EventArgs e)
         {
-            STATIC.Process.m_ChannelOn[0] = true;
-            STATIC.Process.Act_ScanCode(0, "AF Scan", 0);
         }
 
         private void button9_Click(object sender, EventArgs e)
         {
-            STATIC.Process.m_ChannelOn[0] = true;
-            STATIC.Process.Act_ScanCode(0, "OIS X Scan", 0);
         }
 
         private void button10_Click(object sender, EventArgs e)
         {
-            STATIC.Process.m_ChannelOn[0] = true;
-            STATIC.Process.Act_ScanCode(0, "OIS Y Scan", 0);
         }
 
         private void button11_Click(object sender, EventArgs e)
         {
-            STATIC.Process.DWDrvIC.LiearCompClearWrite((int)AxisTypeDW.AxisX);
-            STATIC.Process.DWDrvIC.LiearCompClearWrite((int)AxisTypeDW.AxisY);
         }
 
         private void button12_Click(object sender, EventArgs e)

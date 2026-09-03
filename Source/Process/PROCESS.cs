@@ -1062,12 +1062,13 @@ namespace FZ4P
         {
             try
             {
-                Dln.PowerOnOff(0, true);
+                //TODO : 파워
+                //Dln.PowerOnOff(0, true);
                 Stopwatch st = new Stopwatch();
                 Dln.I3CStop(STATIC.MCUH503).CoverUp();
                 Thread.Sleep(700);
                 Dln.HWReset(STATIC.MCUH503).Connected(STATIC.MCUH503);
-                
+
                 Dln.LoadSocket();
                 if (Option.SocketSensorUse)
                 {
@@ -1084,7 +1085,7 @@ namespace FZ4P
                 Dln.I3CStop(STATIC.MCUH503).CoverDn();
                 Thread.Sleep(500);
                 Dln.HWReset(STATIC.MCUH503);
-                Dln.PowerOnOff(0, true);
+                //Dln.PowerOnOff(0, true);
                 Wait(200);
             }
             catch
@@ -1674,7 +1675,6 @@ namespace FZ4P
             }
             STATIC.Rcp.tt.Count++;
             return;
-
         }
         
         public void Process_Function(int port, string testItem)
