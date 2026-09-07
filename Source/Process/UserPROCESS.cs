@@ -62,6 +62,8 @@ namespace FZ4P
             ItemList.Add(new ActItems() { Name = "OIS Phase Margin Low", Func = OISPM_LOW, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "SineWave Test", Func = OISSineWave, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "Ringing Test", Func = OISRinging, IsMulti = true });
+            ItemList.Add(new ActItems() { Name = "OIS/AF Aging", Func = AFOISAgingTest, IsMulti = true });
+            ItemList.Add(new ActItems() { Name = "OIS Servo Decenter", Func = ServoDecenter, IsMulti = true });
 
             ItemList.Add(new ActItems() { Name = "Changed I3C Mode", Func = OIS_ChangedI3C, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "Changed I2C Mode", Func = OIS_ChangedI2C, IsMulti = true });
@@ -2197,6 +2199,51 @@ namespace FZ4P
             PassFails[0].Results[(int)SpecItem.FRAY_Ringing].Val = result.SettlingTimeY;
             ShowDataResults(ch, (int)SpecItem.FRAX_Ringing, (int)SpecItem.FRAX_Ringing, InspType.Normal, new double[] { });
             ShowDataResults(ch, (int)SpecItem.FRAY_Ringing, (int)SpecItem.FRAY_Ringing, InspType.Normal, new double[] { });
+        }
+        private void AFOISAgingTest(int ch, string testItem, int inspCnt)
+        {
+            var param = new AgingParams()
+            {
+                Freq = Condition.CLAgingFreq,
+                Count = Condition.CLAgingCount,
+                AFMinCode = Condition.CLAgingAFMin,
+                AFMaxCode = Condition.CLAgingAFMax,
+                OISMinCode = Condition.CLAgingOISMin,
+                OISMaxCode = Condition.CLAgingOISMax,
+            };
+
+            AddLog(ch, $"\n\n <<<  XYZ Aging Start  >>>\n\n");
+            AddLog(ch, $" Frequency   : {Condition.CLAgingFreq}Hz\n");
+            AddLog(ch, $" Aging count : {Condition.CLAgingCount}\n");
+            AddLog(ch, $" AF range    : {(Condition.CLAgingAFMax - Condition.CLAgingAFMin)} ({Condition.CLAgingAFMax}~{Condition.CLAgingAFMin})\n");
+            AddLog(ch, $" OIS range   : {(Condition.CLAgingOISMax - Condition.CLAgingOISMin)} ({Condition.CLAgingOISMax}~{Condition.CLAgingOISMin})\n");
+
+            var Executor = new XYZAgingTest(DWDrvIC, DrvIC, AddLog);
+            Executor.SetParams(param).Execute();
+        }
+        public void ServoDecenter(int ch, string name, int InspCnt)
+        {
+
+            AddLog(ch, "<<<  OIS X Servo Decenter Start  >>>");
+
+            LEDs_All_On(0, true);
+
+            var param = new ServoDecenterParams()
+            {
+                CenterCode = 8192,
+                ServoDecenterDelay = Condition.ServoDecenterDelay,
+                targetCode = Condition.ServoDecenterAFPos
+            };
+
+            var Servo = new ServoDecenterTest(DWDrvIC,DrvIC,STATIC.fVision,AddLog);
+            var decenterCollection = Servo.SetParams(param).Execute().Result;
+            
+            PassFails[0].Results[(int)SpecItem.x_ServoDecenter].Val = decenterCollection.First();
+            PassFails[0].Results[(int)SpecItem.y_ServoDecenter].Val = decenterCollection.Last();
+
+            ShowDataResults(0, (int)SpecItem.x_ServoDecenter, (int)SpecItem.y_ServoDecenter, InspType.Normal, new double[] { });
+            LEDs_All_On(0, false);
+            AddLog(ch, "<<<  OIS Y Servo Decenter End  >>>");
         }
 
         private bool NDataPointChecked()

@@ -28,7 +28,7 @@ namespace FZ4P.DriverIc.Interfaces
         void OISMove(int ch, int Xcode, int Ycode);
 
         void OISMoveOL(int ch, int axis, int code);
-        short ReadOISHall(int ch, int axis, int mode);
+        short ReadOISHall(int ch, int axis, int mode = -1);
         double GetCurrent(int axis);
 
         void OISReset(int ch, int axis, bool OnOff);

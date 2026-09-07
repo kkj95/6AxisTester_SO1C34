@@ -179,6 +179,7 @@
     <Compile Include="Process\AFLinCompCoefAKM7314.cs" />
     <Compile Include="Extensions\FIndResultExtension.cs" />
     <Compile Include="Process\AFLinCompCoef.cs" />
+    <Compile Include="Process\Aging\XYZAgingTest.cs" />
     <Compile Include="Process\AjinLibrary.cs" />
     <Compile Include="Process\BootLoadinit.cs" />
     <Compile Include="Process\CalculatorDW9836.cs" />
@@ -200,6 +201,7 @@
     <Compile Include="DriverIc\DLN.cs" />
     <Compile Include="DriverIc\DrvIC.cs" />
     <Compile Include="Process\RECIPE.cs" />
+    <Compile Include="Process\ServoDecenter\ServoDecenterTest.cs" />
     <Compile Include="Process\SignalDebounceLogic.cs" />
     <Compile Include="Process\STATICS.cs" />
     <Compile Include="Process\TCPComm.cs" />

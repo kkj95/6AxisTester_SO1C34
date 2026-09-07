@@ -229,7 +229,7 @@ namespace FZ4P
         private const bool AFDriv = true;
         private const bool OISXDriv = true;
         private const bool OISYDriv = true;
-        private const bool XYZAging = false;
+        private const bool XYZAging = true;
         private const bool AFAging = false;
         private const bool OISLinearComp = true;
         private const bool OISEPAX= true;
@@ -724,6 +724,9 @@ namespace FZ4P
         [ActionListUse(true)][Spec("Y> Hall Decenter(Centering Error)", "um", InspType.Normal, "OIS Y Scan")] y_HallDecenter,
         [ActionListUse(true)][Spec("Y> Sensitivity", "um/code", InspType.Normal, "OIS Y Scan")] y_Sensitivity,
         [ActionListUse(true)][Spec("Y> Dynamic Tilt", "min", InspType.Normal, "OIS Y Scan")] yDynamicTilt,
+
+        [ActionListUse(true)][Spec("XY> X Decenter", "um", InspType.Normal, "X/Y Servo Decenter")] x_ServoDecenter,
+        [ActionListUse(true)][Spec("XY> Y Decenter", "um", InspType.Normal, "X/Y Servo Decenter")] y_ServoDecenter,
 
         [ActionListUse(true)][Spec("OIS X Phase Margin", "deg", InspType.Normal, "OIS Phase Margin")] FRAX_PhaseMargin,
         [ActionListUse(true)][Spec("OIS Y Phase Margin", "deg", InspType.Normal, "OIS Phase Margin")] FRAY_PhaseMargin,
