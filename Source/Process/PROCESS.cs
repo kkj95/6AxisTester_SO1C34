@@ -185,12 +185,28 @@ namespace FZ4P
                     if(index != -1) Rcp.RetryCnt.RetryOption[index].Count = compare.RetryOption[i].Count;
                 }
             }
-
             m__G = Global.GetInstance();
         }
 
-        #region Default
+        //외부 init 순서를 맞추기위해 공개하여 순서를 설정할수있게 하는 메서드 추가
+        public void Lazyinitialize()
+        {
+            var tmpX = Load_PID(Current.H503PidXPath);
+            var tmpY = Load_PID(Current.H503PidYPath);
 
+            PIDBufferMoveData(tmpX, ref H503_DATA_OIS_X_REG, ref H503_DATA_OIS_X);
+            PIDBufferMoveData(tmpY, ref H503_DATA_OIS_Y_REG, ref H503_DATA_OIS_Y);
+        }
+
+        #region Default
+        private byte PIDBufferMoveData(PIDResult result,
+                        ref byte[] PIDParamRegister,
+                        ref byte[] PIDParamRegisterData)
+        {
+            PIDParamRegister = result.Register;
+            PIDParamRegisterData = result.RegisterValue;
+            return result.Version;
+        }
         public void StartI2CMonitor()
         {
             if (I2CMonitorStartFlag) return;
@@ -3137,7 +3153,6 @@ namespace FZ4P
         }
         public void Act_ScanCode(int port, string testItem, int InspCnt)
         {
-
             STATIC.Process.DWDrvIC.LiearCompEnable((int)AxisTypeDW.AxisX, true);
             STATIC.Process.DWDrvIC.LiearCompEnable((int)AxisTypeDW.AxisY, true);
 

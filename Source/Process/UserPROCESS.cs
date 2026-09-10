@@ -3,16 +3,12 @@ using FZ4P.DriverIc.OISIC;
 using FZ4P.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
+
 
 namespace FZ4P
 {
@@ -43,6 +39,13 @@ namespace FZ4P
         byte[] IC_DATA_OIS_X_REG = new byte[1];
         byte[] IC_DATA_OIS_Y = new byte[1];
         byte[] IC_DATA_OIS_Y_REG = new byte[1];
+
+
+        byte[] H503_DATA_OIS_X = new byte[1];
+        byte[] H503_DATA_OIS_X_REG = new byte[1];
+        byte[] H503_DATA_OIS_Y = new byte[1];
+        byte[] H503_DATA_OIS_Y_REG = new byte[1];
+
         byte AFPIDVersion = 0xFF;
         byte OISPIDVersion = 0xFF;
 
@@ -52,7 +55,8 @@ namespace FZ4P
         {
             //동운 H503->DW9836N 로직(I3C)
             ItemList.Add(new ActItems() { Name = "AF HallCalibration", Func = AF_HallCalibration, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "OIS HallCalibration", Func = OIS_HallCalibration, IsMulti = true });      
+            ItemList.Add(new ActItems() { Name = "OIS HallCalibration", Func = OIS_HallCalibration, IsMulti = true });
+            ItemList.Add(new ActItems() { Name = "OIS H503 PID Write", Func = OIS_H503_PIDWrite, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "AF Gain Margin", Func = AFGM, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "AF Phase Margin", Func = AFPM, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "OIS LinearityCompensation", Func = OISLCCComp, IsMulti = true });
@@ -64,9 +68,6 @@ namespace FZ4P
             ItemList.Add(new ActItems() { Name = "Ringing Test", Func = OISRinging, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "OIS/AF Aging", Func = AFOISAgingTest, IsMulti = true });
             ItemList.Add(new ActItems() { Name = "OIS Servo Decenter", Func = ServoDecenter, IsMulti = true });
-
-            ItemList.Add(new ActItems() { Name = "Changed I3C Mode", Func = OIS_ChangedI3C, IsMulti = true });
-            ItemList.Add(new ActItems() { Name = "Changed I2C Mode", Func = OIS_ChangedI2C, IsMulti = true });
         }
 
         //TODO : Action Item Method 변경 방식
@@ -346,7 +347,6 @@ namespace FZ4P
                 return true;
             }
             catch { return false; }
-
         }
         public bool Load_OISYPID(string path)
         {
@@ -388,6 +388,51 @@ namespace FZ4P
             }
             catch { return false; }
 
+        }
+
+        public PIDResult Load_PID(string path)
+        {
+            try
+            {
+                PIDResult result = new PIDResult();
+
+                string textVal = File.ReadAllText(path);
+                string[] t = textVal.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                result.RegisterValue = new byte[(t.Length - 2)];
+                result.Register = new byte[(t.Length - 2)];
+                result.Version = 0xFF;
+                for (int rowCount = 0; rowCount < t.Length; rowCount++)
+                {
+                    if (rowCount == 0)
+                    {
+                        string[] b = t[rowCount].Split(new string[] { ",", " ", "\t", "//", "Reg", "AF", "PID", "Version" }, StringSplitOptions.RemoveEmptyEntries);
+                        result.Version = Convert.ToByte(b[0], 16);
+                    }
+                    else if (rowCount == 1)
+                    {
+                        string[] b = t[rowCount].Split(new string[] { ",", " ", "\t", "//", "Reg" }, StringSplitOptions.RemoveEmptyEntries);
+                        result.SettingRegisterValue = new byte[b.Length / 2];
+                        result.SettingRegister = new byte[b.Length / 2];
+                        for (int j = 0; j < b.Length; j++)
+                        {
+                            if (j < b.Length / 2) result.SettingRegisterValue[j] = Convert.ToByte(b[j], 16);
+                            else result.SettingRegister[j - b.Length / 2] = Convert.ToByte(b[j], 16);
+                        }
+                    }
+                    else
+                    {
+                        string[] b = t[rowCount].Split(new string[] { ",", " ", "\t" }, StringSplitOptions.RemoveEmptyEntries);
+
+                        result.Register[(rowCount - 2)] = Convert.ToByte(b[0], 16);
+                        result.RegisterValue[(rowCount - 2)] = Convert.ToByte(b[1], 16);
+                    }
+                }
+                return result;
+            }
+            catch 
+            { 
+                return null; 
+            }
         }
 
         void AF_HallCalibration(int ch, string testItem, int InspCnt)
@@ -717,6 +762,114 @@ namespace FZ4P
             PassFails[0].Results[(int)SpecItem.AF_NonEPAStroke].Val = stroke;
             ShowDataResults(ch, (int)SpecItem.AF_NonEPAStroke, (int)SpecItem.AF_NonEPAStroke, InspType.Normal, new double[] { });
         }
+
+        private void HallCalX(int ch)
+        {
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
+            //DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x04);         // 기존 I2C 보드
+
+            //커넥트 체크
+            var checkedByte = STATIC.MCUH503.DriveICConnctChecked();
+            if (checkedByte == 0x01)
+            {
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x11);
+                Wait(800);
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
+            }
+            else
+            {
+                AddLog(ch, $"X_Connected fail");
+            }
+
+            ushort us1 = (ushort)STATIC.MCUH503.GetI3CCheckBuffer(AxisTypeDW.AxisX, 0);
+            ushort us2 = (ushort)STATIC.MCUH503.GetI3CCheckBuffer(AxisTypeDW.AxisX, 1);
+
+            var s1 = us1.ToString("X2");
+            var s2 = us2.ToString("X2");
+            AddLog(ch, $"HallCal Value 0x40 : 0x{s1}");
+            AddLog(ch, $"HallCal Value 0x42 : 0x{s2}");
+            Thread.Sleep(100);
+
+            byte data = DWDrvIC.Controls.ReadByte(DWDrvIC.OISX_Addr, 0x44, 1);
+
+            //OIS X Hall Calibration Success
+            if (data == 0x01)
+            {
+                AddLog(ch, $"OIS X Hall Calibration Success");
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x39);
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0xA0);
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x03, 1, 0x01);
+                Wait(20);
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x14);
+            }
+            else
+            {
+                AddLog(ch, $"OIS X Hall Calibration Fail");
+                PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 1;
+                ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
+                return;
+            }
+        }
+
+        private void HallCalY(int ch)
+        {
+
+            Stopwatch sw = new Stopwatch();
+            bool flg = false;
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x40);
+            //DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x04);         // 기존 I2C 보드
+
+            //커넥트 체크
+            var checkedByte = STATIC.MCUH503.DriveICConnctChecked();
+            if (checkedByte == 0x01)
+            {
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x12);
+                AddLog(ch, $"Register : 0x02 , Data : 0x12");
+                Wait(800);
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
+                AddLog(ch, $"Register : 0x02 , Data : 0x40");
+            }
+            else
+            {
+                AddLog(ch, $"Y_Connected fail");
+            }
+
+            //Thread.Sleep(100);
+
+            sw.Restart();
+            while (!flg)
+            {
+                byte data = DWDrvIC.Controls.ReadByte(DWDrvIC.OISY_Addr, 0x44, 1);
+
+                if (data == 0x01)
+                {
+                    flg = true;
+                    AddLog(ch, $"OIS Y Hall Calibration Success");
+                    DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x39);
+                    DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0xA0);
+                    DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
+                    DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x03, 1, 0x01);
+                    Wait(20);
+                    DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x14);
+                    PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 0;
+                    ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
+                }
+                else if (sw.ElapsedMilliseconds > 10000)
+                {
+                    int kk= 0;
+                    break;
+                }
+            }
+
+            if(!flg)
+            {
+                AddLog(ch, $"OIS Y Hall Calibration Fail");
+                PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 1;
+                ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
+                return;
+            }
+        }
         void OIS_HallCalibration(int ch, string testItem, int InspCnt)
         {
             LEDs_All_On(ch, true);
@@ -749,143 +902,96 @@ namespace FZ4P
             AddLog(ch, $"Move AF Position :  {Condition.OISCalAFPos}");
 
             #region OIS Hall Calibration
-            /*
-            AddLog(ch, "OIS X PID Write Start");
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x39);
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x39, 1, 0xA0);
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x7D, 1, 0x00);
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x03, 1, 0x01);
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x55, 1, 0x00);
+            STATIC.MCUH503.SetI3CByPaaMode(true);
+            Thread.Sleep(100);
 
-            Wait(55);
+            DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.StandbyMode);
 
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x39);
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0xA0);
+            STATIC.DW9836.Set_PT((int)AxisTypeDW.AxisX, false);
+            STATIC.DW9836.Set_PT((int)AxisTypeDW.AxisY, false);
 
             for (int i = 0; i < IC_DATA_OIS_X.Length; i++)
             {
-               DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, IC_DATA_OIS_X_REG[i], 1, IC_DATA_OIS_X[i]);
-            }
-            */
-
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
-            //DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x04);         // 기존 I2C 보드
-
-            //커넥트 체크
-            var checkedByte = STATIC.MCUH503.DriveICConnctChecked();
-            if (checkedByte == 0x01)
-            {
-                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x11);
-                Wait(800);
-                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, IC_DATA_OIS_X_REG[i], 1, IC_DATA_OIS_X[i]);
+                AddLog(ch, $"Register : 0x{IC_DATA_OIS_X_REG[i].ToString("X2")} , Data : 0x{IC_DATA_OIS_X[i].ToString("X2")} ");
             }
 
-            ushort us1 = (ushort)STATIC.MCUH503.GetI3CCheckBuffer(AxisTypeDW.AxisX, 0);
-            ushort us2 = (ushort)STATIC.MCUH503.GetI3CCheckBuffer(AxisTypeDW.AxisX, 1);
-
-            var s1 = us1.ToString("X2");
-            var s2 = us2.ToString("X2");
-            AddLog(ch, $"HallCal Value 0x40 : 0x{s1}");
-            AddLog(ch, $"HallCal Value 0x42 : 0x{s2}");
-
-            byte data = DWDrvIC.Controls.ReadByte(DWDrvIC.OISX_Addr, 0x44, 1);
-            if (data == 0x01)
-            {
-                AddLog(ch, $"OIS X Hall Calibration Success");
-                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x39);
-                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0xA0);
-                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x02, 1, 0x40);
-                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x03, 1, 0x01);
-                Wait(20);
-                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x28, 1, 0x14);
-            }
-            else
-            {
-                AddLog(ch, $"OIS X Hall Calibration Fail");
-                PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 1;
-                ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
-                return;
-            }
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x03, 1, 0x01);
+            AddLog(ch, $"Store _ X");
 
             //TOOD : OIS - EPA 삭제 기능 필요없음?? 이인경수석 통화.
             //SetEPA((int)AxisTypeDW.AxisX);
             #endregion
 
             #region OIS Y Hall Calibration
-            /*H503은 PID Write를 진행하면 안됨.
-            AddLog(ch, "OIS Y PID Parameter Setting");
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0x39);
-            AddLog(ch, $"Register : 0x28 , Data : 0x39");
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x39, 1, 0xA0);
-            AddLog(ch, $"Register : 0x39 , Data : 0xA0");
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x7D, 1, 0x00);
-            AddLog(ch, $"Register : 0x7D , Data : 0x00");
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x03, 1, 0x01);
-            AddLog(ch, $"Register : 0x03 , Data : 0x01");
-            Wait(55);
+            DWDrvIC.SetOperationMode(AxisTypeDW.AxisY, OperationTypeDW.StandbyMode);
 
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x40);
-            AddLog(ch, $"Register : 0x02 , Data : 0x40");
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0x39);
-            AddLog(ch, $"Register : 0x28 , Data : 0x39");
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0xA0);
-            AddLog(ch, $"Register : 0x28 , Data : 0xA0");
-            AddLog(ch, "OIS Y PID Parameter Setting END");
+            STATIC.DW9836.Set_PT((int)AxisTypeDW.AxisX, false);
+            STATIC.DW9836.Set_PT((int)AxisTypeDW.AxisY, false);
 
-            AddLog(ch, "OIS Y PID START");
             for (int i = 0; i < IC_DATA_OIS_Y.Length; i++)
             {
                 DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, IC_DATA_OIS_Y_REG[i], 1, IC_DATA_OIS_Y[i]);
                 AddLog(ch, $"Register : 0x{IC_DATA_OIS_Y_REG[i].ToString("X2")} , Data : 0x{IC_DATA_OIS_Y[i].ToString("X2")} ");
             }
-            AddLog(ch, "OIS Y PID END");
-            */
 
-            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x40);
-            //DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x04);         // 기존 I2C 보드
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x03, 1, 0x01);
+            Wait(80);
 
-            //커넥트 체크
-            checkedByte = STATIC.MCUH503.DriveICConnctChecked();
-            if (checkedByte == 0x01)
-            {
-                DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x12);
-                AddLog(ch, $"Register : 0x02 , Data : 0x12");
-                Wait(800);
-                DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x40);
-                AddLog(ch, $"Register : 0x02 , Data : 0x40");
-            }
+            AddLog(ch, $"Store _ Y");
 
-            Thread.Sleep(5);
+            STATIC.DW9836.Set_PT((int)AxisTypeDW.AxisX, true);
+            STATIC.DW9836.Set_PT((int)AxisTypeDW.AxisY, true);
 
-            data = DWDrvIC.Controls.ReadByte(DWDrvIC.OISY_Addr, 0x44, 1);
-            if (data == 0x01)
-            {
-                AddLog(ch, $"OIS Y Hall Calibration Success");
-                DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0x39);
-                AddLog(ch, $"Register : 0x28 , Data : 0x39");
-                DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0xA0);
-                AddLog(ch, $"Register : 0x28 , Data : 0xA0");
-                DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x40);
-                AddLog(ch, $"Register : 0x02 , Data : 0x40");
-                DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x03, 1, 0x01);
-                AddLog(ch, $"Register : 0x03 , Data : 0x01");
-                Wait(20);
-                DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x28, 1, 0x14);
-                AddLog(ch, $"Register : 0x28 , Data : 0x14");
-                PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 0;
-                ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
-            }
-            else
-            {
-                AddLog(ch, $"OIS Y Hall Calibration Fail");
-                PassFails[0].Results[(int)SpecItem.XYHallCalibration].Val = 1;
-                ShowDataResults(ch, (int)SpecItem.XYHallCalibration, (int)SpecItem.XYHallCalibration, InspType.OKNG, new double[] { });
-                return;
-            }
+            STATIC.MCUH503.SetI3CByPaaMode(false);
+            Thread.Sleep(100);
 
+            HallCalX(ch);
+            Thread.Sleep(1000);
+            HallCalY(ch);
             //TOOD : OIS - EPA 삭제 기능 필요없음?? 이인경수석 통화.
             //SetEPA((int)AxisTypeDW.AxisY);
+            #endregion
+        }
+
+        private void OIS_H503_PIDWrite(int ch, string testItem, int InspCnt)
+        {
+            //AF BestPos Move
+            DrvIC.AFOnOff(ch, true);
+            DrvIC.AFMove(ch, Condition.OISCalAFPos);
+
+            AddLog(ch, $"Move AF Position :  {Condition.OISCalAFPos}");
+
+            STATIC.Dln.HWReset(STATIC.MCUH503).Connected(STATIC.MCUH503);
+            #region OIS Hall Calibration
+            STATIC.MCUH503.SetI3CByPaaMode(false);
+            Thread.Sleep(100);
+
+            DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.StandbyMode);
+
+            STATIC.DW9836.Set_PT((int)AxisTypeDW.AxisX, false);
+
+            Thread.Sleep(100);
+            for (int i = 0; i < H503_DATA_OIS_X.Length; i++)
+            {
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, H503_DATA_OIS_X_REG[i], 1, H503_DATA_OIS_X[i]);
+                AddLog(ch, $"Register : 0x{H503_DATA_OIS_X_REG[i].ToString("X2")} , Data : 0x{H503_DATA_OIS_X[i].ToString("X2")} ");
+            }
+
+            for (int i = 0; i < H503_DATA_OIS_Y.Length; i++)
+            {
+                DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, H503_DATA_OIS_Y_REG[i], 1, H503_DATA_OIS_Y[i]);
+                AddLog(ch, $"Register : 0x{H503_DATA_OIS_Y_REG[i].ToString("X2")} , Data : 0x{H503_DATA_OIS_Y[i].ToString("X2")} ");
+            }
+
+            var byte1 = STATIC.DW9836.ReadRegisterPIDH503(AxisTypeDW.AxisX);
+            AddLog(ch, $"Store_PID  Register : 0x7E , Data : 0x{byte1.ToString("X2")}");
+
+            DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x03, 1, 0x02);
+            AddLog(ch, $"Store _ XY");
+            Thread.Sleep(50);
+
+            STATIC.DW9836.Set_PT((int)AxisTypeDW.AxisX, true);
             #endregion
         }
 
@@ -2627,23 +2733,6 @@ namespace FZ4P
             //        break;
             //    }
             //}
-        }
-
-
-        public void OIS_ChangedI3C(int ch, string testItem, int InspCnt)
-        {
-            OISSetI3C(AxisTypeDW.AxisX);
-            Thread.Sleep(100);
-            OISSetI3C(AxisTypeDW.AxisY);
-            Thread.Sleep(100);
-        }
-
-        public void OIS_ChangedI2C(int ch, string testItem, int InspCnt)
-        {
-            OISSetI2C(AxisTypeDW.AxisX);
-            Thread.Sleep(100);
-            OISSetI2C(AxisTypeDW.AxisY);
-            Thread.Sleep(100);
         }
 
         private void OISSetI2C(AxisTypeDW axisTypeDW)

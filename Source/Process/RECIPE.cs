@@ -822,6 +822,8 @@ namespace FZ4P
         public string AFPidPath { get; set; } = "";
         public string OISXPidPath { get; set; } = "";
         public string OISYPidPath { get; set; } = "";
+        public string H503PidXPath { get; set; } = "";
+        public string H503PidYPath { get; set; } = "";
 
         public string OISFWPath { get; set; } = "";
         public string OISBaseCalPath { get; set; } = "";

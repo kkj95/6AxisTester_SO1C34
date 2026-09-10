@@ -211,6 +211,37 @@ namespace FZ4P.DriverIc.OISIC
             Controls.WriteByte(SlaveID, 0x7C, 1, 0x04);
             Controls.WriteByte(SlaveID, (int)RegisterMapDW9836N.STORE_PROD_ID, 1, 0x01);
         }
+        public byte ReadRegisterPIDH503(AxisTypeDW axisType)
+        {
+            int SlaveID = GetAxisTypeID(axisType);
+            return Controls.ReadByte(SlaveID, 0x7E, 1);
+        }
+        public byte ReadRegisterPIDH5032(AxisTypeDW axisType)
+        {
+            int SlaveID = GetAxisTypeID(axisType);
+            return Controls.ReadByte(SlaveID, 0x4D, 1);
+        }
+        public byte ReadRegisterPIDH5033(AxisTypeDW axisType)
+        {
+            int SlaveID = GetAxisTypeID(axisType);
+            return Controls.ReadByte(SlaveID, 0x4A, 1);
+        }
+        public byte ReadTest(AxisTypeDW axisType)
+        {
+            int SlaveID = GetAxisTypeID(axisType);
+            return Controls.ReadByte(SlaveID, 0x4B, 1);
+        }
+        public byte LoopWrite(AxisTypeDW axisType,bool onoff)
+        {
+            int SlaveID = GetAxisTypeID(axisType);
+            if (onoff)
+                Controls.WriteByte(SlaveID, 0x4B, 1, 0x03); 
+            else
+                Controls.WriteByte(SlaveID, 0x4B, 1, 0x00);
+
+            Thread.Sleep(50);
+            return Controls.ReadByte(SlaveID, 0x4B, 1);
+        }
         private int GetAxisTypeID(AxisTypeDW axisType)
         {
             int SlaveID = -1;

@@ -263,7 +263,7 @@ namespace FZ4P.UI
         {
             if (e.PropertyName == nameof(ReadHall))
             {
-                this.InvokeOnUIThread(() => { 
+                this.InvokeOnUIThread(() => {
                     lbl_ReadHall.Text = PropertiesHelper.GetValue<string>(e);
                 });
             }
@@ -451,12 +451,11 @@ namespace FZ4P.UI
             {
                 try
                 {
-                    //ReadHall = _oISFunction.GetI3CData(AxisTypeDW.AxisX).ToString();
                     ReadHall = _oISFunction.ReadOISHall(0, 0, 0).ToString();
                     Thread.Sleep(5);
                     ReadHall2 = _oISFunction.ReadOISHall(0, 1, 0).ToString();
                     Thread.Sleep(5);
-                    //ReadHall3 = _afFunction.ReadAFHall(iCh).ToString();
+                    ReadHall3 = _afFunction.ReadAFHall(iCh).ToString();
                     Thread.Sleep(5);
 
                     PeakCurrent = _oISFunction.GetCurrent((int)AxisTypeDW.AxisX).ToString("00.00");
@@ -502,7 +501,6 @@ namespace FZ4P.UI
                     //STATIC.Dln.PeakDetector(adcNumber, PeakDetectState.Reset);
                     break;
             }
-            
         }
 
         private void btn_ServoOn_Click(object sender, EventArgs e)
@@ -567,11 +565,6 @@ namespace FZ4P.UI
                 _i2CToI3C.SetI3CByPaaMode(State);
             if (iTag == 1)
                 _i2CToI3C.SetSWReset(State);
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            _i2CToI3C.SetH503WakeUp();
         }
 
         private void ReadI2CBuffer(int iCh)
@@ -657,22 +650,6 @@ namespace FZ4P.UI
         private void button7_Click(object sender, EventArgs e)
         {
             _i2CToI3C.I3CStop();
-        }
-
-        private void button8_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void button9_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void button10_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void button11_Click(object sender, EventArgs e)
-        {
         }
 
         private void button12_Click(object sender, EventArgs e)

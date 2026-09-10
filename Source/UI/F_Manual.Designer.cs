@@ -273,11 +273,11 @@
             this.EditCondition.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.EditCondition.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.EditCondition.ForeColor = System.Drawing.Color.White;
-            this.EditCondition.Location = new System.Drawing.Point(509, 0);
+            this.EditCondition.Location = new System.Drawing.Point(458, 3);
             this.EditCondition.Name = "EditCondition";
-            this.EditCondition.Size = new System.Drawing.Size(58, 19);
+            this.EditCondition.Size = new System.Drawing.Size(109, 19);
             this.EditCondition.TabIndex = 269;
-            this.EditCondition.Text = "START";
+            this.EditCondition.Text = "Real Time Read";
             this.EditCondition.UseVisualStyleBackColor = false;
             this.EditCondition.CheckStateChanged += new System.EventHandler(this.EditCondition_CheckStateChanged);
             // 
@@ -451,11 +451,11 @@
             // 
             // button12
             // 
-            this.button12.Location = new System.Drawing.Point(411, -3);
+            this.button12.Location = new System.Drawing.Point(365, 0);
             this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(88, 28);
+            this.button12.Size = new System.Drawing.Size(87, 20);
             this.button12.TabIndex = 539;
-            this.button12.Text = "I3C Read";
+            this.button12.Text = "Read Once";
             this.button12.UseVisualStyleBackColor = true;
             this.button12.Click += new System.EventHandler(this.button12_Click);
             // 
@@ -463,44 +463,43 @@
             // 
             this.panel18.BackColor = System.Drawing.SystemColors.ControlDark;
             this.panel18.Controls.Add(this.label20);
-            this.panel18.Location = new System.Drawing.Point(439, 248);
+            this.panel18.Location = new System.Drawing.Point(395, 248);
             this.panel18.Name = "panel18";
             this.panel18.Size = new System.Drawing.Size(134, 30);
             this.panel18.TabIndex = 524;
             // 
             // label20
             // 
-            this.label20.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label20.AutoSize = true;
+            this.label20.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label20.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.label20.ForeColor = System.Drawing.Color.White;
-            this.label20.Location = new System.Drawing.Point(48, 9);
+            this.label20.Location = new System.Drawing.Point(0, 0);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(12, 12);
+            this.label20.Size = new System.Drawing.Size(134, 30);
             this.label20.TabIndex = 279;
             this.label20.Text = "-";
+            this.label20.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel19
             // 
             this.panel19.BackColor = System.Drawing.SystemColors.ControlDark;
             this.panel19.Controls.Add(this.label21);
-            this.panel19.Location = new System.Drawing.Point(439, 152);
+            this.panel19.Location = new System.Drawing.Point(395, 152);
             this.panel19.Name = "panel19";
             this.panel19.Size = new System.Drawing.Size(134, 30);
             this.panel19.TabIndex = 523;
             // 
             // label21
             // 
-            this.label21.AutoSize = true;
+            this.label21.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label21.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.label21.ForeColor = System.Drawing.Color.White;
-            this.label21.Location = new System.Drawing.Point(35, 9);
+            this.label21.Location = new System.Drawing.Point(0, 0);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(79, 12);
+            this.label21.Size = new System.Drawing.Size(134, 30);
             this.label21.TabIndex = 278;
-            this.label21.Text = "Current(41)";
+            this.label21.Text = "Current Sensor AF";
+            this.label21.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lbl_Current_2
             // 
@@ -508,7 +507,7 @@
             this.lbl_Current_2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbl_Current_2.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_Current_2.ForeColor = System.Drawing.Color.Yellow;
-            this.lbl_Current_2.Location = new System.Drawing.Point(438, 183);
+            this.lbl_Current_2.Location = new System.Drawing.Point(395, 183);
             this.lbl_Current_2.Name = "lbl_Current_2";
             this.lbl_Current_2.Size = new System.Drawing.Size(135, 64);
             this.lbl_Current_2.TabIndex = 522;
@@ -519,44 +518,43 @@
             // 
             this.panel16.BackColor = System.Drawing.SystemColors.ControlDark;
             this.panel16.Controls.Add(this.label14);
-            this.panel16.Location = new System.Drawing.Point(298, 248);
+            this.panel16.Location = new System.Drawing.Point(395, 117);
             this.panel16.Name = "panel16";
             this.panel16.Size = new System.Drawing.Size(134, 30);
             this.panel16.TabIndex = 521;
             // 
             // label14
             // 
-            this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label14.AutoSize = true;
+            this.label14.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label14.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.label14.ForeColor = System.Drawing.Color.White;
-            this.label14.Location = new System.Drawing.Point(48, 9);
+            this.label14.Location = new System.Drawing.Point(0, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(12, 12);
+            this.label14.Size = new System.Drawing.Size(134, 30);
             this.label14.TabIndex = 279;
             this.label14.Text = "-";
+            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel17
             // 
             this.panel17.BackColor = System.Drawing.SystemColors.ControlDark;
             this.panel17.Controls.Add(this.label17);
-            this.panel17.Location = new System.Drawing.Point(298, 152);
+            this.panel17.Location = new System.Drawing.Point(395, 20);
             this.panel17.Name = "panel17";
             this.panel17.Size = new System.Drawing.Size(134, 30);
             this.panel17.TabIndex = 520;
             // 
             // label17
             // 
-            this.label17.AutoSize = true;
+            this.label17.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label17.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.label17.ForeColor = System.Drawing.Color.White;
-            this.label17.Location = new System.Drawing.Point(38, 9);
+            this.label17.Location = new System.Drawing.Point(0, 0);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(79, 12);
+            this.label17.Size = new System.Drawing.Size(134, 30);
             this.label17.TabIndex = 278;
-            this.label17.Text = "Current(40)";
+            this.label17.Text = "Current Sensor OIS";
+            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lbl_Current_1
             // 
@@ -564,7 +562,7 @@
             this.lbl_Current_1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbl_Current_1.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_Current_1.ForeColor = System.Drawing.Color.Yellow;
-            this.lbl_Current_1.Location = new System.Drawing.Point(297, 183);
+            this.lbl_Current_1.Location = new System.Drawing.Point(395, 52);
             this.lbl_Current_1.Name = "lbl_Current_1";
             this.lbl_Current_1.Size = new System.Drawing.Size(135, 64);
             this.lbl_Current_1.TabIndex = 519;
@@ -575,44 +573,43 @@
             // 
             this.panel9.BackColor = System.Drawing.SystemColors.ControlDark;
             this.panel9.Controls.Add(this.label11);
-            this.panel9.Location = new System.Drawing.Point(158, 248);
+            this.panel9.Location = new System.Drawing.Point(188, 248);
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(134, 30);
             this.panel9.TabIndex = 518;
             // 
             // label11
             // 
-            this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label11.AutoSize = true;
+            this.label11.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label11.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.label11.ForeColor = System.Drawing.Color.White;
-            this.label11.Location = new System.Drawing.Point(48, 9);
+            this.label11.Location = new System.Drawing.Point(0, 0);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(12, 12);
+            this.label11.Size = new System.Drawing.Size(134, 30);
             this.label11.TabIndex = 279;
             this.label11.Text = "-";
+            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel10
             // 
             this.panel10.BackColor = System.Drawing.SystemColors.ControlDark;
             this.panel10.Controls.Add(this.label12);
-            this.panel10.Location = new System.Drawing.Point(158, 152);
+            this.panel10.Location = new System.Drawing.Point(189, 152);
             this.panel10.Name = "panel10";
             this.panel10.Size = new System.Drawing.Size(134, 30);
             this.panel10.TabIndex = 517;
             // 
             // label12
             // 
-            this.label12.AutoSize = true;
+            this.label12.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label12.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.label12.ForeColor = System.Drawing.Color.White;
-            this.label12.Location = new System.Drawing.Point(38, 9);
+            this.label12.Location = new System.Drawing.Point(0, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(59, 12);
+            this.label12.Size = new System.Drawing.Size(134, 30);
             this.label12.TabIndex = 278;
-            this.label12.Text = "Channel";
+            this.label12.Text = "IC Current Y";
+            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lbl_ADC_2
             // 
@@ -620,7 +617,7 @@
             this.lbl_ADC_2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbl_ADC_2.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_ADC_2.ForeColor = System.Drawing.Color.Yellow;
-            this.lbl_ADC_2.Location = new System.Drawing.Point(157, 183);
+            this.lbl_ADC_2.Location = new System.Drawing.Point(188, 183);
             this.lbl_ADC_2.Name = "lbl_ADC_2";
             this.lbl_ADC_2.Size = new System.Drawing.Size(135, 64);
             this.lbl_ADC_2.TabIndex = 516;
@@ -661,14 +658,15 @@
             // 
             // label10
             // 
-            this.label10.AutoSize = true;
+            this.label10.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label10.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.label10.ForeColor = System.Drawing.Color.White;
-            this.label10.Location = new System.Drawing.Point(27, 9);
+            this.label10.Location = new System.Drawing.Point(0, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(66, 12);
+            this.label10.Size = new System.Drawing.Size(112, 30);
             this.label10.TabIndex = 278;
-            this.label10.Text = "Channel3";
+            this.label10.Text = "Read Hall Z";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lbl_ReadHall3
             // 
@@ -687,44 +685,43 @@
             // 
             this.panel5.BackColor = System.Drawing.SystemColors.ControlDark;
             this.panel5.Controls.Add(this.label8);
-            this.panel5.Location = new System.Drawing.Point(11, 248);
+            this.panel5.Location = new System.Drawing.Point(48, 248);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(134, 30);
             this.panel5.TabIndex = 290;
             // 
             // label8
             // 
-            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label8.AutoSize = true;
+            this.label8.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label8.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.label8.ForeColor = System.Drawing.Color.White;
-            this.label8.Location = new System.Drawing.Point(48, 9);
+            this.label8.Location = new System.Drawing.Point(0, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(12, 12);
+            this.label8.Size = new System.Drawing.Size(134, 30);
             this.label8.TabIndex = 279;
             this.label8.Text = "-";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel6
             // 
             this.panel6.BackColor = System.Drawing.SystemColors.ControlDark;
             this.panel6.Controls.Add(this.label5);
-            this.panel6.Location = new System.Drawing.Point(11, 152);
+            this.panel6.Location = new System.Drawing.Point(49, 152);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(134, 30);
             this.panel6.TabIndex = 289;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
+            this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label5.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.Location = new System.Drawing.Point(38, 9);
+            this.label5.Location = new System.Drawing.Point(0, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(59, 12);
+            this.label5.Size = new System.Drawing.Size(134, 30);
             this.label5.TabIndex = 278;
-            this.label5.Text = "Channel";
+            this.label5.Text = "IC Current X";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel3
             // 
@@ -760,14 +757,15 @@
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
+            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label4.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(27, 9);
+            this.label4.Location = new System.Drawing.Point(0, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(66, 12);
+            this.label4.Size = new System.Drawing.Size(112, 30);
             this.label4.TabIndex = 278;
-            this.label4.Text = "Channel2";
+            this.label4.Text = "Read Hall Y";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel2
             // 
@@ -803,14 +801,15 @@
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
+            this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label3.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(30, 9);
+            this.label3.Location = new System.Drawing.Point(0, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(66, 12);
+            this.label3.Size = new System.Drawing.Size(112, 30);
             this.label3.TabIndex = 277;
-            this.label3.Text = "Channel1";
+            this.label3.Text = "Read Hall X";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lbl_ReadHall2
             // 
@@ -831,7 +830,7 @@
             this.lbl_ADC.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbl_ADC.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_ADC.ForeColor = System.Drawing.Color.Yellow;
-            this.lbl_ADC.Location = new System.Drawing.Point(10, 183);
+            this.lbl_ADC.Location = new System.Drawing.Point(48, 183);
             this.lbl_ADC.Name = "lbl_ADC";
             this.lbl_ADC.Size = new System.Drawing.Size(135, 64);
             this.lbl_ADC.TabIndex = 283;
@@ -859,7 +858,6 @@
             this.button2.TabIndex = 521;
             this.button2.Text = "Wake Up";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // checkBox5
             // 
@@ -1167,7 +1165,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(993, 522);
+            this.ClientSize = new System.Drawing.Size(987, 522);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -1183,33 +1181,22 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.panel18.ResumeLayout(false);
-            this.panel18.PerformLayout();
             this.panel19.ResumeLayout(false);
-            this.panel19.PerformLayout();
             this.panel16.ResumeLayout(false);
-            this.panel16.PerformLayout();
             this.panel17.ResumeLayout(false);
-            this.panel17.PerformLayout();
             this.panel9.ResumeLayout(false);
-            this.panel9.PerformLayout();
             this.panel10.ResumeLayout(false);
-            this.panel10.PerformLayout();
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
             this.panel8.ResumeLayout(false);
-            this.panel8.PerformLayout();
             this.panel5.ResumeLayout(false);
-            this.panel5.PerformLayout();
             this.panel6.ResumeLayout(false);
-            this.panel6.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.panel15.ResumeLayout(false);

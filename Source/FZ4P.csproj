@@ -176,6 +176,7 @@
     <Compile Include="DriverIc\OISIC\EnumTypeDefined.cs" />
     <Compile Include="DriverIc\OISIC\MCUH503.cs" />
     <Compile Include="Extensions\DLNExtension.cs" />
+    <Compile Include="Process\99.ResultType\PIDResult.cs" />
     <Compile Include="Process\AFLinCompCoefAKM7314.cs" />
     <Compile Include="Extensions\FIndResultExtension.cs" />
     <Compile Include="Process\AFLinCompCoef.cs" />

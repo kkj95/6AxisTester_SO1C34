@@ -24,7 +24,7 @@ namespace FZ4P.DriverIc.OISIC
         #region public
         public void SetI3CByPaaMode(bool Onoff)
         {
-            int slaveId = GetAxisTypeID(AxisTypeDW.AxisY);
+            int slaveId = GetAxisTypeID(AxisTypeDW.AxisX);
             if (Onoff)
                 _controls.WriteByte(slaveId, 0xE6, 1, 0x01);
             else

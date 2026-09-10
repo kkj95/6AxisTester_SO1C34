@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
@@ -197,7 +198,7 @@ namespace FZ4P
             Process.Load_OISXPID(Current.OISXPidPath);
             Process.AddLog(0, $"{Current.OISYPidPath}");
             Process.Load_OISYPID(Current.OISYPidPath);
-
+            
             if (Model.MCType == "Posture_M")
             {
                 Process.Dln.IOOnOff(PostureIO.RED_L, false);
@@ -205,7 +206,11 @@ namespace FZ4P
                 Process.Dln.IOOnOff(PostureIO.GREEN_L, false);
                 Process.Dln.IOOnOff(PostureIO.BUZZER, false);
             }
+
+            Process.Lazyinitialize();
         }
+
+        
 
         private void P_Vision_VisibleChanged(object sender, EventArgs e)
         {
@@ -1076,6 +1081,8 @@ namespace FZ4P
             AFPidSetPath.Text = Current.AFPidPath;
             OISXSetPath.Text = Current.OISXPidPath;
             OISYSetPath.Text = Current.OISYPidPath;
+            H503XSetPath.Text = Current.H503PidXPath;
+            H503YSetPath.Text = Current.H503PidYPath;
         }
         private void SetAFPIDUpdate_Click(object sender, EventArgs e)
         {
@@ -1950,6 +1957,45 @@ namespace FZ4P
             Thread.Sleep(100);
             STATIC.Dln.PowerOnOff(0, false);
             STATIC.Dln.PowerOnOff(1, false);
+        }
+
+        private void OISXSetPath_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            string filePath = STATIC.OISXPIDDir;
+            OpenFileDialog opfd = new OpenFileDialog();
+            opfd.DefaultExt = "txt";
+            opfd.InitialDirectory = filePath;
+            opfd.Filter = "txt(*.txt)|*.txt";
+            opfd.Title = "OIS BaseCal Update Path";
+
+            if (opfd.ShowDialog() == DialogResult.OK)
+            {
+                Current.H503PidXPath = opfd.FileName;
+                DataIO.SerializeToXMLFile(Current, STATIC.CurrentPath);
+                H503XSetPath.Text = Current.H503PidXPath;
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            string filePath = STATIC.OISYPIDDir;
+            OpenFileDialog opfd = new OpenFileDialog();
+            opfd.DefaultExt = "txt";
+            opfd.InitialDirectory = filePath;
+            opfd.Filter = "txt(*.txt)|*.txt";
+            opfd.Title = "OIS BaseCal Update Path";
+
+            if (opfd.ShowDialog() == DialogResult.OK)
+            {
+                Current.H503PidYPath = opfd.FileName;
+                DataIO.SerializeToXMLFile(Current, STATIC.CurrentPath);
+                H503YSetPath.Text = Current.H503PidYPath;
+            }
         }
     }
 }

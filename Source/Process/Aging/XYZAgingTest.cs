@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FZ4P
@@ -41,7 +42,7 @@ namespace FZ4P
             return this;
         }
 
-        public async void Execute()
+        public void Execute()
         {
             var half_period = GetPeriodms() / 2;
             _oISFunction.OISOnOff(0,true);
@@ -53,7 +54,7 @@ namespace FZ4P
             {
                 _afFunction.AFMove(0, _agingParams.AFMinCode);
                 _oISFunction.OISMove(0, _agingParams.OISMinCode, _agingParams.OISMinCode);                // OIS min code move
-                await Task.Delay(half_period);
+                Thread.Sleep(half_period);
 
                 var afHall = _afFunction.ReadAFHall(0);
                 var OISXHall= _oISFunction.ReadOISHall(0,(int)AxisTypeDW.AxisX);
@@ -62,11 +63,12 @@ namespace FZ4P
 
                 _afFunction.AFMove(0, _agingParams.AFMaxCode);
                 _oISFunction.OISMove(0, _agingParams.OISMaxCode, _agingParams.OISMaxCode);                // OIS max code move
-                await Task.Delay(half_period);
+                Thread.Sleep(half_period);
 
                 var hall = _afFunction.ReadAFHall(0);
                 var hall2 = _oISFunction.ReadOISHall(0, (int)AxisTypeDW.AxisX);
                 var hall3 = _oISFunction.ReadOISHall(0, (int)AxisTypeDW.AxisY);
+                _actionLog(0, $"{hall},\t{hall2},\t{hall3}");
             }
 
             _oISFunction.OISOnOff(0, false);
