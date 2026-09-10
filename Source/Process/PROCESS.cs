@@ -3062,17 +3062,13 @@ namespace FZ4P
 
                     for (int i = 0; i < (int)SpecItem.Length; i++)
                     {
-
-
                         switch (Rcp.Spec.specList[i].InspectionType)
                         {
                             case InspType.Normal:
                             case InspType.OnlyMax:
                             case InspType.OnlyMin:
-
                                 if (PassFails[j].Results[i].Val == double.MaxValue) log += " ,";
                                 else log += string.Format("{0:0.000},", PassFails[j].Results[i].Val);
-
 
                                 break;
                             case InspType.OKNG:

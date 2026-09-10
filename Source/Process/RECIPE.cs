@@ -693,6 +693,7 @@ namespace FZ4P
         [ActionListUse(true)][Spec("AF> HallCalibration", "um", InspType.Normal, "AF HallCalibration")] AF_NonEPAStroke,
         [ActionListUse(true)][Spec("XY> HallCalibration", "", InspType.OKNG, "OIS HallCalibration")] XYHallCalibration,
         [ActionListUse(true)][Spec("OIS Linear Compensation", "", InspType.OKNG, "OIS Linear Compensation")] OISLCCComp,
+        [ActionListUse(true)][Spec("XYZ> XYZ Aging Test", "", InspType.OKNG, "XYZ Aging Test")] XYZ_AgingTest,
 
         [ActionListUse(true)][Spec("AF> Displacement Range", "um", InspType.Normal, "AF Scan")] AF_Ratedstroke,
         [ActionListUse(true)][Spec("AF> Displacement Min", "um", InspType.OnlyMax, "AF Scan")] AF_Backwardstroke,

@@ -1,4 +1,5 @@
-﻿using FZ4P.Commons.Helper;
+﻿using Dln;
+using FZ4P.Commons.Helper;
 using FZ4P.DriverIc.OISIC;
 using FZ4P.Extensions;
 using System;
@@ -814,7 +815,6 @@ namespace FZ4P
 
         private void HallCalY(int ch)
         {
-
             Stopwatch sw = new Stopwatch();
             bool flg = false;
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x02, 1, 0x40);
@@ -2326,10 +2326,12 @@ namespace FZ4P
 
             var Executor = new XYZAgingTest(DWDrvIC, DrvIC, AddLog);
             Executor.SetParams(param).Execute();
+
+            PassFails[0].Results[(int)SpecItem.XYZ_AgingTest].Val = 0;
+            ShowDataResults(ch, (int)SpecItem.XYZ_AgingTest, (int)SpecItem.XYZ_AgingTest, InspType.OKNG, new double[] { });
         }
         public void ServoDecenter(int ch, string name, int InspCnt)
-        {
-
+        { 
             AddLog(ch, "<<<  OIS X Servo Decenter Start  >>>");
 
             LEDs_All_On(0, true);
