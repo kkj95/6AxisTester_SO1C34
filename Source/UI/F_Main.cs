@@ -1098,6 +1098,8 @@ namespace FZ4P
                 Current.AFPidPath = opfd.FileName;
                 DataIO.SerializeToXMLFile(Current, STATIC.CurrentPath);
                 AFPidSetPath.Text = Current.AFPidPath;
+
+                Process.Load_AFPID(Current.AFPidPath);
             }
         }
 
@@ -1887,6 +1889,8 @@ namespace FZ4P
                 Current.OISXPidPath = opfd.FileName;
                 DataIO.SerializeToXMLFile(Current, STATIC.CurrentPath);
                 OISXSetPath.Text = Current.OISXPidPath;
+
+                Process.Load_OISXPID(Current.OISXPidPath);
             }
         }
 
@@ -1904,6 +1908,8 @@ namespace FZ4P
                 Current.OISYPidPath = opfd.FileName;
                 DataIO.SerializeToXMLFile(Current, STATIC.CurrentPath);
                 OISYSetPath.Text = Current.OISYPidPath;
+
+                Process.Load_OISYPID(Current.OISYPidPath);
             }
         }
 
@@ -1978,6 +1984,8 @@ namespace FZ4P
                 Current.H503PidXPath = opfd.FileName;
                 DataIO.SerializeToXMLFile(Current, STATIC.CurrentPath);
                 H503XSetPath.Text = Current.H503PidXPath;
+
+                Process.LoadPID(0);
             }
         }
 
@@ -1995,6 +2003,8 @@ namespace FZ4P
                 Current.H503PidYPath = opfd.FileName;
                 DataIO.SerializeToXMLFile(Current, STATIC.CurrentPath);
                 H503YSetPath.Text = Current.H503PidYPath;
+
+                Process.LoadPID(1);
             }
         }
     }

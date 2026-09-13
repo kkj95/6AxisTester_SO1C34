@@ -191,11 +191,22 @@ namespace FZ4P
         //외부 init 순서를 맞추기위해 공개하여 순서를 설정할수있게 하는 메서드 추가
         public void Lazyinitialize()
         {
-            var tmpX = Load_PID(Current.H503PidXPath);
-            var tmpY = Load_PID(Current.H503PidYPath);
+            LoadPID(0);
+            LoadPID(1);
+        }
 
-            PIDBufferMoveData(tmpX, ref H503_DATA_OIS_X_REG, ref H503_DATA_OIS_X);
-            PIDBufferMoveData(tmpY, ref H503_DATA_OIS_Y_REG, ref H503_DATA_OIS_Y);
+        public void LoadPID(int iStep)
+        {
+            if (iStep == 0)
+            {
+                var tmpX = Load_PID(Current.H503PidXPath);
+                PIDBufferMoveData(tmpX, ref H503_DATA_OIS_X_REG, ref H503_DATA_OIS_X);
+            }
+            else if (iStep == 1)
+            {
+                var tmpY = Load_PID(Current.H503PidYPath);
+                PIDBufferMoveData(tmpY, ref H503_DATA_OIS_Y_REG, ref H503_DATA_OIS_Y);
+            }
         }
 
         #region Default
@@ -3146,6 +3157,11 @@ namespace FZ4P
                 m_ChannelOn[0] = false;
                 errMsg[0] = "Check the Result File Open!!!";
             }
+        }
+
+        public void OISRegister_(int port)
+        {
+            
         }
         public void Act_ScanCode(int port, string testItem, int InspCnt)
         {

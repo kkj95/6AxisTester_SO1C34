@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -872,29 +873,6 @@ namespace FZ4P
         }
         void OIS_HallCalibration(int ch, string testItem, int InspCnt)
         {
-            LEDs_All_On(ch, true);
-            DWDrvIC.SetOperationMode(AxisTypeDW.AxisX,OperationTypeDW.OpenMode);
-
-            for (int i = 0; i< 10 ; i++)
-            {  
-                DWDrvIC.OISMove(ch, DWDrvIC.OIS_MIN_CODE, DWDrvIC.OIS_MID_CODE);
-                Thread.Sleep(200);
-                var position = Measure();
-                double[] cx = new double[2];
-                cx[0] = position.cx[0];
-                Thread.Sleep(50);
-
-                DWDrvIC.OISMove(ch, DWDrvIC.OIS_MAX_CODE-1, DWDrvIC.OIS_MID_CODE);
-                Thread.Sleep(200);
-                position = Measure();
-                cx[1] = position.cx[0];
-                var stroke = cx[1] - cx[0];
-                var d= Math.Round(stroke, 2);
-                AddLog(ch, $"Open Loop Stroke : {d} um");
-                Thread.Sleep(50);
-            }
-            LEDs_All_On(ch, false);
-
             //AF BestPos Move
             DrvIC.AFOnOff(ch, true);
             DrvIC.AFMove(ch, Condition.OISCalAFPos);
@@ -945,6 +923,47 @@ namespace FZ4P
 
             STATIC.MCUH503.SetI3CByPaaMode(false);
             Thread.Sleep(100);
+
+            LEDs_All_On(ch, true);
+            DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.OpenMode);
+
+            for (int i = 0; i < 10; i++)
+            {
+                DWDrvIC.OISMove(ch, DWDrvIC.OIS_MIN_CODE, DWDrvIC.OIS_MID_CODE);
+                Thread.Sleep(200);
+                var position = Measure();
+                double[] cx = new double[2];
+                cx[0] = position.cx[0];
+                Thread.Sleep(50);
+
+                DWDrvIC.OISMove(ch, DWDrvIC.OIS_MAX_CODE - 1, DWDrvIC.OIS_MID_CODE);
+                Thread.Sleep(200);
+                position = Measure();
+                cx[1] = position.cx[0];
+                var stroke = cx[1] - cx[0];
+                var d = Math.Round(stroke, 2);
+                AddLog(ch, $"Open Loop Stroke : {d} um");
+                Thread.Sleep(50);
+            }
+            for (int i = 0; i < 10; i++)
+            {
+                DWDrvIC.OISMove(ch, DWDrvIC.OIS_MID_CODE, DWDrvIC.OIS_MIN_CODE);
+                Thread.Sleep(200);
+                var position = Measure();
+                double[] cx = new double[2];
+                cx[0] = position.cy[0];
+                Thread.Sleep(50);
+
+                DWDrvIC.OISMove(ch, DWDrvIC.OIS_MID_CODE - 1, DWDrvIC.OIS_MAX_CODE - 1);
+                Thread.Sleep(200);
+                position = Measure();
+                cx[1] = position.cy[0];
+                var stroke = cx[1] - cx[0];
+                var d = Math.Round(stroke, 2);
+                AddLog(ch, $"Open Loop Stroke Y: {d} um");
+                Thread.Sleep(50);
+            }
+            LEDs_All_On(ch, false);
 
             HallCalX(ch);
             Thread.Sleep(1000);
@@ -2374,27 +2393,37 @@ namespace FZ4P
                 return;
             }
 
-            DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.StandbyMode);
-            DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.OpenMode);
-            DWDrvIC.OISMove(ch, 8191, 8191);      //current 0mA Position
+            //DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.StandbyMode);
+            //DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.ClosedMode);
 
-            for (int i = 0; i < 30; i++)
-            {
-                DWDrvIC.OISMove(ch, DWDrvIC.OIS_MIN_CODE, 8191);
-                Thread.Sleep(100);
-                DWDrvIC.OISMove(ch, DWDrvIC.OIS_MAX_CODE, 8191);
-                Thread.Sleep(100);
-            }
+            //DWDrvIC.OISOnOff(ch, true);
 
-            DWDrvIC.OISMove(ch, 8191, 8191);      //current 0mA Positio
-            for (int i = 0; i < 30; i++)
-            {
-                DWDrvIC.OISMove(ch, 8191, DWDrvIC.OIS_MIN_CODE);
-                Thread.Sleep(100);
-                DWDrvIC.OISMove(ch, 8191, DWDrvIC.OIS_MAX_CODE);
-                Thread.Sleep(100);
-            }
+            //DWDrvIC.OISMove(ch, 8191, 8191);      //current 0mA Position
 
+            //for (int i = 0; i < 30; i++)
+            //{
+            //    DWDrvIC.OISMove(ch, DWDrvIC.OIS_MIN_CODE, 8191);
+            //    Thread.Sleep(100);
+            //    DWDrvIC.OISMove(ch, DWDrvIC.OIS_MAX_CODE, 8191);
+            //    Thread.Sleep(100);
+            //}
+
+            //DWDrvIC.OISMove(ch, 8191, 8191);      //current 0mA Positio
+            //for (int i = 0; i < 30; i++)
+            //{
+            //    DWDrvIC.OISMove(ch, 8191, DWDrvIC.OIS_MIN_CODE);
+            //    Thread.Sleep(100);
+            //    DWDrvIC.OISMove(ch, 8191, DWDrvIC.OIS_MAX_CODE);
+            //    Thread.Sleep(100);
+            //}
+            //DWDrvIC.OISOnOff(ch, false);
+
+
+            //AF BestPos Move
+            DrvIC.AFOnOff(ch, true);
+            DrvIC.AFMove(ch, Condition.OISCalAFPos);
+
+            AddLog(ch, $"Move AF Position :  {Condition.OISCalAFPos}");
 
             OISLineCompCoefDW_EX oISLinCompCoef = new OISLineCompCoefDW_EX();
             OISLineCompCoefDW_EX oISLinCompCoefY = new OISLineCompCoefDW_EX();
@@ -2419,7 +2448,6 @@ namespace FZ4P
                     TargetCode.Add(16383);
                 else TargetCode.Add((short)((step_interval * (i)) + offset));
             }
-                
 
             List<double> bufferLDMX = new List<double>();
             List<double> bufferLDMY = new List<double>();
@@ -2441,6 +2469,8 @@ namespace FZ4P
             DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.StandbyMode);
             DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.ClosedMode);
             Wait(30);
+
+            //X
             DWDrvIC.OISMove(ch, DWDrvIC.OIS_MIN_CODE, DWDrvIC.OIS_MIN_CODE);
             Wait(100);
             res = Measure();
@@ -2456,17 +2486,26 @@ namespace FZ4P
                 var targetCode = TargetCode[i];
                 if (targetCode == DWDrvIC.OIS_MAX_CODE) targetCode -= 1;
 
-                DWDrvIC.OISMove(ch, targetCode, targetCode);
-                Wait(100);
+                DWDrvIC.OISMove(ch, targetCode, DWDrvIC.OIS_MID_CODE);
+                Wait(200);
                 res = Measure();
                 bufferLDMX.Add(res.cx[0]- ldmOffSetX);
-                bufferLDMY.Add(res.cy[0]- ldmOffSetY);
             }
-       
-            AddLog(ch, $"MoveX\tMoveY");
+            for (int i = 0; i < TargetCode.Count; i++)
+            {
+                var targetCode = TargetCode[i];
+                if (targetCode == DWDrvIC.OIS_MAX_CODE) targetCode -= 1;
+
+                DWDrvIC.OISMove(ch, DWDrvIC.OIS_MID_CODE, targetCode);
+                Wait(200);
+                res = Measure();
+                bufferLDMY.Add(res.cy[0] - ldmOffSetY);
+            }
+
+            AddLog(ch, $"MoveCode\tMoveX\tMoveY");
             for (int i = 1; i < bufferLDMX.Count; i++)
             {
-                AddLog(ch, $"{bufferLDMX[i].ToString("F2")}\t{bufferLDMY[i].ToString("F2")}");
+                AddLog(ch, $"{TargetCode[i-1].ToString()}\t{bufferLDMX[i].ToString("F2")}\t{bufferLDMY[i].ToString("F2")}");
             }
 
             ldmDataX = bufferLDMX.ToArray();
@@ -2498,16 +2537,14 @@ namespace FZ4P
             }
             AddLog(ch, $"RealValue End");
 
+            DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.StandbyMode);
+            Wait(100);
+
             DWDrvIC.LiearCompWrite(AxisX, RealValueCollectionX);
             DWDrvIC.LiearCompWrite(AxisY, RealValueCollectionY);
 
-            //DWDrvIC.LiearCompWrite(AxisX, RealValue);
-            //DWDrvIC.LiearCompWrite(AxisY, RealValue);
-
+            //TODO : H503 store는 0x0e 만 하자
             DWDrvIC.SetStore(AxisX);
-            DWDrvIC.SetStore(AxisY);
-
-            //DWDrvIC.SetStore(AxisY);
             Wait(500);
 
             var realX = DWDrvIC.LiearCompRead(AxisX);
@@ -2532,10 +2569,21 @@ namespace FZ4P
             ////Wait(500);
             //LEDs_All_On(0,true);
 
-            DWDrvIC.OISOnOff(ch, true);
-            Wait(100);
             STATIC.MCUH503.SetSWReset(false);
             Wait(100);
+            DWDrvIC.OISOnOff(ch, true);
+            Wait(100);
+
+            //var realX1 = DWDrvIC.LiearCompRead(AxisX);
+            //var realY1 = DWDrvIC.LiearCompRead(AxisY);
+
+            //AddLog(ch, $"RealValueChecked TestX \t RealValueCehcked TestY");
+            //for (int i = 0; i < realX1.Count; i++)
+            //{
+            //    AddLog(ch, $"{realX1[i].ToString("F2")}\t{realY1[i].ToString("F2")}");
+            //}
+            //AddLog(ch, $"END");
+
             for (int i = 0; i < TargetCode.Count; i++)
             {
                 DWDrvIC.OISMove(ch, TargetCode[i], TargetCode[i]);
@@ -2554,44 +2602,33 @@ namespace FZ4P
                 AddLog(ch, $"{TargetCode[i]}\t{checkReadHallX[i].ToString("F2")}\t{checkReadHallY[i].ToString("F2")}");
             }
 
+            STATIC.MCUH503.SetI3CByPaaMode(false);
+            Wait(500);
+            var tmprealX1 = DWDrvIC.LiearCompRead(AxisX);
+            var tmprealY1 = DWDrvIC.LiearCompRead(AxisY);
+            AddLog(ch, $"ByPass OFF");
+            AddLog(ch, $"MoveX\tMoveY");
+            for (int i = 1; i < tmprealX1.Count; i++)
+            {
+                AddLog(ch, $"\t{tmprealX1[i].ToString("F2")}\t{tmprealY1[i].ToString("F2")}");
+            }
 
+            STATIC.MCUH503.SetI3CByPaaMode(true);
+            AddLog(ch, $"ByPass ON");
+            Wait(500);
 
-            //DWDrvIC.OISOnOff(ch, true);
-            //Wait(100);
-            //Status = DrvIC.OIS_StausCheck(ch, 0x01, 0x02);
-            //if (!Status)
-            //{
-            //    LEDs_All_On(0, false);
-            //    PassFails[ch].Results[(int)SpecItem.OISLCCComp].Val = 1;
-            //    ShowDataResults(ch, (int)SpecItem.OISLCCComp, (int)SpecItem.OISLCCComp, InspType.OKNG, new double[] { });
-            //    return;
-            //}
-            //Dln.WriteByte(ch, DrvIC.OIS_Addr, 0x617A, 2, 0x01);
-            //Status = DrvIC.OIS_StausCheck(ch, 0x01, 0x02);
-            //if (!Status)
-            //{
-            //    LEDs_All_On(0, false);
-            //    PassFails[ch].Results[(int)SpecItem.OISLCCComp].Val = 1;
-            //    ShowDataResults(ch, (int)SpecItem.OISLCCComp, (int)SpecItem.OISLCCComp, InspType.OKNG, new double[] { });
-            //    return;
-            //}
+            var tmprealX = DWDrvIC.LiearCompRead(AxisX);
+            var tmprealY = DWDrvIC.LiearCompRead(AxisY);
 
+            AddLog(ch, $"MoveX\tMoveY");
+            for (int i = 1; i < tmprealX.Count; i++)
+            {
+                AddLog(ch, $"\t{tmprealX[i].ToString("F2")}\t{tmprealY[i].ToString("F2")}");
+            }
 
             PassFails[ch].Results[(int)SpecItem.OISLCCComp].Val = 0;
             ShowDataResults(ch, (int)SpecItem.OISLCCComp, (int)SpecItem.OISLCCComp, InspType.OKNG, new double[] { });
 
-            //MeasX.Clear();
-            //MeasY.Clear();
-            //Dln.WriteByte(ch, DrvIC.OIS_Addr, 0x6020, 2, 0x07);
-            //DrvIC.OISOnOff(ch, true);
-            //for (int i = 0; i < SIZE_OFS_TBL * SIZE_OFS_TBL; i++)
-            //{
-            //    DrvIC.OISMove(ch, TargetX[i % SIZE_OFS_TBL], TargetY[i / 7]);
-            //    Wait(100);
-            //    res = Measure();
-            //    MeasX.Add(res.cx[0]);
-            //    MeasY.Add(res.cy[0]);
-            //}
 
             LEDs_All_On(0, false);
         }

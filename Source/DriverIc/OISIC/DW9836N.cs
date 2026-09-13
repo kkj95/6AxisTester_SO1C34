@@ -140,10 +140,11 @@ namespace FZ4P.DriverIc.OISIC
             {
                 Controls.WriteByte(slaveID, (int)0x28, 1, (byte)0x39);
                 Controls.WriteByte(slaveID, (int)0x28, 1, (byte)0xA0);
-                Controls.WriteByte(slaveID, (int)RegisterMapDW9836N.Mode, 1, (byte)0x40);
+                Thread.Sleep(50);
                 Controls.WriteByte(slaveID, (int)RegisterMapDW9836N.STORE_PROD_ID, 1, (byte)0x01);
                 Thread.Sleep(640);
                 Controls.WriteByte(slaveID, (int)0x28, 1, (byte)0x14);
+                Thread.Sleep(50);
                 Controls.WriteByte(slaveID, (int)RegisterMapDW9836N.SWREST, 1, (byte)0x01);
             }
             catch
@@ -314,6 +315,7 @@ namespace FZ4P.DriverIc.OISIC
             var slaveID = GetAxisTypeID((AxisTypeDW)axis);
             Set_PT(axis, false);
 
+            Thread.Sleep(10);
             int startAddress = 0x55;
             _controls.WriteByte(slaveID, startAddress++, 1, 0x01);        // Linearity Enabled
 

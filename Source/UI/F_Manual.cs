@@ -402,17 +402,9 @@ namespace FZ4P.UI
             bool State = ((CheckBox)sender).Checked;
 
             if (State)
-            {
                 STATIC.Dln.PowerOnOff(0, true);
-                STATIC.Dln.PowerOnOff(1, true);
-            }
-
             else
-            {
                 STATIC.Dln.PowerOnOff(0, false);
-                STATIC.Dln.PowerOnOff(1, false);
-            }
-                
         }
 
         private void btn_PositionMove_Click(object sender, EventArgs e)
@@ -423,6 +415,7 @@ namespace FZ4P.UI
                 var positionY = Convert.ToInt32(txt_PositionCode_AxisY.Text);
                 var positionZ = Convert.ToInt32(txt_PositionCode_AxisZ.Text);
 
+                //_afFunction.AFMove(0, positionZ);
                 _afFunction.AFMove(0, positionZ);
                 _oISFunction.OISMove(0, positionX, positionY);
             }
@@ -455,8 +448,8 @@ namespace FZ4P.UI
                     Thread.Sleep(5);
                     ReadHall2 = _oISFunction.ReadOISHall(0, 1, 0).ToString();
                     Thread.Sleep(5);
-                    ReadHall3 = _afFunction.ReadAFHall(iCh).ToString();
-                    Thread.Sleep(5);
+                    //ReadHall3 = _afFunction.ReadAFHall(iCh).ToString();
+                    //Thread.Sleep(50);
 
                     PeakCurrent = _oISFunction.GetCurrent((int)AxisTypeDW.AxisX).ToString("00.00");
                     Thread.Sleep(5);
@@ -508,7 +501,6 @@ namespace FZ4P.UI
             _oISFunction.OISOnOff(0, true);
             _afFunction.AFOnOff(0, true);
         }
-
         private void btn_Move_Min_Click(object sender, EventArgs e)
         {
             var afMinCode = _afFunction.AF_MIN_CODE;

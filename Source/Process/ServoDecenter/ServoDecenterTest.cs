@@ -49,6 +49,7 @@ namespace FZ4P
             _actionLog(0, $"AF Position : {_afFunction.ReadAFHall(0)}");
             _oISFunction.OISMove(0, _params.CenterCode, _params.CenterCode);
             await Task.Delay(200);
+            _actionLog(0, $"X Position : {_oISFunction.ReadOISHall(0,(int)AxisTypeDW.AxisX)}, Y Position : {_oISFunction.ReadOISHall(0, (int)AxisTypeDW.AxisY)}");
 
             var ServoOnMeasure = Measure();
 

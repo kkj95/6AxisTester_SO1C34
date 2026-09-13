@@ -363,6 +363,7 @@
   <ItemGroup>
     <Folder Include="Process\EchoBoard\FRA\GainMergin\" />
     <Folder Include="Process\EchoBoard\FRA\PhaseMergin\" />
+    <Folder Include="Process\OISRegisterLog\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Serilog.4.4.0\build\Serilog.targets" Condition="Exists('..\packages\Serilog.4.4.0\build\Serilog.targets')" />

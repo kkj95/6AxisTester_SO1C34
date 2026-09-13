@@ -559,8 +559,8 @@ namespace FZ4P
         [ActionListUse(OISYDriv)][Condition("Y Sensitivity", "Max Stroke", "OIS Y Scan", "", "um")] public double YSensitivityMaxStroke { get; set; } = 300;
         [ActionListUse(OISYDriv)][Condition("Y Sensitivity", "Min Stroke", "OIS Y Scan", "", "um")] public double YSensitivityMinStroke { get; set; } = -300;
 
-        [ActionListUse(false)][Condition("X/Y Servo Decenter", "AF Position", "X/Y Servo Decenter", "", "code")] public int ServoDecenterAFPos { get; set; } = 1252;
-        [ActionListUse(false)][Condition("X/Y Servo Decenter", "Delay", "X/Y Servo Decenter", "", "ms")] public int ServoDecenterDelay { get; set; } = 100;
+        [ActionListUse(true)][Condition("X/Y Servo Decenter", "AF Position", "OIS Servo Decenter", "", "code")] public int ServoDecenterAFPos { get; set; } = 1252;
+        [ActionListUse(true)][Condition("X/Y Servo Decenter", "Delay", "OIS Servo Decenter", "", "ms")] public int ServoDecenterDelay { get; set; } = 100;
 
 
 
