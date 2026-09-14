@@ -41,6 +41,8 @@ namespace FZ4P.UI
 
             cbb_ReadWriteState.SelectedIndex = 0;
             cbb_SlaveIDState.SelectedIndex = 0;
+            toolStripButton4.Image = imageList1.Images["Power"];
+            toolStripButton5.Image = imageList1.Images["I2CWrite"];
         }
 
         private void btn_WindowState_Max_Click(object sender, EventArgs e)
