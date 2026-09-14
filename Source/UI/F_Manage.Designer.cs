@@ -29,28 +29,21 @@ namespace FZ4P
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(F_Manage));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title3 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.lblRepeatLoadingUnloading = new System.Windows.Forms.Label();
             this.RepeatRunCnt = new System.Windows.Forms.TextBox();
             this.CurrentRunCnt = new System.Windows.Forms.TextBox();
-            this.SetSampleNumber = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.NewSampleNumber = new System.Windows.Forms.TextBox();
             this.LastSampleNum = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.btnCheckContact = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.SuddenStop = new System.Windows.Forms.Button();
-            this.RepeatStartTest = new System.Windows.Forms.Button();
-            this.ToAdmin = new System.Windows.Forms.Button();
-            this.ToVision = new System.Windows.Forms.Button();
             this.p_Result = new System.Windows.Forms.Panel();
-            this.RunProgress = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.lbOISYPID = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
@@ -84,11 +77,18 @@ namespace FZ4P
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.lbActID = new System.Windows.Forms.Label();
             this.lbBarcodeID = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.cbb_Loading = new System.Windows.Forms.CheckBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.btnCheckContact = new System.Windows.Forms.Button();
+            this.RunProgress = new System.Windows.Forms.PictureBox();
+            this.SuddenStop = new System.Windows.Forms.Button();
+            this.RepeatStartTest = new System.Windows.Forms.Button();
+            this.ToAdmin = new System.Windows.Forms.Button();
+            this.ToVision = new System.Windows.Forms.Button();
+            this.SetSampleNumber = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.RunProgress)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -96,6 +96,7 @@ namespace FZ4P
             ((System.ComponentModel.ISupportInitialize)(this.YieldChart)).BeginInit();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RunProgress)).BeginInit();
             this.SuspendLayout();
             // 
             // lblRepeatLoadingUnloading
@@ -129,22 +130,6 @@ namespace FZ4P
             this.CurrentRunCnt.TabIndex = 151;
             this.CurrentRunCnt.Text = "1";
             this.CurrentRunCnt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // SetSampleNumber
-            // 
-            this.SetSampleNumber.BackColor = System.Drawing.Color.DarkOliveGreen;
-            this.SetSampleNumber.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("SetSampleNumber.BackgroundImage")));
-            this.SetSampleNumber.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.SetSampleNumber.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.SetSampleNumber.Font = new System.Drawing.Font("맑은 고딕", 12F, System.Drawing.FontStyle.Bold);
-            this.SetSampleNumber.ForeColor = System.Drawing.Color.Black;
-            this.SetSampleNumber.Location = new System.Drawing.Point(0, 68);
-            this.SetSampleNumber.Name = "SetSampleNumber";
-            this.SetSampleNumber.Size = new System.Drawing.Size(174, 45);
-            this.SetSampleNumber.TabIndex = 156;
-            this.SetSampleNumber.Text = "Set Sample No.";
-            this.SetSampleNumber.UseVisualStyleBackColor = false;
-            this.SetSampleNumber.Click += new System.EventHandler(this.SetSampleNumber_Click);
             // 
             // label3
             // 
@@ -207,22 +192,6 @@ namespace FZ4P
             this.label4.Text = "SO1C34";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // btnCheckContact
-            // 
-            this.btnCheckContact.BackColor = System.Drawing.Color.MidnightBlue;
-            this.btnCheckContact.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnCheckContact.BackgroundImage")));
-            this.btnCheckContact.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btnCheckContact.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnCheckContact.Font = new System.Drawing.Font("맑은 고딕", 12F, System.Drawing.FontStyle.Bold);
-            this.btnCheckContact.ForeColor = System.Drawing.Color.Black;
-            this.btnCheckContact.Location = new System.Drawing.Point(1739, 784);
-            this.btnCheckContact.Name = "btnCheckContact";
-            this.btnCheckContact.Size = new System.Drawing.Size(178, 45);
-            this.btnCheckContact.TabIndex = 165;
-            this.btnCheckContact.Text = "Open Data Folder";
-            this.btnCheckContact.UseVisualStyleBackColor = false;
-            this.btnCheckContact.Click += new System.EventHandler(this.btnCheckContact_Click);
-            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.lblRepeatLoadingUnloading);
@@ -234,83 +203,12 @@ namespace FZ4P
             this.groupBox1.TabIndex = 193;
             this.groupBox1.TabStop = false;
             // 
-            // SuddenStop
-            // 
-            this.SuddenStop.BackColor = System.Drawing.Color.DarkRed;
-            this.SuddenStop.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("SuddenStop.BackgroundImage")));
-            this.SuddenStop.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.SuddenStop.Font = new System.Drawing.Font("맑은 고딕", 32.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SuddenStop.ForeColor = System.Drawing.Color.White;
-            this.SuddenStop.Location = new System.Drawing.Point(295, 923);
-            this.SuddenStop.Name = "SuddenStop";
-            this.SuddenStop.Size = new System.Drawing.Size(176, 89);
-            this.SuddenStop.TabIndex = 196;
-            this.SuddenStop.Text = "Halt";
-            this.SuddenStop.UseVisualStyleBackColor = false;
-            this.SuddenStop.Click += new System.EventHandler(this.SuddenStop_Click);
-            // 
-            // RepeatStartTest
-            // 
-            this.RepeatStartTest.BackColor = System.Drawing.Color.RoyalBlue;
-            this.RepeatStartTest.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("RepeatStartTest.BackgroundImage")));
-            this.RepeatStartTest.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.RepeatStartTest.Font = new System.Drawing.Font("맑은 고딕", 32F, System.Drawing.FontStyle.Bold);
-            this.RepeatStartTest.ForeColor = System.Drawing.Color.White;
-            this.RepeatStartTest.Location = new System.Drawing.Point(113, 923);
-            this.RepeatStartTest.Name = "RepeatStartTest";
-            this.RepeatStartTest.Size = new System.Drawing.Size(176, 89);
-            this.RepeatStartTest.TabIndex = 176;
-            this.RepeatStartTest.Text = "Repeat";
-            this.RepeatStartTest.UseVisualStyleBackColor = false;
-            this.RepeatStartTest.Click += new System.EventHandler(this.RepeatStartTest_Click);
-            // 
-            // ToAdmin
-            // 
-            this.ToAdmin.BackColor = System.Drawing.Color.DeepSkyBlue;
-            this.ToAdmin.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ToAdmin.BackgroundImage")));
-            this.ToAdmin.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ToAdmin.Font = new System.Drawing.Font("Calibri", 18F, System.Drawing.FontStyle.Bold);
-            this.ToAdmin.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.ToAdmin.Location = new System.Drawing.Point(309, 0);
-            this.ToAdmin.Name = "ToAdmin";
-            this.ToAdmin.Size = new System.Drawing.Size(320, 37);
-            this.ToAdmin.TabIndex = 179;
-            this.ToAdmin.Text = "Admin Mode";
-            this.ToAdmin.UseVisualStyleBackColor = false;
-            this.ToAdmin.Click += new System.EventHandler(this.ToAdmin_Click);
-            // 
-            // ToVision
-            // 
-            this.ToVision.BackColor = System.Drawing.Color.DodgerBlue;
-            this.ToVision.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ToVision.BackgroundImage")));
-            this.ToVision.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ToVision.Font = new System.Drawing.Font("Calibri", 18F, System.Drawing.FontStyle.Bold);
-            this.ToVision.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.ToVision.Location = new System.Drawing.Point(635, 0);
-            this.ToVision.Name = "ToVision";
-            this.ToVision.Size = new System.Drawing.Size(320, 37);
-            this.ToVision.TabIndex = 178;
-            this.ToVision.Text = "Vision";
-            this.ToVision.UseVisualStyleBackColor = false;
-            this.ToVision.Click += new System.EventHandler(this.ToVision_Click);
-            // 
             // p_Result
             // 
             this.p_Result.Location = new System.Drawing.Point(961, 43);
             this.p_Result.Name = "p_Result";
             this.p_Result.Size = new System.Drawing.Size(772, 788);
             this.p_Result.TabIndex = 175;
-            // 
-            // RunProgress
-            // 
-            this.RunProgress.BackColor = System.Drawing.Color.Transparent;
-            this.RunProgress.Image = ((System.Drawing.Image)(resources.GetObject("RunProgress.Image")));
-            this.RunProgress.Location = new System.Drawing.Point(7, 684);
-            this.RunProgress.Name = "RunProgress";
-            this.RunProgress.Size = new System.Drawing.Size(470, 57);
-            this.RunProgress.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.RunProgress.TabIndex = 244;
-            this.RunProgress.TabStop = false;
             // 
             // tableLayoutPanel1
             // 
@@ -686,49 +584,49 @@ namespace FZ4P
             this.YieldChart.AllowDrop = true;
             this.YieldChart.BackImageAlignment = System.Windows.Forms.DataVisualization.Charting.ChartImageAlignmentStyle.Center;
             this.YieldChart.BorderlineColor = System.Drawing.Color.Black;
-            chartArea3.BackColor = System.Drawing.Color.Transparent;
-            chartArea3.Name = "ChartArea1";
-            chartArea3.ShadowColor = System.Drawing.Color.White;
-            this.YieldChart.ChartAreas.Add(chartArea3);
+            chartArea1.BackColor = System.Drawing.Color.Transparent;
+            chartArea1.Name = "ChartArea1";
+            chartArea1.ShadowColor = System.Drawing.Color.White;
+            this.YieldChart.ChartAreas.Add(chartArea1);
             this.YieldChart.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend3.Alignment = System.Drawing.StringAlignment.Center;
-            legend3.BackColor = System.Drawing.Color.Transparent;
-            legend3.BackSecondaryColor = System.Drawing.Color.Transparent;
-            legend3.BorderColor = System.Drawing.Color.Transparent;
-            legend3.BorderWidth = 0;
-            legend3.DockedToChartArea = "ChartArea1";
-            legend3.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Bottom;
-            legend3.Font = new System.Drawing.Font("맑은 고딕", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            legend3.IsTextAutoFit = false;
-            legend3.Name = "Legend1";
-            legend3.Position.Auto = false;
-            legend3.Position.Height = 25F;
-            legend3.Position.Width = 98F;
-            legend3.Position.Y = 75F;
-            legend3.ShadowColor = System.Drawing.Color.White;
-            legend3.TitleBackColor = System.Drawing.Color.Transparent;
-            legend3.TitleFont = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.YieldChart.Legends.Add(legend3);
+            legend1.Alignment = System.Drawing.StringAlignment.Center;
+            legend1.BackColor = System.Drawing.Color.Transparent;
+            legend1.BackSecondaryColor = System.Drawing.Color.Transparent;
+            legend1.BorderColor = System.Drawing.Color.Transparent;
+            legend1.BorderWidth = 0;
+            legend1.DockedToChartArea = "ChartArea1";
+            legend1.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Bottom;
+            legend1.Font = new System.Drawing.Font("맑은 고딕", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            legend1.IsTextAutoFit = false;
+            legend1.Name = "Legend1";
+            legend1.Position.Auto = false;
+            legend1.Position.Height = 25F;
+            legend1.Position.Width = 98F;
+            legend1.Position.Y = 75F;
+            legend1.ShadowColor = System.Drawing.Color.White;
+            legend1.TitleBackColor = System.Drawing.Color.Transparent;
+            legend1.TitleFont = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.YieldChart.Legends.Add(legend1);
             this.YieldChart.Location = new System.Drawing.Point(3, 3);
             this.YieldChart.Name = "YieldChart";
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
-            series3.Legend = "Legend1";
-            series3.Name = "Series5";
-            this.YieldChart.Series.Add(series3);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+            series1.Legend = "Legend1";
+            series1.Name = "Series5";
+            this.YieldChart.Series.Add(series1);
             this.YieldChart.Size = new System.Drawing.Size(468, 318);
             this.YieldChart.TabIndex = 255;
             this.YieldChart.Text = "YieldChart";
-            title3.Alignment = System.Drawing.ContentAlignment.TopLeft;
-            title3.BackColor = System.Drawing.Color.Transparent;
-            title3.Font = new System.Drawing.Font("맑은 고딕", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            title3.Name = "Title1";
-            title3.Position.Auto = false;
-            title3.Position.Height = 8F;
-            title3.Position.Width = 55F;
-            title3.Text = "Yield";
-            title3.TextStyle = System.Windows.Forms.DataVisualization.Charting.TextStyle.Shadow;
-            this.YieldChart.Titles.Add(title3);
+            title1.Alignment = System.Drawing.ContentAlignment.TopLeft;
+            title1.BackColor = System.Drawing.Color.Transparent;
+            title1.Font = new System.Drawing.Font("맑은 고딕", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            title1.Name = "Title1";
+            title1.Position.Auto = false;
+            title1.Position.Height = 8F;
+            title1.Position.Width = 55F;
+            title1.Text = "Yield";
+            title1.TextStyle = System.Windows.Forms.DataVisualization.Charting.TextStyle.Shadow;
+            this.YieldChart.Titles.Add(title1);
             this.YieldChart.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.YieldChart_MouseDoubleClick_1);
             // 
             // tabPage2
@@ -786,6 +684,21 @@ namespace FZ4P
             this.lbBarcodeID.Text = "None";
             this.lbBarcodeID.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // cbb_Loading
+            // 
+            this.cbb_Loading.Appearance = System.Windows.Forms.Appearance.Button;
+            this.cbb_Loading.BackColor = System.Drawing.Color.RoyalBlue;
+            this.cbb_Loading.Font = new System.Drawing.Font("맑은 고딕", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.cbb_Loading.ForeColor = System.Drawing.Color.White;
+            this.cbb_Loading.Location = new System.Drawing.Point(7, 928);
+            this.cbb_Loading.Name = "cbb_Loading";
+            this.cbb_Loading.Size = new System.Drawing.Size(104, 84);
+            this.cbb_Loading.TabIndex = 267;
+            this.cbb_Loading.Text = "Loading";
+            this.cbb_Loading.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.cbb_Loading.UseVisualStyleBackColor = false;
+            this.cbb_Loading.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // button1
             // 
             this.button1.BackColor = System.Drawing.Color.MidnightBlue;
@@ -802,26 +715,131 @@ namespace FZ4P
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // cbb_Loading
+            // btnCheckContact
             // 
-            this.cbb_Loading.Appearance = System.Windows.Forms.Appearance.Button;
-            this.cbb_Loading.BackColor = System.Drawing.Color.RoyalBlue;
-            this.cbb_Loading.Font = new System.Drawing.Font("맑은 고딕", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.cbb_Loading.ForeColor = System.Drawing.Color.White;
-            this.cbb_Loading.Location = new System.Drawing.Point(7, 928);
-            this.cbb_Loading.Name = "cbb_Loading";
-            this.cbb_Loading.Size = new System.Drawing.Size(104, 84);
-            this.cbb_Loading.TabIndex = 267;
-            this.cbb_Loading.Text = "Loading";
-            this.cbb_Loading.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.cbb_Loading.UseVisualStyleBackColor = false;
-            this.cbb_Loading.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.btnCheckContact.BackColor = System.Drawing.Color.MidnightBlue;
+            this.btnCheckContact.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnCheckContact.BackgroundImage")));
+            this.btnCheckContact.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnCheckContact.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnCheckContact.Font = new System.Drawing.Font("맑은 고딕", 12F, System.Drawing.FontStyle.Bold);
+            this.btnCheckContact.ForeColor = System.Drawing.Color.Black;
+            this.btnCheckContact.Location = new System.Drawing.Point(1739, 784);
+            this.btnCheckContact.Name = "btnCheckContact";
+            this.btnCheckContact.Size = new System.Drawing.Size(178, 45);
+            this.btnCheckContact.TabIndex = 165;
+            this.btnCheckContact.Text = "Open Data Folder";
+            this.btnCheckContact.UseVisualStyleBackColor = false;
+            this.btnCheckContact.Click += new System.EventHandler(this.btnCheckContact_Click);
+            // 
+            // RunProgress
+            // 
+            this.RunProgress.BackColor = System.Drawing.Color.Transparent;
+            this.RunProgress.Image = ((System.Drawing.Image)(resources.GetObject("RunProgress.Image")));
+            this.RunProgress.Location = new System.Drawing.Point(7, 684);
+            this.RunProgress.Name = "RunProgress";
+            this.RunProgress.Size = new System.Drawing.Size(470, 57);
+            this.RunProgress.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.RunProgress.TabIndex = 244;
+            this.RunProgress.TabStop = false;
+            // 
+            // SuddenStop
+            // 
+            this.SuddenStop.BackColor = System.Drawing.Color.DarkRed;
+            this.SuddenStop.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("SuddenStop.BackgroundImage")));
+            this.SuddenStop.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.SuddenStop.Font = new System.Drawing.Font("맑은 고딕", 32.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SuddenStop.ForeColor = System.Drawing.Color.White;
+            this.SuddenStop.Location = new System.Drawing.Point(295, 923);
+            this.SuddenStop.Name = "SuddenStop";
+            this.SuddenStop.Size = new System.Drawing.Size(176, 89);
+            this.SuddenStop.TabIndex = 196;
+            this.SuddenStop.Text = "Halt";
+            this.SuddenStop.UseVisualStyleBackColor = false;
+            this.SuddenStop.Click += new System.EventHandler(this.SuddenStop_Click);
+            // 
+            // RepeatStartTest
+            // 
+            this.RepeatStartTest.BackColor = System.Drawing.Color.RoyalBlue;
+            this.RepeatStartTest.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("RepeatStartTest.BackgroundImage")));
+            this.RepeatStartTest.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.RepeatStartTest.Font = new System.Drawing.Font("맑은 고딕", 32F, System.Drawing.FontStyle.Bold);
+            this.RepeatStartTest.ForeColor = System.Drawing.Color.White;
+            this.RepeatStartTest.Location = new System.Drawing.Point(113, 923);
+            this.RepeatStartTest.Name = "RepeatStartTest";
+            this.RepeatStartTest.Size = new System.Drawing.Size(176, 89);
+            this.RepeatStartTest.TabIndex = 176;
+            this.RepeatStartTest.Text = "Repeat";
+            this.RepeatStartTest.UseVisualStyleBackColor = false;
+            this.RepeatStartTest.Click += new System.EventHandler(this.RepeatStartTest_Click);
+            // 
+            // ToAdmin
+            // 
+            this.ToAdmin.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.ToAdmin.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ToAdmin.BackgroundImage")));
+            this.ToAdmin.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ToAdmin.Font = new System.Drawing.Font("Calibri", 18F, System.Drawing.FontStyle.Bold);
+            this.ToAdmin.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.ToAdmin.Location = new System.Drawing.Point(309, 0);
+            this.ToAdmin.Name = "ToAdmin";
+            this.ToAdmin.Size = new System.Drawing.Size(320, 37);
+            this.ToAdmin.TabIndex = 179;
+            this.ToAdmin.Text = "Admin Mode";
+            this.ToAdmin.UseVisualStyleBackColor = false;
+            this.ToAdmin.Click += new System.EventHandler(this.ToAdmin_Click);
+            // 
+            // ToVision
+            // 
+            this.ToVision.BackColor = System.Drawing.Color.DodgerBlue;
+            this.ToVision.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ToVision.BackgroundImage")));
+            this.ToVision.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ToVision.Font = new System.Drawing.Font("Calibri", 18F, System.Drawing.FontStyle.Bold);
+            this.ToVision.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.ToVision.Location = new System.Drawing.Point(635, 0);
+            this.ToVision.Name = "ToVision";
+            this.ToVision.Size = new System.Drawing.Size(320, 37);
+            this.ToVision.TabIndex = 178;
+            this.ToVision.Text = "Vision";
+            this.ToVision.UseVisualStyleBackColor = false;
+            this.ToVision.Click += new System.EventHandler(this.ToVision_Click);
+            // 
+            // SetSampleNumber
+            // 
+            this.SetSampleNumber.BackColor = System.Drawing.Color.DarkOliveGreen;
+            this.SetSampleNumber.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("SetSampleNumber.BackgroundImage")));
+            this.SetSampleNumber.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.SetSampleNumber.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.SetSampleNumber.Font = new System.Drawing.Font("맑은 고딕", 12F, System.Drawing.FontStyle.Bold);
+            this.SetSampleNumber.ForeColor = System.Drawing.Color.Black;
+            this.SetSampleNumber.Location = new System.Drawing.Point(0, 68);
+            this.SetSampleNumber.Name = "SetSampleNumber";
+            this.SetSampleNumber.Size = new System.Drawing.Size(174, 45);
+            this.SetSampleNumber.TabIndex = 156;
+            this.SetSampleNumber.Text = "Set Sample No.";
+            this.SetSampleNumber.UseVisualStyleBackColor = false;
+            this.SetSampleNumber.Click += new System.EventHandler(this.SetSampleNumber_Click);
+            // 
+            // button2
+            // 
+            this.button2.BackColor = System.Drawing.Color.MidnightBlue;
+            this.button2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button2.BackgroundImage")));
+            this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button2.Font = new System.Drawing.Font("맑은 고딕", 12F, System.Drawing.FontStyle.Bold);
+            this.button2.ForeColor = System.Drawing.Color.Black;
+            this.button2.Location = new System.Drawing.Point(1739, 427);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(178, 45);
+            this.button2.TabIndex = 268;
+            this.button2.Text = "IC Read Write View";
+            this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click_1);
             // 
             // F_Manage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1920, 1080);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.cbb_Loading);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.tabControl1);
@@ -854,7 +872,6 @@ namespace FZ4P
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.RunProgress)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
@@ -862,6 +879,7 @@ namespace FZ4P
             ((System.ComponentModel.ISupportInitialize)(this.YieldChart)).EndInit();
             this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RunProgress)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -919,5 +937,6 @@ namespace FZ4P
         private System.Windows.Forms.Label lbBarcodeID;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox cbb_Loading;
+        private System.Windows.Forms.Button button2;
     }
 }

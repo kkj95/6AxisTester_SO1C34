@@ -207,6 +207,8 @@ namespace FZ4P
 
         public static F_Manual fManual = new F_Manual(MCUH503.OIS, DrvIC,Process.AddLog, MCUH503);
 
+        public static F_Manaul_Register fManual_Register= new F_Manaul_Register(MCUH503.OIS, DrvIC, dln_control, Process.AddLog, Process.Dln.PowerOnOff , MCUH503);
+
         public static BootLoadinit AppLazyinit = new BootLoadinit();
     }
     public static class DataIO

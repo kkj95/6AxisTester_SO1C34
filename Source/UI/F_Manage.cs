@@ -1001,5 +1001,15 @@ namespace FZ4P
             }
             control.Enabled = true;
         }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            if (STATIC.fManual_Register.Visible)
+                STATIC.fManual_Register.Hide();
+            else
+            {
+                STATIC.fManual_Register.Show();
+            }
+        }
     }
 }
