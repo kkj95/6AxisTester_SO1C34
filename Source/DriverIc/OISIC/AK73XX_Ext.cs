@@ -93,7 +93,6 @@ namespace FZ4P.DriverIc.OISIC
             Dln.ReadArray(ch, AFSlaveAddr, 0x4B, 1, rbuf);
             if ((byte)(rbuf[0] & 0x04) != 0x00)
             {
-
                 _logAction(ch, "Store fail");
                 return false;
             }

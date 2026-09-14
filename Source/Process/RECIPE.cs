@@ -733,6 +733,8 @@ namespace FZ4P
         [ActionListUse(true)][Spec("OIS Y Phase Margin", "deg", InspType.Normal, "OIS Phase Margin")] FRAY_PhaseMargin,
         [ActionListUse(true)][Spec("OIS X Gain Margin", "dB", InspType.Normal, "OIS Gain Margin")] FRAX_GainMargin,
         [ActionListUse(true)][Spec("OIS Y Gain Margin", "dB", InspType.Normal, "OIS Gain Margin")] FRAY_GainMargin,
+        [ActionListUse(true)][Spec("OIS X 10Hz Gain Margin", "dB", InspType.MintoMax, "OIS 10Hz Gain Margin")] FRAX_GainMargin_10Hz,
+        [ActionListUse(true)][Spec("OIS Y 10Hz Gain Margin", "dB", InspType.MintoMax, "OIS 10Hz Gain Margin")] FRAY_GainMargin_10Hz,
         [ActionListUse(true)][Spec("OIS X Phase Margin Low", "deg", InspType.Normal, "OIS Phase Margin Low")] FRAX_PhaseMarginLow,
         [ActionListUse(true)][Spec("OIS Y Phase Margin Low", "deg", InspType.Normal, "OIS Phase Margin Low")] FRAY_PhaseMarginLow,
         [ActionListUse(true)][Spec("OIS X Gain Margin Low", "dB", InspType.Normal, "OIS Gain Margin Low")] FRAX_GainMarginLow,

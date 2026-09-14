@@ -131,8 +131,10 @@ namespace FZ4P
 
             OISPM(ch, (int)AxisTypeDW.AxisX, fra_setting,ref fra_result);
 
+            PassFails[0].Results[(int)SpecItem.FRAX_GainMargin_10Hz].Val = fra_result.freq10HzGain;
             PassFails[0].Results[(int)SpecItem.FRAX_PhaseMargin].Val = fra_result.phase_margin;
             ShowDataResults(ch, (int)SpecItem.FRAX_PhaseMargin, (int)SpecItem.FRAX_PhaseMargin, InspType.Normal, new double[] { });
+            ShowDataResults(ch, (int)SpecItem.FRAX_GainMargin_10Hz, (int)SpecItem.FRAX_GainMargin_10Hz, InspType.Normal, new double[] { });
 
             fra_result = new sFRA_Margin();
             fra_setting = new sFRA_TestSetting()
@@ -148,8 +150,10 @@ namespace FZ4P
             
             OISPM(ch, (int)AxisTypeDW.AxisY, fra_setting, ref fra_result);
 
+            PassFails[0].Results[(int)SpecItem.FRAY_GainMargin_10Hz].Val = fra_result.freq10HzGain;
             PassFails[0].Results[(int)SpecItem.FRAY_PhaseMargin].Val = fra_result.phase_margin;
             ShowDataResults(ch, (int)SpecItem.FRAY_PhaseMargin, (int)SpecItem.FRAY_PhaseMargin, InspType.Normal, new double[] { });
+            ShowDataResults(ch, (int)SpecItem.FRAY_GainMargin_10Hz, (int)SpecItem.FRAY_GainMargin_10Hz, InspType.Normal, new double[] { });
         }
         void OISGM(int ch, string testItem, int inspCnt)
         {
@@ -184,6 +188,45 @@ namespace FZ4P
                 end_freq = Condition.iYChirpFrom_GM,
             };
             
+            OISGM(ch, (int)AxisTypeDW.AxisY, fra_setting, ref fra_result);
+
+            PassFails[0].Results[(int)SpecItem.FRAY_GainMargin].Val = Math.Abs(fra_result.gain_margin);
+            ShowDataResults(ch, (int)SpecItem.FRAY_GainMargin, (int)SpecItem.FRAY_GainMargin, InspType.Normal, new double[] { });
+        }
+
+        void OISGM10Hz(int ch, string testItem, int inspCnt)
+        {
+            double[] res = new double[2];
+
+            sFRA_Margin fra_result = new sFRA_Margin();
+            sFRA_TestSetting fra_setting = new sFRA_TestSetting()
+            {
+                ois_slave_id = (byte)(DWDrvIC.OISX_Addr << 1),
+                ois_mode = 0x00,
+                test_point = 1,
+                amplitude = (int)Condition.iXAmplitude_GM,
+                dc_bias_ofst = (int)Condition.iXOffset_GM,
+                start_freq = 10,
+                end_freq = 10
+            };
+
+            OISGM(ch, (int)AxisTypeDW.AxisX, fra_setting, ref fra_result);
+
+            PassFails[0].Results[(int)SpecItem.FRAX_GainMargin].Val = Math.Abs(fra_result.gain_margin);
+            ShowDataResults(ch, (int)SpecItem.FRAX_GainMargin, (int)SpecItem.FRAX_GainMargin, InspType.Normal, new double[] { });
+
+            fra_result = new sFRA_Margin();
+            fra_setting = new sFRA_TestSetting()
+            {
+                ois_slave_id = (byte)(DWDrvIC.OISY_Addr << 1),
+                ois_mode = 0x00,
+                test_point = 1,
+                amplitude = (int)Condition.iYAmplitude_GM,
+                dc_bias_ofst = (int)Condition.iYOffset_GM,
+                start_freq = 10,
+                end_freq = 10,
+            };
+
             OISGM(ch, (int)AxisTypeDW.AxisY, fra_setting, ref fra_result);
 
             PassFails[0].Results[(int)SpecItem.FRAY_GainMargin].Val = Math.Abs(fra_result.gain_margin);
@@ -978,6 +1021,19 @@ namespace FZ4P
             HallCalY(ch);
             //TOOD : OIS - EPA 삭제 기능 필요없음?? 이인경수석 통화.
             //SetEPA((int)AxisTypeDW.AxisY);
+
+
+            for (int start = 0x00; start < 0xFF; start += 0x10)
+            {
+                int end = start + 0x10;
+
+                if (end > 0xFF)
+                    end = 0xFF;
+
+                var msg = DWDrvIC.Check_Byte(ch,(byte)start,(byte)end);
+
+                AddLog(ch, msg);
+            }
             #endregion
         }
 
@@ -1519,7 +1575,6 @@ namespace FZ4P
 
             if (freqval == Condition.iAFChirpFrom)
             {
-
                 AddLog(ch, " Error type1 : Gain over zero at 1st cycle");
                 DrvIC.FRAModeDisable(ch);
                 resFreq = freqval;
@@ -1527,7 +1582,6 @@ namespace FZ4P
             }
             if ((freqval <= Condition.iAFChirpTo) && (gainval <= 0))
             {
-
                 if (gainval > -2)
                 {
                     freqpm = before_after_zero_freq[0];
@@ -2636,7 +2690,6 @@ namespace FZ4P
 
             PassFails[ch].Results[(int)SpecItem.OISLCCComp].Val = 0;
             ShowDataResults(ch, (int)SpecItem.OISLCCComp, (int)SpecItem.OISLCCComp, InspType.OKNG, new double[] { });
-
 
             LEDs_All_On(0, false);
         }

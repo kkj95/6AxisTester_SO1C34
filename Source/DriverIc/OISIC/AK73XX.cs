@@ -242,7 +242,6 @@ namespace FZ4P.DriverIc.OISIC
 
             }
             Process.AddLog(ch, s);
-
         }
         void AK7326_check_byte(int ch, int axis, byte start, byte end)
         {

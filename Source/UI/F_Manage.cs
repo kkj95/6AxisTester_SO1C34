@@ -1007,9 +1007,7 @@ namespace FZ4P
             if (STATIC.fManual_Register.Visible)
                 STATIC.fManual_Register.Hide();
             else
-            {
                 STATIC.fManual_Register.Show();
-            }
         }
     }
 }

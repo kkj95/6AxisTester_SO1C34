@@ -166,6 +166,26 @@ namespace FZ4P.DriverIc.OISIC
             return readCurrent.Round(2);
         }
 
+        public string Check_Byte(int ch, byte start, byte end)
+        {
+            var SlaveID = GetAxisTypeID(AxisTypeDW.AxisX);
+            int addr = 0; int index = 0;
+            string tmpID = string.Empty;
+            byte rbuf = 0x00;
+            tmpID += $"0x{start.ToString("X2")}~0x{end.ToString("X2")} : ";
+
+            for (addr = start, index = 0; addr <= end; addr++, index++)
+            {
+                rbuf = _controls.ReadByte(SlaveID, addr, 1);
+                if ((index & 0x0003) == 0x0000)
+                    tmpID += " ";
+                tmpID += rbuf.ToString("X2");
+
+            }
+
+            return tmpID;
+        }
+
         /// <summary>
         /// 기본 close 모드
         /// </summary>
