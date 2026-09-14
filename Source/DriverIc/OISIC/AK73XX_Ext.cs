@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FZ4P.DriverIc.OISIC
@@ -76,12 +77,29 @@ namespace FZ4P.DriverIc.OISIC
 
         public bool AF_ICReset(int ch)
         {
-            AFOnOff(ch, false);
-            Process.Wait(10);
-            AF_Memory_Update(ch, 5);
-            AFMove(ch, AF_MID_CODE);
-            AFOnOff(ch, true);
-            Process.AddLog(ch, $"AF was reset, 0x03 = 0x{Dln.ReadByte(ch, AF_Addr, 0x03, 1).ToString("x2")}");
+            //AFOnOff(ch, false);
+            //Process.Wait(10);
+            //AF_Memory_Update(ch, 5);
+            //AFMove(ch, AF_MID_CODE);
+            //AFOnOff(ch, true);
+            //Process.AddLog(ch, $"AF was reset, 0x03 = 0x{Dln.ReadByte(ch, AF_Addr, 0x03, 1).ToString("x2")}");
+            //return true;
+
+            byte[] rbuf = new byte[1];
+            Dln.WriteArray(ch, AFSlaveAddr, 0x02, 1, new byte[] { 0x40 });
+            Thread.Sleep(50);
+            Dln.WriteArray(ch, AFSlaveAddr, 0x03, 1, new byte[] { 0x10 });
+            Thread.Sleep(100);
+            Dln.ReadArray(ch, AFSlaveAddr, 0x4B, 1, rbuf);
+            if ((byte)(rbuf[0] & 0x04) != 0x00)
+            {
+
+                _logAction(ch, "Store fail");
+                return false;
+            }
+            Dln.WriteArray(ch, AFSlaveAddr, 0x02, 1, new byte[] { 0x00 });
+            Dln.WriteArray(ch, AFSlaveAddr, 0x00, 1, new byte[] { 0x80, 0x00 });
+            Thread.Sleep(50);
             return true;
         }
 
