@@ -763,6 +763,14 @@ namespace FZ4P
             }
             PassFails[0].Results[(int)SpecItem.AF_NonEPAStroke].Val = stroke;
             ShowDataResults(ch, (int)SpecItem.AF_NonEPAStroke, (int)SpecItem.AF_NonEPAStroke, InspType.Normal, new double[] { });
+
+            //파워 리셋 후 PID Read
+            Dln.I3CStop(STATIC.MCUH503);
+            Dln.PowerSequence(0);
+            Wait(100);
+            Dln.HWReset(STATIC.MCUH503).Connected(STATIC.MCUH503);
+            DrvIC.AF_ICReset(ch);
+            DrvIC.AK7314_IC_Data(ch);
         }
 
         private void HallCalX(int ch)

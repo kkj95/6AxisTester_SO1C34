@@ -136,7 +136,7 @@ namespace FZ4P.DriverIc.OISIC
 
             for (temp = 0; temp < 5; temp++)
             {
-                Dln.WriteArray(ch, AFSlaveAddr, 0x03, 1, new byte[] { 0x00 });
+                Dln.WriteArray(ch, AFSlaveAddr, 0x03, 1, new byte[] { value });
                 Process.Wait(time);
 
                 Dln.ReadArray(ch, AFSlaveAddr, 0x4B, 1, check_update);// AK7314_Read_byte(0x4B) & 0x04;

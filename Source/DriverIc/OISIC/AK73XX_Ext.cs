@@ -87,9 +87,9 @@ namespace FZ4P.DriverIc.OISIC
 
             byte[] rbuf = new byte[1];
             Dln.WriteArray(ch, AFSlaveAddr, 0x02, 1, new byte[] { 0x40 });
-            Thread.Sleep(50);
-            Dln.WriteArray(ch, AFSlaveAddr, 0x03, 1, new byte[] { 0x10 });
             Thread.Sleep(100);
+            Dln.WriteArray(ch, AFSlaveAddr, 0x03, 1, new byte[] { 0x10 });
+            Thread.Sleep(150);
             Dln.ReadArray(ch, AFSlaveAddr, 0x4B, 1, rbuf);
             if ((byte)(rbuf[0] & 0x04) != 0x00)
             {
@@ -99,7 +99,7 @@ namespace FZ4P.DriverIc.OISIC
             }
             Dln.WriteArray(ch, AFSlaveAddr, 0x02, 1, new byte[] { 0x00 });
             Dln.WriteArray(ch, AFSlaveAddr, 0x00, 1, new byte[] { 0x80, 0x00 });
-            Thread.Sleep(50);
+            Thread.Sleep(100);
             return true;
         }
 
