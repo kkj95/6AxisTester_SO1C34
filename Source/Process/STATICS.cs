@@ -74,7 +74,7 @@ namespace FZ4P
         public static DateTime LogDate = new DateTime();
         public static string FailNumber = string.Empty;
         public static string ActID = string.Empty;
-        public static byte[] ActID_Memory = new byte[5];
+        public static byte[] ActID_Memory = new byte[8];
         public static string PosturePos = string.Empty;
         public static bool BarcodeConState = false;
         public static bool TCPCOnState = false;

@@ -33,7 +33,6 @@ namespace FAutoLearn
         public Mat mCustomImg = null;
         public Mat mCustomImg2 = null;
 
-
         public Mat mOverlayedImg = null;
         public Mat mSchematicImg = null;
         public Mat mSchematicOverlayedImg = null;

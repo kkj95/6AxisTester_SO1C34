@@ -24,6 +24,7 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Remoting.Messaging;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -213,6 +214,7 @@ namespace FZ4P
                         ref byte[] PIDParamRegister,
                         ref byte[] PIDParamRegisterData)
         {
+            if(result == null) return 0x00;
             PIDParamRegister = result.Register;
             PIDParamRegisterData = result.RegisterValue;
             return result.Version;
@@ -1616,7 +1618,6 @@ namespace FZ4P
                                 WriteResult(port);
                                 SaveLogData();
                                 SetFailList(ch);
-
                             }
                             else
                             {
@@ -3162,21 +3163,35 @@ namespace FZ4P
         {
             
         }
+
+        private void ScanByPassModeOnOff(string name, bool OnOff)
+        {
+            if (Option.ByPassUse)
+            {
+                if (name.Contains("OIS X Scan") || name.Contains("OIS Y Scan") || name.Contains("SineWave Tes") || name.Contains("Ringing Test"))
+                {
+                    STATIC.MCUH503.SetI3CByPaaMode(OnOff);
+                    if(OnOff)
+                        AddLog(0, "ByPass ON");
+                    else
+                        AddLog(0, "ByPass OFF");
+                }
+            }
+        }
         //TODO : ByPass True
         public void Act_ScanCode(int port, string testItem, int InspCnt)
         {
             STATIC.Process.DWDrvIC.LiearCompEnable((int)AxisTypeDW.AxisX, true);
             STATIC.Process.DWDrvIC.LiearCompEnable((int)AxisTypeDW.AxisY, true);
 
-            //STATIC.MCUH503.SetI3CByPaaMode(true);
-
+            ScanByPassModeOnOff(testItem,true);
             MakeWaveform(testItem);
             LEDs_All_On(port, true);
             Process_ScanCodeTest(port, testItem, InspCnt);
             LEDs_All_On(port, false);
             Process_CalcCodeTest(port, testItem, InspCnt);
 
-            //STATIC.MCUH503.SetI3CByPaaMode(false);
+            ScanByPassModeOnOff(testItem, false);
         }
         private void Act_ScanTimeCode(int port, string testItem, int InspCnt)
         {

@@ -210,8 +210,6 @@ namespace FZ4P
             Process.Lazyinitialize();
         }
 
-        
-
         private void P_Vision_VisibleChanged(object sender, EventArgs e)
         {
             var P_VIsion = ((Panel)sender);
@@ -816,13 +814,14 @@ namespace FZ4P
         public List<CheckBox> ListChk = new List<CheckBox>();
         private void InitOption()
         {
-
             PropertyDescriptorCollection props = TypeDescriptor.GetProperties(Option);
-
+            int width = 0;
+            int hCal = 0;
             for (int i = 0; i < props.Count; i++)
             {
-                int width = 0;
-                int hCal = 30 * i;
+
+                width = 190 * (i / 12);
+                hCal = 30 * (i % 12);
 
                 CheckBox Chk = new CheckBox
                 {
@@ -830,7 +829,7 @@ namespace FZ4P
                     Checked = Convert.ToBoolean(props[i].GetValue(Option)),
                     Font = new Font("Calibri", 11, FontStyle.Bold),
                     ForeColor = Color.DarkBlue,
-                    Location = new Point(300 + width, 30 + hCal),
+                    Location = new Point(300 + width, 0 + hCal),
                     AutoSize = true,
                 };
                 ModelGroup.Controls.Add(Chk);
@@ -845,7 +844,6 @@ namespace FZ4P
         }
         private void InitModel()
         {
-
             tbMcNum.Text = Model.MCNum;
             TesterNo.Text = Model.TesterNo;
 

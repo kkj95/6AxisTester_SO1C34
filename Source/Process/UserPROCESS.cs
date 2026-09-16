@@ -1022,7 +1022,6 @@ namespace FZ4P
             //TOOD : OIS - EPA 삭제 기능 필요없음?? 이인경수석 통화.
             //SetEPA((int)AxisTypeDW.AxisY);
 
-
             for (int start = 0x00; start < 0xFF; start += 0x10)
             {
                 int end = start + 0x10;
@@ -1990,40 +1989,57 @@ namespace FZ4P
                 }
 
                 var now = STATIC.LogDate;
-                var year = now.Year - 2000;
+                var year = now.Year % 100;
                 var month = now.Month;
                 var day = now.Day;
                 var hour = now.Hour;
                 var minute = now.Minute;
                 var second = now.Second;
-         
+
+                //TODO : Free Memory Write 추가해야됨
+                //if (byte.TryParse(Model.MCNum, out byte MachineNumber))
+                //    STATIC.ActID_Memory[2] = MachineNumber;
+                //if (byte.TryParse(Model.MCNum, out byte MachineNumber))
+                //    STATIC.ActID_Memory[2] = MachineNumber;
+
+                if (byte.TryParse(Model.MCNum, out byte MachineNumber))
+                    STATIC.ActID_Memory[2] = MachineNumber;
+
+                STATIC.ActID_Memory[4] = (byte)((year << 2) | (month >> 2));
+                STATIC.ActID_Memory[5] = (byte)(((month & 0x03) << 6) | ((day & 0x1F) << 1) | ((hour >> 4) & 0x01));
+                STATIC.ActID_Memory[6] = (byte)(((hour & 0x0F) << 4) | ((minute >> 2) & 0x0F));
+                STATIC.ActID_Memory[7] = (byte)(((minute & 0x03) << 6) | (second & 0x3F));
+
                 //AF Mem
                 Dln.WriteByte(ch, DrvIC.AF_Addr, 0xAE, 1, 0x3B);
 
                 byte[] AFWriteData = new byte[16];
-                
+
                 AFWriteData[0] = (byte)res;
-                AFWriteData[1] = (byte)Math.Abs((AFRatedMinMax[1] - AFRatedMinMax[0]) / 4);
-                AFWriteData[2] = (byte)Math.Abs((AFRatedMinMax[2] - AFRatedMinMax[0]) / 4);
-                AFWriteData[3] = (byte)((int)PassFails[ch].Results[(int)SpecItem.AF_Ratedstroke].Val >> 8);
-                AFWriteData[4] = (byte)((int)PassFails[ch].Results[(int)SpecItem.AF_Ratedstroke].Val);
-                AFWriteData[10] = (byte)(PassFails[ch].Results[(int)SpecItem.AF_Tilt].Val * 10);
+                AFWriteData[2] = (byte)Math.Abs(Math.Round((AFRatedMinMax[1] - AFRatedMinMax[0]) / 4));
+               
                 AFWriteData[11] = AFPIDVersion;
-                AFWriteData[12] = (byte)(PassFails[ch].Results[(int)SpecItem.OISX_Ratedstroke].Val / 4);
-                AFWriteData[13] = (byte)(PassFails[ch].Results[(int)SpecItem.OISY_Ratedstroke].Val / 4);
-                AFWriteData[15] = (byte)(PassFails[ch].Results[(int)SpecItem.AF_Linearity].Val * 10);
-                
+
+                //AFWriteData[1] = 
+                //AFWriteData[2] = (byte)Math.Abs((AFRatedMinMax[2] - AFRatedMinMax[0]) / 4);
+                //AFWriteData[3] = (byte)((int)PassFails[ch].Results[(int)SpecItem.AF_Ratedstroke].Val >> 8);
+                //AFWriteData[4] = (byte)((int)PassFails[ch].Results[(int)SpecItem.AF_Ratedstroke].Val);
+                //AFWriteData[10] = (byte)(PassFails[ch].Results[(int)SpecItem.AF_Tilt].Val * 10);
+                //AFWriteData[11] = AFPIDVersion;
+                //AFWriteData[12] = (byte)(PassFails[ch].Results[(int)SpecItem.OISX_Ratedstroke].Val / 4);
+                //AFWriteData[13] = (byte)(PassFails[ch].Results[(int)SpecItem.OISY_Ratedstroke].Val / 4);
+                //AFWriteData[15] = (byte)(PassFails[ch].Results[(int)SpecItem.AF_Linearity].Val * 10);
+
                 for (int i = 0; i < AFWriteData.Length; i++)
                 {
-                    if (i == 5 || i == 6 || i == 7 || i == 8 || i == 9 || i == 14) continue;
+                    if (i == 1 || i == 3 || i == 4 || i == 5 || i == 6 || i == 7 || i == 8 || i == 9 || i == 10 || i == 12 || i == 13 || i == 14 || i == 15 || i == 16) continue;
                     Dln.WriteByte(ch, DrvIC.AF_Addr, 0xF0 + i, 1, AFWriteData[i]);
                     Wait(30);
                 }
-
              
                 for (int i = 0; i < STATIC.ActID_Memory.Length; i++)
                 {
-                    Dln.WriteByte(ch, DrvIC.AF_Addr, 0xF5 + i, 1, STATIC.ActID_Memory[i]);
+                    Dln.WriteByte(ch, DrvIC.AF_Addr, 0xF3 + i, 1, STATIC.ActID_Memory[i]);
                     Wait(30);
                 }
 
@@ -2037,7 +2053,7 @@ namespace FZ4P
                 AddLog(ch, "AF Nvm Data Check");
                 for (int i = 0; i < afCheckData.Length; i++)
                 {
-                    if (i == 5 || i == 6 || i == 7 || i == 8 || i == 9 || i == 14) continue;
+                    if (i == 1 || i == 3 || i == 4 || i == 5 || i == 6 || i == 7 || i == 8 || i == 9 || i == 10 || i == 12 || i == 13 || i == 14 || i == 15 || i == 16) continue;
                     byte rdata = Dln.ReadByte(ch, DrvIC.AF_Addr, 0xF0 + i, 1);
                     AddLog(ch, $"Addr : 0x{(0xF0 + i).ToString("X2")}, WData : 0x{AFWriteData[i].ToString("X2")}, RData : 0x{rdata.ToString("X2")}");
                     if (AFWriteData[i] != rdata)
@@ -2050,12 +2066,10 @@ namespace FZ4P
                         }
                     }
                 }
-
                 for (int i = 0; i < STATIC.ActID_Memory.Length; i++)
                 {
-                  
-                    byte rdata = Dln.ReadByte(ch, DrvIC.AF_Addr, 0xF5 + i, 1);
-                    AddLog(ch, $"Addr : 0x{(0xF5 + i).ToString("X2")}, WData : 0x{STATIC.ActID_Memory[i].ToString("X2")}, RData : 0x{rdata.ToString("X2")}");
+                    byte rdata = Dln.ReadByte(ch, DrvIC.AF_Addr, 0xF3 + i, 1);
+                    AddLog(ch, $"Addr : 0x{(0xF3 + i).ToString("X2")}, WData : 0x{STATIC.ActID_Memory[i].ToString("X2")}, RData : 0x{rdata.ToString("X2")}");
                     if (STATIC.ActID_Memory[i] != rdata)
                     {
                         if (PassFails[ch].FirstFailIndex == 0)
@@ -2067,6 +2081,10 @@ namespace FZ4P
 
                     }
                 }
+
+                AddLog(ch, "OIS PID Data Check");
+
+
             }
             catch (Exception ex)
             {
@@ -2092,15 +2110,12 @@ namespace FZ4P
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
-
-
                 if (m_ChannelOn[ch] && PassFails[0].FirstFailIndex == 0)
                 {
                     m_ChannelOn[ch] = false;
                     PassFails[0].FirstFailIndex = -999;
                     PassFails[0].FirstFail = "Check UserMem Setting";
                 }
-
             }
         }
         private void WriteOISUserMem(int ch, int res)
@@ -2312,7 +2327,7 @@ namespace FZ4P
             {
                 AddLog(ch, "Echo_FRA_Measurement] FRA Board Info Error!!!");
             }
-
+            ScanByPassModeOnOff(testItem, true);
             AMA_TestSetting_Params param = new AMA_TestSetting_Params()
             {
                 Target_slave_id_X = (Condition.Slave_ID_X == 0) ? -1 : Condition.Slave_ID_X,
@@ -2338,6 +2353,7 @@ namespace FZ4P
                 $" NG Count X : {result.NgCountX.ToString()}," +
                 $" NG Count Y : {result.NgCountY.ToString()}");
 
+            ScanByPassModeOnOff(testItem, false);
 
             PassFails[0].Results[(int)SpecItem.FRAX_SineWave].Val = result.DeltaMaxX;
             PassFails[0].Results[(int)SpecItem.FRAY_SineWave].Val = result.DeltaMaxY;
@@ -2355,6 +2371,7 @@ namespace FZ4P
                 AddLog(ch, "Echo_FRA_Measurement] FRA Board Info Error!!!");
             }
 
+            ScanByPassModeOnOff(testItem, true);
             AMA_RingingSetting_Params param = new AMA_RingingSetting_Params()
             {
                 Target_slave_id_X = (Condition.Slave_ID_X == 0) ? -1 : Condition.Slave_ID_X,
@@ -2380,7 +2397,7 @@ namespace FZ4P
                 $" SettlingTimeX[{result.SettlingTimeX.ToString()}]," +
                 $" SettlingTimeY[{result.SettlingTimeY.ToString()}],");
 
-
+            ScanByPassModeOnOff(testItem, false);
             PassFails[0].Results[(int)SpecItem.FRAX_Ringing].Val = result.SettlingTimeX;
             PassFails[0].Results[(int)SpecItem.FRAY_Ringing].Val = result.SettlingTimeY;
             ShowDataResults(ch, (int)SpecItem.FRAX_Ringing, (int)SpecItem.FRAX_Ringing, InspType.Normal, new double[] { });

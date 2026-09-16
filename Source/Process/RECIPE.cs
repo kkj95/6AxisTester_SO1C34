@@ -219,6 +219,8 @@ namespace FZ4P
         //  [Option("Fail Retry")] public bool FailRetry { get; set; }
         [Option("DryRun Mode")] public bool DryRunMode { get; set; }
         [Option("Barcode Use Flag")] public bool BarcodeUse { get; set; }
+
+        [Option("ByPass Mode")] public bool ByPassUse { get; set; }
     }
     public class Condition
     {
