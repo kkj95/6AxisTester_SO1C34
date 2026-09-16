@@ -102,6 +102,7 @@
             // toolStripButton4
             // 
             this.toolStripButton4.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripButton4.AutoSize = false;
             this.toolStripButton4.Checked = true;
             this.toolStripButton4.CheckOnClick = true;
             this.toolStripButton4.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -109,19 +110,20 @@
             this.toolStripButton4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton4.Image")));
             this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton4.Name = "toolStripButton4";
-            this.toolStripButton4.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton4.Size = new System.Drawing.Size(30, 22);
             this.toolStripButton4.Text = "toolStripButton4";
             this.toolStripButton4.CheckStateChanged += new System.EventHandler(this.toolStripButton4_CheckStateChanged);
             // 
             // toolStripButton5
             // 
             this.toolStripButton5.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripButton5.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton5.AutoSize = false;
+            this.toolStripButton5.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripButton5.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton5.Image")));
             this.toolStripButton5.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton5.Name = "toolStripButton5";
-            this.toolStripButton5.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton5.Text = "toolStripButton5";
+            this.toolStripButton5.Size = new System.Drawing.Size(100, 22);
+            this.toolStripButton5.Text = "I2CRead/Write";
             this.toolStripButton5.Click += new System.EventHandler(this.toolStripButton5_Click);
             // 
             // toolStripSeparator1
@@ -202,7 +204,7 @@
             // 
             this.toolStripLabel9.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripLabel9.Name = "toolStripLabel9";
-            this.toolStripLabel9.Size = new System.Drawing.Size(47, 22);
+            this.toolStripLabel9.Size = new System.Drawing.Size(47, 15);
             this.toolStripLabel9.Text = "SlaveID";
             // 
             // imageList1

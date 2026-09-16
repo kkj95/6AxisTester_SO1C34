@@ -156,7 +156,6 @@ namespace FZ4P
                 });
                 tiltChart[i].SetRings(new double[] { tiltChart[i].range / 2, tiltChart[i].range });
                 
-
                 InfoBtn.Add(new InfoButton()); //test
                 InfoBtn.Add(new InfoButton());
                 InfoBtn.Add(new InfoButton());  // TODO :임시 테스트 진입하기위해 버튼을 만듬...
@@ -3163,10 +3162,13 @@ namespace FZ4P
         {
             
         }
+        //TODO : ByPass True
         public void Act_ScanCode(int port, string testItem, int InspCnt)
         {
             STATIC.Process.DWDrvIC.LiearCompEnable((int)AxisTypeDW.AxisX, true);
             STATIC.Process.DWDrvIC.LiearCompEnable((int)AxisTypeDW.AxisY, true);
+
+            //STATIC.MCUH503.SetI3CByPaaMode(true);
 
             MakeWaveform(testItem);
             LEDs_All_On(port, true);
@@ -3174,6 +3176,7 @@ namespace FZ4P
             LEDs_All_On(port, false);
             Process_CalcCodeTest(port, testItem, InspCnt);
 
+            //STATIC.MCUH503.SetI3CByPaaMode(false);
         }
         private void Act_ScanTimeCode(int port, string testItem, int InspCnt)
         {

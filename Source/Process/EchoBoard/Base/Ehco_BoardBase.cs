@@ -15,6 +15,8 @@ namespace FZ4P
 
         protected IFRAFunction FraFunction => _fraFunction;
 
+        public IOneTwoBytesDrivingIC I2cControl => _i2cControl;
+
         public Ehco_BoardBase(IOneTwoBytesDrivingIC i2cControl, IFRAFunction fraFunction)
         {
             _i2cControl = i2cControl;
@@ -23,15 +25,15 @@ namespace FZ4P
 
         protected virtual void WriteByte(int addr, byte data)
         {
-            _i2cControl.WriteByte(FraFunction.FRA_Addr, addr, 1, data);
+            I2cControl.WriteByte(FraFunction.FRA_Addr, addr, 1, data);
         }
         protected virtual byte ReadByte(int addr)
         {
-            return _i2cControl.ReadByte(FraFunction.FRA_Addr, addr, 1);
+            return I2cControl.ReadByte(FraFunction.FRA_Addr, addr, 1);
         }
         protected virtual ushort ReadWord(int addr)
         {
-            return _i2cControl.Read2Byte(FraFunction.FRA_Addr, addr, 1);
+            return I2cControl.Read2Byte(FraFunction.FRA_Addr, addr, 1);
         }
     }
 }

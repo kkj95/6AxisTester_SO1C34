@@ -1539,7 +1539,7 @@ namespace FZ4P
                 oldfreq = freqval;
                 gainval = DrvIC.Get_Gain(ch);
                 pmval = DrvIC.Get_Phase(ch, 1);
-                AddLog(ch, $"{Condition.AFGMamp}\t{freqval}\t{gainval.ToString("F2")}\t{pmval.ToString("F0")}");
+                AddLog(ch, $"{Condition.iAFAmplitude}\t{freqval}\t{gainval.ToString("F2")}\t{pmval.ToString("F0")}");
 
 
                 if (!PhaseFouund && gainval > 0)
@@ -2001,6 +2001,7 @@ namespace FZ4P
                 Dln.WriteByte(ch, DrvIC.AF_Addr, 0xAE, 1, 0x3B);
 
                 byte[] AFWriteData = new byte[16];
+                
                 AFWriteData[0] = (byte)res;
                 AFWriteData[1] = (byte)Math.Abs((AFRatedMinMax[1] - AFRatedMinMax[0]) / 4);
                 AFWriteData[2] = (byte)Math.Abs((AFRatedMinMax[2] - AFRatedMinMax[0]) / 4);
@@ -2011,7 +2012,7 @@ namespace FZ4P
                 AFWriteData[12] = (byte)(PassFails[ch].Results[(int)SpecItem.OISX_Ratedstroke].Val / 4);
                 AFWriteData[13] = (byte)(PassFails[ch].Results[(int)SpecItem.OISY_Ratedstroke].Val / 4);
                 AFWriteData[15] = (byte)(PassFails[ch].Results[(int)SpecItem.AF_Linearity].Val * 10);
-
+                
                 for (int i = 0; i < AFWriteData.Length; i++)
                 {
                     if (i == 5 || i == 6 || i == 7 || i == 8 || i == 9 || i == 14) continue;
@@ -2046,9 +2047,7 @@ namespace FZ4P
                             AddLog(ch, "NVM Verify NG");
                             PassFails[ch].Results[(int)SpecItem.AFPIDVerifyRes].Val = 1;
                             ShowDataResults(ch, (int)SpecItem.AFPIDVerifyRes, (int)SpecItem.AFPIDVerifyRes, InspType.Normal, new double[] { });
-
                         }
-
                     }
                 }
 
@@ -2455,32 +2454,6 @@ namespace FZ4P
                 return;
             }
 
-            //DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.StandbyMode);
-            //DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.ClosedMode);
-
-            //DWDrvIC.OISOnOff(ch, true);
-
-            //DWDrvIC.OISMove(ch, 8191, 8191);      //current 0mA Position
-
-            //for (int i = 0; i < 30; i++)
-            //{
-            //    DWDrvIC.OISMove(ch, DWDrvIC.OIS_MIN_CODE, 8191);
-            //    Thread.Sleep(100);
-            //    DWDrvIC.OISMove(ch, DWDrvIC.OIS_MAX_CODE, 8191);
-            //    Thread.Sleep(100);
-            //}
-
-            //DWDrvIC.OISMove(ch, 8191, 8191);      //current 0mA Positio
-            //for (int i = 0; i < 30; i++)
-            //{
-            //    DWDrvIC.OISMove(ch, 8191, DWDrvIC.OIS_MIN_CODE);
-            //    Thread.Sleep(100);
-            //    DWDrvIC.OISMove(ch, 8191, DWDrvIC.OIS_MAX_CODE);
-            //    Thread.Sleep(100);
-            //}
-            //DWDrvIC.OISOnOff(ch, false);
-
-
             //AF BestPos Move
             DrvIC.AFOnOff(ch, true);
             DrvIC.AFMove(ch, Condition.OISCalAFPos);
@@ -2619,32 +2592,10 @@ namespace FZ4P
             }
             AddLog(ch, $"END");
 
-            //TODO : 임시
-            //Dln.PowerOnOff(0, false);
-            //Wait(500);
-            //Dln.PowerOnOff(0, true);
-            //Wait(500);
-
-            //DWDrvIC.OISOnOff(0, true);
-            //Wait(500);
-            ////DWDrvIC.OISICReset(0);
-            ////Wait(500);
-            //LEDs_All_On(0,true);
-
             STATIC.MCUH503.SetSWReset(false);
             Wait(100);
             DWDrvIC.OISOnOff(ch, true);
             Wait(100);
-
-            //var realX1 = DWDrvIC.LiearCompRead(AxisX);
-            //var realY1 = DWDrvIC.LiearCompRead(AxisY);
-
-            //AddLog(ch, $"RealValueChecked TestX \t RealValueCehcked TestY");
-            //for (int i = 0; i < realX1.Count; i++)
-            //{
-            //    AddLog(ch, $"{realX1[i].ToString("F2")}\t{realY1[i].ToString("F2")}");
-            //}
-            //AddLog(ch, $"END");
 
             for (int i = 0; i < TargetCode.Count; i++)
             {
@@ -2687,6 +2638,8 @@ namespace FZ4P
             {
                 AddLog(ch, $"\t{tmprealX[i].ToString("F2")}\t{tmprealY[i].ToString("F2")}");
             }
+
+            STATIC.MCUH503.SetI3CByPaaMode(false);
 
             PassFails[ch].Results[(int)SpecItem.OISLCCComp].Val = 0;
             ShowDataResults(ch, (int)SpecItem.OISLCCComp, (int)SpecItem.OISLCCComp, InspType.OKNG, new double[] { });

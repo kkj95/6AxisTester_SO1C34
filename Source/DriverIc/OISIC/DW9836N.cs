@@ -318,7 +318,6 @@ namespace FZ4P.DriverIc.OISIC
         {
             List<int> reulst = new List<int>();
             var slaveID = GetAxisTypeID((AxisTypeDW)axis);
-            Set_PT(axis, false);
 
             int startAddress = 0x55;
 
