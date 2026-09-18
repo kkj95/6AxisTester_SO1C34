@@ -29,13 +29,17 @@ namespace FZ4P
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(F_Main));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
             this.SpecGrid = new System.Windows.Forms.DataGridView();
             this.ModelGroup = new System.Windows.Forms.GroupBox();
+            this.cbb_VenderCode = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.txtbxActualtorID = new System.Windows.Forms.TextBox();
             this.btnBarcodeOff = new System.Windows.Forms.Button();
             this.btnBarcodeOn = new System.Windows.Forms.Button();
             this.lblDefaultModel = new System.Windows.Forms.Label();
@@ -114,14 +118,14 @@ namespace FZ4P
             this.SpecGrid.AllowUserToResizeRows = false;
             this.SpecGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.SpecGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.SpecGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.SpecGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
             this.SpecGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.SpecGrid.Location = new System.Drawing.Point(769, 152);
             this.SpecGrid.Name = "SpecGrid";
@@ -136,6 +140,10 @@ namespace FZ4P
             // ModelGroup
             // 
             this.ModelGroup.BackColor = System.Drawing.Color.LightGray;
+            this.ModelGroup.Controls.Add(this.cbb_VenderCode);
+            this.ModelGroup.Controls.Add(this.label4);
+            this.ModelGroup.Controls.Add(this.label3);
+            this.ModelGroup.Controls.Add(this.txtbxActualtorID);
             this.ModelGroup.Controls.Add(this.btnBarcodeOff);
             this.ModelGroup.Controls.Add(this.btnBarcodeOn);
             this.ModelGroup.Controls.Add(this.lblDefaultModel);
@@ -153,6 +161,44 @@ namespace FZ4P
             this.ModelGroup.Size = new System.Drawing.Size(647, 524);
             this.ModelGroup.TabIndex = 159;
             this.ModelGroup.TabStop = false;
+            // 
+            // cbb_VenderCode
+            // 
+            this.cbb_VenderCode.FormattingEnabled = true;
+            this.cbb_VenderCode.Location = new System.Drawing.Point(137, 256);
+            this.cbb_VenderCode.Name = "cbb_VenderCode";
+            this.cbb_VenderCode.Size = new System.Drawing.Size(131, 20);
+            this.cbb_VenderCode.TabIndex = 274;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(18, 253);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(111, 23);
+            this.label4.TabIndex = 273;
+            this.label4.Text = "Vender Code";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(28, 219);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(101, 23);
+            this.label3.TabIndex = 271;
+            this.label3.Text = "Actuator ID";
+            // 
+            // txtbxActualtorID
+            // 
+            this.txtbxActualtorID.BackColor = System.Drawing.Color.White;
+            this.txtbxActualtorID.Font = new System.Drawing.Font("Calibri", 14F, System.Drawing.FontStyle.Bold);
+            this.txtbxActualtorID.Location = new System.Drawing.Point(138, 214);
+            this.txtbxActualtorID.Name = "txtbxActualtorID";
+            this.txtbxActualtorID.Size = new System.Drawing.Size(130, 30);
+            this.txtbxActualtorID.TabIndex = 270;
+            this.txtbxActualtorID.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // btnBarcodeOff
             // 
@@ -533,14 +579,14 @@ namespace FZ4P
             this.SettleDataGrid.AllowUserToResizeRows = false;
             this.SettleDataGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.SettleDataGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.SettleDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.SettleDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle14;
             this.SettleDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.SettleDataGrid.Location = new System.Drawing.Point(2, 729);
             this.SettleDataGrid.Name = "SettleDataGrid";
@@ -575,14 +621,14 @@ namespace FZ4P
             this.RetryGrid.AllowUserToResizeRows = false;
             this.RetryGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.RetryGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.RetryGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.RetryGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle15;
             this.RetryGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.RetryGrid.Location = new System.Drawing.Point(1246, 610);
             this.RetryGrid.Name = "RetryGrid";
@@ -688,14 +734,14 @@ namespace FZ4P
             this.ConditinGrid.AllowUserToResizeRows = false;
             this.ConditinGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.ConditinGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ConditinGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle16.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            dataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.ConditinGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle16;
             this.ConditinGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ConditinGrid.Location = new System.Drawing.Point(364, 43);
             this.ConditinGrid.Name = "ConditinGrid";
@@ -1004,7 +1050,7 @@ namespace FZ4P
             this.Name = "F_Main";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "6AxisTester_26091601_SO1C34";
+            this.Text = "6AxisTester_26091703_SO1C34";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.F_Main_FormClosing);
             this.Load += new System.EventHandler(this.F_Main_Load);
@@ -1089,6 +1135,10 @@ namespace FZ4P
         private System.Windows.Forms.RichTextBox H503YSetPath;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.RichTextBox H503XSetPath;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox txtbxActualtorID;
+        private System.Windows.Forms.ComboBox cbb_VenderCode;
+        private System.Windows.Forms.Label label4;
     }
 }
 

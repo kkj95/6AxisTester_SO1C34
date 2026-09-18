@@ -538,6 +538,8 @@ namespace FZ4P
         {
             LastSampleNum.Text = STATIC.Rcp.yield.LastSampleNum.ToString();
             NewSampleNumber.Text = (STATIC.Rcp.yield.LastSampleNum + 1).ToString();
+            chckbx_AutoCounting.Checked = Process.bAutoCountFlg;
+
             List<string> litem = new List<string>();
             List<double> lratio = new List<double>();
 
@@ -1008,6 +1010,12 @@ namespace FZ4P
                 STATIC.fManual_Register.Hide();
             else
                 STATIC.fManual_Register.Show();
+        }
+
+        private void chckbx_AutoCounting_CheckStateChanged(object sender, EventArgs e)
+        {
+            var state = ((CheckBox)sender).Checked;
+            Process.bAutoCountFlg = state;
         }
     }
 }

@@ -353,15 +353,29 @@ namespace FZ4P.DriverIc.OISIC
             _controls.WriteByte(slaveID, startAddress, 1, 0x00);        // Linearity Enabled
         }
 
-        public void LiearCompEnable(int axis,bool onOff)
+        public byte LiearCompEnable(int axis,bool onOff)
         {
             var slaveID = GetAxisTypeID((AxisTypeDW)axis);
-
+            
+            //Set_PT(axis, false);
+            Set_PT(axis, false);
             int startAddress = 0x55;
             if (onOff)
+            {
                 _controls.WriteByte(slaveID, startAddress, 1, 0x01);        // Linearity Enabled
+                Thread.Sleep(50);
+                Set_PT(axis, true);
+                Thread.Sleep(50);
+                return _controls.ReadByte(slaveID, startAddress, 1);
+            }
             else
+            {
                 _controls.WriteByte(slaveID, startAddress, 1, 0x00);        // Linearity Disabled
+                Thread.Sleep(50);
+                Set_PT(axis, true);
+                Thread.Sleep(50);
+                return _controls.ReadByte(slaveID, startAddress, 1);
+            }
         }
 
         public void SetPCAL(int axis,int code)

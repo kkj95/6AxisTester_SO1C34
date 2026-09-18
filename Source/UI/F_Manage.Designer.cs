@@ -29,11 +29,11 @@ namespace FZ4P
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(F_Manage));
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(F_Manage));
             this.lblRepeatLoadingUnloading = new System.Windows.Forms.Label();
             this.RepeatRunCnt = new System.Windows.Forms.TextBox();
             this.CurrentRunCnt = new System.Windows.Forms.TextBox();
@@ -41,6 +41,8 @@ namespace FZ4P
             this.NewSampleNumber = new System.Windows.Forms.TextBox();
             this.LastSampleNum = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.chckbx_AutoCounting = new System.Windows.Forms.CheckBox();
+            this.SetSampleNumber = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.p_Result = new System.Windows.Forms.Panel();
@@ -85,7 +87,6 @@ namespace FZ4P
             this.RepeatStartTest = new System.Windows.Forms.Button();
             this.ToAdmin = new System.Windows.Forms.Button();
             this.ToVision = new System.Windows.Forms.Button();
-            this.SetSampleNumber = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -168,6 +169,7 @@ namespace FZ4P
             // groupBox2
             // 
             this.groupBox2.BackColor = System.Drawing.Color.Gainsboro;
+            this.groupBox2.Controls.Add(this.chckbx_AutoCounting);
             this.groupBox2.Controls.Add(this.SetSampleNumber);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.label3);
@@ -178,6 +180,33 @@ namespace FZ4P
             this.groupBox2.Size = new System.Drawing.Size(470, 122);
             this.groupBox2.TabIndex = 194;
             this.groupBox2.TabStop = false;
+            // 
+            // chckbx_AutoCounting
+            // 
+            this.chckbx_AutoCounting.AutoSize = true;
+            this.chckbx_AutoCounting.Location = new System.Drawing.Point(250, 65);
+            this.chckbx_AutoCounting.Name = "chckbx_AutoCounting";
+            this.chckbx_AutoCounting.Size = new System.Drawing.Size(103, 16);
+            this.chckbx_AutoCounting.TabIndex = 260;
+            this.chckbx_AutoCounting.Text = "Auto Counting";
+            this.chckbx_AutoCounting.UseVisualStyleBackColor = true;
+            this.chckbx_AutoCounting.CheckStateChanged += new System.EventHandler(this.chckbx_AutoCounting_CheckStateChanged);
+            // 
+            // SetSampleNumber
+            // 
+            this.SetSampleNumber.BackColor = System.Drawing.Color.DarkOliveGreen;
+            this.SetSampleNumber.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("SetSampleNumber.BackgroundImage")));
+            this.SetSampleNumber.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.SetSampleNumber.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.SetSampleNumber.Font = new System.Drawing.Font("맑은 고딕", 12F, System.Drawing.FontStyle.Bold);
+            this.SetSampleNumber.ForeColor = System.Drawing.Color.Black;
+            this.SetSampleNumber.Location = new System.Drawing.Point(0, 68);
+            this.SetSampleNumber.Name = "SetSampleNumber";
+            this.SetSampleNumber.Size = new System.Drawing.Size(174, 45);
+            this.SetSampleNumber.TabIndex = 156;
+            this.SetSampleNumber.Text = "Set Sample No.";
+            this.SetSampleNumber.UseVisualStyleBackColor = false;
+            this.SetSampleNumber.Click += new System.EventHandler(this.SetSampleNumber_Click);
             // 
             // label4
             // 
@@ -442,7 +471,7 @@ namespace FZ4P
             this.ModelGroup.Location = new System.Drawing.Point(1739, 43);
             this.ModelGroup.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ModelGroup.Name = "ModelGroup";
-            this.ModelGroup.Size = new System.Drawing.Size(178, 326);
+            this.ModelGroup.Size = new System.Drawing.Size(178, 356);
             this.ModelGroup.TabIndex = 256;
             // 
             // tableLayoutPanel2
@@ -707,7 +736,7 @@ namespace FZ4P
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button1.Font = new System.Drawing.Font("맑은 고딕", 12F, System.Drawing.FontStyle.Bold);
             this.button1.ForeColor = System.Drawing.Color.Black;
-            this.button1.Location = new System.Drawing.Point(1739, 376);
+            this.button1.Location = new System.Drawing.Point(1739, 402);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(178, 45);
             this.button1.TabIndex = 266;
@@ -802,22 +831,6 @@ namespace FZ4P
             this.ToVision.UseVisualStyleBackColor = false;
             this.ToVision.Click += new System.EventHandler(this.ToVision_Click);
             // 
-            // SetSampleNumber
-            // 
-            this.SetSampleNumber.BackColor = System.Drawing.Color.DarkOliveGreen;
-            this.SetSampleNumber.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("SetSampleNumber.BackgroundImage")));
-            this.SetSampleNumber.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.SetSampleNumber.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.SetSampleNumber.Font = new System.Drawing.Font("맑은 고딕", 12F, System.Drawing.FontStyle.Bold);
-            this.SetSampleNumber.ForeColor = System.Drawing.Color.Black;
-            this.SetSampleNumber.Location = new System.Drawing.Point(0, 68);
-            this.SetSampleNumber.Name = "SetSampleNumber";
-            this.SetSampleNumber.Size = new System.Drawing.Size(174, 45);
-            this.SetSampleNumber.TabIndex = 156;
-            this.SetSampleNumber.Text = "Set Sample No.";
-            this.SetSampleNumber.UseVisualStyleBackColor = false;
-            this.SetSampleNumber.Click += new System.EventHandler(this.SetSampleNumber_Click);
-            // 
             // button2
             // 
             this.button2.BackColor = System.Drawing.Color.MidnightBlue;
@@ -826,7 +839,7 @@ namespace FZ4P
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button2.Font = new System.Drawing.Font("맑은 고딕", 12F, System.Drawing.FontStyle.Bold);
             this.button2.ForeColor = System.Drawing.Color.Black;
-            this.button2.Location = new System.Drawing.Point(1739, 427);
+            this.button2.Location = new System.Drawing.Point(1739, 453);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(178, 45);
             this.button2.TabIndex = 268;
@@ -938,5 +951,6 @@ namespace FZ4P
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox cbb_Loading;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.CheckBox chckbx_AutoCounting;
     }
 }

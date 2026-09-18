@@ -1453,78 +1453,6 @@ namespace FZ4P
                         }
                     }
 
-                    //if (!isI2cFail)
-                    //{
-                    //    LEDs_All_On(0, true);
-                    //    Thread.Sleep(100);
-                    //    FindResult res = Measure();
-
-                    //    if (res.cx[0] == 0 || res.cy[0] == 0 || res.cz[0] == 0)
-                    //        m_ChannelOn[ch] = false;
-
-                    //    //OpenLoopMoveSeq
-                    //    Dln.WriteByte(ch, DrvIC.AF_Addr, 0xAE, 1, 0x3B);
-                    //    byte backData = Dln.ReadByte(ch, DrvIC.AF_Addr, 0x0B, 1);
-                    //    Dln.WriteByte(ch, DrvIC.AF_Addr, 0x1A, 1, 0x00);
-                    //    Dln.WriteByte(ch, DrvIC.AF_Addr, 0x0B, 1, (byte)(backData & 0x7F));
-                    //    Dln.WriteByte(ch, DrvIC.AF_Addr, 0xA6, 1, 0x7B);
-                    //    DrvIC.AFOnOff(ch, true);
-                    //    DrvIC.AFMoveOL(ch, 0);
-                    //    Wait(100);
-                    //    res = Measure();
-                    //    if (res.cx[0] == 0 || res.cy[0] == 0 || res.cz[0] == 0)
-                    //        m_ChannelOn[ch] = false;
-                    //    DrvIC.AFMoveOL(ch, 4095);
-                    //    Wait(100);
-                    //    res = Measure();
-                    //    if (res.cx[0] == 0 || res.cy[0] == 0 || res.cz[0] == 0)
-                    //        m_ChannelOn[ch] = false;
-
-                    //    DrvIC.AFOnOff(ch, false);
-                    //    Wait(5);
-                    //    Dln.WriteByte(ch, DrvIC.AF_Addr, 0x0B, 1, backData);
-                    //    Dln.WriteByte(ch, DrvIC.AF_Addr, 0xA6, 1, 0x00);
-
-                    //    //DrvIC.OISOnOff(ch, true);
-                    //    //DrvIC.OISOnOff(ch, false);
-                    //    //Wait(10);
-                    //    //DrvIC.OISMoveOL(ch, 1, 0);
-                    //    //DrvIC.OISMoveOL(ch, 0, -8192);
-                    //    //Wait(100);
-                    //    //res = Measure();
-                    //    //if (res.cx[0] == 0 || res.cy[0] == 0 || res.cz[0] == 0)
-                    //    //    m_ChannelOn[ch] = false;
-                    //    //DrvIC.OISMoveOL(ch, 0, 8191);
-                    //    //Wait(100);
-                    //    //res = Measure();
-                    //    //if (res.cx[0] == 0 || res.cy[0] == 0 || res.cz[0] == 0)
-                    //    //    m_ChannelOn[ch] = false;
-                    //    //DrvIC.OISMoveOL(ch, 0, 0);
-                    //    //DrvIC.OISMoveOL(ch, 1, -8192);
-                    //    //Wait(100);
-                    //    //res = Measure();
-                    //    //if (res.cx[0] == 0 || res.cy[0] == 0 || res.cz[0] == 0)
-                    //    //    m_ChannelOn[ch] = false;
-                    //    //DrvIC.OISMoveOL(ch, 1, 8191);
-                    //    //Wait(100);
-                    //    //res = Measure();
-                    //    //if (res.cx[0] == 0 || res.cy[0] == 0 || res.cz[0] == 0)
-                    //    //    m_ChannelOn[ch] = false;
-
-                    //    LEDs_All_On(0, false);
-
-                    //    for (int k = ch; k < ch + ChannelCnt; k++)
-                    //    {
-                    //        if (!m_ChannelOn[k])
-                    //        {
-                    //            errMsg[k] = "Socket Empty\r\nVision Check";
-                    //            AddLog(k, "Socket Empty\r\nVision Check");
-                    //        }
-                    //    }
-                    //}
-
-  
-
                     if (errMsg[ch] != "")
                     {
                         return;
@@ -1573,8 +1501,8 @@ namespace FZ4P
 
                     double ellipse = (double)sw.ElapsedMilliseconds / 1000;
                     sw.Stop();
-
-                    yield.LastSampleNum++;
+                    if(bAutoCountFlg)
+                        yield.LastSampleNum++;
 
                     for (int k = ch; k < ch + ChannelCnt; k++)
                     {
@@ -1583,6 +1511,15 @@ namespace FZ4P
                         STATIC.Rcp.tt.St += ellipse;
                         STATIC.Rcp.tt.CurrentST += ellipse;
                     }
+
+                    AddLog(ch, "AF PID Data Check");
+                    AFPIDChecked(ch);
+
+                    AddLog(ch, "OIS PID Data Check X");
+                    PIDChecked(ch, 0);
+
+                    AddLog(ch, "OIS PID Data Check Y");
+                    PIDChecked(ch, 1);
 
                     if (!SuddenStop)
                     {
@@ -1655,7 +1592,8 @@ namespace FZ4P
                                 else
                                 {
                                     AddLog(ch, $"Fail Retry =  {errMsg[0]}");
-                                    yield.LastSampleNum--;
+                                    if (bAutoCountFlg)
+                                        yield.LastSampleNum--;
                                 }
                             }
                         }
@@ -3181,10 +3119,45 @@ namespace FZ4P
         //TODO : ByPass True
         public void Act_ScanCode(int port, string testItem, int InspCnt)
         {
-            STATIC.Process.DWDrvIC.LiearCompEnable((int)AxisTypeDW.AxisX, true);
-            STATIC.Process.DWDrvIC.LiearCompEnable((int)AxisTypeDW.AxisY, true);
+            ScanByPassModeOnOff(testItem, true);
+            Thread.Sleep(500);
+            if (testItem.Contains("OIS X Scan"))
+            {
+                var loopBackData = STATIC.Process.DWDrvIC.LiearCompEnable((int)AxisTypeDW.AxisX, true);
+                AddLog(0, $"LiearComp Enable{loopBackData}");
+                loopBackData = STATIC.Process.DWDrvIC.LiearCompEnable((int)AxisTypeDW.AxisY, true);
+                AddLog(0, $"LiearComp Enable{loopBackData}");
 
-            ScanByPassModeOnOff(testItem,true);
+                var realX = DWDrvIC.LiearCompRead(0);
+                var realY = DWDrvIC.LiearCompRead(1);
+
+                AddLog(0, $"RealValueChecked X \t RealValueCehcked X");
+                for (int i = 0; i < realX.Count; i++)
+                {
+                    AddLog(0, $"{realX[i].ToString("F2")}\t{realY[i].ToString("F2")}");
+                }
+                AddLog(0, $"END");
+            }
+            else if (testItem.Contains("OIS Y Scan"))
+            {
+                var loopBackData = STATIC.Process.DWDrvIC.LiearCompEnable((int)AxisTypeDW.AxisX, true);
+                AddLog(0, $"LiearComp Enable{loopBackData}");
+                loopBackData = STATIC.Process.DWDrvIC.LiearCompEnable((int)AxisTypeDW.AxisY, true);
+                AddLog(0, $"LiearComp Enable{loopBackData}");
+
+                var realX = DWDrvIC.LiearCompRead(0);
+                var realY = DWDrvIC.LiearCompRead(1);
+
+                AddLog(0, $"RealValueChecked X \t RealValueCehcked X");
+                for (int i = 0; i < realX.Count; i++)
+                {
+                    AddLog(0, $"{realX[i].ToString("F2")}\t{realY[i].ToString("F2")}");
+                }
+                AddLog(0, $"END");
+            }
+
+
+
             MakeWaveform(testItem);
             LEDs_All_On(port, true);
             Process_ScanCodeTest(port, testItem, InspCnt);
@@ -3192,6 +3165,7 @@ namespace FZ4P
             Process_CalcCodeTest(port, testItem, InspCnt);
 
             ScanByPassModeOnOff(testItem, false);
+            Thread.Sleep(500);
         }
         private void Act_ScanTimeCode(int port, string testItem, int InspCnt)
         {
@@ -3213,8 +3187,8 @@ namespace FZ4P
                        res =  Process_CalcTimeTest(port, testItem, Startcode, Endcode, criteria, TryCnt, i + 1);
                     }
 
-                    PassFails[0].Results[(int)(SpecItem.AF_SettillingTime1 + i)].Val = res;
-                    ShowDataResults(0, (int)(SpecItem.AF_SettillingTime1 + i), (int)(SpecItem.AF_SettillingTime1 + i), InspType.OnlyMax, new double[] { });
+                    //PassFails[0].Results[(int)(SpecItem.AF_SettillingTime1 + i)].Val = res;
+                    //ShowDataResults(0, (int)(SpecItem.AF_SettillingTime1 + i), (int)(SpecItem.AF_SettillingTime1 + i), InspType.OnlyMax, new double[] { });
 
 
                 }

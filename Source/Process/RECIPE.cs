@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
@@ -106,7 +107,7 @@ namespace FZ4P
                         Spec.specList[index].MaxSpec = compare.specList[i].MaxSpec;
                         Spec.specList[index].OnOff = compare.specList[i].OnOff;
                         Spec.specList[index].FailCnt = compare.specList[i].FailCnt;
-                        Spec.specList[index].InspectionType = compare.specList[i].InspectionType;
+                        //Spec.specList[index].InspectionType = compare.specList[i].InspectionType;
                     }
                 }
             }
@@ -735,8 +736,8 @@ namespace FZ4P
         [ActionListUse(true)][Spec("OIS Y Phase Margin", "deg", InspType.Normal, "OIS Phase Margin")] FRAY_PhaseMargin,
         [ActionListUse(true)][Spec("OIS X Gain Margin", "dB", InspType.Normal, "OIS Gain Margin")] FRAX_GainMargin,
         [ActionListUse(true)][Spec("OIS Y Gain Margin", "dB", InspType.Normal, "OIS Gain Margin")] FRAY_GainMargin,
-        [ActionListUse(true)][Spec("OIS X 10Hz Gain", "dB", InspType.MintoMax, "OIS 10Hz Gain")] FRAX_GainMargin_10Hz,
-        [ActionListUse(true)][Spec("OIS Y 10Hz Gain", "dB", InspType.MintoMax, "OIS 10Hz Gain")] FRAY_GainMargin_10Hz,
+        [ActionListUse(true)][Spec("OIS X 10Hz Gain", "dB", InspType.Normal, "OIS 10Hz Gain")] FRAX_GainMargin_10Hz,
+        [ActionListUse(true)][Spec("OIS Y 10Hz Gain", "dB", InspType.Normal, "OIS 10Hz Gain")] FRAY_GainMargin_10Hz,
         [ActionListUse(true)][Spec("OIS X Phase Margin Low", "deg", InspType.Normal, "OIS Phase Margin Low")] FRAX_PhaseMarginLow,
         [ActionListUse(true)][Spec("OIS Y Phase Margin Low", "deg", InspType.Normal, "OIS Phase Margin Low")] FRAY_PhaseMarginLow,
         [ActionListUse(true)][Spec("OIS X Gain Margin Low", "dB", InspType.Normal, "OIS Gain Margin Low")] FRAX_GainMarginLow,
@@ -752,7 +753,7 @@ namespace FZ4P
         [ActionListUse(true)][Spec("AF Phase Margin", "deg", InspType.Normal, "AF Phase Margin")] FRAAF_PhaseMargin,
         [ActionListUse(true)][Spec("AF -4dB Phase Margin", "deg", InspType.Normal, "AF Phase Margin")] FRAAF_4dB_PhaseMargin,
         
-        [ActionListUse(true)][Spec("AF> Stabilize Time 1", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime1,
+        //[ActionListUse(true)][Spec("AF> Stabilize Time 1", "ms", InspType.OnlyMax, "AF Settling")] AF_SettillingTime1,
 
         [ActionListUse(true)][Spec("AF PID Verify", "any", InspType.Normal, "AF PID Verify")] AFPIDVerifyRes,
         [ActionListUse(true)][Spec("OIS PID Verify", "any", InspType.Normal, "OIS PID Verify")] OISPIDVerifyRes,
@@ -853,6 +854,9 @@ namespace FZ4P
         }
         public string OperatorName;
 
+        public string ActuatorID;
+        public string VenderCode;
+
         public List<string> List = new List<string>();
 
         public List<string> MakerList = new List<string>();
@@ -887,7 +891,9 @@ namespace FZ4P
                 List.Add("0");
                 List.Add("0");
                 List.Add("Normal");
-               
+                List.Add("0x1E");
+                List.Add("0");
+
                 STATIC.SetTextLine(FilePath, List);
                 SetParam();
             }
@@ -903,7 +909,8 @@ namespace FZ4P
             List.Add(MCNum);
             List.Add(TesterNo);
             List.Add(MCType);
-
+            List.Add(ActuatorID);
+            List.Add(VenderCode);
 
             STATIC.SetTextLine(FilePath, List);
         }
@@ -911,11 +918,29 @@ namespace FZ4P
         public override void SetParam()
         {
             base.SetParam();
-            int index = 0;
-            MCNum = List[index++];
-            TesterNo = List[index++];
-            MCType = List[index++];
-
+            for (int i = 0; i < List.Count; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        MCNum = List[i];
+                        break;
+                    case 1:
+                        TesterNo = List[i];
+                        break;
+                    case 2:
+                        MCType = List[i];
+                        break;
+                    case 3:
+                        ActuatorID = List[i];
+                        break;
+                    case 4:
+                        VenderCode = List[i];
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
         public void LotChanged()
         {

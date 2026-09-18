@@ -2,12 +2,15 @@
 using FZ4P.Commons.Helper;
 using FZ4P.DriverIc.OISIC;
 using FZ4P.Extensions;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -24,6 +27,7 @@ namespace FZ4P
     }
     public partial class Process
     {
+        public bool bAutoCountFlg = true;
         int[] g_IME = new int[2];
         double[] AFCurrentMinMax = new double[2];
         double[] OISXCurrentMinMax = new double[2];
@@ -1997,10 +2001,13 @@ namespace FZ4P
                 var second = now.Second;
 
                 //TODO : Free Memory Write 추가해야됨
-                //if (byte.TryParse(Model.MCNum, out byte MachineNumber))
-                //    STATIC.ActID_Memory[2] = MachineNumber;
-                //if (byte.TryParse(Model.MCNum, out byte MachineNumber))
-                //    STATIC.ActID_Memory[2] = MachineNumber;
+                if (byte.TryParse(Model.ActuatorID, NumberStyles.HexNumber, null, out byte actid))
+                {
+                    STATIC.ActID_Memory[0] = actid;
+                    STATIC.ActID = "0x"+Model.ActuatorID;
+                }
+                if (byte.TryParse(Model.VenderCode, out byte VenderCode))
+                    STATIC.ActID_Memory[1] = VenderCode;
 
                 if (byte.TryParse(Model.MCNum, out byte MachineNumber))
                     STATIC.ActID_Memory[2] = MachineNumber;
@@ -2016,8 +2023,9 @@ namespace FZ4P
                 byte[] AFWriteData = new byte[16];
 
                 AFWriteData[0] = (byte)res;
-                AFWriteData[2] = (byte)Math.Abs(Math.Round((AFRatedMinMax[1] - AFRatedMinMax[0]) / 4));
-               
+
+                AFWriteData[2] = (byte)Math.Abs(Math.Round(PassFails[ch].Results[(int)SpecItem.AF_Ratedstroke].Val / 4));
+                
                 AFWriteData[11] = AFPIDVersion;
 
                 //AFWriteData[1] = 
@@ -2081,10 +2089,6 @@ namespace FZ4P
 
                     }
                 }
-
-                AddLog(ch, "OIS PID Data Check");
-
-
             }
             catch (Exception ex)
             {
@@ -2118,6 +2122,142 @@ namespace FZ4P
                 }
             }
         }
+
+        private void PIDChecked(int ch, int iAxis)
+        {
+            STATIC.MCUH503.SetI3CByPaaMode(true);
+            Thread.Sleep(1000);
+            bool NgFlg = false;
+            int SlaveID = 0;
+            byte[] Value = new byte[1];
+            byte[] Register= new byte[1];
+            List<string> OKCollection = new List<string>();
+            List<string> NGCollection = new List<string>();
+
+            if (iAxis == 0)
+            {
+                Register = IC_DATA_OIS_X_REG;
+                Value = IC_DATA_OIS_X;
+                SlaveID = DWDrvIC.OISX_Addr;
+            }
+            else if (iAxis == 1)
+            {
+                Register = IC_DATA_OIS_Y_REG;
+                Value = IC_DATA_OIS_Y;
+                SlaveID = DWDrvIC.OISY_Addr;
+            }
+            for (int i = 0; i < Register.Length; i++)
+            {
+                if (Register[i] == 0x2E) continue;
+                byte rdata = DWDrvIC.Controls.ReadByte(SlaveID, Register[i], 1);
+
+                if (Value[i] == rdata)
+                {
+                    var tmp = string.Format($"OK Register : 0x{Register[i].ToString("X2")} OK Value : 0x{rdata.ToString("X2")}");
+                    OKCollection.Add(tmp);
+                }
+                else
+                {
+                    var tmp = string.Format($"NG Register : 0x{Register[i].ToString("X2")} NG Write Value : 0x{Value[i].ToString("X2")} Read Value : 0x{rdata.ToString("X2")}");
+                    NGCollection.Add(tmp);
+                    NgFlg = true;
+                }
+            }
+
+            if (NgFlg)
+            {
+                AddLog(ch, "OIS Verify NG");
+                PassFails[ch].Results[(int)SpecItem.OISPIDVerifyRes].Val = 1;
+                ShowDataResults(ch, (int)SpecItem.OISPIDVerifyRes, (int)SpecItem.OISPIDVerifyRes, InspType.Normal, new double[] { });
+            }
+            else
+            {
+                if (iAxis == 0)
+                    AddLog(ch, "OIS Verify X OK");
+                else if (iAxis == 1)
+                {
+                    AddLog(ch, "OIS Verify Y OK");
+                    if (PassFails[ch].Results[(int)SpecItem.OISPIDVerifyRes].Val != 1)
+                    {
+                        PassFails[ch].Results[(int)SpecItem.OISPIDVerifyRes].Val = 0;
+                    }
+                    ShowDataResults(ch, (int)SpecItem.OISPIDVerifyRes, (int)SpecItem.OISPIDVerifyRes, InspType.Normal, new double[] { });
+                }
+            }
+            var resultCollection = SumCollection(OKCollection, NGCollection);
+
+            resultCollection.ForEach(element => {
+                AddLog(ch, element);
+            });
+
+            STATIC.MCUH503.SetI3CByPaaMode(false);
+        }
+        private void AFPIDChecked(int ch)
+        {
+            bool NgFlg = false;
+            int SlaveID = 0;
+            byte[] Value = new byte[1];
+            byte[] Register = new byte[1];
+            List<string> OKCollection = new List<string>();
+            List<string> NGCollection = new List<string>();
+
+            Register = IC_DATA_AF_REG;
+            Value = IC_DATA_AF;
+            SlaveID = DrvIC.AFSlaveAddr;
+            
+            for (int i = 0; i < Register.Length; i++)
+            {
+                byte rdata = DrvIC.Dln.ReadByte(ch, SlaveID, Register[i], 1);
+
+                if (Value[i] == rdata)
+                {
+                    var tmp = string.Format($"OK Register : 0x{Register[i].ToString("X2")} OK Value : 0x{rdata.ToString("X2")}");
+                    OKCollection.Add(tmp);
+                }
+                else
+                {
+                    var tmp = string.Format($"NG Register : 0x{Register[i].ToString("X2")} NG Write Value : 0x{Value[i].ToString("X2")} Read Value : 0x{rdata.ToString("X2")}");
+                    NGCollection.Add(tmp);
+                    NgFlg = true;
+                }
+            }
+
+            if (NgFlg)
+            {
+                AddLog(ch, "AF Verify NG");
+                PassFails[ch].Results[(int)SpecItem.AFPIDVerifyRes].Val = 1;
+                ShowDataResults(ch, (int)SpecItem.AFPIDVerifyRes, (int)SpecItem.AFPIDVerifyRes, InspType.Normal, new double[] { });
+            }
+            else
+            {
+                AddLog(ch, "AF Verify OK");
+                PassFails[ch].Results[(int)SpecItem.AFPIDVerifyRes].Val = 0;
+                ShowDataResults(ch, (int)SpecItem.AFPIDVerifyRes, (int)SpecItem.AFPIDVerifyRes, InspType.Normal, new double[] { });
+            }
+
+            var resultCollection = SumCollection(OKCollection, NGCollection);
+
+            resultCollection.ForEach(element => {
+                AddLog(ch, element);
+            });
+        }
+
+        private List<string> SumCollection(List<string> OKCollection, List<string> NGCollection)
+        {
+            List<string> ResultCollection = new List<string>();
+            int maxCount = Math.Max(OKCollection.Count, NGCollection.Count);
+
+            for (int i = 0; i < maxCount; i++)
+            {
+                string ok = i < OKCollection.Count ? OKCollection[i] : "";
+                string ng = i < NGCollection.Count ? NGCollection[i] : "";
+
+                ResultCollection.Add($"{ok}/{ng}");
+            }
+            return ResultCollection;
+        }
+
+        
         private void WriteOISUserMem(int ch, int res)
         {
             NVMWriteCollection readCollection = new NVMWriteCollection();
@@ -2589,6 +2729,7 @@ namespace FZ4P
             }
             AddLog(ch, $"RealValue End");
 
+            
             DWDrvIC.SetOperationMode(AxisTypeDW.AxisX, OperationTypeDW.StandbyMode);
             Wait(100);
 

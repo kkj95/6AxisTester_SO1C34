@@ -23,6 +23,20 @@ using static S2System.Vision.MILlib;
 
 namespace FZ4P
 {
+    public enum VenderCodeType
+    {
+        NONE = 0,
+        SEMV = 1,
+        STEM = 2,
+        BANGJOO_VINA = 3,
+        BANGJOO_FIN = 4,
+        IM_FIL = 5,
+        SUNGWOO = 6,
+        HAESUNG = 7,
+        IM_VINA = 8,
+        SEMCO = 9,
+        SBK = 10,
+    }
     public partial class F_Main : Form
     {
         private Global m__G = null;
@@ -38,7 +52,6 @@ namespace FZ4P
             try
             {
                 InitializeComponent();
-                //TestHelper.Test();
             }
             catch (Exception ex)
             {
@@ -92,9 +105,11 @@ namespace FZ4P
                     break;
             }
         }
-        private void F_Main_Load(object sender, EventArgs e)
+        private async void F_Main_Load(object sender, EventArgs e)
         {
-            if(!AppHelper.IsDebuggerMode())
+            await Task.Delay(3000);
+
+            if (!AppHelper.IsDebuggerMode())
                 STATIC.fStart.TopMost = true;
             STATIC.fStart.Show();
             
@@ -135,7 +150,6 @@ namespace FZ4P
 
             InitModel();
             InitFWPath();
-       
 
             LoadLastModelFileList();
 
@@ -844,15 +858,21 @@ namespace FZ4P
         }
         private void InitModel()
         {
+            cbb_VenderCode.DataSource = Enum.GetValues(typeof(VenderCodeType));
+
             tbMcNum.Text = Model.MCNum;
             TesterNo.Text = Model.TesterNo;
+            txtbxActualtorID.Text = Model.ActuatorID;
 
             MCtypeList.Items.Clear();
             for (int i = 0; i < Model.MCTypeList.Count; i++)
                 MCtypeList.Items.Add(Model.MCTypeList[i]);
             
             MCtypeList.SelectedItem = Model.MCType;
-            if(MCtypeList.SelectedItem == null)
+            if (Enum.TryParse(Model.VenderCode, out VenderCodeType vender))
+                cbb_VenderCode.SelectedItem = vender;
+
+            if (MCtypeList.SelectedItem == null)
             {
                 Model.MCType = "Normal";
                 Model.Save();
@@ -936,7 +956,7 @@ namespace FZ4P
                         Spec.specList[index].MaxSpec = compare.specList[i].MaxSpec;
                         Spec.specList[index].OnOff = compare.specList[i].OnOff;
                         Spec.specList[index].FailCnt = compare.specList[i].FailCnt;
-                        Spec.specList[index].InspectionType = compare.specList[i].InspectionType;
+                        //Spec.specList[index].InspectionType = compare.specList[i].InspectionType;
                     }
                 }
             }
@@ -982,9 +1002,10 @@ namespace FZ4P
             //Model ==
             Model.MCNum = tbMcNum.Text;
             Model.TesterNo = TesterNo.Text;
-           
-          
+            Model.ActuatorID = txtbxActualtorID.Text;
+
             if (MCtypeList.SelectedItem != null) Model.MCType = MCtypeList.SelectedItem.ToString();
+            if (MCtypeList.SelectedItem != null) Model.VenderCode = cbb_VenderCode.SelectedIndex.ToString();
             Model.Save();
 
             InitModel();
