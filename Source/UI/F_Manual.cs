@@ -646,6 +646,13 @@ namespace FZ4P.UI
 
         private void button12_Click(object sender, EventArgs e)
         {
+            ReadHall = _oISFunction.ReadOISHall(0, 0, 0).ToString();
+            Thread.Sleep(5);
+            ReadHall2 = _oISFunction.ReadOISHall(0, 1, 0).ToString();
+            Thread.Sleep(5);
+            ReadHall3 = _afFunction.ReadAFHall(0).ToString();
+            Thread.Sleep(50);
+
             PeakCurrent = _oISFunction.GetCurrent((int)AxisTypeDW.AxisX).ToString("00.00");
             Thread.Sleep(5);
             Current2 = _oISFunction.GetCurrent((int)AxisTypeDW.AxisY).ToString("00.00");

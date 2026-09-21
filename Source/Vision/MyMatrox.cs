@@ -1718,7 +1718,6 @@ namespace S2System.Vision
             switch (name)
             {
                 case "AF Scan":
-               
                     MIL.MdigGrab(milDigitizer, milAFRelay[i]);
                     break;
                 case "OIS X Scan":

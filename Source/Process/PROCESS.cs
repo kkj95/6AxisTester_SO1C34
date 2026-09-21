@@ -933,6 +933,8 @@ namespace FZ4P
                     ChartTop[ch].C.ChartAreas[0].AxisY2.LabelStyle.Font = new Font("Calibri", 9, FontStyle.Bold);
 
                     ChartTop[ch].IsFalg = false;
+
+                    ChartTop[ch].C.ChartAreas[0].AxisY2.ScaleView.Zoomable = false;
                 });
             }
             //settle Chart
@@ -1993,6 +1995,7 @@ namespace FZ4P
                             }
                             else if (name.Contains("Y"))
                             {
+
                                 DWDrvIC.OISMove(j, OISXCenter, Cal.CodeY[framCnt[port]]);
                             }
                             else if (name.Contains("AF"))
@@ -3125,8 +3128,6 @@ namespace FZ4P
             {
                 var loopBackData = STATIC.Process.DWDrvIC.LiearCompEnable((int)AxisTypeDW.AxisX, true);
                 AddLog(0, $"LiearComp Enable{loopBackData}");
-                loopBackData = STATIC.Process.DWDrvIC.LiearCompEnable((int)AxisTypeDW.AxisY, true);
-                AddLog(0, $"LiearComp Enable{loopBackData}");
 
                 var realX = DWDrvIC.LiearCompRead(0);
                 var realY = DWDrvIC.LiearCompRead(1);
@@ -3140,9 +3141,7 @@ namespace FZ4P
             }
             else if (testItem.Contains("OIS Y Scan"))
             {
-                var loopBackData = STATIC.Process.DWDrvIC.LiearCompEnable((int)AxisTypeDW.AxisX, true);
-                AddLog(0, $"LiearComp Enable{loopBackData}");
-                loopBackData = STATIC.Process.DWDrvIC.LiearCompEnable((int)AxisTypeDW.AxisY, true);
+                var loopBackData = STATIC.Process.DWDrvIC.LiearCompEnable((int)AxisTypeDW.AxisY, true);
                 AddLog(0, $"LiearComp Enable{loopBackData}");
 
                 var realX = DWDrvIC.LiearCompRead(0);

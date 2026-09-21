@@ -1512,7 +1512,88 @@ namespace FZ4P
                 //C.Series[numSeries].IsVisibleInLegend = true;
                 //C.Series[numSeries].YAxisType = AxisType.Secondary;
             }//Tilt
+
+            //C.MouseWheel += Chart_MouseWheel;
+            //C.MouseEnter += (s, e) => ((Chart)s).Focus();
         }
+
+        private void Chart_MouseWheel(object sender, MouseEventArgs e)
+        {
+            Chart chart = sender as Chart;
+
+            if (chart == null)
+                return;
+
+            ChartArea area = chart.ChartAreas[0];
+            Axis axisY = area.AxisY2;   // Y1 축
+
+            double yMin = axisY.ScaleView.ViewMinimum;
+            double yMax = axisY.ScaleView.ViewMaximum;
+
+            // 아직 Zoom되지 않은 상태
+            if (double.IsNaN(yMin) || double.IsNaN(yMax))
+            {
+                yMin = axisY.Minimum;
+                yMax = axisY.Maximum;
+            }
+
+            double range = yMax - yMin;
+
+            // 마우스 위치에 해당하는 Y값
+            double mouseY;
+
+            try
+            {
+                mouseY = axisY.PixelPositionToValue(e.Y);
+            }
+            catch
+            {
+                return;
+            }
+
+            double zoomFactor;
+
+            if (e.Delta > 0)
+            {
+                // 휠 위쪽 -> 확대
+                zoomFactor = 0.8;
+            }
+            else
+            {
+                // 휠 아래쪽 -> 축소
+                zoomFactor = 1.25;
+            }
+
+            double newRange = range * zoomFactor;
+
+            double ratio = (mouseY - yMin) / range;
+
+            double newMin = mouseY - newRange * ratio;
+            double newMax = mouseY + newRange * (1.0 - ratio);
+
+            // 원래 전체 범위를 벗어나지 않도록 제한
+            if (newMin < axisY.Minimum)
+            {
+                newMin = axisY.Minimum;
+                newMax = newMin + newRange;
+            }
+
+            if (newMax > axisY.Maximum)
+            {
+                newMax = axisY.Maximum;
+                newMin = newMax - newRange;
+            }
+
+            // 너무 크게 축소된 경우 전체 범위로 복귀
+            if (newRange >= axisY.Maximum - axisY.Minimum)
+            {
+                axisY.ScaleView.ZoomReset();
+                return;
+            }
+
+            axisY.ScaleView.Zoom(newMin, newMax);
+        }
+
         private void MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (e.X >= (C.Width - 40))

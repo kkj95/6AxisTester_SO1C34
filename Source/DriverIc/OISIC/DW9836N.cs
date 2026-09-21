@@ -132,6 +132,8 @@ namespace FZ4P.DriverIc.OISIC
 
             return true;
         }
+
+        //가이드 된 시퀀스  
         public bool SetStore(int axis)
         {
             var slaveID = GetAxisTypeID((AxisTypeDW)axis);
@@ -146,6 +148,25 @@ namespace FZ4P.DriverIc.OISIC
                 Controls.WriteByte(slaveID, (int)0x28, 1, (byte)0x14);
                 Thread.Sleep(50);
                 Controls.WriteByte(slaveID, (int)RegisterMapDW9836N.SWREST, 1, (byte)0x01);
+                Thread.Sleep(50);
+            }
+            catch
+            {
+                bResult = false;
+            }
+
+            return bResult;
+        }
+
+        //현재 개발중이라 시퀀스가 달라질수 있음... 그래서 스토어 시퀀스가 두개로 나뉨... 
+        public bool TestSetStore(int axis)
+        {
+            var slaveID = GetAxisTypeID((AxisTypeDW)axis);
+            bool bResult = true;
+            try
+            {
+                Controls.WriteByte(slaveID, (int)RegisterMapDW9836N.STORE_PROD_ID, 1, (byte)0x01);
+                Thread.Sleep(640);
             }
             catch
             {
@@ -356,14 +377,19 @@ namespace FZ4P.DriverIc.OISIC
         public byte LiearCompEnable(int axis,bool onOff)
         {
             var slaveID = GetAxisTypeID((AxisTypeDW)axis);
-            
-            //Set_PT(axis, false);
+
+            if ((AxisTypeDW)axis == AxisTypeDW.AxisY)
+                Set_PT((int)AxisTypeDW.AxisX, false);
             Set_PT(axis, false);
+
             int startAddress = 0x55;
             if (onOff)
             {
                 _controls.WriteByte(slaveID, startAddress, 1, 0x01);        // Linearity Enabled
                 Thread.Sleep(50);
+                //TestSetStore(axis);
+                if ((AxisTypeDW)axis == AxisTypeDW.AxisY)
+                    Set_PT((int)AxisTypeDW.AxisX, true);
                 Set_PT(axis, true);
                 Thread.Sleep(50);
                 return _controls.ReadByte(slaveID, startAddress, 1);
@@ -372,6 +398,9 @@ namespace FZ4P.DriverIc.OISIC
             {
                 _controls.WriteByte(slaveID, startAddress, 1, 0x00);        // Linearity Disabled
                 Thread.Sleep(50);
+                //TestSetStore(axis);
+                if ((AxisTypeDW)axis == AxisTypeDW.AxisY)
+                    Set_PT((int)AxisTypeDW.AxisX, true);
                 Set_PT(axis, true);
                 Thread.Sleep(50);
                 return _controls.ReadByte(slaveID, startAddress, 1);
