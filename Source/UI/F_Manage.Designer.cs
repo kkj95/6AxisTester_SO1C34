@@ -471,7 +471,7 @@ namespace FZ4P
             this.ModelGroup.Location = new System.Drawing.Point(1739, 43);
             this.ModelGroup.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ModelGroup.Name = "ModelGroup";
-            this.ModelGroup.Size = new System.Drawing.Size(178, 356);
+            this.ModelGroup.Size = new System.Drawing.Size(178, 408);
             this.ModelGroup.TabIndex = 256;
             // 
             // tableLayoutPanel2
@@ -539,9 +539,9 @@ namespace FZ4P
             this.lbST.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbST.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbST.ForeColor = System.Drawing.Color.Yellow;
-            this.lbST.Location = new System.Drawing.Point(1739, 716);
+            this.lbST.Location = new System.Drawing.Point(1739, 732);
             this.lbST.Name = "lbST";
-            this.lbST.Size = new System.Drawing.Size(178, 61);
+            this.lbST.Size = new System.Drawing.Size(178, 49);
             this.lbST.TabIndex = 260;
             this.lbST.Text = "0.0";
             this.lbST.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -552,7 +552,7 @@ namespace FZ4P
             this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label1.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Black;
-            this.label1.Location = new System.Drawing.Point(1739, 682);
+            this.label1.Location = new System.Drawing.Point(1739, 698);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(178, 34);
             this.label1.TabIndex = 261;
@@ -565,7 +565,7 @@ namespace FZ4P
             this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label5.Font = new System.Drawing.Font("Arial", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.Black;
-            this.label5.Location = new System.Drawing.Point(1739, 582);
+            this.label5.Location = new System.Drawing.Point(1739, 613);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(178, 34);
             this.label5.TabIndex = 263;
@@ -578,9 +578,9 @@ namespace FZ4P
             this.lbCurrentST.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbCurrentST.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbCurrentST.ForeColor = System.Drawing.Color.Yellow;
-            this.lbCurrentST.Location = new System.Drawing.Point(1739, 616);
+            this.lbCurrentST.Location = new System.Drawing.Point(1739, 647);
             this.lbCurrentST.Name = "lbCurrentST";
-            this.lbCurrentST.Size = new System.Drawing.Size(178, 61);
+            this.lbCurrentST.Size = new System.Drawing.Size(178, 49);
             this.lbCurrentST.TabIndex = 262;
             this.lbCurrentST.Text = "0.0";
             this.lbCurrentST.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -693,7 +693,7 @@ namespace FZ4P
             this.lbActID.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbActID.Font = new System.Drawing.Font("Arial", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbActID.ForeColor = System.Drawing.Color.Black;
-            this.lbActID.Location = new System.Drawing.Point(1739, 501);
+            this.lbActID.Location = new System.Drawing.Point(1739, 537);
             this.lbActID.Name = "lbActID";
             this.lbActID.Size = new System.Drawing.Size(178, 28);
             this.lbActID.TabIndex = 263;
@@ -706,7 +706,7 @@ namespace FZ4P
             this.lbBarcodeID.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbBarcodeID.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbBarcodeID.ForeColor = System.Drawing.Color.Yellow;
-            this.lbBarcodeID.Location = new System.Drawing.Point(1739, 529);
+            this.lbBarcodeID.Location = new System.Drawing.Point(1739, 565);
             this.lbBarcodeID.Name = "lbBarcodeID";
             this.lbBarcodeID.Size = new System.Drawing.Size(178, 44);
             this.lbBarcodeID.TabIndex = 262;
@@ -736,9 +736,9 @@ namespace FZ4P
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button1.Font = new System.Drawing.Font("맑은 고딕", 12F, System.Drawing.FontStyle.Bold);
             this.button1.ForeColor = System.Drawing.Color.Black;
-            this.button1.Location = new System.Drawing.Point(1739, 402);
+            this.button1.Location = new System.Drawing.Point(1739, 458);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(178, 45);
+            this.button1.Size = new System.Drawing.Size(178, 35);
             this.button1.TabIndex = 266;
             this.button1.Text = "IC Manual View";
             this.button1.UseVisualStyleBackColor = false;
@@ -839,9 +839,9 @@ namespace FZ4P
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button2.Font = new System.Drawing.Font("맑은 고딕", 12F, System.Drawing.FontStyle.Bold);
             this.button2.ForeColor = System.Drawing.Color.Black;
-            this.button2.Location = new System.Drawing.Point(1739, 453);
+            this.button2.Location = new System.Drawing.Point(1739, 499);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(178, 45);
+            this.button2.Size = new System.Drawing.Size(178, 35);
             this.button2.TabIndex = 268;
             this.button2.Text = "IC Read Write View";
             this.button2.UseVisualStyleBackColor = false;

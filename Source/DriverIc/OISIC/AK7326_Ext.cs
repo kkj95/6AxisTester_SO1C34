@@ -1,17 +1,20 @@
-﻿using FZ4P.DriverIc.Interfaces;
+﻿using FZ4P.DriverIc.I2CBase.Interfaces;
+using FZ4P.DriverIc.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace FZ4P.DriverIc.OISIC
 {
-    public class AK73XX_Ext : AK73XX , IAFunction , IOISFunction, IFRAFunction
+    public class AK7326_Ext : AK73XX , IAFunction , IOISFunction, IFRAFunction
     {
         private Action<int, string> _logAction;
-        public AK73XX_Ext(Action<int, string> logAction)
+        private readonly IOneTwoBytesDrivingIC _controls;
+        public AK7326_Ext(Action<int, string> logAction)
         {
             _logAction = logAction;
         }
@@ -142,15 +145,19 @@ namespace FZ4P.DriverIc.OISIC
 
         #region OIS Function
         public int OIS_Addr => throw new NotImplementedException();         ///기존 DLN은 OIS Slave ID 가 1개였다... Register로 구분하는 방식.... 추가 삭제 예정...
-        public int OISX_Addr { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public int OISY_Addr { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public int OIS_MIN_CODE => throw new NotImplementedException();
 
-        public int OIS_MID_CODE => throw new NotImplementedException();
+        public int OISX_Addr { get; set; } = 0x0E;
+        public int OISY_Addr { get; set; } = 0x4E;
 
-        public int OIS_MAX_CODE => throw new NotImplementedException();
+        public int OIS_MIN_CODE { get; set; } = 0;
+        public int OIS_MID_CODE { get; set; } = 2048;
+        public int OIS_MAX_CODE { get; set; } = 4096;
 
         public void LiearCompWrite(int axis, List<int> CompValue)
+        {
+            throw new NotImplementedException();
+        }
+        public byte LiearCompEnable(int axis, bool enable)
         {
             throw new NotImplementedException();
         }
@@ -162,7 +169,20 @@ namespace FZ4P.DriverIc.OISIC
 
         public void OISMove(int ch, int Xcode, int Ycode)
         {
-            throw new NotImplementedException();
+            var moveX = Xcode << 3;
+            var moveY = Ycode << 3;
+
+            var targetBufferX1 = (moveX >> 8) & 0xFF;
+            var targetBufferX2 = (moveX) & 0xFF;
+
+            var targetBufferY1 = (moveY >> 8) & 0xFF;
+            var targetBufferY2 = (moveY) & 0xFF;
+
+            Dln.WriteByte(ch, OISX_Addr, (int)RegisterMap7326.Target, 1, (byte)targetBufferX1);
+            Dln.WriteByte(ch, OISX_Addr, (int)RegisterMap7326.Target1, 1, (byte)targetBufferX2);
+
+            Dln.WriteByte(ch, OISY_Addr, (int)RegisterMap7326.Target, 1, (byte)targetBufferY1);
+            Dln.WriteByte(ch, OISY_Addr, (int)RegisterMap7326.Target1, 1, (byte)targetBufferY2);
         }
 
         public void OISMoveOL(int ch, int axis, int code)
@@ -172,13 +192,15 @@ namespace FZ4P.DriverIc.OISIC
 
         public void OISOnOff(int ch, bool isOn)
         {
-            
             if (isOn)
             {
-                Dln.WriteArray(ch, this.XSlaveAddr, 0x02, 1, new byte[] { 0x40 });
-                Dln.WriteArray(ch, this.Y1SlaveAddr, 0x02, 1, new byte[] { 0x40 });
-                if (this.Y2SlaveAddr != 0x00)
-                    Dln.WriteArray(ch, this.Y2SlaveAddr, 0x02, 1, new byte[] { 0x40 });
+                Dln.WriteArray(ch, OISX_Addr, (int)RegisterMap7326.Mode, 1, new byte[] { 0x00 });
+                Dln.WriteArray(ch, OISY_Addr, (int)RegisterMap7326.Mode, 1, new byte[] { 0x00 });
+            }
+            else
+            {
+                Dln.WriteArray(ch, OISX_Addr, (int)RegisterMap7326.Mode, 1, new byte[] { 0x40 });
+                Dln.WriteArray(ch, OISY_Addr, (int)RegisterMap7326.Mode, 1, new byte[] { 0x40 });
             }
         }
 
@@ -198,17 +220,53 @@ namespace FZ4P.DriverIc.OISIC
         }
         public short ReadOISHall(int ch, int axis, int mode)
         {
-            throw new NotImplementedException();
+            short ReadData = 0x0000;
+
+            int SlaveID = GetAxisTypeID((AxisTypeDW)axis);
+            var Wrod = Dln.Read2Byte(ch, SlaveID, (int)RegisterMap7326.POSITION_READ_LOW, 1);
+            ReadData = (short)(Wrod >> 3);
+
+            return (short)ReadData;
         }
 
         public bool SetManualDrvModeXY(int ch, int MidCodeX, int MidCodeY)
         {
-            throw new NotImplementedException();
+            bool flag = false;
+            OISMove(ch, MidCodeX, MidCodeY);
+            return true;
         }
-
+        private void SettingMode(int ch, int axis, bool OnOff)
+        {
+            var slaveID = GetAxisTypeID((AxisTypeDW)axis);
+            if (OnOff)
+            {
+                if (!Dln.WriteArray(ch, slaveID, 0xAE, 1, new byte[] { 0x3B })) return;
+                    _logAction(ch, string.Format("Setting Mode = Write Mem : 0x{0:X2} XData : 0x{1:X2}", 0xAE, 0x3B));
+            }
+            else
+            {
+                if (!Dln.WriteArray(ch, slaveID, 0xAE, 1, new byte[] { 0x00 })) return;
+                    _logAction(ch, string.Format("Setting Mode = Write Mem : 0x{0:X2} XData : 0x{1:X2}", 0xAE, 0x3B));
+            }
+        }
         public bool SetStore(int axis)
         {
-            throw new NotImplementedException();
+            var slaveID = GetAxisTypeID((AxisTypeDW)axis);
+            bool bResult = true;
+            try
+            {
+                SettingMode(0, axis, true);
+                Thread.Sleep(50);
+                Dln.WriteByte(0, slaveID, (int)RegisterMap7326.STORE_PROD_ID, 1, (byte)0x01);
+                Thread.Sleep(200);
+                _logAction(0, string.Format("Store Memory = Write Mem : 0x{0:X2} Data : 0x{1:X2}", 0x03, 0x01));
+            }
+            catch
+            {
+                bResult = false;
+            }
+
+            return bResult;
         }
         #endregion
 
@@ -255,5 +313,26 @@ namespace FZ4P.DriverIc.OISIC
         }
 
         #endregion
+
+        private int GetAxisTypeID(AxisTypeDW axisType)
+        {
+            int SlaveID = -1;
+            switch (axisType)
+            {
+                case AxisTypeDW.AxisX:
+                    SlaveID = OISX_Addr;
+                    break;
+                case AxisTypeDW.AxisY:
+                    SlaveID = OISY_Addr;
+                    break;
+                case AxisTypeDW.AxisZ:
+                    SlaveID = AF_Addr;
+                    break;
+                default:
+                    throw new Exception("Type Not Difined Error");
+            }
+
+            return SlaveID;
+        }
     }
 }

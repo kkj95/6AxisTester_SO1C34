@@ -171,7 +171,7 @@
     <Compile Include="DriverIc\OISIC\Adapter\FRAAdapterAKM.cs" />
     <Compile Include="DriverIc\OISIC\Adapter\OISAdapterAKM.cs" />
     <Compile Include="DriverIc\OISIC\AK73XX.cs" />
-    <Compile Include="DriverIc\OISIC\AK73XX_Ext.cs" />
+    <Compile Include="DriverIc\OISIC\AK7326_Ext.cs" />
     <Compile Include="DriverIc\OISIC\Base\DriveICBase.cs" />
     <Compile Include="DriverIc\OISIC\DW9836N.cs" />
     <Compile Include="DriverIc\OISIC\EnumTypeDefined.cs" />

@@ -105,6 +105,8 @@ namespace FZ4P
         private void ChagnedOISAKM()
         {
             //TODO : 여기 AKM 로직 넣어야됨.
+            CollectionHelper.FindCollection(ItemList, "OIS X Scan", Act_ScanCodeAKM);
+            CollectionHelper.FindCollection(ItemList, "OIS Y Scan", Act_ScanCodeAKM);
             CollectionHelper.FindCollection(ItemList, "OIS HallCalibration", Act_OISHallCalubration);
             //CollectionHelper.FindCollection(ItemList, "OIS LinearityCompensation", Act_OISLinComp);
             //CollectionHelper.FindCollection(ItemList, "OIS Gain Margin", OISGM);
@@ -582,7 +584,6 @@ namespace FZ4P
                 }
                 Dln.ReadArray(ch, DrvIC.AFSlaveAddr, 0x19, 1, rbuf);
                 byte tmpData = (byte)Math.Floor(rbuf[0] * 0.75);
-                //임시 주석
                 if (tmpData >= 0x00 && tmpData <= 0x30)
                 {
                     DrvIC.WriteArray(ch, DrvIC.AFSlaveAddr, 0x19, 1, new byte[] { tmpData });

@@ -106,13 +106,13 @@ namespace FZ4P
             }
         }
         private async void F_Main_Load(object sender, EventArgs e)
-        {
-            await Task.Delay(3000);
-
+        {   
             if (!AppHelper.IsDebuggerMode())
                 STATIC.fStart.TopMost = true;
             STATIC.fStart.Show();
-            
+
+            //await Task.Delay(100);
+
             STATIC.fStart.Log("Program Start !!");
             STATIC.StateChange += Form_StateChange;
 
@@ -878,6 +878,10 @@ namespace FZ4P
                 Model.Save();
                 MCtypeList.SelectedItem = Model.MCType;
             }
+            if (Option.OISTYPE_AKM)
+                Process.ChangedActionItemFunction(ChangedActionType.H503ToAKM);
+            else
+                Process.ChangedActionItemFunction(ChangedActionType.H503ToDW);
         }
       
         private void ToOperator_Click(object sender, EventArgs e)

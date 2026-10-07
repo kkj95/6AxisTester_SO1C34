@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -41,7 +42,7 @@ namespace FZ4P
     {
         public DLN Dln { get { return STATIC.Dln; } }
         //public DrvIC DrvIC { get { return STATIC.DrvIC; } }
-        public AK73XX_Ext DrvIC { get { return STATIC.DrvIC; } }
+        public AK7326_Ext DrvIC { get { return STATIC.DrvIC; } }
         public DW9836N DWDrvIC { get { return STATIC.DW9836; } }
         public Recipe Rcp { get { return STATIC.Rcp; } }
         public Condition Condition { get { return STATIC.Rcp.Condition; } }
@@ -193,6 +194,11 @@ namespace FZ4P
         {
             LoadPID(0);
             LoadPID(1);
+            
+            if(Rcp.Option.OISTYPE_AKM)
+                ChangedActionItemFunction(ChangedActionType.H503ToAKM);
+            else
+                ChangedActionItemFunction(ChangedActionType.H503ToDW);
         }
 
         public void LoadPID(int iStep)
@@ -1441,9 +1447,18 @@ namespace FZ4P
                         PassFails[k].FirstFailIndex = 0;
                     }
 
+                    //TODO : 임의
                     if (Dln.ReadByteNull(ch, DrvIC.AF_Addr, 0x03, 1) == null) m_ChannelOn[ch] = false;
                     //if (Dln.ReadByteNull(ch, DrvIC.OIS_Addr, 0x6024, 2) == null) m_ChannelOn[ch] = false;
 
+
+                    //Dln.WriteArray(ch, 0x28, 0x02, 1, new byte[] { 0x40 });
+                    //Thread.Sleep(10);
+                    //Dln.WriteArray(ch, 0x28, 0xAE, 1, new byte[] { 0x3B });
+                    //Dln.WriteArray(ch, 0x28, 0x0B, 1, new byte[] { 0xF2 });
+                    //Dln.WriteArray(ch, 0x28, 0x0A, 1, new byte[] { 0x00 });
+                    //Dln.WriteArray(ch, 0x0C, 0x03, 1, new byte[] { 0x01 });
+                    //Dln.WriteArray(ch, 0x0C, 0xAE, 1, new byte[] { 0x00 });
 
                     for (int k = ch; k < ch + ChannelCnt; k++)
                     {
@@ -1991,12 +2006,17 @@ namespace FZ4P
                         {
                             if (name.Contains("X"))
                             {
-                                DWDrvIC.OISMove(j, Cal.CodeX[framCnt[port]], OISYCenter);
+                                if(Option.OISTYPE_AKM)
+                                    DrvIC.OISMove(j, Cal.CodeX[framCnt[port]], OISYCenter);
+                                else 
+                                    DWDrvIC.OISMove(j, Cal.CodeX[framCnt[port]], OISYCenter);
                             }
                             else if (name.Contains("Y"))
                             {
-
-                                DWDrvIC.OISMove(j, OISXCenter, Cal.CodeY[framCnt[port]]);
+                                if (Option.OISTYPE_AKM)
+                                    DrvIC.OISMove(j, OISXCenter, Cal.CodeY[framCnt[port]]);
+                                else
+                                    DWDrvIC.OISMove(j, OISXCenter, Cal.CodeY[framCnt[port]]);
                             }
                             else if (name.Contains("AF"))
                             {
@@ -2038,13 +2058,18 @@ namespace FZ4P
                     foreach (var Cal in CalList[j])
                         if (Cal.Name == name)
                         {
-
-                            Cal.HallX[framCnt[port]] = DWDrvIC.ReadOISHall(j, 0, 0);
-
-                            Cal.HallY[framCnt[port]] = DWDrvIC.ReadOISHall(j, 1, 0);
-
-                            Cal.HallZ[framCnt[port]] = DrvIC.ReadAFHall(j);
-
+                            if (Option.OISTYPE_AKM)
+                            {
+                                Cal.HallX[framCnt[port]] = DrvIC.ReadOISHall(j, 0, 0);
+                                Cal.HallY[framCnt[port]] = DrvIC.ReadOISHall(j, 1, 0);
+                                Cal.HallZ[framCnt[port]] = DrvIC.ReadAFHall(j);
+                            }
+                            else
+                            {
+                                Cal.HallX[framCnt[port]] = DWDrvIC.ReadOISHall(j, 0, 0);
+                                Cal.HallY[framCnt[port]] = DWDrvIC.ReadOISHall(j, 1, 0);
+                                Cal.HallZ[framCnt[port]] = DrvIC.ReadAFHall(j);
+                            }
 
                             //Get Hall
                             if (name.Contains("X"))
@@ -2086,7 +2111,6 @@ namespace FZ4P
                             {
                                 if (Cal.CodeZ.Count - 1 == framCnt[port]) IsScan[port] = false;
                             }
-
                         }
                 }
                 
@@ -2115,14 +2139,18 @@ namespace FZ4P
             for (int j = ch; j < ch + ChannelCnt; j++)
             {
                 DrvIC.AFOnOff(j, false);
-                DWDrvIC.OISOnOff(j, false);
-              
+                if (Option.OISTYPE_AKM)
+                    DrvIC.OISOnOff(j, false);
+                else
+                    DWDrvIC.OISOnOff(j, false);
             }
+
             for (int j = ch; j < ch + ChannelCnt; j++)
                 AddLog(j, string.Format("framCnt {0}", framCnt[port]));
 
             STATIC.fVision.m__G.oCam[port].CommonToReplayBuf(name, framCnt[port]);
         }
+
         public double settleRigingTime = 0;
         private void Process_ScanTimeTest(int port, string name, int startcode, int endcode)
         {
@@ -3154,6 +3182,52 @@ namespace FZ4P
                 }
                 AddLog(0, $"END");
             }
+
+
+
+            MakeWaveform(testItem);
+            LEDs_All_On(port, true);
+            Process_ScanCodeTest(port, testItem, InspCnt);
+            LEDs_All_On(port, false);
+            Process_CalcCodeTest(port, testItem, InspCnt);
+
+            ScanByPassModeOnOff(testItem, false);
+            Thread.Sleep(500);
+        }
+        public void Act_ScanCodeAKM(int port, string testItem, int InspCnt)
+        {
+            //ScanByPassModeOnOff(testItem, true);
+            //Thread.Sleep(500);
+            //if (testItem.Contains("OIS X Scan"))
+            //{
+            //    var loopBackData = STATIC.Process.DrvIC.LiearCompEnable((int)AxisTypeDW.AxisX, true);
+            //    AddLog(0, $"LiearComp Enable{loopBackData}");
+
+            //    var realX = DWDrvIC.LiearCompRead(0);
+            //    var realY = DWDrvIC.LiearCompRead(1);
+
+            //    AddLog(0, $"RealValueChecked X \t RealValueCehcked X");
+            //    for (int i = 0; i < realX.Count; i++)
+            //    {
+            //        AddLog(0, $"{realX[i].ToString("F2")}\t{realY[i].ToString("F2")}");
+            //    }
+            //    AddLog(0, $"END");
+            //}
+            //else if (testItem.Contains("OIS Y Scan"))
+            //{
+            //    var loopBackData = STATIC.Process.DWDrvIC.LiearCompEnable((int)AxisTypeDW.AxisY, true);
+            //    AddLog(0, $"LiearComp Enable{loopBackData}");
+
+            //    var realX = DWDrvIC.LiearCompRead(0);
+            //    var realY = DWDrvIC.LiearCompRead(1);
+
+            //    AddLog(0, $"RealValueChecked X \t RealValueCehcked X");
+            //    for (int i = 0; i < realX.Count; i++)
+            //    {
+            //        AddLog(0, $"{realX[i].ToString("F2")}\t{realY[i].ToString("F2")}");
+            //    }
+            //    AddLog(0, $"END");
+            //}
 
 
 

@@ -222,6 +222,7 @@ namespace FZ4P
         [Option("Barcode Use Flag")] public bool BarcodeUse { get; set; }
 
         [Option("ByPass Mode")] public bool ByPassUse { get; set; }
+        [Option("OIS Type AKM")] public bool OISTYPE_AKM { get; set; }
     }
     public class Condition
     {
