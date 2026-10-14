@@ -13,5 +13,7 @@ namespace FZ4P.DriverIc.Interfaces
         void Echo_Board_Select_Ch(int ch);
         void Set_FRA_I2C_Speed();
         void Set_Control_Freq(ControlFreqMode controlFreqMode);
+
+        void Set_init();
     }
 }

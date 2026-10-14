@@ -1538,6 +1538,8 @@ namespace FZ4P
                     AddLog(ch, "OIS PID Data Check Y");
                     PIDChecked(ch, 1);
 
+                    
+
                     if (!SuddenStop)
                     {
                         if(LoopCnt > 1)
@@ -1647,7 +1649,11 @@ namespace FZ4P
                         }
                     }
                     else { /*Dln.PowerOnOff(port, false);*/  STATIC.Rcp.tt.Count++; return; }
-                   // Dln.PowerOnOff(port, false);
+                    // Dln.PowerOnOff(port, false);
+
+
+                    DWDrvIC.Set_init();
+                    AddLog(ch, "init 완료.");
                 }
                 catch
                 {
@@ -1807,10 +1813,12 @@ namespace FZ4P
                             case "OIS X Scan":
                                 //X =========
                                 MakeWaveformCodeOIS(ref Cal.CodeX, Condition.iXDrvCodeMin, Condition.iXDrvCodeMax, OISXCenter, Condition.iDrvXStep);
+                                //MakeWaveformCodeOISTest(ref Cal.CodeX, Condition.iXDrvCodeMin, Condition.iXDrvCodeMax, OISXCenter, Condition.iDrvXStep);
                                 break;
                             case "OIS Y Scan":
                                 //Y1 ===========================
-                                MakeWaveformCodeOIS(ref Cal.CodeY, Condition.iYDrvCodeMin, Condition.iYDrvCodeMax, OISYCenter, Condition.iDrvYStep);                               
+                                MakeWaveformCodeOIS(ref Cal.CodeY, Condition.iYDrvCodeMin, Condition.iYDrvCodeMax, OISYCenter, Condition.iDrvYStep);
+                                //MakeWaveformCodeOISTest(ref Cal.CodeY, Condition.iYDrvCodeMin, Condition.iYDrvCodeMax, OISYCenter, Condition.iDrvYStep);
                                 break;
 
                             case "AF Settling":
@@ -1881,6 +1889,47 @@ namespace FZ4P
                 curPos += step;
             } while (curPos < mid);
             code.Add(mid);
+        }
+
+        //TODO : 임시 테스트용
+        void MakeWaveformCodeOISTest(ref List<int> code, int min, int max, int mid, int step)
+        {
+            int curPos = 0;
+
+            for (int icount = 0; icount < 2; icount++)
+            {
+                curPos = mid;
+                do
+                {
+                    code.Add(curPos);
+                    curPos += step;
+                } while (curPos < max);
+                //  if (max >= 4095) max = 4095;
+                code.Add(max);
+                curPos -= step;
+                do
+                {
+                    code.Add(curPos);
+                    curPos -= step;
+                } while (curPos > min);
+                code.Add(min);
+                curPos += step;
+
+                do
+                {
+                    code.Add(curPos);
+                    curPos += step;
+                } while (curPos < max);
+                code.Add(max);
+
+                curPos -= step;
+                do
+                {
+                    code.Add(curPos);
+                    curPos -= step;
+                } while (curPos > mid);
+                code.Add(mid);
+            }
         }
 
         private void CrossOffsetMove(int port, string name)
@@ -2149,6 +2198,201 @@ namespace FZ4P
                 AddLog(j, string.Format("framCnt {0}", framCnt[port]));
 
             STATIC.fVision.m__G.oCam[port].CommonToReplayBuf(name, framCnt[port]);
+        }
+
+        private void Process_ScanCodeTestkkjTest(int port, string name, int InspCnt)
+        {
+            int ch = port * 2;
+
+            Wait(100);
+
+            CrossOffsetMove(port, name);
+
+            IsScan[port] = true;
+            framCnt[port] = 0;
+            int curPos = 0;
+
+            Stopwatch sw = new Stopwatch();
+            sw.Reset(); sw.Start();
+
+            while (IsScan[port])
+            {
+                for (int j = ch; j < ch + ChannelCnt; j++)
+                {
+                    if (!m_ChannelOn[j]) continue;
+
+                    foreach (var Cal in CalList[j])
+                        if (Cal.Name == name)
+                        {
+                            if (name.Contains("X"))
+                            {
+                                if (Option.OISTYPE_AKM)
+                                    DrvIC.OISMove(j, Cal.CodeX[framCnt[port]], OISYCenter);
+                                else
+                                    DWDrvIC.OISMove(j, Cal.CodeX[framCnt[port]], OISYCenter);
+                            }
+                            else if (name.Contains("Y"))
+                            {
+                                if (Option.OISTYPE_AKM)
+                                    DrvIC.OISMove(j, OISXCenter, Cal.CodeY[framCnt[port]]);
+                                else
+                                    DWDrvIC.OISMove(j, OISXCenter, Cal.CodeY[framCnt[port]]);
+                            }
+                            else if (name.Contains("AF"))
+                            {
+                                DrvIC.AFMove(j, Cal.CodeZ[framCnt[port]]);
+                            }
+
+                            Cal.StrokeX.Add(0);
+                            Cal.StrokeY.Add(0);
+                            Cal.StrokeZ.Add(0);
+                            Cal.StrokeY1.Add(0);
+                            Cal.StrokeY2.Add(0);
+                            Cal.HallX.Add(0);
+                            Cal.HallY.Add(0);
+                            Cal.HallZ.Add(0);
+                            Cal.HallY1.Add(0);
+                            Cal.HallY2.Add(0);
+                            Cal.Current.Add(0);
+                            Cal.TiltX.Add(0);
+                            Cal.TiltY.Add(0);
+                            Cal.TiltZ.Add(0);
+                        }
+                }
+                if (name.Contains("X"))
+                {
+                    Thread.Sleep(Condition.iDrvStepIntervalX);
+                }
+                else if (name.Contains("Y"))
+                {
+                    Thread.Sleep(Condition.iDrvStepIntervalY);
+                }
+                else if (name.Contains("AF"))
+                {
+                    Thread.Sleep(Condition.iDrvStepIntervalZ);
+                }
+
+                for (int j = ch; j < ch + ChannelCnt; j++)
+                {
+                    if (!m_ChannelOn[j]) continue;
+                    foreach (var Cal in CalList[j])
+                        if (Cal.Name == name)
+                        {
+                            if (Option.OISTYPE_AKM)
+                            {
+                                Cal.HallX[framCnt[port]] = DrvIC.ReadOISHall(j, 0, 0);
+                                Cal.HallY[framCnt[port]] = DrvIC.ReadOISHall(j, 1, 0);
+                                Cal.HallZ[framCnt[port]] = DrvIC.ReadAFHall(j);
+                            }
+                            else
+                            {
+                                Cal.HallX[framCnt[port]] = DWDrvIC.ReadOISHall(j, 0, 0);
+                                Cal.HallY[framCnt[port]] = DWDrvIC.ReadOISHall(j, 1, 0);
+                                Cal.HallZ[framCnt[port]] = DrvIC.ReadAFHall(j);
+                            }
+
+                            //Get Hall
+                            if (name.Contains("X"))
+                            {
+                                Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 0);
+                                //Cal.Current[framCnt[port]] = Math.Abs(DWDrvIC.GetCurrent((int)AxisTypeDW.AxisX));
+                                AddLog(j, string.Format("{0} == Code : {1}, Hall : {2}", name, Cal.CodeX[framCnt[port]], Cal.HallX[framCnt[port]]));
+                            }
+                            else if (name.Contains("Y"))
+                            {
+                                Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 0);
+                                //Cal.Current[framCnt[port]] = Math.Abs(DWDrvIC.GetCurrent((int)AxisTypeDW.AxisY));
+                                AddLog(j, string.Format("{0} == Code : {1}, Hall : {2}", name, Cal.CodeY[framCnt[port]], Cal.HallY[framCnt[port]]));
+                            }
+                            else if (name.Contains("AF"))
+                            {
+                                Cal.Current[framCnt[port]] = Dln.GetCurrent(j, 1) + Condition.AFCurrentOffset;
+                                AddLog(j, string.Format("{0} == Code : {1}, Hall : {2}", name, Cal.CodeZ[framCnt[port]], Cal.HallZ[framCnt[port]]));
+                            }
+                        }
+                }
+                STATIC.fVision.m__G.oCam[port].GrabA(framCnt[port]);
+
+                for (int j = ch; j < ch + ChannelCnt; j++)
+                {
+                    if (!m_ChannelOn[j]) continue;
+                    foreach (var Cal in CalList[j])
+                        if (Cal.Name == name)
+                        {
+                            if (name.Contains("X"))
+                            {
+                                if (Cal.CodeX.Count - 1 == framCnt[port]) IsScan[port] = false;
+                            }
+                            else if (name.Contains("Y"))
+                            {
+                                if (Cal.CodeY.Count - 1 == framCnt[port]) IsScan[port] = false;
+                            }
+                            else if (name.Contains("AF"))
+                            {
+                                if (Cal.CodeZ.Count - 1 == framCnt[port]) IsScan[port] = false;
+                            }
+                        }
+                }
+
+                framCnt[port]++;
+            }
+            long esec = sw.ElapsedMilliseconds;
+            sw.Stop();
+
+            double fps = 0;
+            if (name.Contains("X"))
+            {
+                fps = esec - Condition.iDrvStepIntervalX * framCnt[port];
+            }
+            else if (name.Contains("Y"))
+            {
+                fps = esec - Condition.iDrvStepIntervalY * framCnt[port];
+            }
+            else if (name.Contains("AF"))
+            {
+                fps = esec - Condition.iDrvStepIntervalZ * framCnt[port];
+            }
+
+            fps = fps / 1000;
+            fps = framCnt[port] / fps * 2.4;
+
+            for (int j = ch; j < ch + ChannelCnt; j++)
+            {
+                DrvIC.AFOnOff(j, false);
+                if (Option.OISTYPE_AKM)
+                    DrvIC.OISOnOff(j, false);
+                else
+                    DWDrvIC.OISOnOff(j, false);
+            }
+            for (int j = ch; j < ch + ChannelCnt; j++)
+                AddLog(j, string.Format("framCnt {0}", framCnt[port]));
+
+            STATIC.fVision.m__G.oCam[port].CommonToReplayBuf(name, framCnt[port]);
+
+            foreach (var Cal in CalList[0])
+            {
+                if (Cal.Name == name)
+                {
+                    if (name.Contains("X"))
+                    {
+                        int half = Cal.CodeX.Count / 2;
+                        Cal.CodeX = Cal.CodeX.Skip(half).ToList();
+                        Cal.Current = Cal.Current.Skip(half).ToList();
+                        Cal.HallX = Cal.HallX.Skip(half).ToList();
+                        Cal.HallY = Cal.HallY.Skip(half).ToList();
+                        Cal.HallZ = Cal.HallZ.Skip(half).ToList();
+                    }
+                    else if (name.Contains("Y"))
+                    {
+                        int half = Cal.CodeY.Count / 2;
+                        Cal.CodeY = Cal.CodeY.Skip(half).ToList();
+                        Cal.Current = Cal.Current.Skip(half).ToList();
+                        Cal.HallX = Cal.HallX.Skip(half).ToList();
+                        Cal.HallY = Cal.HallY.Skip(half).ToList();
+                        Cal.HallZ = Cal.HallZ.Skip(half).ToList();
+                    }
+                }
+            }
         }
 
         public double settleRigingTime = 0;
@@ -3133,11 +3377,11 @@ namespace FZ4P
             
         }
 
-        private void ScanByPassModeOnOff(string name, bool OnOff)
+        private void ScanByPassModeOnOff(string name, bool OnOff, bool OptionState)
         {
-            if (Option.ByPassUse)
+            if (OptionState)
             {
-                if (name.Contains("OIS X Scan") || name.Contains("OIS Y Scan") || name.Contains("SineWave Tes") || name.Contains("Ringing Test"))
+                if (name.Contains("OIS X Scan") || name.Contains("OIS Y Scan") || name.Contains("SineWave Test") || name.Contains("Ringing Test"))
                 {
                     STATIC.MCUH503.SetI3CByPaaMode(OnOff);
                     if(OnOff)
@@ -3150,7 +3394,7 @@ namespace FZ4P
         //TODO : ByPass True
         public void Act_ScanCode(int port, string testItem, int InspCnt)
         {
-            ScanByPassModeOnOff(testItem, true);
+            ScanByPassModeOnOff(testItem, true, Option.ByPassUse);
             Thread.Sleep(500);
             if (testItem.Contains("OIS X Scan"))
             {
@@ -3188,10 +3432,11 @@ namespace FZ4P
             MakeWaveform(testItem);
             LEDs_All_On(port, true);
             Process_ScanCodeTest(port, testItem, InspCnt);
+            //Process_ScanCodeTestkkjTest(port, testItem, InspCnt);
             LEDs_All_On(port, false);
             Process_CalcCodeTest(port, testItem, InspCnt);
 
-            ScanByPassModeOnOff(testItem, false);
+            ScanByPassModeOnOff(testItem, false, Option.ByPassUse);
             Thread.Sleep(500);
         }
         public void Act_ScanCodeAKM(int port, string testItem, int InspCnt)
@@ -3237,7 +3482,7 @@ namespace FZ4P
             LEDs_All_On(port, false);
             Process_CalcCodeTest(port, testItem, InspCnt);
 
-            ScanByPassModeOnOff(testItem, false);
+            ScanByPassModeOnOff(testItem, false, Option.ByPassUse);
             Thread.Sleep(500);
         }
         private void Act_ScanTimeCode(int port, string testItem, int InspCnt)

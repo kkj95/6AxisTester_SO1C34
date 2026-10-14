@@ -2468,7 +2468,7 @@ namespace FZ4P
             {
                 AddLog(ch, "Echo_FRA_Measurement] FRA Board Info Error!!!");
             }
-            ScanByPassModeOnOff(testItem, true);
+            ScanByPassModeOnOff(testItem, false, true);
             AMA_TestSetting_Params param = new AMA_TestSetting_Params()
             {
                 Target_slave_id_X = (Condition.Slave_ID_X == 0) ? -1 : Condition.Slave_ID_X,
@@ -2494,7 +2494,7 @@ namespace FZ4P
                 $" NG Count X : {result.NgCountX.ToString()}," +
                 $" NG Count Y : {result.NgCountY.ToString()}");
 
-            ScanByPassModeOnOff(testItem, false);
+            ScanByPassModeOnOff(testItem, false, true);
 
             PassFails[0].Results[(int)SpecItem.FRAX_SineWave].Val = result.DeltaMaxX;
             PassFails[0].Results[(int)SpecItem.FRAY_SineWave].Val = result.DeltaMaxY;
@@ -2512,7 +2512,7 @@ namespace FZ4P
                 AddLog(ch, "Echo_FRA_Measurement] FRA Board Info Error!!!");
             }
 
-            ScanByPassModeOnOff(testItem, true);
+            ScanByPassModeOnOff(testItem, false, true);
             AMA_RingingSetting_Params param = new AMA_RingingSetting_Params()
             {
                 Target_slave_id_X = (Condition.Slave_ID_X == 0) ? -1 : Condition.Slave_ID_X,
@@ -2538,7 +2538,7 @@ namespace FZ4P
                 $" SettlingTimeX[{result.SettlingTimeX.ToString()}]," +
                 $" SettlingTimeY[{result.SettlingTimeY.ToString()}],");
 
-            ScanByPassModeOnOff(testItem, false);
+            ScanByPassModeOnOff(testItem, false, true);
             PassFails[0].Results[(int)SpecItem.FRAX_Ringing].Val = result.SettlingTimeX;
             PassFails[0].Results[(int)SpecItem.FRAY_Ringing].Val = result.SettlingTimeY;
             ShowDataResults(ch, (int)SpecItem.FRAX_Ringing, (int)SpecItem.FRAX_Ringing, InspType.Normal, new double[] { });

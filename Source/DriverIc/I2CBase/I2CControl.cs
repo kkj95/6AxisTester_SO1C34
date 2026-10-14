@@ -1,4 +1,5 @@
 ﻿using Dln.I2cMaster;
+using FZ4P.Commons.Events;
 using FZ4P.DriverIc.I2CBase.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace FZ4P.DriverIc.I2CBase
     {
         public readonly Port _i2CMaster = null;
         public readonly Action<string> SetError = null;
+        public event EventHandler<StringEventArgs> exceptionError;
         public bool IsVirtual => STATIC.Process.IsVirtual;
         private object I2cLock = new object();
 
@@ -196,7 +198,7 @@ namespace FZ4P.DriverIc.I2CBase
                 }
                 return tmp[0];
             }
-            catch
+            catch(Exception ex)
             {
                 STATIC.I2CFailcnt++;
                 if (STATIC.I2CFailcnt > 20)
@@ -204,7 +206,9 @@ namespace FZ4P.DriverIc.I2CBase
                     SetError("Dln ReadFail");
 
                 }
-                return byte.MaxValue;
+
+                exceptionError?.Invoke(this, new StringEventArgs(ex.Message));
+                return 0x00;
             }
         }
         public ushort Read2Byte(int slaveAddr, int memAddr, int memCnt)

@@ -659,8 +659,6 @@ namespace FZ4P
                     if (dy > 0) fwdIndex.Add(new CalcList { code = code[i], Val1 = stroke[i] });
                     else bwdIndex.Add(new CalcList { code = code[i], Val1 = stroke[i] });
                 }
-
-              
             }
             fwdIndex = fwdIndex.OrderBy(a => a.code).ToList();
             bwdIndex = bwdIndex.OrderBy(a => a.code).ToList();

@@ -51,5 +51,10 @@ namespace FZ4P.DriverIc.OISIC.Adapter
         {
             throw new NotImplementedException();
         }
+
+        public void Set_init()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

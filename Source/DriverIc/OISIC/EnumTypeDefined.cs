@@ -128,6 +128,8 @@ namespace FZ4P.DriverIc.OISIC
 
         VERSION_MAJOR = 0xF2,
         VERSION_MINOR = 0xF3,
+
+        INIT = 0xFF,
     }
 
     public enum RegisterMapAMA
@@ -177,6 +179,12 @@ namespace FZ4P.DriverIc.OISIC
         SINE_WAVEX_MAX_L = 0xA9,
         SINE_WAVEY_MAX_H = 0xAA,
         SINE_WAVEY_MAX_L = 0xAB,
+
+        MG_RESET_1 = 0xAC,
+        MG_RESET_2 = 0xAD,
+        MG_RESET_3 = 0xAE,
+        MG_RESET_4 = 0xAF,
+        MG_RESET_5 = 0xB0,
 
         SINE_WAVEX_NG_1 = 0xA0,
         SINE_WAVEX_NG_2 = 0xA1,

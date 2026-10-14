@@ -1,4 +1,5 @@
-﻿using FZ4P.Commons.Helper;
+﻿using FZ4P.Commons.Events;
+using FZ4P.Commons.Helper;
 using FZ4P.DriverIc.I2CBase.Interfaces;
 using FZ4P.DriverIc.Interfaces;
 using System;
@@ -43,8 +44,18 @@ namespace FZ4P.UI
             cbb_SlaveIDState.SelectedIndex = 0;
             toolStripButton4.Image = imageList1.Images["Power"];
             toolStripButton5.Image = imageList1.Images["I2CWrite"];
+
+            _i2cMasterControl.exceptionError += LogEvent;
         }
 
+        private void LogEvent(object sender, StringEventArgs e)
+        {
+            var message = e.Message + "\r\n";
+
+            this.InvokeOnUIThread(() => {
+                rchtxtbx_MessageLog.AppendText(message);
+            });
+        }
         private void btn_WindowState_Max_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Maximized;

@@ -334,5 +334,10 @@ namespace FZ4P.DriverIc.OISIC
 
             return SlaveID;
         }
+
+        public void Set_init()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

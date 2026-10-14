@@ -695,10 +695,9 @@ namespace FZ4P
                         .Connected(STATIC.MCUH503);
                 }
             }
-            catch
+            catch(Exception ex)
             {
                 SetError("Power On Off I2C NG");
-              
             }
             
         }

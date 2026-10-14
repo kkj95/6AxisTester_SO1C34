@@ -135,6 +135,7 @@
             // tlst_Register_Value
             // 
             this.tlst_Register_Value.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tlst_Register_Value.Font = new System.Drawing.Font("맑은 고딕", 9F);
             this.tlst_Register_Value.Name = "tlst_Register_Value";
             this.tlst_Register_Value.Size = new System.Drawing.Size(100, 25);
             this.tlst_Register_Value.Text = "00";
@@ -149,6 +150,7 @@
             // tlst_Register
             // 
             this.tlst_Register.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tlst_Register.Font = new System.Drawing.Font("맑은 고딕", 9F);
             this.tlst_Register.Name = "tlst_Register";
             this.tlst_Register.Size = new System.Drawing.Size(100, 25);
             this.tlst_Register.Text = "00";

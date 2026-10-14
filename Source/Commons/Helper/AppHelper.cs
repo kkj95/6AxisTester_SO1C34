@@ -26,16 +26,19 @@ namespace FZ4P.Commons.Helper
 
         public static void InvokeOnUIThread(this Control control, Action action)
         {
-            if (control.IsHandleCreated && !control.IsDisposed)
+            if (control.IsDisposed)
+                return;
+
+            try
             {
-                try
-                {
+                if (control.InvokeRequired)
                     control.BeginInvoke(action);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"BeginInvoke 실패: {ex.Message}");
-                }
+                else
+                    action();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"UI Invoke 실패: {ex.Message}");
             }
         }
     }
