@@ -1812,13 +1812,13 @@ namespace FZ4P
                                 break;
                             case "OIS X Scan":
                                 //X =========
-                                MakeWaveformCodeOIS(ref Cal.CodeX, Condition.iXDrvCodeMin, Condition.iXDrvCodeMax, OISXCenter, Condition.iDrvXStep);
-                                //MakeWaveformCodeOISTest(ref Cal.CodeX, Condition.iXDrvCodeMin, Condition.iXDrvCodeMax, OISXCenter, Condition.iDrvXStep);
+                                //MakeWaveformCodeOIS(ref Cal.CodeX, Condition.iXDrvCodeMin, Condition.iXDrvCodeMax, OISXCenter, Condition.iDrvXStep);
+                                MakeWaveformCodeOISTest(ref Cal.CodeX, Condition.iXDrvCodeMin, Condition.iXDrvCodeMax, OISXCenter, Condition.iDrvXStep);
                                 break;
                             case "OIS Y Scan":
                                 //Y1 ===========================
-                                MakeWaveformCodeOIS(ref Cal.CodeY, Condition.iYDrvCodeMin, Condition.iYDrvCodeMax, OISYCenter, Condition.iDrvYStep);
-                                //MakeWaveformCodeOISTest(ref Cal.CodeY, Condition.iYDrvCodeMin, Condition.iYDrvCodeMax, OISYCenter, Condition.iDrvYStep);
+                                //MakeWaveformCodeOIS(ref Cal.CodeY, Condition.iYDrvCodeMin, Condition.iYDrvCodeMax, OISYCenter, Condition.iDrvYStep);
+                                MakeWaveformCodeOISTest(ref Cal.CodeY, Condition.iYDrvCodeMin, Condition.iYDrvCodeMax, OISYCenter, Condition.iDrvYStep);
                                 break;
 
                             case "AF Settling":
@@ -3431,8 +3431,8 @@ namespace FZ4P
 
             MakeWaveform(testItem);
             LEDs_All_On(port, true);
-            Process_ScanCodeTest(port, testItem, InspCnt);
-            //Process_ScanCodeTestkkjTest(port, testItem, InspCnt);
+            //Process_ScanCodeTest(port, testItem, InspCnt);
+            Process_ScanCodeTestkkjTest(port, testItem, InspCnt);
             LEDs_All_On(port, false);
             Process_CalcCodeTest(port, testItem, InspCnt);
 
