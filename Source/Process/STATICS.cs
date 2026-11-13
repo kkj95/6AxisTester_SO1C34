@@ -2,11 +2,13 @@
 using FZ4P.DriverIc.I2CBase;
 using FZ4P.DriverIc.OISIC;
 using FZ4P.UI;
+using ProgramUpdate.Shared.NamedPipes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.IO.Pipes;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Reflection;
@@ -194,20 +196,40 @@ namespace FZ4P
             return '0';
         }
 
+        public static NamedPipeClient clientPipe = null;
         public static Recipe Rcp = new Recipe();
         public static Process Process = new Process();
         public static DLN Dln = new DLN();
         //public static DrvIC DrvIC = new DrvIC();
 
-        public static AK7326_Ext DrvIC = new AK7326_Ext(Process.AddLog);
-
         public static I2CControl dln_control = new I2CControl(Dln.DLNi2c[3], LogHelper.LogWrite);
+        public static AK7326_Ext DrvIC = new AK7326_Ext(Process.AddLog, dln_control);
+
         public static DW9836N DW9836 = new DW9836N(dln_control);
+        //public static MCUH503 MCUH503 = new MCUH503(DrvIC, dln_control);
         public static MCUH503 MCUH503 = new MCUH503(DW9836, dln_control);
 
-        public static F_Manual fManual = new F_Manual(MCUH503.OIS, DrvIC,Process.AddLog, MCUH503);
-        public static F_Manaul_Register fManual_Register= new F_Manaul_Register(MCUH503.OIS, DrvIC, dln_control, Process.AddLog, Process.Dln.PowerOnOff , MCUH503);
+        public static F_Manual fManual = null; //new F_Manual(MCUH503.OIS, DrvIC,Process.AddLog, MCUH503);
+        public static F_Manaul_Register fManual_Register = null;//new F_Manaul_Register(MCUH503.OIS, DrvIC, dln_control, Process.AddLog, Process.Dln.PowerOnOff , MCUH503);
         public static BootLoadinit AppLazyinit = new BootLoadinit();
+
+        //Load 후 변경하기 위해 추가한 로직
+        public static void Lazyinit(bool useAKM)
+        {
+            if (useAKM)
+            {
+                MCUH503 = new MCUH503(DrvIC, dln_control);
+            }
+
+            else
+            {
+                MCUH503 = new MCUH503(DW9836, dln_control);
+            }
+            fManual = new F_Manual(MCUH503.OIS, DrvIC, Process.AddLog, MCUH503);
+            fManual_Register = new F_Manaul_Register(MCUH503.OIS, DrvIC, dln_control, Process.AddLog, Process.Dln.PowerOnOff, MCUH503);
+
+            clientPipe = new NamedPipeClient("MyTestProgram");
+        }
     }
     public static class DataIO
     {

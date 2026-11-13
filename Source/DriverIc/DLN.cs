@@ -86,8 +86,7 @@ namespace FZ4P
                 {
                     f.BeginInvoke((MethodInvoker)delegate
                     {
-                        MessageBox.Show(f, s, "Error",
-                       MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(f, s, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         System.Diagnostics.Process.GetCurrentProcess().Kill();
                     });
                 }
@@ -96,8 +95,7 @@ namespace FZ4P
             else
             {
                 // 메인폼을 못 찾았을 때 (owner 없이 표시)
-                MessageBox.Show(s, "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(s, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 System.Diagnostics.Process.GetCurrentProcess().Kill();
             }
            
@@ -698,7 +696,6 @@ namespace FZ4P
             catch
             {
                 SetError("Power On Off I2C NG");
-              
             }
             
         }
@@ -760,7 +757,6 @@ namespace FZ4P
    
         public bool ReadArray(int ch, int slaveAddr, int memAddr, int memCnt,  byte[] data)
         {
-
             try
             {
                 if (Process.IsVirtual) return true;

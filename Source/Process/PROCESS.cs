@@ -1900,34 +1900,50 @@ namespace FZ4P
                         DrvIC.AFOnOff(j, true);
                         break;
                     case "OIS X Scan":
-                        ushort us1 = (ushort)STATIC.MCUH503.GetI3CCheckBuffer(AxisTypeDW.AxisX, 0);
-                        ushort us2 = (ushort)STATIC.MCUH503.GetI3CCheckBuffer(AxisTypeDW.AxisX, 1);
+                        if (!Rcp.Option.OISTYPE_AKM)
+                        {
+                            ushort us1 = (ushort)STATIC.MCUH503.GetI3CCheckBuffer(AxisTypeDW.AxisX, 0);
+                            ushort us2 = (ushort)STATIC.MCUH503.GetI3CCheckBuffer(AxisTypeDW.AxisX, 1);
 
-                        var s1 = us1.ToString("X2");
-                        var s2 = us2.ToString("X2");
+                            var s1 = us1.ToString("X2");
+                            var s2 = us2.ToString("X2");
 
-                        AddLog(ch, $"Before HallCal Value 0x40 : 0x{s1}");
-                        AddLog(ch, $"Before HallCal Value 0x42 : 0x{s2}");
+                            AddLog(ch, $"Before HallCal Value 0x40 : 0x{s1}");
+                            AddLog(ch, $"Before HallCal Value 0x42 : 0x{s2}");
 
-                        DWDrvIC.OISOnOff(j, true);
+                            DWDrvIC.OISOnOff(j, true);
 
-                        us1 = (ushort)STATIC.MCUH503.GetI3CCheckBuffer(AxisTypeDW.AxisX, 0);
-                        us2 = (ushort)STATIC.MCUH503.GetI3CCheckBuffer(AxisTypeDW.AxisX, 1);
+                            us1 = (ushort)STATIC.MCUH503.GetI3CCheckBuffer(AxisTypeDW.AxisX, 0);
+                            us2 = (ushort)STATIC.MCUH503.GetI3CCheckBuffer(AxisTypeDW.AxisX, 1);
 
-                        s1 = us1.ToString("X2");
-                        s2 = us2.ToString("X2");
+                            s1 = us1.ToString("X2");
+                            s2 = us2.ToString("X2");
 
-                        AddLog(ch, $"after HallCal Value 0x40 : 0x{s1}");
-                        AddLog(ch, $"after HallCal Value 0x42 : 0x{s2}");
-                        DWDrvIC.SetManualDrvModeXY(j, OISXCenter, OISYCenter);
+                            AddLog(ch, $"after HallCal Value 0x40 : 0x{s1}");
+                            AddLog(ch, $"after HallCal Value 0x42 : 0x{s2}");
+                            DWDrvIC.SetManualDrvModeXY(j, OISXCenter, OISYCenter);
+                        }
+                        else
+                        {
+                            DrvIC.OISOnOff(j, true);
+                            DrvIC.SetManualDrvModeXY(j, OISXCenter, OISYCenter);
+                        }
 
                         DrvIC.AFOnOff(j, true);
                         DrvIC.AFMove(j, Condition.OISDrvAFPos);
                         AddLog(j, $"Move AF Best Position : {Condition.OISDrvAFPos}");
                         break;
                     case "OIS Y Scan":
-                        DWDrvIC.OISOnOff(j, true);
-                        DWDrvIC.SetManualDrvModeXY(j, OISXCenter, OISYCenter);                  
+                        if (!Rcp.Option.OISTYPE_AKM)
+                        {
+                            DWDrvIC.OISOnOff(j, true);
+                            DWDrvIC.SetManualDrvModeXY(j, OISXCenter, OISYCenter);
+                        }
+                        else
+                        {
+                            DrvIC.OISOnOff(j, true);
+                            DrvIC.SetManualDrvModeXY(j, OISXCenter, OISYCenter);
+                        }
 
                         DrvIC.AFOnOff(j, true);
                         DrvIC.AFMove(j, Condition.OISDrvAFPos);
@@ -1960,7 +1976,14 @@ namespace FZ4P
                             if (!m_ChannelOn[j]) continue;
                             foreach (var Cal in CalList[j])
                             {
-                                if (Cal.Name == name) DWDrvIC.OISMove(j, Cal.CodeX[0], OISYCenter);
+                                if (Cal.Name == name)
+                                {
+                                    if(!Option.OISTYPE_AKM)
+                                        DWDrvIC.OISMove(j, Cal.CodeX[0], OISYCenter);
+                                    else
+                                        DrvIC.OISMove(j, Cal.CodeX[0], OISYCenter);
+                                }
+                                    
                             }
                         }
                         Process.Wait(Condition.iDrvStepIntervalX);
@@ -1971,12 +1994,18 @@ namespace FZ4P
                             if (!m_ChannelOn[j]) continue;
                             foreach (var Cal in CalList[j])
                             {
-                                if (Cal.Name == name) DWDrvIC.OISMove(j, OISXCenter, Cal.CodeY[0]);
+                                if (Cal.Name == name)
+                                {
+                                    if (!Option.OISTYPE_AKM)
+                                        DWDrvIC.OISMove(j, OISXCenter, Cal.CodeY[0]);
+                                    else
+                                        DrvIC.OISMove(j, OISXCenter, Cal.CodeY[0]);
+                                }
+                                    
                             }
                         }
                         Process.Wait(Condition.iDrvStepIntervalY);
                         break;
-
                 }
             }
         }

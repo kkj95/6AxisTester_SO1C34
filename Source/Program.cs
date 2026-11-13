@@ -20,7 +20,6 @@ namespace FZ4P
         {
             AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly;
 
-
             bool isNew;
             Mutex mutex = new Mutex(true, "FZ_Test", out isNew);
 

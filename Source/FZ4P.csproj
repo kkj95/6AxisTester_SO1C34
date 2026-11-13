@@ -98,6 +98,9 @@
     <Reference Include="OpenCvSharp.Extensions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenCvSharp4.Extensions.4.5.5.20211231\lib\netstandard2.0\OpenCvSharp.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="ProgramUpdate.Shared">
+      <HintPath>..\lib\ProgramUpdate.Shared.dll</HintPath>
+    </Reference>
     <Reference Include="Serilog, Version=4.4.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <HintPath>..\packages\Serilog.4.4.0\lib\net471\Serilog.dll</HintPath>
     </Reference>

@@ -1,6 +1,8 @@
 ﻿
 using FZ4P.Commons.Helper;
 using FZ4P.DriverIc.OISIC;
+using ProgramUpdate.Shared.Events;
+using ProgramUpdate.Shared.NamedPipes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -37,7 +39,7 @@ namespace FZ4P
         SEMCO = 9,
         SBK = 10,
     }
-    public partial class F_Main : Form
+    public partial class F_Main : Form, IFormPipeSource
     {
         private Global m__G = null;
         public Condition Condition { get { return STATIC.Rcp.Condition; } }
@@ -47,6 +49,11 @@ namespace FZ4P
         public Model Model { get { return STATIC.Rcp.Model; } }
         public CurrentPath Current { get { return STATIC.Rcp.Current; } }
         public Process Process { get { return STATIC.Process; } }
+
+        public bool FormStatus => closeState;
+
+        private bool closeState = false;
+
         public F_Main()
         {
             try
@@ -1971,10 +1978,27 @@ namespace FZ4P
                 SettleDataGrid.CommitEdit(DataGridViewDataErrorContexts.Commit);
         }
 
-        private void F_Main_Shown(object sender, EventArgs e)
+        private async void F_Main_Shown(object sender, EventArgs e)
         {
             H503WakeUp();
+            await Task.Delay(1000);
+            STATIC.Lazyinit(Rcp.Option.OISTYPE_AKM);
+            STATIC.clientPipe.SetSourceForm(this);
 
+            STATIC.clientPipe.Connection();
+
+            Thread.Sleep(1000);
+
+            if (STATIC.clientPipe.IsConnected)
+            {
+                STATIC.clientPipe.ReciveEvent += RecivePipeMessage;
+            }
+
+        }
+
+        private void RecivePipeMessage(object sender, PipeMessageEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void H503WakeUp()
@@ -2029,6 +2053,14 @@ namespace FZ4P
 
                 Process.LoadPID(1);
             }
+        }
+
+        public void SourceClose()
+        {
+            if (this.InvokeRequired)
+                this.BeginInvoke(new Action(()=> this.Close()));
+            else
+                this.Close();
         }
     }
 }

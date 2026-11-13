@@ -14,9 +14,10 @@ namespace FZ4P.DriverIc.OISIC
     {
         private Action<int, string> _logAction;
         private readonly IOneTwoBytesDrivingIC _controls;
-        public AK7326_Ext(Action<int, string> logAction)
+        public AK7326_Ext(Action<int, string> logAction , IOneTwoBytesDrivingIC controls)
         {
             _logAction = logAction;
+            _controls = controls;
         }
 
         public override bool WriteArray(int ch, int slaveAddr, int memAddr, int memCnt, byte[] data, bool logAction = true)
@@ -150,8 +151,8 @@ namespace FZ4P.DriverIc.OISIC
         public int OISY_Addr { get; set; } = 0x4E;
 
         public int OIS_MIN_CODE { get; set; } = 0;
-        public int OIS_MID_CODE { get; set; } = 2048;
-        public int OIS_MAX_CODE { get; set; } = 4096;
+        public int OIS_MID_CODE { get; set; } = 4095;
+        public int OIS_MAX_CODE { get; set; } = 8191;
 
         public void LiearCompWrite(int axis, List<int> CompValue)
         {
@@ -178,11 +179,11 @@ namespace FZ4P.DriverIc.OISIC
             var targetBufferY1 = (moveY >> 8) & 0xFF;
             var targetBufferY2 = (moveY) & 0xFF;
 
-            Dln.WriteByte(ch, OISX_Addr, (int)RegisterMap7326.Target, 1, (byte)targetBufferX1);
-            Dln.WriteByte(ch, OISX_Addr, (int)RegisterMap7326.Target1, 1, (byte)targetBufferX2);
+            _controls.WriteByte( OISX_Addr, (int)RegisterMap7326.Target, 1, (byte)targetBufferX1);
+            _controls.WriteByte( OISX_Addr, (int)RegisterMap7326.Target1, 1, (byte)targetBufferX2);
 
-            Dln.WriteByte(ch, OISY_Addr, (int)RegisterMap7326.Target, 1, (byte)targetBufferY1);
-            Dln.WriteByte(ch, OISY_Addr, (int)RegisterMap7326.Target1, 1, (byte)targetBufferY2);
+            _controls.WriteByte( OISY_Addr, (int)RegisterMap7326.Target, 1, (byte)targetBufferY1);
+            _controls.WriteByte( OISY_Addr, (int)RegisterMap7326.Target1, 1, (byte)targetBufferY2);
         }
 
         public void OISMoveOL(int ch, int axis, int code)
@@ -194,13 +195,13 @@ namespace FZ4P.DriverIc.OISIC
         {
             if (isOn)
             {
-                Dln.WriteArray(ch, OISX_Addr, (int)RegisterMap7326.Mode, 1, new byte[] { 0x00 });
-                Dln.WriteArray(ch, OISY_Addr, (int)RegisterMap7326.Mode, 1, new byte[] { 0x00 });
+                _controls.WriteByte( OISX_Addr, (int)RegisterMap7326.Mode, 1, 0x03 );
+                _controls.WriteByte( OISY_Addr, (int)RegisterMap7326.Mode, 1, 0x03 );
             }
             else
             {
-                Dln.WriteArray(ch, OISX_Addr, (int)RegisterMap7326.Mode, 1, new byte[] { 0x40 });
-                Dln.WriteArray(ch, OISY_Addr, (int)RegisterMap7326.Mode, 1, new byte[] { 0x40 });
+                _controls.WriteByte( OISX_Addr, (int)RegisterMap7326.Mode, 1, 0x40 );
+                _controls.WriteByte( OISY_Addr, (int)RegisterMap7326.Mode, 1, 0x40 );
             }
         }
 
@@ -223,7 +224,7 @@ namespace FZ4P.DriverIc.OISIC
             short ReadData = 0x0000;
 
             int SlaveID = GetAxisTypeID((AxisTypeDW)axis);
-            var Wrod = Dln.Read2Byte(ch, SlaveID, (int)RegisterMap7326.POSITION_READ_LOW, 1);
+            var Wrod = _controls.Read2Byte(SlaveID, (int)RegisterMap7326.POSITION_READ_LOW, 1);
             ReadData = (short)(Wrod >> 3);
 
             return (short)ReadData;
