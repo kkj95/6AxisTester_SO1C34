@@ -15,7 +15,7 @@ namespace FZ4P.DriverIc.OISIC
         private readonly IOneTwoBytesDrivingIC _controls = null;
         public IOISFunction OIS { get; }
 
-        public MCUH503(IOISFunction oISFunction, IOneTwoBytesDrivingIC controls)
+        public MCUH503(IOISFunction oISFunction, IOneTwoBytesDrivingIC controls) : base(controls)
         {
             OIS = oISFunction;
             _controls = controls;
@@ -54,7 +54,7 @@ namespace FZ4P.DriverIc.OISIC
         #endregion
 
         #region Private
-        private int GetAxisTypeID(AxisTypeDW axisType)
+        protected override int GetAxisTypeID(AxisTypeDW axisType)
         {
             int SlaveID = -1;
             switch (axisType)

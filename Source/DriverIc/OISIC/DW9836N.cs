@@ -1,4 +1,5 @@
 ﻿using Dln.I2cMaster;
+using FZ4P.DriverIc.DongWoon.Params;
 using FZ4P.DriverIc.I2CBase;
 using FZ4P.DriverIc.I2CBase.Interfaces;
 using FZ4P.DriverIc.Interfaces;
@@ -38,9 +39,10 @@ namespace FZ4P.DriverIc.OISIC
 
         public IOneTwoBytesDrivingIC Controls => _controls;
 
-        public DW9836N(IOneTwoBytesDrivingIC controls)
+        public DW9836N(IOneTwoBytesDrivingIC controls) : base(controls)
         {
             _controls = controls;
+            base.Lazy_Initialize(ICBitType.TypeBit_14);
         }
         public void OISMove(int ch, int Xcode, int Ycode)
         {
@@ -284,7 +286,7 @@ namespace FZ4P.DriverIc.OISIC
             Thread.Sleep(50);
             return Controls.ReadByte(SlaveID, 0x4B, 1);
         }
-        private int GetAxisTypeID(AxisTypeDW axisType)
+        protected override int GetAxisTypeID(AxisTypeDW axisType)
         {
             int SlaveID = -1;
             switch (axisType)
@@ -304,7 +306,6 @@ namespace FZ4P.DriverIc.OISIC
 
             return SlaveID;
         }
-
         public void OISReset(int ch, int axis, bool OnOff)
         {
             byte data = 0x00;
