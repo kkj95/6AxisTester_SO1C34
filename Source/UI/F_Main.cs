@@ -1983,16 +1983,16 @@ namespace FZ4P
             H503WakeUp();
             await Task.Delay(1000);
             STATIC.Lazyinit(Rcp.Option.OISTYPE_AKM);
-            STATIC.clientPipe.SetSourceForm(this);
+            //STATIC.clientPipe.SetSourceForm(this);
 
-            STATIC.clientPipe.Connection();
+            //STATIC.clientPipe.Connection();
 
             Thread.Sleep(1000);
 
-            if (STATIC.clientPipe.IsConnected)
-            {
-                STATIC.clientPipe.ReciveEvent += RecivePipeMessage;
-            }
+            //if (STATIC.clientPipe.IsConnected)
+            //{
+            //    STATIC.clientPipe.ReciveEvent += RecivePipeMessage;
+            //}
 
         }
 

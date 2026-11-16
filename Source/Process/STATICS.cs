@@ -228,7 +228,7 @@ namespace FZ4P
             fManual = new F_Manual(MCUH503.OIS, DrvIC, Process.AddLog, MCUH503);
             fManual_Register = new F_Manaul_Register(MCUH503.OIS, DrvIC, dln_control, Process.AddLog, Process.Dln.PowerOnOff, MCUH503);
 
-            clientPipe = new NamedPipeClient("MyTestProgram");
+            //clientPipe = new NamedPipeClient("MyTestProgram");
         }
     }
     public static class DataIO
