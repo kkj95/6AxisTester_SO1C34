@@ -176,7 +176,14 @@
     <Compile Include="DriverIc\OISIC\Base\DriveICBase.cs" />
     <Compile Include="DriverIc\OISIC\DW9836N.cs" />
     <Compile Include="DriverIc\OISIC\EnumTypeDefined.cs" />
+    <Compile Include="DriverIc\OISIC\IC_Code_Information\Context\ResultCodeContext.cs" />
+    <Compile Include="DriverIc\OISIC\IC_Code_Information\ICCodeBit12.cs" />
+    <Compile Include="DriverIc\OISIC\IC_Code_Information\ICCodeBit14.cs" />
+    <Compile Include="DriverIc\OISIC\IC_Code_Information\IICCodeValue.cs" />
+    <Compile Include="DriverIc\OISIC\IC_Code_Information\Params\ResultCodeValue.cs" />
+    <Compile Include="DriverIc\OISIC\IC_Code_Information\Selector\CodeValueSelector.cs" />
     <Compile Include="DriverIc\OISIC\MCUH503.cs" />
+    <Compile Include="DriverIc\OISIC\params\ICMoveParams.cs" />
     <Compile Include="Extensions\DLNExtension.cs" />
     <Compile Include="Process\99.ResultType\PIDResult.cs" />
     <Compile Include="Process\AFLinCompCoefAKM7314.cs" />
