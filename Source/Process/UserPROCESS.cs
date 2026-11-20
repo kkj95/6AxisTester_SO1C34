@@ -1,4 +1,5 @@
-﻿using Dln;
+﻿using App.CoreModules.Thread;
+using Dln;
 using FZ4P.Commons.Helper;
 using FZ4P.DriverIc.OISIC;
 using FZ4P.Extensions;
@@ -948,6 +949,7 @@ namespace FZ4P
             {
                 DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, IC_DATA_OIS_X_REG[i], 1, IC_DATA_OIS_X[i]);
                 AddLog(ch, $"Register : 0x{IC_DATA_OIS_X_REG[i].ToString("X2")} , Data : 0x{IC_DATA_OIS_X[i].ToString("X2")} ");
+                Thread.Sleep(10);
             }
 
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISX_Addr, 0x03, 1, 0x01);
@@ -967,6 +969,7 @@ namespace FZ4P
             {
                 DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, IC_DATA_OIS_Y_REG[i], 1, IC_DATA_OIS_Y[i]);
                 AddLog(ch, $"Register : 0x{IC_DATA_OIS_Y_REG[i].ToString("X2")} , Data : 0x{IC_DATA_OIS_Y[i].ToString("X2")} ");
+                Thread.Sleep(10);
             }
 
             DWDrvIC.Controls.WriteByte(DWDrvIC.OISY_Addr, 0x03, 1, 0x01);
