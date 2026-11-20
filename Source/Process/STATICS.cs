@@ -1,6 +1,8 @@
 ﻿using App.CoreModules.Logs.Serilog;
 using FZ4P.DriverIc.I2CBase;
 using FZ4P.DriverIc.OISIC;
+using FZ4P.DriverIc.OISIC.H503s.AKM;
+using FZ4P.DriverIc.OISIC.H503s.DongWoon;
 using FZ4P.UI;
 using ProgramUpdate.Shared.NamedPipes;
 using System;
@@ -218,12 +220,12 @@ namespace FZ4P
         {
             if (useAKM)
             {
-                MCUH503 = new MCUH503(DrvIC, dln_control);
+                MCUH503 = new H503_AKM(DrvIC, dln_control);
             }
 
             else
             {
-                MCUH503 = new MCUH503(DW9836, dln_control);
+                MCUH503 = new H503_DW(DW9836, dln_control);
             }
             fManual = new F_Manual(MCUH503.OIS, DrvIC, Process.AddLog, MCUH503);
             fManual_Register = new F_Manaul_Register(MCUH503.OIS, DrvIC, dln_control, Process.AddLog, Process.Dln.PowerOnOff, MCUH503);

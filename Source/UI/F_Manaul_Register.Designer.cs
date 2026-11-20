@@ -62,6 +62,9 @@
             this.toolStrip3 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel5 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton6 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButton7 = new System.Windows.Forms.ToolStripButton();
             this.toolStrip2.SuspendLayout();
             this.pnl_Content.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -135,6 +138,7 @@
             // tlst_Register_Value
             // 
             this.tlst_Register_Value.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tlst_Register_Value.Font = new System.Drawing.Font("맑은 고딕", 9F);
             this.tlst_Register_Value.Name = "tlst_Register_Value";
             this.tlst_Register_Value.Size = new System.Drawing.Size(100, 25);
             this.tlst_Register_Value.Text = "00";
@@ -149,6 +153,7 @@
             // tlst_Register
             // 
             this.tlst_Register.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tlst_Register.Font = new System.Drawing.Font("맑은 고딕", 9F);
             this.tlst_Register.Name = "tlst_Register";
             this.tlst_Register.Size = new System.Drawing.Size(100, 25);
             this.tlst_Register.Text = "00";
@@ -204,7 +209,7 @@
             // 
             this.toolStripLabel9.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripLabel9.Name = "toolStripLabel9";
-            this.toolStripLabel9.Size = new System.Drawing.Size(47, 15);
+            this.toolStripLabel9.Size = new System.Drawing.Size(47, 22);
             this.toolStripLabel9.Text = "SlaveID";
             // 
             // imageList1
@@ -372,7 +377,9 @@
             this.toolStrip3.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.toolStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel5,
-            this.toolStripButton3});
+            this.toolStripButton3,
+            this.toolStripSeparator3,
+            this.toolStripButton7});
             this.toolStrip3.Location = new System.Drawing.Point(0, 0);
             this.toolStrip3.Name = "toolStrip3";
             this.toolStrip3.Size = new System.Drawing.Size(994, 25);
@@ -395,6 +402,29 @@
             this.toolStripButton3.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton3.Tag = "2";
             this.toolStripButton3.Text = "toolStripButton1";
+            this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
+            // 
+            // toolStripButton6
+            // 
+            this.toolStripButton6.Name = "toolStripButton6";
+            this.toolStripButton6.Size = new System.Drawing.Size(23, 22);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButton7
+            // 
+            this.toolStripButton7.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripButton7.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton7.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton7.Image")));
+            this.toolStripButton7.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton7.Name = "toolStripButton7";
+            this.toolStripButton7.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton7.Text = "toolStripButton7";
+            this.toolStripButton7.Click += new System.EventHandler(this.toolStripButton7_Click);
             // 
             // F_Manaul_Register
             // 
@@ -464,5 +494,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripComboBox cbb_SlaveIDState;
         private System.Windows.Forms.ToolStripLabel toolStripLabel9;
+        private System.Windows.Forms.ToolStripButton toolStripButton6;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripButton toolStripButton7;
     }
 }

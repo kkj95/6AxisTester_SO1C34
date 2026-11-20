@@ -178,6 +178,8 @@
     <Compile Include="DriverIc\OISIC\Base\DriveICBase.cs" />
     <Compile Include="DriverIc\OISIC\DW9836N.cs" />
     <Compile Include="DriverIc\OISIC\EnumTypeDefined.cs" />
+    <Compile Include="DriverIc\OISIC\H503s\AKM\H503_AKM.cs" />
+    <Compile Include="DriverIc\OISIC\H503s\DongWoon\H503_DW.cs" />
     <Compile Include="DriverIc\OISIC\MCUH503.cs" />
     <Compile Include="Extensions\DLNExtension.cs" />
     <Compile Include="Process\99.ResultType\PIDResult.cs" />

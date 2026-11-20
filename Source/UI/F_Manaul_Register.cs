@@ -7,10 +7,12 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace FZ4P.UI
 {
@@ -78,11 +80,13 @@ namespace FZ4P.UI
                 _i2cMasterControl.WriteByte(SlaveID, byteRegister, 1, byteData);
                 string tmpFormat = string.Format($"SlaveID : 0x{SlaveID.ToString("X2")}, Register : 0x{byteRegister.ToString("X2")} , Value : 0x{byteData.ToString("X2")}") + CRLF;
                 rchtxtbx_WriteLog.AppendText(tmpFormat);
+                MessageLog(cbb_ReadWriteState.SelectedIndex, tmpFormat);
             }
             else
             {
                 string tmpFormat = string.Format($"SlaveID : 0x{SlaveID.ToString("X2")}, Register : 0x{byteRegister.ToString("X2")} , Value : 0x{_i2cMasterControl.ReadByte(SlaveID, byteRegister, 1).ToString("X2")}") + CRLF;
                 rchtxtbx_ReadLog.AppendText(tmpFormat);
+                MessageLog(cbb_ReadWriteState.SelectedIndex, tmpFormat);
             }
         }
 
@@ -116,6 +120,40 @@ namespace FZ4P.UI
 
             if (result == DialogResult.Yes)
                 this.Hide();
+        }
+
+
+        private void MessageLog(int ActionType,string message)
+        {
+            string ActionMessage = string.Empty;
+            switch (ActionType)
+            {
+                case 1:
+                    ActionMessage = "[Write]";
+                    break;
+                case 0:
+                    ActionMessage = "[Read]";
+                    break;
+
+            }
+            rchtxtbx_MessageLog.AppendText($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}]{ActionMessage}{message}");
+        }
+
+        private void toolStripButton7_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "*.*"  + "|*.txt";
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = saveFileDialog.FileName;
+                File.WriteAllText(filePath, rchtxtbx_MessageLog.Text);
+            }
+        }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            rchtxtbx_MessageLog.Clear();
         }
     }
 }

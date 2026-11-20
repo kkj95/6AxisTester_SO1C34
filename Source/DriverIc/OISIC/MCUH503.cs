@@ -12,7 +12,7 @@ namespace FZ4P.DriverIc.OISIC
 {
     public class MCUH503 : DriveICBase,I2CTOI3C_Function
     {
-        private readonly IOneTwoBytesDrivingIC _controls = null;
+        protected readonly IOneTwoBytesDrivingIC _controls = null;
         public IOISFunction OIS { get; }
 
         public MCUH503(IOISFunction oISFunction, IOneTwoBytesDrivingIC controls)
@@ -21,8 +21,9 @@ namespace FZ4P.DriverIc.OISIC
             _controls = controls;
         }
 
-        #region public
-        public void SetI3CByPaaMode(bool Onoff)
+        //TODO : 테스트 가능시 메서드 처리 제거함.
+        #region public DW 기능들...
+        public virtual void SetI3CByPaaMode(bool Onoff)
         {
             int slaveId = GetAxisTypeID(AxisTypeDW.AxisX);
             if (Onoff)
@@ -30,14 +31,14 @@ namespace FZ4P.DriverIc.OISIC
             else
                 _controls.WriteByte(slaveId, 0xE6, 1, 0x00);
         }
-        public void SetH503WakeUp()
+        public virtual void SetH503WakeUp()
         {
             //int slaveId = GetAxisTypeID(AxisTypeDW.AxisY);
             //_controls.ReadByte(slaveId, 0x00, 1);
 
             OIS.ReadOISHall(0, 0, 0).ToString();
         }
-        public short GetI3CCheckBuffer(AxisTypeDW axisTypeDW,int bufferCheckType)
+        public virtual short GetI3CCheckBuffer(AxisTypeDW axisTypeDW,int bufferCheckType)
         {
             int slaveId = GetAxisTypeID(axisTypeDW);
 
@@ -51,10 +52,35 @@ namespace FZ4P.DriverIc.OISIC
 
             return (short)ReadData;
         }
+        public virtual ushort GetVersionChecked(AxisTypeDW axisTypeDW)
+        {
+            int slaveId = GetAxisTypeID(axisTypeDW);
+            var readWord = _controls.Read2Byte(slaveId, 0x22, 1);
+            return readWord;
+        }
+        public virtual void SetSWReset(bool OnOff)
+        { 
+            //H503은 X축 및 Y축 아이디...
+            int slaveId = GetAxisTypeID(AxisTypeDW.AxisX);
+            if (OnOff)
+                _controls.WriteByte(slaveId, 0x04, 1, 0x01);
+            else
+                _controls.WriteByte(slaveId, 0x04, 1, 0x03);
+        }
+        public virtual byte DriveICConnctChecked()
+        {
+            int slaveId = GetAxisTypeID(AxisTypeDW.AxisX);
+            return _controls.ReadByte(slaveId, 0x1F, 1);
+        }
+        public virtual void I3CStop()
+        {
+            int slaveId = GetAxisTypeID(AxisTypeDW.AxisX);
+            _controls.WriteByte(slaveId, 0x02, 1, 0x60);
+        }
         #endregion
 
         #region Private
-        private int GetAxisTypeID(AxisTypeDW axisType)
+        protected int GetAxisTypeID(AxisTypeDW axisType)
         {
             int SlaveID = -1;
             switch (axisType)
@@ -70,35 +96,6 @@ namespace FZ4P.DriverIc.OISIC
             }
 
             return SlaveID;
-        }
-
-        public ushort GetVersionChecked(AxisTypeDW axisTypeDW)
-        {
-            int slaveId = GetAxisTypeID(axisTypeDW);
-            var readWord = _controls.Read2Byte(slaveId, 0x22, 1);
-            return readWord;
-        }
-
-        public void SetSWReset(bool OnOff)
-        {
-            //H503은 X축 및 Y축 아이디...
-            int slaveId = GetAxisTypeID(AxisTypeDW.AxisX);
-            if (OnOff)
-                _controls.WriteByte(slaveId, 0x04, 1, 0x01);
-            else
-                _controls.WriteByte(slaveId, 0x04, 1, 0x03);
-        }
-
-        public byte DriveICConnctChecked()
-        {
-            int slaveId = GetAxisTypeID(AxisTypeDW.AxisX);
-            return _controls.ReadByte(slaveId, 0x1F, 1);
-        }
-
-        public void I3CStop()
-        {
-            int slaveId = GetAxisTypeID(AxisTypeDW.AxisX);
-            _controls.WriteByte(slaveId, 0x02, 1, 0x60);
         }
         #endregion
     }
