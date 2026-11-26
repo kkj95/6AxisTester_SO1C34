@@ -31,7 +31,7 @@ namespace FZ4P
                 var status = ReadByte((int)RegisterMapAMA.AMA_STATUS);
 
                 if (status == expectedStatus) return true;
-                if (status >= 0xE0) return false;
+                if (status > 0xE0) return false;
             }
             return false;
         }
@@ -54,11 +54,12 @@ namespace FZ4P
 
             FraFunction.AMA_Echoboard_StartStop(ch, StartStopType.Ready);
 
-            var statusSuccess = PollAmaStatus(0x01, 100, TEST_LIMIT_CNT);
+            bool statusSuccess = PollAmaStatus(0x01, 100, TEST_LIMIT_CNT);
 
             if (statusSuccess)
             {
                 _logAction(ch, string.Format($"[echo_sinewave_measurement] Read OK (cnt={cnt})"));
+                statusSuccess = true;
             }
             else
             {
@@ -70,6 +71,8 @@ namespace FZ4P
                 return false;
             }
 
+            ParamSetExecutor.SET_MG(ch);
+            Thread.Sleep(100);
             FraFunction.AMA_Echoboard_StartStop(ch, StartStopType.Start);
 
             Thread.Sleep(waitMs);
@@ -137,6 +140,7 @@ namespace FZ4P
             if (statusSuccess)
             {
                 _logAction(ch, string.Format($"[echo_ringing_measurement] Read OK (cnt={cnt})"));
+                statusSuccess = true;
             }
             else
             {

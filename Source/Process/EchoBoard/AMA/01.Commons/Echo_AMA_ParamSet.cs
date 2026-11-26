@@ -61,7 +61,7 @@ namespace FZ4P
             SetToWrite(ch, RegisterMapAMA.AMA_ID_Y, _param.Target_slave_id_Y << 1, "AMA_ID_Y");
             if (_param.Target_slave_id_Z != -1)
                 SetToWrite(ch, RegisterMapAMA.AMA_ID_Z, _param.Target_slave_id_Z << 1, "AMA_ID_Z");
-            //SetToWrite(ch, RegisterMapAMA.AMA_CLK_DIV, _param.Clock_devision, "AMA_CLK_DIV");                   
+            SetToWrite(ch, RegisterMapAMA.AMA_CLK_DIV, _param.Clock_devision, "AMA_CLK_DIV");                   
             SetToWrite(ch, RegisterMapAMA.AMA_OIS_NUM, _param.EOIS_target_device_number, "AMA_OIS_NUM");
             SetToWrite(ch, RegisterMapAMA.AMA_Z_NUM, _param.Af_target_device_number, "AMA_Z_NUM");              
 
@@ -74,9 +74,18 @@ namespace FZ4P
             SetToWrite(ch, RegisterMapAMA.AMA_RINGING_ENDPOS_Y, _param.End_positionY, "AMA_ENDPOSITION_Y");          
             SetToWrite(ch, RegisterMapAMA.AMA_RINGING_STARTPOS_Y, _param.Start_positionY, "AMA_STARTPOSITION_Y");      
 
-            SetToWrite(ch, RegisterMapAMA.AMA_RINGING_STARTTIME, _param.End_time, "AMA_RINGING_STARTTIME");                 
+            SetToWrite(ch, RegisterMapAMA.AMA_RINGING_STARTTIME, _param.Start_time, "AMA_RINGING_STARTTIME");                 
             SetToWrite(ch, RegisterMapAMA.AMA_RINGING_ENDTIME, _param.End_time, "AMA_RINGING_ENDTIME");           
-            SetToWrite(ch, RegisterMapAMA.AMA_RINGING_THD, _param.End_time, "AMA_RINGING_THD");           
+            SetToWrite(ch, RegisterMapAMA.AMA_RINGING_THD, _param.Threshold, "AMA_RINGING_THD");           
+        }
+
+        public void SET_MG(int ch)
+        {
+            SetToWrite(ch, RegisterMapAMA.MG_RESET_1, 0x00, "MG_RESET_1");
+            SetToWrite(ch, RegisterMapAMA.MG_RESET_2, 0x00, "MG_RESET_2");
+            SetToWrite(ch, RegisterMapAMA.MG_RESET_3, 0x00, "MG_RESET_3");
+            SetToWrite(ch, RegisterMapAMA.MG_RESET_4, 0x00, "MG_RESET_4");
+            SetToWrite(ch, RegisterMapAMA.MG_RESET_5, 0x00, "MG_RESET_5");
         }
 
         public void SetErrorCount(int ch, int aixs, int iCount)

@@ -507,6 +507,12 @@ namespace FZ4P.DriverIc.OISIC
             _controls.WriteByte(FRA_Addr, (int)RegisterMapFRA.CONTROL_FREQ, 1, byData);
         }
 
+        public void Set_init()
+        {
+            var slaveID = GetAxisTypeID(AxisTypeDW.AxisZ);
+            _controls.WriteByte(slaveID, (int)RegisterMapFRA.INIT, 1, 0x01);
+        }
+
 
         //public void SetI3CByPaaMode(bool Onoff)
         //{

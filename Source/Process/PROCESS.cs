@@ -1647,7 +1647,10 @@ namespace FZ4P
                         }
                     }
                     else { /*Dln.PowerOnOff(port, false);*/  STATIC.Rcp.tt.Count++; return; }
-                   // Dln.PowerOnOff(port, false);
+                    // Dln.PowerOnOff(port, false);
+
+                    DWDrvIC.Set_init();
+                    AddLog(ch, "init 완료.");
                 }
                 catch
                 {
@@ -3162,9 +3165,9 @@ namespace FZ4P
             
         }
 
-        private void ScanByPassModeOnOff(string name, bool OnOff)
+        private void ScanByPassModeOnOff(string name, bool OnOff, bool OptionState)
         {
-            if (Option.ByPassUse)
+            if (OptionState)
             {
                 if (name.Contains("OIS X Scan") || name.Contains("OIS Y Scan") || name.Contains("SineWave Tes") || name.Contains("Ringing Test"))
                 {
@@ -3179,7 +3182,7 @@ namespace FZ4P
         //TODO : ByPass True
         public void Act_ScanCode(int port, string testItem, int InspCnt)
         {
-            ScanByPassModeOnOff(testItem, true);
+            ScanByPassModeOnOff(testItem, true, Option.ByPassUse);
             Thread.Sleep(500);
             if (testItem.Contains("OIS X Scan"))
             {
@@ -3220,7 +3223,7 @@ namespace FZ4P
             LEDs_All_On(port, false);
             Process_CalcCodeTest(port, testItem, InspCnt);
 
-            ScanByPassModeOnOff(testItem, false);
+            ScanByPassModeOnOff(testItem, false, Option.ByPassUse);
             Thread.Sleep(500);
         }
         public void Act_ScanCodeAKM(int port, string testItem, int InspCnt)
@@ -3266,7 +3269,7 @@ namespace FZ4P
             LEDs_All_On(port, false);
             Process_CalcCodeTest(port, testItem, InspCnt);
 
-            ScanByPassModeOnOff(testItem, false);
+            ScanByPassModeOnOff(testItem, false, Option.ByPassUse);
             Thread.Sleep(500);
         }
         private void Act_ScanTimeCode(int port, string testItem, int InspCnt)
